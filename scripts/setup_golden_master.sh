@@ -255,8 +255,9 @@ REPOS=(
 for repo in "${REPOS[@]}"; do
   echo "Syncing to $repo..."
   # Add sync logic here
-  # git remote add $repo https://github.com/$repo.git
-  # git push $repo main
+  # Check if remote exists, if not add it
+  # git remote get-url "$repo" 2>/dev/null || git remote add "$repo" "https://github.com/$repo.git"
+  # git push "$repo" main
 done
 
 echo "✓ All repositories synced"
