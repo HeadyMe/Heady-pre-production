@@ -3,7 +3,7 @@ services:
   - type: web
     name: heady-manager
     env: node
-    buildCommand: npm ci && pip install -r requirements.txt
+    buildCommand: npm install && pip install -r requirements.txt
     startCommand: node heady-manager.js
     healthCheckPath: /api/health
     envVars:

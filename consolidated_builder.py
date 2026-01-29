@@ -9,6 +9,7 @@ and parallel execution support.
 import argparse
 import json
 import logging
+import os
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
@@ -120,7 +121,7 @@ def build_single_project(
         result = subprocess.run(
             build_command,
             cwd=str(project_path),
-            env={**subprocess.os.environ, **env},
+            env={**os.environ, **env},
             capture_output=True,
             text=True
         )

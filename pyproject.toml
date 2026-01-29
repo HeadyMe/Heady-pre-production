@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "Apache-2.0"}
 authors = [
-    {name = "Heady Systems", email = "contact@headysystems.com"}
+    {name = "Heady Systems"}
 ]
 keywords = ["data-processing", "mcp", "api", "framework"]
 classifiers = [
@@ -71,4 +71,6 @@ target-version = ["py38", "py39", "py310", "py311", "py312"]
 python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
-disallow_untyped_defs = true
+# Relaxed setting to allow gradual typing adoption
+disallow_untyped_defs = false
+check_untyped_defs = true

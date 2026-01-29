@@ -11,7 +11,7 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 import requests
@@ -151,8 +151,6 @@ class HeadyAdminConsole:
             event: Event type/name
             details: Event details dictionary
         """
-        from datetime import datetime, timezone
-        
         audit_entry = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "event": event,

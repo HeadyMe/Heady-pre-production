@@ -11,6 +11,9 @@ jobs:
     name: Python Tests
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: read
+    
     strategy:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
@@ -34,18 +37,13 @@ jobs:
       - name: Run tests with coverage
         run: |
           pytest tests/ -v --cov=heady_project --cov-report=xml --cov-report=term
-      
-      - name: Upload coverage reports
-        if: matrix.python-version == '3.11'
-        uses: codecov/codecov-action@v4
-        with:
-          file: ./coverage.xml
-          flags: python
-          name: python-${{ matrix.python-version }}
   
   lint-python:
     name: Python Linting
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
     
     steps:
       - name: Checkout code
@@ -78,6 +76,9 @@ jobs:
   test-node:
     name: Node.js Tests
     runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
     
     strategy:
       matrix:
@@ -117,6 +118,9 @@ jobs:
     name: Integration Tests
     runs-on: ubuntu-latest
     needs: [test-python, test-node]
+    
+    permissions:
+      contents: read
     
     services:
       postgres:

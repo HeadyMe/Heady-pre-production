@@ -40,11 +40,9 @@
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-postgres"
+        "@modelcontextprotocol/server-postgres",
+        "${DATABASE_URL}"
       ],
-      "env": {
-        "POSTGRES_CONNECTION_STRING": "${DATABASE_URL}"
-      },
       "description": "PostgreSQL database access for audit trail and data persistence"
     },
     "git": {
