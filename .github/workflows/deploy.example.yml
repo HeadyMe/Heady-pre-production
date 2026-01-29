@@ -1,0 +1,65 @@
+# Example GitHub Actions Workflow
+# This workflow demonstrates how to securely use environment variables
+# stored as GitHub Repository Secrets
+
+name: Deploy Heady System
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run tests with secrets
+      env:
+        # Reference secrets from GitHub Secrets
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        OTHER_API_KEY: ${{ secrets.OTHER_API_KEY }}
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        HEADY_API_KEY: ${{ secrets.HEADY_API_KEY }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      run: |
+        # Run your tests here
+        # npm test
+        echo "Tests would run with environment variables configured"
+    
+    - name: Validate configuration
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        HEADY_API_KEY: ${{ secrets.HEADY_API_KEY }}
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+      run: |
+        # Start server and validate configuration
+        node heady-manager.js &
+        SERVER_PID=$!
+        sleep 5
+        
+        # Check health endpoint
+        curl -f http://localhost:3300/api/health || exit 1
+        
+        # Check config endpoint
+        curl -f http://localhost:3300/api/config || exit 1
+        
+        # Stop server
+        kill $SERVER_PID
+        
+        echo "Configuration validation passed"
+    
+    # Note: Actual deployment would go here
+    # This is just an example to show secret usage
