@@ -16,6 +16,41 @@ const OTHER_API_KEY = process.env.OTHER_API_KEY;
 const DEFAULT_HF_TEXT_MODEL = process.env.HF_TEXT_MODEL || "gpt2";
 const DEFAULT_HF_EMBED_MODEL = process.env.HF_EMBED_MODEL || "sentence-transformers/all-MiniLM-L6-v2";
 
+// Simple in-memory rate limiting for admin endpoints
+const rateLimitStore = new Map();
+const RATE_LIMIT_WINDOW_MS = 10000; // 10 seconds
+const MAX_REQUESTS_PER_WINDOW = 20; // 20 requests per 10 seconds
+
+function rateLimitMiddleware(req, res, next) {
+  const ip = req.ip || req.connection.remoteAddress;
+  const now = Date.now();
+  const windowKey = `${ip}-${Math.floor(now / RATE_LIMIT_WINDOW_MS)}`;
+  
+  const currentCount = rateLimitStore.get(windowKey) || 0;
+  
+  if (currentCount >= MAX_REQUESTS_PER_WINDOW) {
+    return res.status(429).json({ 
+      ok: false, 
+      error: "Too many requests. Please try again later." 
+    });
+  }
+  
+  rateLimitStore.set(windowKey, currentCount + 1);
+  
+  // Clean up old entries periodically
+  if (Math.random() < 0.01) {
+    const cutoff = Math.floor((now - RATE_LIMIT_WINDOW_MS * 2) / RATE_LIMIT_WINDOW_MS);
+    for (const key of rateLimitStore.keys()) {
+      const keyTime = parseInt(key.split('-')[1]);
+      if (keyTime < cutoff) {
+        rateLimitStore.delete(key);
+      }
+    }
+  }
+  
+  next();
+}
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
@@ -185,6 +220,7 @@ app.get(
 
 app.get(
   "/api/admin/status",
+  rateLimitMiddleware,
   asyncHandler(async (req, res) => {
     // Read MCP configuration
     let mcpServers = [];
