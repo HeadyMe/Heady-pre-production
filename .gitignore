@@ -4,3 +4,35 @@ node_modules/
 __pycache__/
 *.log
 secrets_dump.txt
+
+# Python test artifacts
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+/tmp/
+*.tmp
+audit_log.jsonl
+archive/

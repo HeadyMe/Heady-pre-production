@@ -1,0 +1,109 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "${GITHUB_WORKSPACE}",
+        "${GITHUB_WORKSPACE}/.github",
+        "${GITHUB_WORKSPACE}/heady_project",
+        "${GITHUB_WORKSPACE}/tests"
+      ],
+      "description": "Access to repository files for reading code, configuration, and documentation",
+      "allowedTools": [
+        "read_file",
+        "write_file",
+        "list_directory",
+        "search_files"
+      ],
+      "env": {}
+    },
+    "git": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-git",
+        "--repository",
+        "${GITHUB_WORKSPACE}"
+      ],
+      "description": "Git operations for version control, diffs, and commit history",
+      "allowedTools": [
+        "git_status",
+        "git_diff",
+        "git_log",
+        "git_show",
+        "git_blame"
+      ],
+      "env": {}
+    },
+    "postgres": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres"
+      ],
+      "description": "PostgreSQL database access for audit trails and data queries",
+      "allowedTools": [
+        "query",
+        "describe_table",
+        "list_tables"
+      ],
+      "env": {
+        "POSTGRES_CONNECTION_STRING": "${DATABASE_URL}"
+      }
+    },
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "description": "HTTP client for fetching external documentation and APIs",
+      "allowedTools": [
+        "fetch"
+      ],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "description": "Enhanced reasoning for complex problem-solving and architectural decisions",
+      "allowedTools": [],
+      "env": {}
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "description": "Persistent memory for storing context about the project structure and patterns",
+      "allowedTools": [
+        "store_memory",
+        "retrieve_memory"
+      ],
+      "env": {}
+    },
+    "cloudflare": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cloudflare/mcp-server-cloudflare"
+      ],
+      "description": "Cloudflare API integration for CDN, DNS, and edge computing operations",
+      "allowedTools": [
+        "list_zones",
+        "get_zone",
+        "list_dns_records"
+      ],
+      "env": {
+        "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}",
+        "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}"
+      }
+    }
+  }
+}
