@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "heady-manager": {
+      "type": "local",
+      "command": "node",
+      "args": ["heady-manager.js"],
+      "tools": ["*"],
+      "description": "HeadySystems MCP Manager - Node.js server providing system pulse and Docker integration"
+    }
+  }
+}
