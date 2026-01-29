@@ -1,11 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 const Docker = require("dockerode");
+const fs = require("fs");
+const path = require("path");
 
 const PORT = Number(process.env.PORT || 3300);
 
 const HF_TOKEN = process.env.HF_TOKEN;
 const HEADY_API_KEY = process.env.HEADY_API_KEY;
+const DATABASE_URL = process.env.DATABASE_URL;
+const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
+const OTHER_API_KEY = process.env.OTHER_API_KEY;
 
 const DEFAULT_HF_TEXT_MODEL = process.env.HF_TEXT_MODEL || "gpt2";
 const DEFAULT_HF_EMBED_MODEL = process.env.HF_EMBED_MODEL || "sentence-transformers/all-MiniLM-L6-v2";
@@ -152,6 +158,9 @@ app.get(
       env: {
         has_hf_token: Boolean(HF_TOKEN),
         has_heady_api_key: Boolean(HEADY_API_KEY),
+        has_database_url: Boolean(DATABASE_URL),
+        has_cloudflare: Boolean(CLOUDFLARE_API_TOKEN && CLOUDFLARE_ACCOUNT_ID),
+        has_other_api_key: Boolean(OTHER_API_KEY),
       },
     });
   }),
@@ -171,6 +180,92 @@ app.get(
     }
 
     res.json({ ok: true, ts: new Date().toISOString(), docker: dockerInfo });
+  }),
+);
+
+app.get(
+  "/api/admin/status",
+  asyncHandler(async (req, res) => {
+    // Read MCP configuration
+    let mcpServers = [];
+    try {
+      const mcpConfigPath = path.join(__dirname, "mcp_config.json");
+      if (fs.existsSync(mcpConfigPath)) {
+        const mcpConfig = JSON.parse(fs.readFileSync(mcpConfigPath, "utf8"));
+        if (mcpConfig.mcpServers) {
+          mcpServers = Object.keys(mcpConfig.mcpServers).map((name) => ({
+            name,
+            status: "configured",
+          }));
+        }
+      }
+    } catch (e) {
+      console.error("Error reading MCP config:", e);
+    }
+
+    // Patent integration status
+    const patents = [
+      {
+        title: "Multi-modal AI Integration",
+        implemented: Boolean(HF_TOKEN),
+        description: "Hugging Face inference pipeline for text and embeddings",
+      },
+      {
+        title: "Containerized Service Management",
+        implemented: true,
+        description: "Docker integration for isolated service execution",
+      },
+      {
+        title: "Secure API Gateway",
+        implemented: Boolean(HEADY_API_KEY),
+        description: "API key authentication and rate limiting",
+      },
+      {
+        title: "Real-time Monitoring Dashboard",
+        implemented: true,
+        description: "WebSocket-based live system updates",
+      },
+      {
+        title: "Database Audit Trail",
+        implemented: Boolean(DATABASE_URL),
+        description: "PostgreSQL integration for compliance tracking",
+      },
+      {
+        title: "CDN Edge Computing",
+        implemented: Boolean(CLOUDFLARE_API_TOKEN && CLOUDFLARE_ACCOUNT_ID),
+        description: "Cloudflare Workers integration",
+      },
+      {
+        title: "Model Context Protocol (MCP)",
+        implemented: mcpServers.length > 0,
+        description: "Standardized AI service communication",
+      },
+    ];
+
+    // Component status
+    const components = {
+      system: {
+        status: "operational",
+        uptime: process.uptime(),
+        version: "1.0.0",
+      },
+      secrets: {
+        hf_token: Boolean(HF_TOKEN),
+        heady_api_key: Boolean(HEADY_API_KEY),
+        database_url: Boolean(DATABASE_URL),
+        cloudflare_token: Boolean(CLOUDFLARE_API_TOKEN),
+        cloudflare_account: Boolean(CLOUDFLARE_ACCOUNT_ID),
+        other_api_key: Boolean(OTHER_API_KEY),
+      },
+      mcp_servers: mcpServers,
+      patents,
+    };
+
+    res.json({
+      ok: true,
+      ts: new Date().toISOString(),
+      ...components,
+    });
   }),
 );
 
