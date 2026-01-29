@@ -34,9 +34,11 @@
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-postgres",
-        "postgresql://admin:secure_enterprise_password@localhost:5432/audit_trail"
-      ]
+        "@modelcontextprotocol/server-postgres"
+      ],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
     },
     "git": {
       "command": "npx",
@@ -59,8 +61,8 @@
         "@cloudflare/mcp-server-cloudflare"
       ],
       "env": {
-        "CLOUDFLARE_API_TOKEN": "YOUR_CLOUDFLARE_TOKEN",
-        "CLOUDFLARE_ACCOUNT_ID": "YOUR_ACCOUNT_ID"
+        "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}",
+        "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}"
       }
     }
   }

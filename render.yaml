@@ -5,4 +5,23 @@ services:
     buildCommand: npm install
     startCommand: node heady-manager.js
     envVars:
-      - fromGroup: heady-shared-secrets
+      - key: DATABASE_URL
+        sync: false
+      - key: OTHER_API_KEY
+        sync: false
+      - key: CLOUDFLARE_API_TOKEN
+        sync: false
+      - key: CLOUDFLARE_ACCOUNT_ID
+        sync: false
+      - key: HF_TOKEN
+        sync: false
+      - key: HEADY_API_KEY
+        sync: false
+
+envVarGroups:
+  - name: data-processing-env
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: OTHER_API_KEY
+        sync: false

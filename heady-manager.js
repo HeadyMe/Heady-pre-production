@@ -6,6 +6,10 @@ const PORT = Number(process.env.PORT || 3300);
 
 const HF_TOKEN = process.env.HF_TOKEN;
 const HEADY_API_KEY = process.env.HEADY_API_KEY;
+const DATABASE_URL = process.env.DATABASE_URL;
+const OTHER_API_KEY = process.env.OTHER_API_KEY;
+const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN;
+const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID;
 
 const DEFAULT_HF_TEXT_MODEL = process.env.HF_TEXT_MODEL || "gpt2";
 const DEFAULT_HF_EMBED_MODEL = process.env.HF_EMBED_MODEL || "sentence-transformers/all-MiniLM-L6-v2";
@@ -152,6 +156,10 @@ app.get(
       env: {
         has_hf_token: Boolean(HF_TOKEN),
         has_heady_api_key: Boolean(HEADY_API_KEY),
+        has_database_url: Boolean(DATABASE_URL),
+        has_other_api_key: Boolean(OTHER_API_KEY),
+        has_cloudflare_api_token: Boolean(CLOUDFLARE_API_TOKEN),
+        has_cloudflare_account_id: Boolean(CLOUDFLARE_ACCOUNT_ID),
       },
     });
   }),
@@ -171,6 +179,37 @@ app.get(
     }
 
     res.json({ ok: true, ts: new Date().toISOString(), docker: dockerInfo });
+  }),
+);
+
+app.get(
+  "/api/config",
+  asyncHandler(async (req, res) => {
+    res.json({
+      ok: true,
+      environment: {
+        database_url: Boolean(DATABASE_URL),
+        other_api_key: Boolean(OTHER_API_KEY),
+        cloudflare_api_token: Boolean(CLOUDFLARE_API_TOKEN),
+        cloudflare_account_id: Boolean(CLOUDFLARE_ACCOUNT_ID),
+        hf_token: Boolean(HF_TOKEN),
+        heady_api_key: Boolean(HEADY_API_KEY),
+      },
+      models: {
+        default_text_model: DEFAULT_HF_TEXT_MODEL,
+        default_embed_model: DEFAULT_HF_EMBED_MODEL,
+      },
+      mcp_servers: [
+        "filesystem",
+        "sequential-thinking",
+        "memory",
+        "fetch",
+        "postgres",
+        "git",
+        "puppeteer",
+        "cloudflare",
+      ],
+    });
   }),
 );
 
