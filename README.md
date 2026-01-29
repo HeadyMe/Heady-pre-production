@@ -10,6 +10,8 @@ Run the setup script to install all required Hugging Face libraries:
 ./setup_huggingface.sh
 ```
 
+Note: The script is executable. If you encounter permission issues, run: `chmod +x setup_huggingface.sh`
+
 This will install:
 - Core libraries: transformers, datasets, accelerate, gradio, huggingface_hub
 - Optimization libraries: bitsandbytes, optimum

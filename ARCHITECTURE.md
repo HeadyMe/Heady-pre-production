@@ -28,7 +28,7 @@ The UI is built using Gradio.
 ## Workflow Instructions for Agents
 
 ### New Features
-When adding a new model, create a small test script in `tests/` to verify it loads before integrating it into the main app.
+When adding a new model, create a small test script to verify it loads before integrating it into the main app. Test scripts should be organized appropriately based on your project structure.
 
 ### Refactoring
 When refactoring, preserve the `device_map="auto"` argument to ensure cross-platform compatibility.
