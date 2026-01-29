@@ -394,9 +394,7 @@ async function runPythonQa({ question, context, model, parameters, requestId }) 
           settled = true;
           try {
             child.kill("SIGKILL");
-          } catch {
-            // ignore
-          }
+          } catch {}
           const err = new Error("Python worker timed out");
           err.code = "PY_WORKER_TIMEOUT";
           reject(err);
