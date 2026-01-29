@@ -1,0 +1,22 @@
+{
+  "projects": {
+    "heady-manager": {
+      "path": ".",
+      "build_command": "npm install",
+      "description": "Node.js MCP server and API manager",
+      "env": {
+        "NODE_ENV": "production"
+      }
+    },
+    "heady-project": {
+      "path": "./heady_project",
+      "build_command": "python -m pip install -e .",
+      "description": "Python data processing framework",
+      "env": {
+        "PYTHONPATH": "."
+      }
+    }
+  },
+  "version": "1.0.0",
+  "description": "Heady Systems project configuration"
+}

@@ -1,0 +1,11 @@
+{
+  "project_path": ".",
+  "build_commands": [
+    ["npm", "install"],
+    ["pip", "install", "-r", "requirements.txt"]
+  ],
+  "test_commands": [
+    ["pytest", "tests/", "-v"]
+  ],
+  "version": "1.0.0"
+}

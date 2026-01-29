@@ -1,8 +1,36 @@
 services:
+  # Heady Manager - Node.js MCP Server and API Gateway
   - type: web
     name: heady-manager
     env: node
-    buildCommand: npm install
+    buildCommand: npm ci && pip install -r requirements.txt
     startCommand: node heady-manager.js
+    healthCheckPath: /api/health
     envVars:
-      - fromGroup: heady-shared-secrets
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3300
+      - key: HF_TOKEN
+        sync: false
+      - key: HEADY_API_KEY
+        generateValue: true
+      - key: HF_TEXT_MODEL
+        value: gpt2
+      - key: HF_EMBED_MODEL
+        value: sentence-transformers/all-MiniLM-L6-v2
+      - key: DATABASE_URL
+        fromDatabase:
+          name: heady-db
+          property: connectionString
+      - key: CLOUDFLARE_API_TOKEN
+        sync: false
+      - key: CLOUDFLARE_ACCOUNT_ID
+        sync: false
+
+# Database for audit trail and persistence
+databases:
+  - name: heady-db
+    databaseName: heady_production
+    user: heady_admin
+    plan: starter

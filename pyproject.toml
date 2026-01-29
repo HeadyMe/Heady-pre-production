@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "heady-project"
+version = "1.0.0"
+description = "Heady - A Python-based data-processing framework"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "Apache-2.0"}
+authors = [
+    {name = "Heady Systems", email = "contact@headysystems.com"}
+]
+keywords = ["data-processing", "mcp", "api", "framework"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "psycopg2-binary>=2.9.9",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+    "huggingface-hub>=0.20.0",
+    "transformers>=4.36.0",
+    "click>=8.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0",
+]
+
+[project.scripts]
+heady-build = "execute_build:main"
+heady-builder = "consolidated_builder:main"
+heady-admin = "admin_console:main"
+
+[project.urls]
+Homepage = "https://github.com/HeadyMe/Heady"
+Repository = "https://github.com/HeadyMe/Heady"
+Issues = "https://github.com/HeadyMe/Heady/issues"
+
+[tool.setuptools]
+packages = ["heady_project"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=heady_project --cov-report=term-missing"
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
