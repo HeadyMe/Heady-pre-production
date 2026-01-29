@@ -151,8 +151,10 @@ class HeadyAdminConsole:
             event: Event type/name
             details: Event details dictionary
         """
+        from datetime import datetime, timezone
+        
         audit_entry = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "event": event,
             "details": details
         }

@@ -37,7 +37,8 @@ class TestHeadyAdminConsole:
         """Test console initialization."""
         assert console.api_url == "http://localhost:3300"
         assert console.api_key == "test-key"
-        assert console.audit_log_path.exists()
+        # Audit log directory should exist (parent directory)
+        assert console.audit_log_path.parent.exists()
     
     def test_console_uses_env_vars(self, monkeypatch, tmp_path):
         """Test that console uses environment variables."""

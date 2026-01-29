@@ -7,7 +7,7 @@ This module provides essential data processing and archiving functions.
 import json
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, Optional, List
 from pathlib import Path
 
@@ -45,11 +45,11 @@ def mint_coin(
     actual_version = version or __version__
     
     coin_data = {
-        "id": f"coin_{datetime.utcnow().timestamp()}",
+        "id": f"coin_{datetime.now(timezone.utc).timestamp()}",
         "value": value,
         "currency": currency,
         "version": actual_version,
-        "created_at": datetime.utcnow().isoformat(),
+        "created_at": datetime.now(timezone.utc).isoformat(),
         "metadata": metadata or {}
     }
     
@@ -123,14 +123,14 @@ class HeadyArchive:
             IOError: If writing to archive fails
         """
         if identifier is None:
-            identifier = f"archive_{datetime.utcnow().timestamp()}"
+            identifier = f"archive_{datetime.now(timezone.utc).timestamp()}"
         
         archive_file = self.archive_path / f"{identifier}.json"
         
         archive_entry = {
             "identifier": identifier,
             "version": self.version,
-            "archived_at": datetime.utcnow().isoformat(),
+            "archived_at": datetime.now(timezone.utc).isoformat(),
             "data": data
         }
         
