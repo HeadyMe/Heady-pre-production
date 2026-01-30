@@ -13,38 +13,70 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 
 ## Quick Start
 
+### Prerequisites
+- Node.js 18+ 
+- Python 3.11+
+- Git
+
 ### Local development
-1. Install dependencies:
+1. **Clone and setup:**
+   ```bash
+   git clone https://github.com/HeadyMe/Heady.git
+   cd Heady
+   ```
+
+2. **Install dependencies:**
    ```bash
    npm install
    pip install -r requirements.txt
    ```
-2. Set environment variables (see Configuration):
+
+3. **Configure environment:**
+   ```bash
+   cp .env.template .env
+   # Edit .env with your API keys and configuration
+   ```
+
+4. **Set required environment variables:**
    ```bash
    export HEADY_API_KEY="your-api-key"
    export HF_TOKEN="your-hf-token"
    ```
-3. Start the server:
+
+5. **Start the server:**
    ```bash
    npm start
    ```
-4. Open the Admin IDE: http://localhost:3300/admin
+
+6. **Access the Admin IDE:** http://localhost:3300/admin
 
 ### Production (Render)
 - Deploy via `render.yaml` (uses `heady-shared-secrets` env group for secrets).
 
 ## Configuration
 
-### Core
+### Core Environment Variables
 - `PORT` (default: 3300)
 - `HEADY_API_KEY` – Required for Admin API and HF endpoints
 - `HF_TOKEN` – Hugging Face inference token
 - `HEADY_CORS_ORIGINS` – Comma‑separated allowed origins
+- `NODE_ENV` – Set to 'production' for production logging
 
-### Admin UI
+### Model Configuration
+- `HF_TEXT_MODEL` – Default text model (default: gpt2)
+- `HF_EMBED_MODEL` – Default embedding model (default: sentence-transformers/all-MiniLM-L6-v2)
+
+### Performance Tuning
+- `HEADY_RATE_LIMIT_WINDOW_MS` – Rate limit window (default: 60000)
+- `HEADY_RATE_LIMIT_MAX` – Max requests per window (default: 120)
+- `HF_MAX_CONCURRENCY` – Max concurrent HF requests (default: 4)
+- `HEADY_PY_MAX_CONCURRENCY` – Max Python worker concurrency (default: 2)
+
+### Admin UI Configuration
 - `HEADY_ADMIN_ROOT` – Repository root for file access (default: repo root)
 - `HEADY_ADMIN_ALLOWED_PATHS` – Comma‑separated allowlist for additional roots
 - `HEADY_ADMIN_MAX_BYTES` – Max file size for editing (default: 512 KB)
+- `HEADY_ADMIN_OP_LOG_LIMIT` – Max operation log entries (default: 2000)
 
 ### Build/Audit scripts
 - `HEADY_ADMIN_BUILD_SCRIPT` – Path to build script (default: `src/consolidated_builder.py`)
@@ -64,7 +96,9 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - **Multi‑tab editing** with Ctrl+S save
 - **Real‑time build/audit logs** via Server‑Sent Events
 - **Settings panel** for GPU configuration (local only)
-- **AI assistant panel** (stub; integrates with Copilot/MCP in future)
+- **AI assistant panel** with Hugging Face integration
+- **Code linting** for Python files
+- **Test runner** integration
 
 ## API Endpoints
 
@@ -79,7 +113,9 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - `GET /api/admin/config/render-yaml` – Render config
 - `GET /api/admin/config/mcp` – MCP config (secrets masked)
 - `GET /api/admin/settings/gpu` – GPU settings (masked)
-- `POST /api/admin/assistant` – AI assistant (stub)
+- `POST /api/admin/assistant` – AI assistant
+- `POST /api/admin/lint` – Code linting
+- `POST /api/admin/test` – Run tests
 
 ### Hugging Face (protected by HEADY_API_KEY)
 - `POST /api/hf/infer`
@@ -89,6 +125,55 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 ### System
 - `GET /api/pulse` – Docker/system info
 - `GET /api/health` – Health check
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"HF_TOKEN is not set" error**
+   - Ensure HF_TOKEN is set in your environment
+   - Get a token from https://huggingface.co/settings/tokens
+
+2. **"HEADY_API_KEY is not set" error**
+   - Set HEADY_API_KEY in your environment
+   - Use a strong, unique key for security
+
+3. **Python worker not responding**
+   - Check that Python dependencies are installed: `pip install -r requirements.txt`
+   - Verify HEADY_PYTHON_BIN points to correct Python executable
+
+4. **Port already in use**
+   - Change PORT environment variable
+   - Kill existing process: `lsof -ti:3300 | xargs kill`
+
+5. **CORS issues**
+   - Set HEADY_CORS_ORIGINS to include your frontend URL
+   - For development: `HEADY_CORS_ORIGINS=http://localhost:3000,http://localhost:3300`
+
+### Debug Mode
+Enable debug logging by setting:
+```bash
+NODE_ENV=development
+```
+
+This will provide detailed console output with timestamps and structured logging.
+
+## Development Scripts
+
+### Available Scripts
+- `npm start` – Start the server
+- `python src/process_data.py` – Run Python worker standalone
+- `python admin_console.py` – Run system audit
+- `python src/process_data.py qa` – Test QA interface
+
+### Testing
+```bash
+# Test Python worker QA functionality
+echo '{"question":"What is Heady?","context":"Heady is a system"}' | python src/process_data.py qa
+
+# Run system audit
+python admin_console.py --output audit.json
+```
 
 ## Copilot Customization
 

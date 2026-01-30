@@ -1,4 +1,6 @@
 import os
+import sys
+import json
 import time
 from typing import Any, Dict, List, Optional, Sequence, Union
 
@@ -139,7 +141,92 @@ def hf_embed(
     return {"model": used_model, "embeddings": embeddings, "raw": data}
 
 
+def qa_interface(question: str, context: str = "", model: Optional[str] = None, parameters: Optional[Dict[str, Any]] = None, max_new_tokens: int = 256, request_id: str = "") -> Dict[str, Any]:
+    """QA interface for Node.js manager communication"""
+    try:
+        used_model = model or DEFAULT_HF_TEXT_MODEL
+        merged_parameters = {
+            "max_new_tokens": max_new_tokens,
+            "temperature": 0.2,
+            "return_full_text": False,
+            **(parameters or {}),
+        }
+        
+        prompt = f"""You are Heady Systems Q&A. Provide a clear, safe, and concise answer. Do not reveal secrets, API keys, tokens, or private data.
+
+Context:
+{context}
+
+Question:
+{question}
+
+Answer:"""
+        
+        result = hf_generate(prompt, model=used_model, parameters=merged_parameters)
+        answer = result.get("output", "")
+        
+        # Remove prompt echo if present
+        if answer.startswith(prompt):
+            answer = answer[len(prompt):].strip()
+            
+        return {
+            "ok": True,
+            "answer": answer,
+            "model": used_model,
+            "backend": "python-hf",
+            "request_id": request_id,
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "error": str(e),
+            "backend": "python-hf",
+            "request_id": request_id,
+        }
+
+
+def handle_qa_command():
+    """Handle QA command from stdin (JSON input)"""
+    try:
+        # Read JSON from stdin
+        input_data = json.loads(sys.stdin.read())
+        
+        question = input_data.get("question", "")
+        context = input_data.get("context", "")
+        model = input_data.get("model")
+        parameters = input_data.get("parameters")
+        max_new_tokens = input_data.get("max_new_tokens", 256)
+        request_id = input_data.get("request_id", "")
+        
+        result = qa_interface(question, context, model, parameters, max_new_tokens, request_id)
+        print(json.dumps(result))
+        sys.exit(0)
+        
+    except Exception as e:
+        error_result = {
+            "ok": False,
+            "error": str(e),
+            "backend": "python-hf",
+        }
+        print(json.dumps(error_result))
+        sys.exit(1)
+
+
 def main() -> None:
+    # Check if we're being called with a specific command
+    if len(sys.argv) > 1:
+        command = sys.argv[1]
+        if command == "qa":
+            handle_qa_command()
+        elif command == "test":
+            # Placeholder for test functionality
+            print("Test functionality not yet implemented")
+            sys.exit(0)
+        else:
+            print(f"Unknown command: {command}")
+            sys.exit(1)
+    
+    # Default behavior: worker initialization
     print("∞ Heady Data Worker Initialized ∞")
     print("∞ Heady Hugging Face Bridge Online ∞")
 

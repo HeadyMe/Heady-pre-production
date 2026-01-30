@@ -213,6 +213,30 @@ function requireApiKey(req, res, next) {
   return next();
 }
 
+function logMessage(level, message, meta = {}) {
+  const timestamp = new Date().toISOString();
+  const logEntry = {
+    timestamp,
+    level,
+    service: 'heady-manager',
+    message,
+    ...meta
+  };
+  
+  if (process.env.NODE_ENV === 'production') {
+    console.log(JSON.stringify(logEntry));
+  } else {
+    const prefix = `[${timestamp}] ${level.toUpperCase()}:`;
+    if (level === 'error') {
+      console.error(prefix, message, meta);
+    } else if (level === 'warn') {
+      console.warn(prefix, message, meta);
+    } else {
+      console.log(prefix, message, meta);
+    }
+  }
+}
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -1252,10 +1276,23 @@ app.use((err, req, res, next) => {
   if (err && err.details !== undefined) payload.details = err.details;
 
   if (status >= 500) {
-    console.error(err);
+    logMessage('error', err.message || 'Server error', { 
+      status, 
+      stack: err.stack, 
+      requestId: req.requestId,
+      path: req.path,
+      method: req.method 
+    });
   }
 
   res.status(status).json(payload);
 });
 
-app.listen(PORT, () => console.log(`∞ Heady System Active on Port ${PORT} ∞`));
+app.listen(PORT, () => {
+  logMessage('info', `Heady System Active on Port ${PORT}`, { 
+    port: PORT, 
+    nodeEnv: process.env.NODE_ENV,
+    pid: process.pid,
+    version: process.env.npm_package_version || '1.0.0'
+  });
+});
