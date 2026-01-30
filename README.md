@@ -105,8 +105,11 @@ To access the Admin UI from other devices on your local network:
 
 1. **Find your local IP address**:
    ```bash
-   # On Linux/Mac
+   # On Linux
    hostname -I | awk '{print $1}'
+   
+   # On macOS
+   ipconfig getifaddr en0
    
    # On Windows
    ipconfig | findstr IPv4
@@ -186,7 +189,9 @@ For the Admin UI to function properly:
 
 **Solutions**:
 - Verify server is running: `curl http://localhost:3300/api/health`
-- Check if port 3300 is in use: `lsof -ti:3300` (Linux/Mac) or `netstat -ano | findstr :3300` (Windows)
+- Check if port 3300 is in use:
+  - Linux/macOS: `lsof -i:3300`
+  - Windows: `netstat -ano | findstr :3300`
 - Ensure no other process is using port 3300
 - Try changing the port: `PORT=3301 npm start`
 

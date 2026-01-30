@@ -87,8 +87,15 @@ curl -H "x-heady-api-key: $HEADY_API_KEY" \
 ### Server won't start
 ```bash
 # Check if port is already in use
-lsof -ti:3300 | xargs kill -9  # Linux/Mac
-netstat -ano | findstr :3300   # Windows
+# Linux/macOS
+lsof -i:3300
+# Windows
+netstat -ano | findstr :3300
+
+# Stop the process gracefully (use PID from above)
+kill <PID>       # Try graceful shutdown first
+# If that doesn't work after a few seconds:
+kill -9 <PID>    # Force kill (use with caution)
 
 # Or use a different port
 PORT=3301 npm start

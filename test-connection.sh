@@ -3,8 +3,6 @@
 # Heady Admin UI Connection Test Script
 # This script tests all the documented connection points
 
-set -e
-
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -15,9 +13,11 @@ echo "Heady Connection Test"
 echo "================================"
 echo ""
 
-# Check if server is running
+# Check if server is running (portable method)
 echo -n "1. Checking if server is running on port 3300... "
-if nc -z localhost 3300 2>/dev/null; then
+if timeout 1 bash -c 'cat < /dev/tcp/localhost/3300' 2>/dev/null; then
+    echo -e "${GREEN}✓ Server is running${NC}"
+elif command -v nc &> /dev/null && nc -z localhost 3300 2>/dev/null; then
     echo -e "${GREEN}✓ Server is running${NC}"
 else
     echo -e "${RED}✗ Server is not running${NC}"
@@ -114,8 +114,15 @@ echo "  • Health check:  http://localhost:3300/api/health"
 echo "  • System pulse:  http://localhost:3300/api/pulse"
 echo ""
 
-# Show local IP for LAN access
-LOCAL_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+# Show local IP for LAN access (cross-platform)
+if command -v hostname &> /dev/null; then
+    # Linux
+    LOCAL_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+elif command -v ipconfig &> /dev/null; then
+    # macOS
+    LOCAL_IP=$(ipconfig getifaddr en0 2>/dev/null || ipconfig getifaddr en1 2>/dev/null)
+fi
+
 if [ -n "$LOCAL_IP" ]; then
     echo "LAN Access (from other devices on your network):"
     echo "  http://$LOCAL_IP:3300/admin.html"
