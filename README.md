@@ -56,6 +56,8 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 
 6. **Access the Admin IDE:** http://localhost:3300/admin
 
+> 💡 **Quick Reference**: For a printable connection guide, see [ADMIN_CONNECTION_QUICK_REF.md](./ADMIN_CONNECTION_QUICK_REF.md)
+
 ### Production (Render)
 - Deploy via `render.yaml` (uses `heady-shared-secrets` env group for secrets).
 
@@ -63,6 +65,8 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 
 ### Overview
 The Admin UI is a web-based interface accessible via browser at `/admin` endpoint. It requires authentication via `HEADY_API_KEY` and provides file management, build monitoring, AI assistance, and system configuration.
+
+> 📄 **TL;DR**: See the [Quick Connection Reference](./ADMIN_CONNECTION_QUICK_REF.md) for a condensed guide, or run `./test-connection.sh` to verify your setup.
 
 ### Local Development Access
 
@@ -233,21 +237,54 @@ For the Admin UI to function properly:
 
 ### Testing Connection
 
-#### Quick Health Check Script
+A comprehensive connection test script is provided to verify all endpoints:
+
 ```bash
-#!/bin/bash
-echo "Testing Heady connection..."
-echo "1. Health endpoint:"
-curl -s http://localhost:3300/api/health | jq .
-
-echo -e "\n2. Pulse endpoint:"
-curl -s http://localhost:3300/api/pulse | jq .
-
-echo -e "\n3. Admin endpoint (requires API key):"
-curl -s -H "x-heady-api-key: $HEADY_API_KEY" http://localhost:3300/api/admin/roots | jq .
+./test-connection.sh
 ```
 
-Save as `test-connection.sh`, make executable (`chmod +x test-connection.sh`), and run.
+This script will:
+- Check if the server is running on port 3300
+- Test the health and pulse endpoints
+- Verify Admin UI static files are accessible
+- Test API authentication with both header methods
+- Display local and LAN access URLs
+- Check required environment variables
+
+Expected output when everything is working:
+```
+================================
+Heady Connection Test
+================================
+
+1. Checking if server is running on port 3300... ✓ Server is running
+2. Testing health endpoint... ✓ Health check passed
+3. Testing pulse endpoint... ✓ Pulse endpoint accessible
+4. Testing Admin UI (admin.html)... ✓ Admin UI accessible
+5. Testing Admin UI (admin/index.html)... ✓ Admin UI (alt path) accessible
+
+6. Checking environment variables...
+   ✓ HEADY_API_KEY is set
+   Testing admin API with x-heady-api-key header... ✓ Admin API accessible
+   Testing admin API with Bearer token... ✓ Bearer authentication works
+   ✓ HF_TOKEN is set
+
+================================
+Connection Test Summary
+================================
+
+Access points:
+  • Main UI:       http://localhost:3300/
+  • Admin UI:      http://localhost:3300/admin.html
+  • Alt Admin UI:  http://localhost:3300/admin/index.html
+  • Health check:  http://localhost:3300/api/health
+  • System pulse:  http://localhost:3300/api/pulse
+
+LAN Access (from other devices on your network):
+  http://192.168.1.100:3300/admin.html
+
+Connection test completed successfully!
+```
 
 ### Security Considerations
 
