@@ -163,6 +163,33 @@ In an issue or PR comment:
 @github-copilot Please update all outdated npm packages to their latest versions
 ```
 
+### Using Custom Agents
+
+This repository has specialized custom agents for different tasks:
+
+```
+@github-copilot please use the python-nodejs-specialist to add a new API endpoint
+```
+
+```
+@github-copilot please use the documentation-specialist to create API docs
+```
+
+```
+@github-copilot please use the security-audit-specialist to fix all vulnerabilities
+```
+
+Available custom agents:
+- **python-nodejs-specialist** - Python and Node.js code development
+- **documentation-specialist** - Quiz & Flashcard methodology documentation
+- **build-deployment-specialist** - Build processes, Docker, Render deployment
+- **security-audit-specialist** - Security scans and vulnerability fixes
+- **admin-ui-specialist** - React UI and Sacred Geometry design
+- **mcp-integration-specialist** - MCP server configuration
+- **heady-copilot-instructor** - Architecture and conventions guide
+
+See [.github/agents/README.md](agents/README.md) for detailed information about each agent.
+
 ## Automated Fix Workflow
 
 When the Copilot Coding Agent is enabled and a PR is created:
@@ -190,6 +217,15 @@ The repository is organized to support Copilot Coding Agent:
 
 ```
 .github/
+  ├── agents/                 # Custom Copilot agents
+  │   ├── README.md           # Agent documentation
+  │   ├── python-nodejs-specialist.agent.md
+  │   ├── documentation-specialist.agent.md
+  │   ├── build-deployment-specialist.agent.md
+  │   ├── security-audit-specialist.agent.md
+  │   ├── admin-ui-specialist.agent.md
+  │   ├── mcp-integration-specialist.agent.md
+  │   └── heady-copilot-instructor.agent.md
   ├── workflows/              # GitHub Actions workflows
   │   ├── automated-fixes.yml # Main automated checks and fixes
   │   ├── ci.yml              # Continuous integration

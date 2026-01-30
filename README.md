@@ -201,6 +201,14 @@ This repository is fully integrated with GitHub Copilot's Coding Agent for autom
 - `.github/COPILOT_SETUP.md` – Complete setup guide for enabling Copilot Coding Agent
 - `.github/copilot-instructions.md` – Project overview and Quiz Protocol for documentation
 - `.github/copilot-mcp-config.json` – MCP server definitions
+- `.github/agents/` – **Custom Copilot agents for specialized tasks** (see [.github/agents/README.md](.github/agents/README.md))
+  - `python-nodejs-specialist.agent.md` – Python & Node.js development expert
+  - `documentation-specialist.agent.md` – Quiz & Flashcard documentation expert
+  - `build-deployment-specialist.agent.md` – Build, Docker, and Render deployment expert
+  - `security-audit-specialist.agent.md` – Security scanning and vulnerability fixes
+  - `admin-ui-specialist.agent.md` – React UI and Sacred Geometry design expert
+  - `mcp-integration-specialist.agent.md` – MCP server configuration expert
+  - `heady-copilot-instructor.agent.md` – Architecture and conventions instructor
 - `.github/workflows/automated-fixes.yml` – Automated checks and fix workflow
 - `.github/workflows/copilot-setup-steps.yml` – Setup workflow for Copilot
 - `.github/CODEOWNERS` – Code review assignments
