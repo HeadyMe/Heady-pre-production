@@ -3,6 +3,7 @@ import sys
 import json
 import time
 import logging
+import argparse
 from typing import Any, Dict, List, Optional, Sequence, Union
 
 import requests
@@ -247,36 +248,61 @@ def handle_health_check() -> None:
 
 def main() -> None:
     """Main entry point for the Python worker"""
-    # Check if we're being called with a specific command
-    if len(sys.argv) > 1:
-        command = sys.argv[1]
-        if command == "qa":
-            handle_qa_command()
-        elif command == "health":
-            handle_health_check()
-        elif command == "test":
-            # Placeholder for test functionality
-            logger.info("Test functionality not yet implemented")
-            print(json.dumps({"status": "not_implemented", "message": "Test functionality not yet implemented"}))
-            sys.exit(0)
-        else:
-            logger.error(f"Unknown command: {command}")
-            print(json.dumps({"error": f"Unknown command: {command}"}))
-            sys.exit(1)
+    parser = argparse.ArgumentParser(
+        description="Heady Python Worker - Hugging Face inference and data processing",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Commands:
+  qa       Process Q&A inference (reads JSON from stdin)
+  health   Display health check status
+  test     Run tests (not yet implemented)
+  
+Examples:
+  python process_data.py qa < input.json
+  python process_data.py health
+  python process_data.py --daemon
+        """
+    )
     
-    # Default behavior: worker initialization
-    logger.info("∞ Heady Data Worker Initialized ∞")
-    logger.info("∞ Heady Hugging Face Bridge Online ∞")
-    print("∞ Heady Data Worker Initialized ∞")
-    print("∞ Heady Hugging Face Bridge Online ∞")
-
-    try:
-        while True:
-            time.sleep(60)
-    except KeyboardInterrupt:
-        logger.info("Worker shutting down gracefully...")
-        print("Worker shutting down gracefully...")
+    parser.add_argument(
+        'command',
+        nargs='?',
+        choices=['qa', 'health', 'test'],
+        help='Command to execute'
+    )
+    
+    parser.add_argument(
+        '--daemon',
+        action='store_true',
+        help='Run in daemon mode (default if no command specified)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Handle commands
+    if args.command == "qa":
+        handle_qa_command()
+    elif args.command == "health":
+        handle_health_check()
+    elif args.command == "test":
+        # Placeholder for test functionality
+        logger.info("Test functionality not yet implemented")
+        print(json.dumps({"status": "not_implemented", "message": "Test functionality not yet implemented"}))
         sys.exit(0)
+    else:
+        # Default behavior: worker initialization (daemon mode)
+        logger.info("∞ Heady Data Worker Initialized ∞")
+        logger.info("∞ Heady Hugging Face Bridge Online ∞")
+        print("∞ Heady Data Worker Initialized ∞")
+        print("∞ Heady Hugging Face Bridge Online ∞")
+
+        try:
+            while True:
+                time.sleep(60)
+        except KeyboardInterrupt:
+            logger.info("Worker shutting down gracefully...")
+            print("Worker shutting down gracefully...")
+            sys.exit(0)
 
 
 if __name__ == "__main__":

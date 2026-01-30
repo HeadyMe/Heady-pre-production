@@ -54,6 +54,21 @@ const REMOTE_GPU_PORT = process.env.REMOTE_GPU_PORT || '';
 const GPU_MEMORY_LIMIT = process.env.GPU_MEMORY_LIMIT || '';
 const ENABLE_GPUDIRECT = process.env.ENABLE_GPUDIRECT === 'true';
 
+// Startup validation
+function validateEnvironment() {
+  const warnings = [];
+  
+  if (!HF_TOKEN) {
+    warnings.push('HF_TOKEN not set - Hugging Face inference will not work');
+  }
+  
+  if (!HEADY_API_KEY) {
+    warnings.push('HEADY_API_KEY not set - Admin and HF endpoints will be unprotected');
+  }
+  
+  return warnings;
+}
+
 function getClientIp(req) {
   if (typeof req.ip === 'string' && req.ip) return req.ip;
   if (req.socket && typeof req.socket.remoteAddress === 'string' && req.socket.remoteAddress) return req.socket.remoteAddress;
@@ -1300,10 +1315,20 @@ app.use((err, req, res, _next) => {
 });
 
 app.listen(PORT, () => {
+  // Validate environment on startup
+  const warnings = validateEnvironment();
+  
   logMessage('info', `Heady System Active on Port ${PORT}`, { 
     port: PORT, 
     nodeEnv: process.env.NODE_ENV,
     pid: process.pid,
     version: process.env.npm_package_version || '1.0.0'
   });
+  
+  // Log warnings if any
+  if (warnings.length > 0) {
+    warnings.forEach(warning => {
+      logMessage('warn', warning);
+    });
+  }
 });
