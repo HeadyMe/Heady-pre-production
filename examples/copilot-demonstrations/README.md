@@ -51,6 +51,11 @@ You can test the image alt checker in any web page:
 3. Run `window.ImageAltChecker.createAccessibilityOverlay()`
 4. Click "Highlight Issues" to see images without alt text
 
+Or use the included test page:
+1. Open `test-image-alt.html` in your browser
+2. Click "Run Tests" to see the checker in action
+3. Observe highlighted images and the accessibility overlay
+
 ## Usage in Node.js
 
 You can use the date calculator in Node.js:

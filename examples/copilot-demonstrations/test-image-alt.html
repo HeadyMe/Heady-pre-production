@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Alt Checker Test</title>
+</head>
+<body>
+    <h1>Image Alt Text Checker Test</h1>
+    <p>This page tests the image alt checker functionality.</p>
+    
+    <!-- Image with alt text (good) -->
+    <img src="https://via.placeholder.com/150" alt="Placeholder image">
+    
+    <!-- Image without alt text (bad) -->
+    <img src="https://via.placeholder.com/150">
+    
+    <!-- Image with empty alt text (bad) -->
+    <img src="https://via.placeholder.com/150" alt="">
+    
+    <button onclick="runTests()">Run Tests</button>
+    <div id="results"></div>
+    
+    <script src="image-alt-checker.js"></script>
+    <script>
+        function runTests() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<h2>Test Results</h2>';
+            
+            // Test 1: Find images without alt
+            const imagesWithoutAlt = window.ImageAltChecker.findImagesWithoutAlt();
+            results.innerHTML += `<p>✅ Found ${imagesWithoutAlt.length} images without alt text (expected: 2)</p>`;
+            
+            // Test 2: Generate report
+            const report = window.ImageAltChecker.generateAccessibilityReport();
+            results.innerHTML += `<p>✅ Report shows ${report.totalImages} total images, ${report.imagesWithoutAlt} without alt</p>`;
+            results.innerHTML += `<p>✅ Compliance: ${report.percentageCompliant}%</p>`;
+            
+            // Test 3: Highlight issues
+            window.ImageAltChecker.highlightImagesWithoutAlt();
+            results.innerHTML += `<p>✅ Highlighted images without alt text (check for red borders)</p>`;
+            
+            // Test 4: Show overlay
+            window.ImageAltChecker.createAccessibilityOverlay();
+            results.innerHTML += `<p>✅ Created accessibility overlay (check top-right corner)</p>`;
+        }
+    </script>
+</body>
+</html>
