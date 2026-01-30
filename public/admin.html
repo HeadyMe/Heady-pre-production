@@ -6,7 +6,7 @@
     <title>Heady Admin UI</title>
     <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    <script src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/esm/monaco-loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@monaco-editor/loader@1.4.0/lib/esm/monaco-loader.js" crossorigin></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -342,7 +342,7 @@
 </head>
 <body>
     <div id="root"></div>
-    <div id="cdn-error" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; color: #f1f5f9; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 9999;">
+    <div id="cdn-error" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; color: #f1f5f9; align-items: center; justify-content: center; padding: 20px; z-index: 9999; display: none;">
         <div style="max-width: 600px; text-align: center;">
             <h1 style="color: #ef4444; margin-bottom: 20px;">⚠️ Admin UI Loading Error</h1>
             <p style="margin-bottom: 15px;">Failed to load required dependencies from CDN. This could be due to:</p>
