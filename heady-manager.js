@@ -1338,6 +1338,7 @@ app.get(
 
 app.get(
   '/admin',
+  rateLimitApi,
   asyncHandler(async (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin', 'index.html'));
   }),
