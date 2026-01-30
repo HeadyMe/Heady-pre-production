@@ -36,3 +36,5 @@ services:
         value: "${HF_TOKEN}"
       - key: HEADY_API_KEY
         value: "${HEADY_API_KEY}"
+      - key: JULES_API_KEY
+        value: "${JULES_API_KEY}"

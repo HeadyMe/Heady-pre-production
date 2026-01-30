@@ -13,6 +13,7 @@ const PORT = Number(process.env.PORT || 3300);
 
 const HF_TOKEN = process.env.HF_TOKEN;
 const HEADY_API_KEY = process.env.HEADY_API_KEY;
+const JULES_API_KEY = process.env.JULES_API_KEY;
 
 const HEADY_TRUST_PROXY = process.env.HEADY_TRUST_PROXY === "true";
 const HEADY_CORS_ORIGINS = (process.env.HEADY_CORS_ORIGINS || "")
@@ -1248,6 +1249,139 @@ app.post(
 
     const embeddings = poolFeatureExtractionOutput(result.data);
     return res.json({ ok: true, model: result.model, embeddings, raw: result.data });
+  }),
+);
+
+// Jules AI Integration Endpoints
+app.post(
+  "/api/jules/chat",
+  requireApiKey,
+  asyncHandler(async (req, res) => {
+    if (!JULES_API_KEY) {
+      return res.status(500).json({ ok: false, error: "JULES_API_KEY is not configured" });
+    }
+
+    const { message, context, model, parameters } = req.body || {};
+    if (!message || typeof message !== "string") {
+      return res.status(400).json({ ok: false, error: "message is required" });
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000);
+
+    try {
+      const julesPayload = {
+        message: message.trim(),
+        ...(context && { context }),
+        ...(model && { model }),
+        ...(parameters && { parameters })
+      };
+
+      // Jules API endpoint - adjust URL based on actual Jules API
+      const julesUrl = "https://api.jules.ai/v1/chat";
+      
+      const resp = await fetch(julesUrl, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${JULES_API_KEY}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(julesPayload),
+        signal: controller.signal,
+      });
+
+      const status = resp.status;
+      const text = await resp.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+
+      if (status < 200 || status >= 300) {
+        const errorMsg = data && typeof data === "object" && data.error 
+          ? data.error 
+          : "Jules API request failed";
+        return res.status(status).json({ ok: false, error: errorMsg, details: data });
+      }
+
+      return res.json({ ok: true, response: data });
+    } catch (err) {
+      if (err.name === "AbortError") {
+        return res.status(504).json({ ok: false, error: "Jules API request timed out" });
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }),
+);
+
+app.post(
+  "/api/jules/complete",
+  requireApiKey,
+  asyncHandler(async (req, res) => {
+    if (!JULES_API_KEY) {
+      return res.status(500).json({ ok: false, error: "JULES_API_KEY is not configured" });
+    }
+
+    const { prompt, maxTokens, temperature, model } = req.body || {};
+    if (!prompt || typeof prompt !== "string") {
+      return res.status(400).json({ ok: false, error: "prompt is required" });
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000);
+
+    try {
+      const julesPayload = {
+        prompt: prompt.trim(),
+        ...(maxTokens && { max_tokens: maxTokens }),
+        ...(temperature !== undefined && { temperature }),
+        ...(model && { model })
+      };
+
+      // Jules API endpoint for completions
+      const julesUrl = "https://api.jules.ai/v1/completions";
+      
+      const resp = await fetch(julesUrl, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${JULES_API_KEY}`,
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(julesPayload),
+        signal: controller.signal,
+      });
+
+      const status = resp.status;
+      const text = await resp.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+
+      if (status < 200 || status >= 300) {
+        const errorMsg = data && typeof data === "object" && data.error 
+          ? data.error 
+          : "Jules API request failed";
+        return res.status(status).json({ ok: false, error: errorMsg, details: data });
+      }
+
+      return res.json({ ok: true, completion: data });
+    } catch (err) {
+      if (err.name === "AbortError") {
+        return res.status(504).json({ ok: false, error: "Jules API request timed out" });
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
   }),
 );
 

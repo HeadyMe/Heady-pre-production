@@ -59,6 +59,7 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - `PORT` (default: 3300)
 - `HEADY_API_KEY` – Required for Admin API and HF endpoints
 - `HF_TOKEN` – Hugging Face inference token
+- `JULES_API_KEY` – Jules AI service API key (required for Jules integration)
 - `HEADY_CORS_ORIGINS` – Comma‑separated allowed origins
 - `NODE_ENV` – Set to 'production' for production logging
 
@@ -122,6 +123,10 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - `POST /api/hf/generate`
 - `POST /api/hf/embed`
 
+### Jules AI (protected by HEADY_API_KEY)
+- `POST /api/jules/chat` – Jules chat completion
+- `POST /api/jules/complete` – Jules text completion
+
 ### System
 - `GET /api/pulse` – Docker/system info
 - `GET /api/health` – Health check
@@ -138,15 +143,19 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
    - Set HEADY_API_KEY in your environment
    - Use a strong, unique key for security
 
-3. **Python worker not responding**
+3. **"JULES_API_KEY is not configured" error**
+   - Set JULES_API_KEY in your environment
+   - Get a token from your Jules AI account settings
+
+4. **Python worker not responding**
    - Check that Python dependencies are installed: `pip install -r requirements.txt`
    - Verify HEADY_PYTHON_BIN points to correct Python executable
 
-4. **Port already in use**
+5. **Port already in use**
    - Change PORT environment variable
    - Kill existing process: `lsof -ti:3300 | xargs kill`
 
-5. **CORS issues**
+6. **CORS issues**
    - Set HEADY_CORS_ORIGINS to include your frontend URL
    - For development: `HEADY_CORS_ORIGINS=http://localhost:3000,http://localhost:3300`
 
