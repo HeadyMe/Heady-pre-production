@@ -773,16 +773,99 @@ app.get(
 );
 
 app.post(
+  "/api/admin/gpu/infer",
+  asyncHandler(async (req, res) => {
+    if (!HEADY_ADMIN_ENABLE_GPU) {
+      throw createHttpError(503, "GPU features are disabled");
+    }
+    const { inputs, model, parameters } = req.body || {};
+    if (!inputs) throw createHttpError(400, "inputs is required");
+    // Stub: echo back with GPU flag; real integration would call remote GPU worker
+    res.json({
+      ok: true,
+      backend: "remote-gpu-stub",
+      model: model || "gpu-stub",
+      result: { outputs: inputs, gpu: true, rdma: ENABLE_GPUDIRECT },
+    });
+  }),
+);
+
+app.post(
   "/api/admin/assistant",
   asyncHandler(async (req, res) => {
     const { context, filePath, instruction } = req.body || {};
     if (!instruction || typeof instruction !== "string") {
       throw createHttpError(400, "instruction is required");
     }
-    // Stub: echo back instruction and context for now
+    // Simple proxy: forward to Hugging Face QA for now (MCP tool proxy later)
+    try {
+      const qaResult = await runPythonQa({
+        question: instruction,
+        context: context || "",
+        model: HEADY_QA_MODEL,
+        parameters: { max_new_tokens: HEADY_QA_MAX_NEW_TOKENS },
+        requestId: `assistant-${Date.now()}`,
+      });
+      res.json({
+        ok: true,
+        response: qaResult.answer || "No response",
+        model: qaResult.model,
+        backend: "python-hf",
+      });
+    } catch (err) {
+      // Fallback stub
+      res.json({
+        ok: true,
+        response: `Assistant stub: received instruction "${instruction}" for ${filePath || "(no file)"}. Context length: ${context ? context.length : 0}.`,
+        error: err.message,
+      });
+    }
+  }),
+);
+
+app.post(
+  "/api/admin/lint",
+  asyncHandler(async (req, res) => {
+    const { root: rootParam, path: relPath, content } = req.body || {};
+    if (typeof relPath !== "string" || !relPath) {
+      throw createHttpError(400, "path is required");
+    }
+    if (typeof content !== "string") {
+      throw createHttpError(400, "content is required");
+    }
+    const root = assertAdminRoot(rootParam);
+    const targetPath = resolveAdminPath(root.path, relPath);
+
+    // Simple stub: detect Python syntax errors via compile
+    let errors = [];
+    if (targetPath.endsWith('.py')) {
+      try {
+        const PythonShell = require('python-shell').PythonShell;
+        await PythonShell.runString(content, { mode: 'json' });
+      } catch (e) {
+        errors = [e.message || 'Syntax error'];
+      }
+    }
+    res.json({ ok: true, errors, fixed: false });
+  }),
+);
+
+app.post(
+  "/api/admin/test",
+  asyncHandler(async (req, res) => {
+    const { root: rootParam, path: relPath, testType } = req.body || {};
+    const root = assertAdminRoot(rootParam);
+    const targetPath = resolveAdminPath(root.path, relPath || ".");
+    const op = startAdminOperation({
+      type: "test",
+      script: path.join(__dirname, "src", "process_data.py"),
+      args: ["test", targetPath],
+      cwd: root.path,
+    });
     res.json({
       ok: true,
-      response: `Assistant stub: received instruction "${instruction}" for ${filePath || "(no file)"}. Context length: ${context ? context.length : 0}.`,
+      op: serializeAdminOp(op),
+      streamUrl: `/api/admin/ops/${op.id}/stream`,
     });
   }),
 );
