@@ -62,6 +62,17 @@
         "CLOUDFLARE_API_TOKEN": "${COPILOT_MCP_CLOUDFLARE_API_TOKEN}",
         "CLOUDFLARE_ACCOUNT_ID": "${COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID}"
       }
+    },
+    "heady-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "heady-mcp-server"
+      ],
+      "env": {
+        "HEADY_API_TOKEN": "${HEADY_SECRET}",
+        "HEADY_ENV": "production"
+      }
     }
   }
 }
