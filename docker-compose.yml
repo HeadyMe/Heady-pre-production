@@ -22,20 +22,6 @@ services:
       retries: 3
       start_period: 40s
 
-  heady-worker:
-    build:
-      context: .
-      dockerfile: Dockerfile.worker
-    environment:
-      - PYTHONUNBUFFERED=1
-    env_file:
-      - .env
-    volumes:
-      - ./src:/app/src
-    restart: unless-stopped
-    depends_on:
-      - heady-manager
-
 networks:
   default:
     name: heady-network

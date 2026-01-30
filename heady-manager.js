@@ -24,14 +24,14 @@ const HEADY_RATE_LIMIT_WINDOW_MS = Number(process.env.HEADY_RATE_LIMIT_WINDOW_MS
 const HEADY_RATE_LIMIT_MAX = Number(process.env.HEADY_RATE_LIMIT_MAX) || 120;
 const HF_MAX_CONCURRENCY = Number(process.env.HF_MAX_CONCURRENCY) || 4;
 
-const HEADY_QA_BACKEND = process.env.HEADY_QA_BACKEND || 'auto';
+// const HEADY_QA_BACKEND = process.env.HEADY_QA_BACKEND || 'auto';
 const HEADY_PYTHON_BIN = process.env.HEADY_PYTHON_BIN || 'python';
 const HEADY_PY_WORKER_TIMEOUT_MS = Number(process.env.HEADY_PY_WORKER_TIMEOUT_MS) || 90_000;
 const HEADY_PY_MAX_CONCURRENCY = Number(process.env.HEADY_PY_MAX_CONCURRENCY) || 2;
 const HEADY_QA_MAX_NEW_TOKENS = Number(process.env.HEADY_QA_MAX_NEW_TOKENS) || 256;
 const HEADY_QA_MODEL = process.env.HEADY_QA_MODEL;
-const HEADY_QA_MAX_QUESTION_CHARS = Number(process.env.HEADY_QA_MAX_QUESTION_CHARS) || 4000;
-const HEADY_QA_MAX_CONTEXT_CHARS = Number(process.env.HEADY_QA_MAX_CONTEXT_CHARS) || 12000;
+// const HEADY_QA_MAX_QUESTION_CHARS = Number(process.env.HEADY_QA_MAX_QUESTION_CHARS) || 4000;
+// const HEADY_QA_MAX_CONTEXT_CHARS = Number(process.env.HEADY_QA_MAX_CONTEXT_CHARS) || 12000;
 
 const DEFAULT_HF_TEXT_MODEL = process.env.HF_TEXT_MODEL || 'gpt2';
 const DEFAULT_HF_EMBED_MODEL = process.env.HF_EMBED_MODEL || 'sentence-transformers/all-MiniLM-L6-v2';
@@ -224,14 +224,18 @@ function logMessage(level, message, meta = {}) {
   };
   
   if (process.env.NODE_ENV === 'production') {
+    // eslint-disable-next-line no-console
     console.log(JSON.stringify(logEntry));
   } else {
     const prefix = `[${timestamp}] ${level.toUpperCase()}:`;
     if (level === 'error') {
+      // eslint-disable-next-line no-console
       console.error(prefix, message, meta);
     } else if (level === 'warn') {
+      // eslint-disable-next-line no-console
       console.warn(prefix, message, meta);
     } else {
+      // eslint-disable-next-line no-console
       console.log(prefix, message, meta);
     }
   }
@@ -359,12 +363,12 @@ function poolFeatureExtractionOutput(output) {
   });
 }
 
-function truncateString(value, maxChars) {
-  if (typeof value !== 'string') return '';
-  if (!Number.isFinite(maxChars) || maxChars <= 0) return value;
-  if (value.length <= maxChars) return value;
-  return value.slice(0, maxChars);
-}
+// function truncateString(value, maxChars) {
+//   if (typeof value !== 'string') return '';
+//   if (!Number.isFinite(maxChars) || maxChars <= 0) return value;
+//   if (value.length <= maxChars) return value;
+//   return value.slice(0, maxChars);
+// }
 
 function createHttpError(status, message, details) {
   const err = new Error(message);
@@ -582,60 +586,60 @@ function startAdminOperation({ type, script, args, cwd }) {
   return op;
 }
 
-function computeRiskAnalysis({ question, context }) {
-  const text = `${question || ''}\n${context || ''}`;
+// function computeRiskAnalysis({ question, context }) {
+//   const text = `${question || ''}\n${context || ''}`;
+//
+//   const patterns = [
+//     { re: /\b(rm\s+-rf|del\s+\/f|format\s+c:|wipe|erase)\b/i, level: 'high', title: 'Destructive file operations' },
+//     { re: /\b(drop\s+database|drop\s+table|truncate\s+table)\b/i, level: 'high', title: 'Destructive database operations' },
+//     { re: /\b(ssh|private\s+key|api\s+key|password|secret|token)\b/i, level: 'medium', title: 'Credential or secret handling' },
+//     { re: /\b(ssn|social\s+security|credit\s+card|passport|driver'?s\s+license)\b/i, level: 'high', title: 'Potential PII handling' },
+//     { re: /\b(sql\s+injection|xss|csrf|rce|command\s+injection)\b/i, level: 'medium', title: 'Security vulnerability context' },
+//     { re: /\b(powershell|cmd\.exe|bash|shell\s+command|execute\s+command)\b/i, level: 'medium', title: 'Command execution context' },
+//   ];
+//
+//   const items = [];
+//   let maxLevel = 'low';
+//   const rank = { low: 0, medium: 1, high: 2 };
+//
+//   for (const p of patterns) {
+//     if (p.re.test(text)) {
+//       items.push({ level: p.level, title: p.title });
+//       if (rank[p.level] > rank[maxLevel]) maxLevel = p.level;
+//     }
+//   }
+//
+//   return {
+//     level: maxLevel,
+//     items,
+//     notes: items.length
+//       ? 'Risk analysis is heuristic-based. Validate before acting on any destructive or security-sensitive advice.'
+//       : 'No obvious risk signals detected by heuristics.',
+//   };
+// }
 
-  const patterns = [
-    { re: /\b(rm\s+-rf|del\s+\/f|format\s+c:|wipe|erase)\b/i, level: 'high', title: 'Destructive file operations' },
-    { re: /\b(drop\s+database|drop\s+table|truncate\s+table)\b/i, level: 'high', title: 'Destructive database operations' },
-    { re: /\b(ssh|private\s+key|api\s+key|password|secret|token)\b/i, level: 'medium', title: 'Credential or secret handling' },
-    { re: /\b(ssn|social\s+security|credit\s+card|passport|driver'?s\s+license)\b/i, level: 'high', title: 'Potential PII handling' },
-    { re: /\b(sql\s+injection|xss|csrf|rce|command\s+injection)\b/i, level: 'medium', title: 'Security vulnerability context' },
-    { re: /\b(powershell|cmd\.exe|bash|shell\s+command|execute\s+command)\b/i, level: 'medium', title: 'Command execution context' },
-  ];
+// function buildQaPrompt({ question, context }) {
+//   const safeContext = context ? `Context:\n${context}\n\n` : '';
+//   return (
+//     'You are Heady Systems Q&A. Provide a clear, safe, and concise answer. ' +
+//     'Do not reveal secrets, API keys, tokens, or private data.\n\n' +
+//     safeContext +
+//     `Question:\n${question}\n\nAnswer:\n`
+//   );
+// }
 
-  const items = [];
-  let maxLevel = 'low';
-  const rank = { low: 0, medium: 1, high: 2 };
+// function extractGeneratedText(hfData) {
+//   if (Array.isArray(hfData) && hfData.length > 0 && hfData[0] && typeof hfData[0] === 'object') {
+//     if (typeof hfData[0].generated_text === 'string') return hfData[0].generated_text;
+//   }
+//   return undefined;
+// }
 
-  for (const p of patterns) {
-    if (p.re.test(text)) {
-      items.push({ level: p.level, title: p.title });
-      if (rank[p.level] > rank[maxLevel]) maxLevel = p.level;
-    }
-  }
-
-  return {
-    level: maxLevel,
-    items,
-    notes: items.length
-      ? 'Risk analysis is heuristic-based. Validate before acting on any destructive or security-sensitive advice.'
-      : 'No obvious risk signals detected by heuristics.',
-  };
-}
-
-function buildQaPrompt({ question, context }) {
-  const safeContext = context ? `Context:\n${context}\n\n` : '';
-  return (
-    'You are Heady Systems Q&A. Provide a clear, safe, and concise answer. ' +
-    'Do not reveal secrets, API keys, tokens, or private data.\n\n' +
-    safeContext +
-    `Question:\n${question}\n\nAnswer:\n`
-  );
-}
-
-function extractGeneratedText(hfData) {
-  if (Array.isArray(hfData) && hfData.length > 0 && hfData[0] && typeof hfData[0] === 'object') {
-    if (typeof hfData[0].generated_text === 'string') return hfData[0].generated_text;
-  }
-  return undefined;
-}
-
-function stripPromptEcho(output, prompt) {
-  if (typeof output !== 'string') return output;
-  if (typeof prompt === 'string' && prompt && output.startsWith(prompt)) return output.slice(prompt.length);
-  return output;
-}
+// function stripPromptEcho(output, prompt) {
+//   if (typeof output !== 'string') return output;
+//   if (typeof prompt === 'string' && prompt && output.startsWith(prompt)) return output.slice(prompt.length);
+//   return output;
+// }
 
 async function runPythonQa({ question, context, model, parameters, requestId }) {
   const scriptExists = fs.existsSync(PY_WORKER_SCRIPT);
@@ -664,7 +668,9 @@ async function runPythonQa({ question, context, model, parameters, requestId }) 
           settled = true;
           try {
             child.kill('SIGKILL');
-          } catch {}
+          } catch (killErr) {
+            // Ignore kill errors
+          }
           const err = new Error('Python worker timed out');
           err.code = 'PY_WORKER_TIMEOUT';
           reject(err);
@@ -731,29 +737,29 @@ async function runPythonQa({ question, context, model, parameters, requestId }) 
   );
 }
 
-async function runNodeQa({ question, context, model, parameters }) {
-  const prompt = buildQaPrompt({ question, context });
-  const usedModel = model || HEADY_QA_MODEL || DEFAULT_HF_TEXT_MODEL;
-
-  const mergedParameters = {
-    max_new_tokens: HEADY_QA_MAX_NEW_TOKENS,
-    temperature: 0.2,
-    return_full_text: false,
-    ...(parameters && typeof parameters === 'object' ? parameters : {}),
-  };
-
-  const result = await hfInfer({
-    model: usedModel,
-    inputs: prompt,
-    parameters: mergedParameters,
-    options: { wait_for_model: true },
-  });
-
-  const rawOutput = extractGeneratedText(result.data);
-  const answer = stripPromptEcho(rawOutput, prompt);
-
-  return { ok: true, backend: 'node-hf', model: result.model, answer, raw: result.data };
-}
+// async function runNodeQa({ question, context, model, parameters }) {
+//   const prompt = buildQaPrompt({ question, context });
+//   const usedModel = model || HEADY_QA_MODEL || DEFAULT_HF_TEXT_MODEL;
+//
+//   const mergedParameters = {
+//     max_new_tokens: HEADY_QA_MAX_NEW_TOKENS,
+//     temperature: 0.2,
+//     return_full_text: false,
+//     ...(parameters && typeof parameters === 'object' ? parameters : {}),
+//   };
+//
+//   const result = await hfInfer({
+//     model: usedModel,
+//     inputs: prompt,
+//     parameters: mergedParameters,
+//     options: { wait_for_model: true },
+//   });
+//
+//   const rawOutput = extractGeneratedText(result.data);
+//   const answer = stripPromptEcho(rawOutput, prompt);
+//
+//   return { ok: true, backend: 'node-hf', model: result.model, answer, raw: result.data };
+// }
 
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
@@ -811,7 +817,7 @@ app.post(
     if (!HEADY_ADMIN_ENABLE_GPU) {
       throw createHttpError(503, 'GPU features are disabled');
     }
-    const { inputs, model, parameters } = req.body || {};
+    const { inputs, model } = req.body || {};
     if (!inputs) throw createHttpError(400, 'inputs is required');
     // Stub: echo back with GPU flag; real integration would call remote GPU worker
     res.json({
@@ -886,7 +892,7 @@ app.post(
 app.post(
   '/api/admin/test',
   asyncHandler(async (req, res) => {
-    const { root: rootParam, path: relPath, testType } = req.body || {};
+    const { root: rootParam, path: relPath } = req.body || {};
     const root = assertAdminRoot(rootParam);
     const targetPath = resolveAdminPath(root.path, relPath || '.');
     const op = startAdminOperation({
@@ -1274,7 +1280,7 @@ app.get(
   }),
 );
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   const status = typeof err.status === 'number' ? err.status : 500;
   const payload = {
     ok: false,
