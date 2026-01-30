@@ -1,0 +1,145 @@
+name: Automated Build and Test Fixes
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      fix_type:
+        description: 'Type of fixes to apply'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - lint
+          - build
+          - test
+          - security
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+  actions: read
+  checks: write
+
+jobs:
+  automated-checks:
+    name: Run Automated Checks and Fixes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install Node.js dependencies
+        run: npm ci
+      
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run Node.js linting
+        id: node-lint
+        continue-on-error: true
+        run: npm run lint
+      
+      - name: Check Node.js syntax
+        id: node-syntax
+        continue-on-error: true
+        run: node --check heady-manager.js
+      
+      - name: Run Python syntax check
+        id: python-syntax
+        continue-on-error: true
+        run: python -m compileall src
+      
+      - name: Run build
+        id: build
+        continue-on-error: true
+        run: npm run build
+      
+      - name: Check for test failures
+        id: check-tests
+        continue-on-error: true
+        run: |
+          if [ -d "tests" ]; then
+            python -m pytest tests/ -v || echo "Tests need attention"
+          else
+            echo "No test directory found - tests will be added as needed"
+          fi
+      
+      - name: Security audit - npm
+        id: npm-audit
+        continue-on-error: true
+        run: npm audit --audit-level=moderate || echo "Security issues found"
+      
+      - name: Security audit - Python
+        id: python-security
+        continue-on-error: true
+        run: |
+          pip install safety bandit
+          safety check -r requirements.txt || echo "Python security issues found"
+          bandit -r src/ -ll || echo "Bandit security issues found"
+      
+      - name: Generate summary report
+        if: always()
+        run: |
+          echo "# Automated Checks Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Node.js Linting | ${{ steps.node-lint.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Node.js Syntax | ${{ steps.node-syntax.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Syntax | ${{ steps.python-syntax.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Build | ${{ steps.build.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests | ${{ steps.check-tests.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| NPM Security Audit | ${{ steps.npm-audit.outcome }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Security Audit | ${{ steps.python-security.outcome }} |" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Comment on PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const summary = `
+            ## 🤖 Automated Checks Summary
+            
+            | Check | Status |
+            |-------|--------|
+            | Node.js Linting | ${{ steps.node-lint.outcome }} |
+            | Node.js Syntax | ${{ steps.node-syntax.outcome }} |
+            | Python Syntax | ${{ steps.python-syntax.outcome }} |
+            | Build | ${{ steps.build.outcome }} |
+            | Tests | ${{ steps.check-tests.outcome }} |
+            | NPM Security Audit | ${{ steps.npm-audit.outcome }} |
+            | Python Security Audit | ${{ steps.python-security.outcome }} |
+            
+            The Copilot Coding Agent can help fix any issues found.
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });

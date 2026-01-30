@@ -1,6 +1,12 @@
 # Heady
 
+![CI](https://github.com/HeadyMe/Heady/workflows/CI/badge.svg)
+![Security Scan](https://github.com/HeadyMe/Heady/workflows/Security%20Scan/badge.svg)
+![Automated Fixes](https://github.com/HeadyMe/Heady/workflows/Automated%20Build%20and%20Test%20Fixes/badge.svg)
+
 A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a web‑based Admin IDE with AI assistance, real‑time build/audit monitoring, and optional remote GPU support.
+
+**🤖 GitHub Copilot Coding Agent Enabled** - This repository is configured to work with GitHub Copilot's Coding Agent for automated fixes and improvements. See [Copilot Setup Guide](.github/COPILOT_SETUP.md) for details.
 
 ## Architecture
 
@@ -175,11 +181,31 @@ echo '{"question":"What is Heady?","context":"Heady is a system"}' | python src/
 python admin_console.py --output audit.json
 ```
 
-## Copilot Customization
+## GitHub Copilot Integration
 
+This repository is fully integrated with GitHub Copilot's Coding Agent for automated assistance:
+
+- **Automated Workflows**: Continuous integration, security scanning, and automated fix suggestions
+- **Issue Templates**: Pre-configured templates for requesting automated fixes
+- **Code Owners**: Automatic review assignment for PRs
+- **MCP Servers**: Custom MCP server configuration for enhanced Copilot capabilities
+
+### Quick Start with Copilot
+
+1. **Enable the Copilot Coding Agent** - See [.github/COPILOT_SETUP.md](.github/COPILOT_SETUP.md) for step-by-step instructions
+2. **Request automated fixes** - Use issue templates or mention `@github-copilot` in issues/PRs
+3. **Monitor CI/CD** - All PRs automatically run checks and provide feedback
+
+### Copilot Configuration Files
+
+- `.github/COPILOT_SETUP.md` – Complete setup guide for enabling Copilot Coding Agent
 - `.github/copilot-instructions.md` – Project overview and Quiz Protocol for documentation
 - `.github/copilot-mcp-config.json` – MCP server definitions
+- `.github/workflows/automated-fixes.yml` – Automated checks and fix workflow
 - `.github/workflows/copilot-setup-steps.yml` – Setup workflow for Copilot
+- `.github/CODEOWNERS` – Code review assignments
+- `.github/PULL_REQUEST_TEMPLATE.md` – PR checklist template
+- `.github/ISSUE_TEMPLATE/` – Issue templates for bugs, features, and fix requests
 
 ## Documentation Protocol
 
