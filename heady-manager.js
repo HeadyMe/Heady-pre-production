@@ -1336,13 +1336,6 @@ app.get(
   }),
 );
 
-app.get(
-  '/admin',
-  rateLimitApi,
-  asyncHandler(async (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin', 'index.html'));
-  }),
-);
 
 app.use((err, req, res, next) => {
   const status = typeof err.status === 'number' ? err.status : 500;
