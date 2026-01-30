@@ -116,33 +116,33 @@ class GitHubAppWebhookHandler extends EventEmitter {
 
     // Handle specific events
     switch (event) {
-      case 'pull_request':
-        await this.handlePullRequest(context);
-        break;
-      case 'push':
-        await this.handlePush(context);
-        break;
-      case 'issues':
-        await this.handleIssues(context);
-        break;
-      case 'issue_comment':
-        await this.handleIssueComment(context);
-        break;
-      case 'check_run':
-        await this.handleCheckRun(context);
-        break;
-      case 'check_suite':
-        await this.handleCheckSuite(context);
-        break;
-      case 'security_advisory':
-        await this.handleSecurityAdvisory(context);
-        break;
-      case 'repository':
-        await this.handleRepository(context);
-        break;
-      default:
-        // Log unhandled events
-        console.log(`Unhandled GitHub event: ${event}`);
+    case 'pull_request':
+      await this.handlePullRequest(context);
+      break;
+    case 'push':
+      await this.handlePush(context);
+      break;
+    case 'issues':
+      await this.handleIssues(context);
+      break;
+    case 'issue_comment':
+      await this.handleIssueComment(context);
+      break;
+    case 'check_run':
+      await this.handleCheckRun(context);
+      break;
+    case 'check_suite':
+      await this.handleCheckSuite(context);
+      break;
+    case 'security_advisory':
+      await this.handleSecurityAdvisory(context);
+      break;
+    case 'repository':
+      await this.handleRepository(context);
+      break;
+    default:
+      // Log unhandled events
+      console.log(`Unhandled GitHub event: ${event}`);
     }
   }
 
@@ -291,7 +291,7 @@ class GitHubAppWebhookHandler extends EventEmitter {
   /**
    * Check for required files in repository
    */
-  async checkRequiredFiles(context) {
+  async checkRequiredFiles(_context) {
     // This would use GitHub API to check for files
     // For now, just log
     console.log('Checking required files...');
