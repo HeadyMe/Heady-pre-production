@@ -1,0 +1,17 @@
+.split-pane {
+  display: flex;
+  height: 100vh;
+}
+.split-pane-left {
+  width: 35%;
+  border-right: 1px solid #222;
+  background: #181818;
+  color: #fff;
+  overflow-y: auto;
+}
+.split-pane-right {
+  flex: 1;
+  background: #232323;
+  color: #fff;
+  overflow-y: auto;
+}
