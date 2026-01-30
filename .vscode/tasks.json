@@ -1,0 +1,17 @@
+{
+    // Feature Wrap-Up Squash Task for VS Code
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Feature Wrap-Up: Squash, Commit, Push",
+            "type": "shell",
+            "command": "git reset $(git merge-base main $(git rev-parse --abbrev-ref HEAD)) --soft && git add . && git commit -e -m 'feat: combined changes from dev branch' && git push --force-with-lease",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "detail": "Squash all changes since main, commit, and force-push with lease. Only use on feature branches."
+        }
+    ]
+}
