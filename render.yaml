@@ -61,9 +61,21 @@ services:
         value: "${GPU_MEMORY_LIMIT}"
       - key: ENABLE_GPUDIRECT
         value: "${ENABLE_GPUDIRECT}"
+
+databases:
+  - name: heady-db
+    databaseName: heady
+    user: heady_user
+    ipAllowList: []
+
+envVarGroups:
+  - name: heady-shared-secrets
+    envVars:
       - key: DATABASE_URL
-        value: "${DATABASE_URL}"
+        fromDatabase:
+          name: heady-db
+          property: connectionString
+      - key: HEADY_API_KEY
+        generateValue: true
       - key: HF_TOKEN
         value: "${HF_TOKEN}"
-      - key: HEADY_API_KEY
-        value: "${HEADY_API_KEY}"

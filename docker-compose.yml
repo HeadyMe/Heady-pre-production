@@ -16,25 +16,11 @@ services:
       - ./src:/app/src
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3300/api/health"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3300/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  heady-worker:
-    build:
-      context: .
-      dockerfile: Dockerfile.worker
-    environment:
-      - PYTHONUNBUFFERED=1
-    env_file:
-      - .env
-    volumes:
-      - ./src:/app/src
-    restart: unless-stopped
-    depends_on:
-      - heady-manager
 
 networks:
   default:
