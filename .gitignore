@@ -9,8 +9,6 @@ __pycache__/
 dist/
 build/
 *.tsbuildinfo
-frontend/dist/
-backend/dist/
 
 # GitHub App private keys
 *.pem

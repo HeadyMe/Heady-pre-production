@@ -53,7 +53,7 @@ services:
       - key: HF_EMBED_MODEL
         value: "sentence-transformers/all-MiniLM-L6-v2"
       - key: HEADY_CORS_ORIGINS
-        value: "https://heady-systems.onrender.com,https://heady-backend.onrender.com,https://heady-frontend.onrender.com"
+        value: "https://heady-manager.onrender.com,https://heady-backend.onrender.com,https://heady-frontend.onrender.com"
       - key: REMOTE_GPU_HOST
         value: "${REMOTE_GPU_HOST}"
       - key: REMOTE_GPU_PORT
@@ -63,7 +63,9 @@ services:
       - key: ENABLE_GPUDIRECT
         value: "${ENABLE_GPUDIRECT}"
       - key: DATABASE_URL
-        value: "${DATABASE_URL}"
+        fromDatabase:
+          name: heady-postgres
+          property: connectionString
       - key: HF_TOKEN
         value: "${HF_TOKEN}"
       - key: HEADY_API_KEY
@@ -90,9 +92,11 @@ services:
       - key: NODE_ENV
         value: "production"
       - key: DATABASE_URL
-        value: "${DATABASE_URL}"
+        fromDatabase:
+          name: heady-postgres
+          property: connectionString
       - key: CORS_ORIGINS
-        value: "https://heady-frontend.onrender.com,https://heady-systems.onrender.com"
+        value: "https://heady-frontend.onrender.com,https://heady-manager.onrender.com"
 
   # Frontend Static Site
   - type: web

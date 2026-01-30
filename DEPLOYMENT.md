@@ -4,6 +4,20 @@
 
 This repository uses Render.com for deployment with Infrastructure-as-Code via the `render.yaml` blueprint. The Heady ecosystem consists of three services and a PostgreSQL database.
 
+### Estimated Monthly Costs
+
+Based on Render.com pricing (as of 2026):
+
+| Service | Type | Plan | Estimated Cost |
+|---------|------|------|----------------|
+| heady-manager | Web Service | Starter | $7/month |
+| heady-backend | Web Service | Starter | $7/month |
+| heady-frontend | Static Site | Free | $0/month |
+| heady-postgres | PostgreSQL | Starter | $7/month |
+| **Total** | | | **~$21/month** |
+
+*Note: Costs may vary based on usage, region, and plan upgrades. Check [Render.com pricing](https://render.com/pricing) for current rates.*
+
 ## Architecture
 
 ```
@@ -120,10 +134,11 @@ Additional environment variables are configured per-service in `render.yaml`:
 2. **Create Render account**
    - Sign up at [render.com](https://render.com)
 
-3. **Create environment group**
+3. **Create environment group** (REQUIRED before Blueprint deployment)
    - Go to Render Dashboard → Environment Groups
    - Create new group: `heady-shared-secrets`
-   - Add required secret values
+   - Add required secret values (see table below)
+   - **IMPORTANT:** This must be created BEFORE deploying via Blueprint
 
 4. **Deploy via Blueprint**
    - In Render Dashboard, click "New +" → "Blueprint"
@@ -164,22 +179,22 @@ Alternatively, deploy each service manually:
 
 ### Environment Variables Setup
 
-After deployment, ensure `DATABASE_URL` is properly linked:
+After deployment, the database connection is automatically configured:
 
-1. Go to heady-postgres service
-2. Copy the Internal Database URL
-3. Add it to `heady-shared-secrets` group
-4. All services will automatically receive it
+1. The `heady-postgres` database is created by Render
+2. Services automatically receive the database URL via `fromDatabase` configuration
+3. No manual DATABASE_URL setup is needed in the shared secrets group for the database connection
+4. However, you still need to add other secrets to `heady-shared-secrets` (HF_TOKEN, HEADY_API_KEY, etc.)
 
 ## CORS Configuration
 
 Update CORS origins in production to match your deployed URLs:
 
 ```yaml
-HEADY_CORS_ORIGINS: "https://heady-systems.onrender.com,https://heady-backend.onrender.com,https://heady-frontend.onrender.com"
+HEADY_CORS_ORIGINS: "https://heady-manager.onrender.com,https://heady-backend.onrender.com,https://heady-frontend.onrender.com"
 ```
 
-Replace with your actual Render URLs.
+Replace with your actual Render URLs if you use custom service names.
 
 ## Health Checks
 
