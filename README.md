@@ -62,6 +62,13 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - `HEADY_CORS_ORIGINS` – Comma‑separated allowed origins
 - `NODE_ENV` – Set to 'production' for production logging
 
+### GitHub App Configuration (Optional)
+- `GITHUB_APP_ID` – GitHub App ID for automated governance
+- `GITHUB_APP_PRIVATE_KEY` – Base64-encoded private key
+- `GITHUB_APP_WEBHOOK_SECRET` – Webhook signature secret
+
+See [GitHub App Setup Guide](docs/github-app-setup.md) for details on configuring the Heady Governance Bot.
+
 ### Model Configuration
 - `HF_TEXT_MODEL` – Default text model (default: gpt2)
 - `HF_EMBED_MODEL` – Default embedding model (default: sentence-transformers/all-MiniLM-L6-v2)
@@ -125,6 +132,35 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 ### System
 - `GET /api/pulse` – Docker/system info
 - `GET /api/health` – Health check
+
+### GitHub App (Webhook Signature Verification)
+- `POST /api/github/webhooks` – GitHub App webhook receiver
+- `GET /api/github/setup` – GitHub App installation setup
+- `GET /api/github/callback` – OAuth callback endpoint
+- `GET /api/github/app/status` – App health and statistics
+
+## GitHub App Integration
+
+Heady includes an optional GitHub App integration that provides automated compliance checks, security monitoring, and repository governance for the HeadyConnection ecosystem.
+
+### Features
+- **Automated Compliance Validation**: Branch naming, commit message validation, required files
+- **Security Monitoring**: Real-time security event tracking and automated alerts
+- **Repository Health Checks**: Automated health assessments and recommendations
+- **Governance Enforcement**: Branch protection, review requirements, status checks
+
+### Setup
+See the [GitHub App Setup Guide](docs/github-app-setup.md) for complete registration and configuration instructions.
+
+### Quick Start
+1. Register the GitHub App using the manifest in `.github/github-app-manifest.json`
+2. Generate and securely store the private key
+3. Set environment variables: `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`, `GITHUB_APP_WEBHOOK_SECRET`
+4. Deploy to Render or your hosting platform
+5. Install the app on your repositories
+
+### Webhook Events
+The app handles: pull requests, pushes, issues, comments, security advisories, check runs, and more. All events are logged and can trigger custom automation workflows.
 
 ## Troubleshooting
 

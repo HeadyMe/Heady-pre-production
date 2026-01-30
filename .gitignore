@@ -4,3 +4,8 @@ node_modules/
 __pycache__/
 *.log
 .venv/
+
+# GitHub App private keys
+*.pem
+private-key-base64.txt
+heady-governance-bot.*

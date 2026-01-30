@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const { EventEmitter } = require('events');
+const GitHubAppWebhookHandler = require('./src/github-app-webhook-handler');
 
 const fsp = fs.promises;
 
@@ -756,6 +757,74 @@ async function runNodeQa({ question, context, model, parameters }) {
 }
 
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
+
+// GitHub App Webhook Handler
+const githubAppHandler = new GitHubAppWebhookHandler();
+
+// GitHub App webhook endpoint (no API key required - uses webhook signature instead)
+app.post(
+  '/api/github/webhooks',
+  express.json({ type: 'application/json', limit: '5mb' }),
+  asyncHandler(async (req, res) => {
+    // Validate payload is not empty
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Empty payload'
+      });
+    }
+    
+    await githubAppHandler.handleWebhook(req, res);
+  })
+);
+
+// GitHub App setup endpoint (protected)
+app.get(
+  '/api/github/setup',
+  requireApiKey,
+  asyncHandler(async (req, res) => {
+    res.json({
+      ok: true,
+      message: 'GitHub App setup endpoint',
+      configured: !!(process.env.GITHUB_APP_ID && process.env.GITHUB_APP_WEBHOOK_SECRET)
+    });
+  })
+);
+
+// GitHub App callback endpoint
+app.get(
+  '/api/github/callback',
+  asyncHandler(async (req, res) => {
+    const { installation_id, setup_action } = req.query;
+    
+    logMessage('info', 'GitHub App callback', { 
+      hasCode: !!req.query.code, 
+      installation_id, 
+      setup_action 
+    });
+    
+    res.json({
+      ok: true,
+      message: 'Installation complete',
+      installation_id
+    });
+  })
+);
+
+// GitHub App status endpoint (minimal public info)
+app.get(
+  '/api/github/app/status',
+  asyncHandler(async (req, res) => {
+    const stats = githubAppHandler.getStats();
+    
+    // Only expose non-sensitive stats publicly
+    res.json({
+      ok: true,
+      configured: stats.isConfigured,
+      uptime: stats.uptime
+    });
+  })
+);
 
 app.use('/api/admin', requireApiKey);
 
