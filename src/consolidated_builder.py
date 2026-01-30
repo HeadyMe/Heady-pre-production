@@ -9,6 +9,7 @@ import sys
 import json
 import subprocess
 import argparse
+import shlex
 from pathlib import Path
 from datetime import datetime
 
@@ -19,10 +20,22 @@ def log_error(msg):
     print(f"[ERROR] {datetime.now().isoformat()} {msg}", file=sys.stderr)
 
 def run_command(cmd, cwd=None, timeout=300):
-    """Execute command with timeout and error handling"""
+    """Execute command with timeout and error handling
+    
+    Args:
+        cmd: Command string or list of command arguments
+        cwd: Working directory for command execution
+        timeout: Command timeout in seconds
+    """
     try:
+        # Convert string commands to list to avoid shell injection
+        if isinstance(cmd, str):
+            cmd_list = shlex.split(cmd)
+        else:
+            cmd_list = cmd
+            
         result = subprocess.run(
-            cmd, shell=True, cwd=cwd, timeout=timeout,
+            cmd_list, cwd=cwd, timeout=timeout,
             capture_output=True, text=True, check=True
         )
         return result.stdout.strip(), result.stderr.strip()
