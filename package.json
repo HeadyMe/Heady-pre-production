@@ -6,9 +6,12 @@
   "scripts": {
     "start": "node heady-manager.js",
     "dev": "nodemon heady-manager.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"Build complete\"",
+    "test": "npm run test:syntax && npm run test:smoke",
+    "test:syntax": "python -m compileall src && echo 'Python syntax check passed'",
+    "test:smoke": "node test/smoke-test.js",
+    "build": "node -e \"const { execSync } = require('child_process'); try { execSync('python src/consolidated_builder.py --project-root .', { stdio: 'inherit' }); } catch (e) { console.error('Build failed'); process.exit(1); }\"",
     "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
     "docker:build": "docker build -t heady-systems .",
     "docker:run": "docker run -p 3300:3300 heady-systems"
   },
