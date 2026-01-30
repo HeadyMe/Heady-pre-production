@@ -5,6 +5,9 @@ const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
+const { EventEmitter } = require("events");
+
+const fsp = fs.promises;
 
 const PORT = Number(process.env.PORT || 3300);
 
@@ -32,6 +35,18 @@ const HEADY_QA_MAX_CONTEXT_CHARS = Number(process.env.HEADY_QA_MAX_CONTEXT_CHARS
 
 const DEFAULT_HF_TEXT_MODEL = process.env.HF_TEXT_MODEL || "gpt2";
 const DEFAULT_HF_EMBED_MODEL = process.env.HF_EMBED_MODEL || "sentence-transformers/all-MiniLM-L6-v2";
+
+const HEADY_ADMIN_ROOT = process.env.HEADY_ADMIN_ROOT || path.resolve(__dirname);
+const HEADY_ADMIN_ALLOWED_PATHS = (process.env.HEADY_ADMIN_ALLOWED_PATHS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+const HEADY_ADMIN_MAX_BYTES = Number(process.env.HEADY_ADMIN_MAX_BYTES) || 512_000;
+const HEADY_ADMIN_OP_LOG_LIMIT = Number(process.env.HEADY_ADMIN_OP_LOG_LIMIT) || 2000;
+const HEADY_ADMIN_OP_LIMIT = Number(process.env.HEADY_ADMIN_OP_LIMIT) || 50;
+const HEADY_ADMIN_BUILD_SCRIPT =
+  process.env.HEADY_ADMIN_BUILD_SCRIPT || path.join(__dirname, "src", "consolidated_builder.py");
+const HEADY_ADMIN_AUDIT_SCRIPT = process.env.HEADY_ADMIN_AUDIT_SCRIPT || path.join(__dirname, "admin_console.py");
 
 function getClientIp(req) {
   if (typeof req.ip === "string" && req.ip) return req.ip;
@@ -312,6 +327,222 @@ function truncateString(value, maxChars) {
   return value.slice(0, maxChars);
 }
 
+function createHttpError(status, message, details) {
+  const err = new Error(message);
+  err.status = status;
+  if (details !== undefined) err.details = details;
+  return err;
+}
+
+function buildAdminRoots() {
+  const roots = [];
+  const seen = new Set();
+  const candidates = [HEADY_ADMIN_ROOT, ...HEADY_ADMIN_ALLOWED_PATHS];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    const resolved = path.resolve(candidate);
+    const key = process.platform === "win32" ? resolved.toLowerCase() : resolved;
+    if (seen.has(key)) continue;
+    seen.add(key);
+
+    const label = path.basename(resolved) || resolved;
+    roots.push({
+      id: `root-${roots.length + 1}`,
+      path: resolved,
+      label,
+      exists: fs.existsSync(resolved),
+    });
+  }
+
+  return roots;
+}
+
+const ADMIN_ROOTS = buildAdminRoots();
+const adminOps = new Map();
+let adminOpCounter = 0;
+
+function getAdminRoot(rootParam) {
+  if (!ADMIN_ROOTS.length) return null;
+  if (!rootParam) return ADMIN_ROOTS[0];
+  return ADMIN_ROOTS.find((root) => root.id === rootParam || root.path === rootParam) || null;
+}
+
+function assertAdminRoot(rootParam) {
+  const root = getAdminRoot(rootParam);
+  if (!root) {
+    throw createHttpError(400, "Invalid root");
+  }
+  if (!root.exists) {
+    throw createHttpError(404, "Root not found");
+  }
+  return root;
+}
+
+function resolveAdminPath(rootPath, relPath = "") {
+  if (typeof relPath !== "string") {
+    throw createHttpError(400, "path must be a string");
+  }
+  if (relPath.includes("\0")) {
+    throw createHttpError(400, "Invalid path");
+  }
+
+  const resolvedRoot = path.resolve(rootPath);
+  const resolved = path.resolve(resolvedRoot, relPath);
+  const rootWithSep = resolvedRoot.endsWith(path.sep) ? resolvedRoot : `${resolvedRoot}${path.sep}`;
+
+  if (resolved !== resolvedRoot && !resolved.startsWith(rootWithSep)) {
+    throw createHttpError(403, "Path is outside allowed root");
+  }
+
+  return resolved;
+}
+
+function toPosixPath(value) {
+  return value.split(path.sep).join("/");
+}
+
+function toRelativePath(rootPath, targetPath) {
+  const rel = path.relative(rootPath, targetPath);
+  return rel ? toPosixPath(rel) : "";
+}
+
+function hashBuffer(buffer) {
+  return crypto.createHash("sha256").update(buffer).digest("hex");
+}
+
+function classifyLogLine(line) {
+  const text = line.trim();
+  if (!text) return { level: "info", status: "running" };
+  if (/(\bERROR\b|\bFAIL\b|✖|❌|fatal)/i.test(text)) return { level: "error", status: "error" };
+  if (/(✓|✅|\bSUCCESS\b|\bOK\b)/i.test(text)) return { level: "success", status: "success" };
+  if (/(warn|warning)/i.test(text)) return { level: "warn", status: "running" };
+  return { level: "info", status: "running" };
+}
+
+function pushAdminLog(op, line, stream) {
+  const { level, status } = classifyLogLine(line);
+  const entry = {
+    ts: new Date().toISOString(),
+    level,
+    status,
+    stream,
+    line,
+  };
+  op.logs.push(entry);
+  if (op.logs.length > HEADY_ADMIN_OP_LOG_LIMIT) op.logs.shift();
+  op.emitter.emit("log", entry);
+  if (status === "error") op.lastError = line;
+}
+
+function finalizeAdminOp(op, status, exitCode) {
+  op.status = status;
+  op.exitCode = exitCode;
+  op.endedAt = new Date().toISOString();
+  op.emitter.emit("status", { status: op.status, exitCode });
+  op.emitter.emit("end");
+}
+
+function pruneAdminOps() {
+  if (adminOps.size <= HEADY_ADMIN_OP_LIMIT) return;
+  const entries = Array.from(adminOps.values()).sort(
+    (a, b) => new Date(a.startedAt).getTime() - new Date(b.startedAt).getTime(),
+  );
+
+  while (adminOps.size > HEADY_ADMIN_OP_LIMIT) {
+    const next = entries.shift();
+    if (!next) break;
+    if (next.status === "running") {
+      entries.push(next);
+      break;
+    }
+    adminOps.delete(next.id);
+  }
+}
+
+function serializeAdminOp(op) {
+  return {
+    id: op.id,
+    type: op.type,
+    status: op.status,
+    startedAt: op.startedAt,
+    endedAt: op.endedAt,
+    exitCode: op.exitCode,
+    pid: op.pid,
+    script: op.script,
+    args: op.args,
+    cwd: op.cwd,
+    lastError: op.lastError,
+  };
+}
+
+function startAdminOperation({ type, script, args, cwd }) {
+  if (!fs.existsSync(script)) {
+    throw createHttpError(404, `Script not found: ${script}`);
+  }
+
+  const id = `op_${Date.now()}_${++adminOpCounter}`;
+  const emitter = new EventEmitter();
+  emitter.setMaxListeners(0);
+
+  const op = {
+    id,
+    type,
+    script,
+    args,
+    cwd,
+    status: "running",
+    startedAt: new Date().toISOString(),
+    endedAt: null,
+    exitCode: null,
+    pid: null,
+    logs: [],
+    emitter,
+    lastError: null,
+  };
+
+  adminOps.set(id, op);
+  pruneAdminOps();
+
+  const child = spawn(HEADY_PYTHON_BIN, [script, ...args], {
+    cwd,
+    env: { ...process.env, PYTHONUNBUFFERED: "1" },
+    windowsHide: true,
+  });
+
+  op.pid = child.pid;
+
+  const attachStream = (stream, streamName) => {
+    let buffer = "";
+    stream.on("data", (chunk) => {
+      buffer += chunk.toString("utf8");
+      const lines = buffer.split(/\r?\n/);
+      buffer = lines.pop();
+      lines.forEach((line) => {
+        if (line !== "") pushAdminLog(op, line, streamName);
+      });
+    });
+    stream.on("end", () => {
+      if (buffer.trim()) pushAdminLog(op, buffer.trim(), streamName);
+    });
+  };
+
+  attachStream(child.stdout, "stdout");
+  attachStream(child.stderr, "stderr");
+
+  child.on("error", (err) => {
+    pushAdminLog(op, err && err.message ? err.message : String(err), "stderr");
+    finalizeAdminOp(op, "error", null);
+  });
+
+  child.on("close", (code) => {
+    const status = code === 0 ? "success" : "error";
+    finalizeAdminOp(op, status, code);
+  });
+
+  return op;
+}
+
 function computeRiskAnalysis({ question, context }) {
   const text = `${question || ""}\n${context || ""}`;
 
@@ -487,6 +718,264 @@ async function runNodeQa({ question, context, model, parameters }) {
 
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
+app.use("/api/admin", requireApiKey);
+
+app.get(
+  "/api/admin/roots",
+  asyncHandler(async (req, res) => {
+    res.json({ ok: true, roots: ADMIN_ROOTS });
+  }),
+);
+
+app.get(
+  "/api/admin/files",
+  asyncHandler(async (req, res) => {
+    const root = assertAdminRoot(req.query.root);
+    const relPath = typeof req.query.path === "string" ? req.query.path : "";
+    const targetPath = resolveAdminPath(root.path, relPath || ".");
+    const stat = await fsp.stat(targetPath);
+
+    if (!stat.isDirectory()) {
+      throw createHttpError(400, "Path is not a directory");
+    }
+
+    const entries = await fsp.readdir(targetPath, { withFileTypes: true });
+    const items = await Promise.all(
+      entries.map(async (entry) => {
+        const fullPath = path.join(targetPath, entry.name);
+        const entryStat = await fsp.stat(fullPath);
+        return {
+          name: entry.name,
+          path: toRelativePath(root.path, fullPath),
+          type: entry.isDirectory() ? "directory" : "file",
+          size: entryStat.size,
+          mtime: entryStat.mtime.toISOString(),
+        };
+      }),
+    );
+
+    items.sort((a, b) => {
+      if (a.type !== b.type) return a.type === "directory" ? -1 : 1;
+      return a.name.localeCompare(b.name);
+    });
+
+    res.json({
+      ok: true,
+      root,
+      path: toRelativePath(root.path, targetPath),
+      entries: items,
+    });
+  }),
+);
+
+app.get(
+  "/api/admin/file",
+  asyncHandler(async (req, res) => {
+    const relPath = req.query.path;
+    if (typeof relPath !== "string" || !relPath) {
+      throw createHttpError(400, "path is required");
+    }
+
+    const root = assertAdminRoot(req.query.root);
+    const targetPath = resolveAdminPath(root.path, relPath);
+    const stat = await fsp.stat(targetPath);
+
+    if (!stat.isFile()) {
+      throw createHttpError(400, "Path is not a file");
+    }
+
+    if (stat.size > HEADY_ADMIN_MAX_BYTES) {
+      throw createHttpError(413, "File exceeds size limit", {
+        maxBytes: HEADY_ADMIN_MAX_BYTES,
+        bytes: stat.size,
+      });
+    }
+
+    const buffer = await fsp.readFile(targetPath);
+    if (buffer.includes(0)) {
+      throw createHttpError(415, "Binary files are not supported");
+    }
+
+    res.json({
+      ok: true,
+      root,
+      path: toRelativePath(root.path, targetPath),
+      bytes: stat.size,
+      mtime: stat.mtime.toISOString(),
+      sha: hashBuffer(buffer),
+      encoding: "utf8",
+      content: buffer.toString("utf8"),
+    });
+  }),
+);
+
+app.post(
+  "/api/admin/file",
+  asyncHandler(async (req, res) => {
+    const { root: rootParam, path: relPath, content, expectedSha } = req.body || {};
+    if (typeof relPath !== "string" || !relPath) {
+      throw createHttpError(400, "path is required");
+    }
+    if (typeof content !== "string") {
+      throw createHttpError(400, "content must be a string");
+    }
+
+    const root = assertAdminRoot(rootParam);
+    const targetPath = resolveAdminPath(root.path, relPath);
+    const bytes = Buffer.from(content, "utf8");
+
+    if (bytes.length > HEADY_ADMIN_MAX_BYTES) {
+      throw createHttpError(413, "File exceeds size limit", {
+        maxBytes: HEADY_ADMIN_MAX_BYTES,
+        bytes: bytes.length,
+      });
+    }
+
+    if (fs.existsSync(targetPath)) {
+      const existingBuffer = await fsp.readFile(targetPath);
+      const existingSha = hashBuffer(existingBuffer);
+      if (expectedSha && existingSha !== expectedSha) {
+        throw createHttpError(409, "File has changed", {
+          expectedSha,
+          actualSha: existingSha,
+        });
+      }
+    }
+
+    await fsp.mkdir(path.dirname(targetPath), { recursive: true });
+    await fsp.writeFile(targetPath, content, "utf8");
+
+    res.json({
+      ok: true,
+      root,
+      path: toRelativePath(root.path, targetPath),
+      bytes: bytes.length,
+      sha: hashBuffer(bytes),
+    });
+  }),
+);
+
+app.get(
+  "/api/admin/ops",
+  asyncHandler(async (req, res) => {
+    const ops = Array.from(adminOps.values()).map(serializeAdminOp);
+    res.json({ ok: true, ops });
+  }),
+);
+
+app.get(
+  "/api/admin/ops/:id/status",
+  asyncHandler(async (req, res) => {
+    const op = adminOps.get(req.params.id);
+    if (!op) {
+      throw createHttpError(404, "Operation not found");
+    }
+    res.json({ ok: true, op: serializeAdminOp(op), logs: op.logs.slice(-200) });
+  }),
+);
+
+app.get(
+  "/api/admin/ops/:id/stream",
+  asyncHandler(async (req, res) => {
+    const op = adminOps.get(req.params.id);
+    if (!op) {
+      throw createHttpError(404, "Operation not found");
+    }
+
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+
+    const sendEvent = (event, data) => {
+      res.write(`event: ${event}\n`);
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
+
+    sendEvent("snapshot", { op: serializeAdminOp(op), logs: op.logs });
+
+    const onLog = (entry) => sendEvent("log", entry);
+    const onStatus = (status) => sendEvent("status", status);
+    const onEnd = () => {
+      sendEvent("end", { ok: true });
+      res.end();
+    };
+
+    op.emitter.on("log", onLog);
+    op.emitter.on("status", onStatus);
+    op.emitter.once("end", onEnd);
+
+    req.on("close", () => {
+      op.emitter.off("log", onLog);
+      op.emitter.off("status", onStatus);
+      op.emitter.off("end", onEnd);
+    });
+  }),
+);
+
+app.post(
+  "/api/admin/build",
+  asyncHandler(async (req, res) => {
+    const { root: rootParam, path: relPath, mode, args } = req.body || {};
+    const root = assertAdminRoot(rootParam);
+    const targetPath = resolveAdminPath(root.path, relPath || ".");
+
+    const scriptArgs = [];
+    if (mode) scriptArgs.push(String(mode));
+    scriptArgs.push(targetPath);
+
+    if (Array.isArray(args)) {
+      args.forEach((arg) => {
+        if (arg !== undefined && arg !== null) scriptArgs.push(String(arg));
+      });
+    }
+
+    const op = startAdminOperation({
+      type: "build",
+      script: HEADY_ADMIN_BUILD_SCRIPT,
+      args: scriptArgs,
+      cwd: root.path,
+    });
+
+    res.json({
+      ok: true,
+      op: serializeAdminOp(op),
+      streamUrl: `/api/admin/ops/${op.id}/stream`,
+    });
+  }),
+);
+
+app.post(
+  "/api/admin/audit",
+  asyncHandler(async (req, res) => {
+    const { root: rootParam, path: relPath, mode, args } = req.body || {};
+    const root = assertAdminRoot(rootParam);
+    const targetPath = resolveAdminPath(root.path, relPath || ".");
+
+    const scriptArgs = [];
+    if (mode) scriptArgs.push(String(mode));
+    scriptArgs.push(targetPath);
+
+    if (Array.isArray(args)) {
+      args.forEach((arg) => {
+        if (arg !== undefined && arg !== null) scriptArgs.push(String(arg));
+      });
+    }
+
+    const op = startAdminOperation({
+      type: "audit",
+      script: HEADY_ADMIN_AUDIT_SCRIPT,
+      args: scriptArgs,
+      cwd: root.path,
+    });
+
+    res.json({
+      ok: true,
+      op: serializeAdminOp(op),
+      streamUrl: `/api/admin/ops/${op.id}/stream`,
+    });
+  }),
+);
+
 app.get(
   "/api/health",
   asyncHandler(async (req, res) => {
@@ -596,6 +1085,7 @@ app.use((err, req, res, next) => {
   };
 
   if (err && err.response !== undefined) payload.details = err.response;
+  if (err && err.details !== undefined) payload.details = err.details;
 
   if (status >= 500) {
     console.error(err);
