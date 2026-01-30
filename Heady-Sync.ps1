@@ -31,6 +31,10 @@ $ChangedCount = $ChangedFiles.Count
 if ($ChangedCount -eq 0) {
     Write-Host "No local changes detected. Checking for remote updates..." -ForegroundColor Yellow
     git pull origin $Branch --rebase
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Pull failed. Exiting." -ForegroundColor Red
+        exit $LASTEXITCODE
+    }
     exit 0
 }
 
@@ -51,11 +55,14 @@ git commit -m "Temp commit for sync"
 # We prefer local changes during rebase conflicts because
 # your local HeadyHive build is the Source of Truth.
 Write-Host "[SYNC] Aligning with remote..." -ForegroundColor Blue
-try {
-    git pull origin $Branch --rebase --strategy-option=theirs --allow-unrelated-histories
-} catch {
-    Write-Host "[WARNING] Rebase encountered conflicts, using local changes..." -ForegroundColor Yellow
-    git pull origin $Branch --rebase --strategy-option=ours --allow-unrelated-histories
+
+# Try pull with 'theirs' (which favors local changes in rebase)
+git pull origin $Branch --rebase --strategy-option=theirs --allow-unrelated-histories
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "[ERROR] Rebase failed or encountered conflicts that could not be automatically resolved." -ForegroundColor Red
+    Write-Host "Please resolve conflicts manually, then finish the rebase and run the script again." -ForegroundColor Yellow
+    exit 1
 }
 
 # 4. SQUASH & COMMIT

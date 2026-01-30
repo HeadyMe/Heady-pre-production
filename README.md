@@ -222,4 +222,7 @@ All documentation follows the **Quiz & Flashcard Methodology** (see `.github/cop
 ## License
 
 See LICENSE file.
+
+## Commit Guidelines
+
 3. Make commits with clear messages following conventional commits format
