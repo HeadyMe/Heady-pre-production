@@ -40,6 +40,11 @@ jobs:
         pip install safety bandit
         safety check -r requirements.txt
         bandit -r src/ -f json -o bandit-report.json || true
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript, python
         
     - name: Run CodeQL Analysis
       uses: github/codeql-action/analyze@v2
