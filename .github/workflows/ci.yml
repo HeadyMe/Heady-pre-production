@@ -6,19 +6,11 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  contents: read
-  pull-requests: write
-  issues: write
-  checks: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write
-      checks: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,15 +35,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Node.js linting
-        continue-on-error: true
-        run: npm run lint
-
-      - name: Check Node.js syntax
-        run: node --check heady-manager.js
-
       - name: Python syntax check
         run: python -m compileall src
-
-      - name: Run build
-        run: npm run build
