@@ -1,3 +1,5 @@
+require('dotenv').config({ override: true });
+
 const express = require('express');
 const cors = require('cors');
 const Docker = require('dockerode');
