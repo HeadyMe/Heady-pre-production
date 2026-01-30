@@ -60,6 +60,7 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - `HEADY_API_KEY` – Required for Admin API and HF endpoints
 - `HF_TOKEN` – Hugging Face inference token
 - `JULES_API_KEY` – Jules AI service API key (required for Jules integration)
+- `CLOUDFLARE_SECRET` – Cloudflare API token (required for Cloudflare integration)
 - `HEADY_CORS_ORIGINS` – Comma‑separated allowed origins
 - `NODE_ENV` – Set to 'production' for production logging
 
@@ -127,6 +128,10 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - `POST /api/jules/chat` – Jules chat completion
 - `POST /api/jules/complete` – Jules text completion
 
+### Cloudflare (protected by HEADY_API_KEY)
+- `GET /api/cloudflare/zones` – List Cloudflare zones
+- `POST /api/cloudflare/dns` – Manage DNS records (create, update, delete)
+
 ### System
 - `GET /api/pulse` – Docker/system info
 - `GET /api/health` – Health check
@@ -147,15 +152,20 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
    - Set JULES_API_KEY in your environment
    - Get a token from your Jules AI account settings
 
-4. **Python worker not responding**
+4. **"CLOUDFLARE_SECRET is not configured" error**
+   - Set CLOUDFLARE_SECRET in your environment
+   - Get an API token from https://dash.cloudflare.com/profile/api-tokens
+   - Create a token with appropriate permissions for DNS/zone management
+
+5. **Python worker not responding**
    - Check that Python dependencies are installed: `pip install -r requirements.txt`
    - Verify HEADY_PYTHON_BIN points to correct Python executable
 
-5. **Port already in use**
+6. **Port already in use**
    - Change PORT environment variable
    - Kill existing process: `lsof -ti:3300 | xargs kill`
 
-6. **CORS issues**
+7. **CORS issues**
    - Set HEADY_CORS_ORIGINS to include your frontend URL
    - For development: `HEADY_CORS_ORIGINS=http://localhost:3000,http://localhost:3300`
 

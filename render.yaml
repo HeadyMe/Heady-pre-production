@@ -38,3 +38,5 @@ services:
         value: "${HEADY_API_KEY}"
       - key: JULES_API_KEY
         value: "${JULES_API_KEY}"
+      - key: CLOUDFLARE_SECRET
+        value: "${CLOUDFLARE_SECRET}"

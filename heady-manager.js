@@ -14,6 +14,7 @@ const PORT = Number(process.env.PORT || 3300);
 const HF_TOKEN = process.env.HF_TOKEN;
 const HEADY_API_KEY = process.env.HEADY_API_KEY;
 const JULES_API_KEY = process.env.JULES_API_KEY;
+const CLOUDFLARE_SECRET = process.env.CLOUDFLARE_SECRET;
 
 const HEADY_TRUST_PROXY = process.env.HEADY_TRUST_PROXY === "true";
 const HEADY_CORS_ORIGINS = (process.env.HEADY_CORS_ORIGINS || "")
@@ -1377,6 +1378,129 @@ app.post(
     } catch (err) {
       if (err.name === "AbortError") {
         return res.status(504).json({ ok: false, error: "Jules API request timed out" });
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }),
+);
+
+// Cloudflare Integration Endpoints
+app.post(
+  "/api/cloudflare/dns",
+  requireApiKey,
+  asyncHandler(async (req, res) => {
+    if (!CLOUDFLARE_SECRET) {
+      return res.status(500).json({ ok: false, error: "CLOUDFLARE_SECRET is not configured" });
+    }
+
+    const { zoneId, action, recordData } = req.body || {};
+    if (!zoneId || !action) {
+      return res.status(400).json({ ok: false, error: "zoneId and action are required" });
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000);
+
+    try {
+      let cloudflareUrl = `https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`;
+      let method = "GET";
+      let body = null;
+
+      if (action === "create" && recordData) {
+        method = "POST";
+        body = JSON.stringify(recordData);
+      } else if (action === "update" && recordData && recordData.id) {
+        method = "PUT";
+        cloudflareUrl = `${cloudflareUrl}/${recordData.id}`;
+        body = JSON.stringify(recordData);
+      } else if (action === "delete" && recordData && recordData.id) {
+        method = "DELETE";
+        cloudflareUrl = `${cloudflareUrl}/${recordData.id}`;
+      }
+
+      const resp = await fetch(cloudflareUrl, {
+        method,
+        headers: {
+          "Authorization": `Bearer ${CLOUDFLARE_SECRET}`,
+          "Content-Type": "application/json",
+        },
+        ...(body && { body }),
+        signal: controller.signal,
+      });
+
+      const status = resp.status;
+      const text = await resp.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+
+      if (status < 200 || status >= 300) {
+        const errorMsg = data && typeof data === "object" && data.errors 
+          ? data.errors[0]?.message || "Cloudflare API request failed"
+          : "Cloudflare API request failed";
+        return res.status(status).json({ ok: false, error: errorMsg, details: data });
+      }
+
+      return res.json({ ok: true, result: data.result });
+    } catch (err) {
+      if (err.name === "AbortError") {
+        return res.status(504).json({ ok: false, error: "Cloudflare API request timed out" });
+      }
+      throw err;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }),
+);
+
+app.get(
+  "/api/cloudflare/zones",
+  requireApiKey,
+  asyncHandler(async (req, res) => {
+    if (!CLOUDFLARE_SECRET) {
+      return res.status(500).json({ ok: false, error: "CLOUDFLARE_SECRET is not configured" });
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000);
+
+    try {
+      const cloudflareUrl = "https://api.cloudflare.com/client/v4/zones";
+      
+      const resp = await fetch(cloudflareUrl, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${CLOUDFLARE_SECRET}`,
+          "Content-Type": "application/json",
+        },
+        signal: controller.signal,
+      });
+
+      const status = resp.status;
+      const text = await resp.text();
+      let data;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+
+      if (status < 200 || status >= 300) {
+        const errorMsg = data && typeof data === "object" && data.errors 
+          ? data.errors[0]?.message || "Cloudflare API request failed"
+          : "Cloudflare API request failed";
+        return res.status(status).json({ ok: false, error: errorMsg, details: data });
+      }
+
+      return res.json({ ok: true, zones: data.result });
+    } catch (err) {
+      if (err.name === "AbortError") {
+        return res.status(504).json({ ok: false, error: "Cloudflare API request timed out" });
       }
       throw err;
     } finally {

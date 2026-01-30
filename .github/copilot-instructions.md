@@ -61,6 +61,8 @@ npm test
 - `HEADY_API_KEY` - API authentication key
 - `DATABASE_URL` - Postgres connection string
 - `HF_TOKEN` - Hugging Face API token
+- `JULES_API_KEY` - Jules AI service API key
+- `CLOUDFLARE_SECRET` - Cloudflare API token for DNS/zone management
 - `HEADY_ADMIN_ROOT` - Admin UI file system root
 - `HEADY_ADMIN_ALLOWED_PATHS` - Comma-separated allowed paths
 - `REMOTE_GPU_HOST` - Remote GPU server (optional)
@@ -72,6 +74,8 @@ Managed via Render's `heady-shared-secrets` env group:
 - `DATABASE_URL` - Postgres connection string
 - `HEADY_API_KEY` - Auto-generated API key
 - `HF_TOKEN` - Hugging Face token
+- `JULES_API_KEY` - Jules AI API key
+- `CLOUDFLARE_SECRET` - Cloudflare API token
 - `COPILOT_MCP_CLOUDFLARE_API_TOKEN` - Cloudflare API for MCP
 - `COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID` - Cloudflare account ID
 
@@ -99,6 +103,10 @@ Managed via Render's `heady-shared-secrets` env group:
 | `/api/admin/build` | POST | Run build script |
 | `/api/admin/audit` | POST | Run audit script |
 | `/api/hf/*` | VAR | Hugging Face inference (protected by HEADY_API_KEY) |
+| `/api/jules/chat` | POST | Jules AI chat completion (protected by HEADY_API_KEY) |
+| `/api/jules/complete` | POST | Jules AI text completion (protected by HEADY_API_KEY) |
+| `/api/cloudflare/zones` | GET | List Cloudflare zones (protected by HEADY_API_KEY) |
+| `/api/cloudflare/dns` | POST | Manage DNS records (protected by HEADY_API_KEY) |
 
 ## Documentation Protocol
 
