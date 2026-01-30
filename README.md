@@ -166,19 +166,43 @@ This will provide detailed console output with timestamps and structured logging
 
 ## Development Scripts
 
-### Available Scripts
-- `npm start` – Start the server
+### Available npm Scripts
+- `npm start` – Start the server in production mode
+- `npm run dev` – Start the server with nodemon (auto-reload on changes)
+- `npm test` – Run all tests (Python syntax check + smoke tests)
+- `npm run test:syntax` – Run Python syntax validation
+- `npm run test:smoke` – Run Node.js smoke tests
+- `npm run build` – Run the consolidated build orchestrator
+- `npm run lint` – Lint JavaScript files
+- `npm run lint:fix` – Lint and auto-fix JavaScript files
+- `npm run docker:build` – Build Docker image
+- `npm run docker:run` – Run Docker container
+
+### Python Scripts
 - `python src/process_data.py` – Run Python worker standalone
 - `python admin_console.py` – Run system audit
+- `python src/consolidated_builder.py` – Run build orchestrator
 - `python src/process_data.py qa` – Test QA interface
 
 ### Testing
 ```bash
+# Run all tests
+npm test
+
+# Test Python syntax
+npm run test:syntax
+
+# Run smoke tests
+npm run test:smoke
+
 # Test Python worker QA functionality
 echo '{"question":"What is Heady?","context":"Heady is a system"}' | python src/process_data.py qa
 
 # Run system audit
 python admin_console.py --output audit.json
+
+# Run build
+npm run build
 ```
 
 ## GitHub Copilot Integration

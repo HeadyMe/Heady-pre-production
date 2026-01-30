@@ -45,6 +45,23 @@ Enter your `HEADY_API_KEY` when prompted.
 - **Operations**: Run builds, audits, and GPU inference
 - **Configuration**: Manage settings and deployment
 
+## 🧪 Verify Installation
+
+Run these commands to verify everything is working:
+
+```bash
+# Run tests
+npm test
+
+# Run build
+npm run build
+
+# Lint code
+npm run lint
+```
+
+All tasks should complete successfully before using the system.
+
 ## 🔧 Troubleshooting
 
 **Server won't start?**
