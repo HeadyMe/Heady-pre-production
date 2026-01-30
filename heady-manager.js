@@ -1364,7 +1364,7 @@ app.get(
   }),
 );
 
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   const status = typeof err.status === 'number' ? err.status : 500;
   const payload = {
     ok: false,
