@@ -112,7 +112,7 @@ The orchestrator integrates with the following MCP (Model Context Protocol) serv
 - ❌ Never store secrets in comments, docs, or code
 
 ### Change Safety
-- ✅ Prefer idempotent operations (e.g., upserting labels)
+- ✅ Prefer idempotent operations (e.g., creating or updating labels)
 - ✅ Check before creating duplicates
 - ✅ Be explicit about targets (repo names, IDs, URLs, environments)
 - ❌ Avoid destructive operations (delete, purge, force-push, drop tables)

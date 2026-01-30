@@ -158,7 +158,7 @@ When deciding whether to use a tool:
 - Always explain the effect of any change you make (what changed, where, and why)
 - Avoid ambiguous actions; be explicit about targets (repo names, IDs, URLs, environments)
 - If something is unclear (e.g., which repo, which environment, which workspace), ask the user to disambiguate before calling write tools
-- Prefer idempotent operations when possible (e.g., upserting labels, checking before creating duplicates)
+- Prefer idempotent operations when possible (e.g., creating or updating labels, checking before creating duplicates)
 
 ## 7. Example Task Behaviors (for calibration)
 
@@ -185,12 +185,14 @@ When deciding whether to use a tool:
 
 This orchestrator works seamlessly with the Heady ecosystem's MCP (Model Context Protocol) servers:
 
-- **filesystem** - For reading/writing configuration files
-- **git** - For repository operations
-- **postgres** - For database queries
-- **fetch** - For HTTP API calls
-- **memory** - For maintaining context across tasks
-- **sequential-thinking** - For complex multi-step reasoning
+- **filesystem** - For reading/writing configuration files.
+- **git** - For repository operations.
+- **postgres** - For database queries.
+- **fetch** - For HTTP API calls.
+- **memory** - For maintaining context across tasks.
+- **sequential-thinking** - For complex multi-step reasoning.
+- **puppeteer** - For web automation tasks.
+- **cloudflare** - For Cloudflare API operations.
 
 Always coordinate with these tools to ensure consistent and reliable operations across the Heady ecosystem.
 

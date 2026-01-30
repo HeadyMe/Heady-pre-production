@@ -215,12 +215,14 @@ This repository includes custom Copilot agents for specialized tasks:
 
 **Tool Integration:**
 The orchestrator integrates with the following MCP servers:
-- **filesystem** - Reading/writing configuration files
-- **git** - Repository operations
-- **postgres** - Database queries
-- **fetch** - HTTP API calls
-- **memory** - Context maintenance across tasks
-- **sequential-thinking** - Complex multi-step reasoning
+- **filesystem** - Reading/writing configuration files.
+- **git** - Repository operations.
+- **postgres** - Database queries.
+- **fetch** - HTTP API calls.
+- **memory** - Context maintenance across tasks.
+- **sequential-thinking** - Complex multi-step reasoning.
+- **puppeteer** - Web automation tasks.
+- **cloudflare** - Cloudflare API operations.
 
 For detailed orchestrator capabilities, see `.github/agents/connected-apps-orchestrator.agent.md`.
 
