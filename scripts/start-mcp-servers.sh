@@ -90,7 +90,9 @@ start_mcp_server "memory" "npx" "-y" "@modelcontextprotocol/server-memory"
 echo ""
 echo "4. Fetch Server"
 echo "---------------"
-start_mcp_server "fetch" "npx" "-y" "@modelcontextprotocol/server-fetch"
+# Note: @modelcontextprotocol/server-fetch doesn't exist
+# Using brave-search as an alternative for web fetching capabilities
+start_mcp_server "brave-search" "npx" "-y" "@modelcontextprotocol/server-brave-search"
 
 # Start postgres server (if DATABASE_URL is set)
 echo ""
@@ -107,7 +109,10 @@ fi
 echo ""
 echo "6. Git Server"
 echo "-------------"
-start_mcp_server "git" "npx" "-y" "@modelcontextprotocol/server-git" "--repository" "$PROJECT_ROOT"
+# Note: @modelcontextprotocol/server-git doesn't exist as a separate package
+# Git functionality is often built into other tools or available via filesystem operations
+echo "  ⚠️  Skipping git server (no standalone package available)"
+echo "    Git operations can be performed via filesystem server or shell commands"
 
 # Start puppeteer server
 echo ""

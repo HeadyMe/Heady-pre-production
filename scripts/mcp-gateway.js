@@ -2,9 +2,12 @@
 /**
  * Heady MCP Gateway Sidecar
  * 
- * This gateway connects to all local MCP servers and provides:
- * - Unified client interface
- * - Connection management for each upstream server
+ * This gateway spawns and connects to all local MCP servers via stdio.
+ * MCP servers communicate using JSON-RPC over stdin/stdout.
+ * 
+ * Features:
+ * - Spawns MCP server processes
+ * - Manages stdio communication
  * - Health monitoring
  * - Request routing
  */
@@ -13,10 +16,10 @@ const { spawn } = require('child_process');
 const { EventEmitter } = require('events');
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const MCP_CONFIG_PATH = path.join(PROJECT_ROOT, 'mcp_config.json');
-const PID_DIR = path.join(PROJECT_ROOT, 'tmp', 'mcp-pids');
 
 class MCPClient extends EventEmitter {
   constructor(name, config) {
@@ -27,55 +30,159 @@ class MCPClient extends EventEmitter {
     this.connected = false;
     this.requestId = 0;
     this.pendingRequests = new Map();
+    this.messageBuffer = '';
   }
 
   async connect() {
     return new Promise((resolve, reject) => {
-      console.log(`[${this.name}] Connecting to MCP server...`);
+      console.log(`[${this.name}] Starting MCP server...`);
       
-      // Check if server process is running
-      const pidFile = path.join(PID_DIR, `${this.name}.pid`);
-      if (!fs.existsSync(pidFile)) {
-        return reject(new Error(`Server ${this.name} is not running. No PID file found.`));
-      }
+      const args = this.config.args || [];
+      const env = {
+        ...process.env,
+        ...(this.config.env || {})
+      };
 
-      const pid = parseInt(fs.readFileSync(pidFile, 'utf8'));
-      
-      // Check if process is alive
-      try {
-        process.kill(pid, 0); // Signal 0 just checks if process exists
-        this.connected = true;
-        console.log(`[${this.name}] ✓ Connected (server PID: ${pid})`);
-        resolve();
-      } catch (err) {
-        reject(new Error(`Server ${this.name} process (PID: ${pid}) is not running`));
+      // Replace environment variable placeholders
+      const processedArgs = args.map(arg => {
+        if (typeof arg === 'string' && arg.startsWith('${') && arg.endsWith('}')) {
+          const varName = arg.slice(2, -1);
+          return env[varName] || arg;
+        }
+        return arg;
+      });
+
+      // Spawn the MCP server process
+      this.process = spawn(this.config.command, processedArgs, {
+        env,
+        stdio: ['pipe', 'pipe', 'pipe']
+      });
+
+      // Handle stdout (JSON-RPC responses)
+      this.process.stdout.on('data', (data) => {
+        this.handleServerMessage(data.toString());
+      });
+
+      // Handle stderr (logging/errors)
+      this.process.stderr.on('data', (data) => {
+        const message = data.toString().trim();
+        if (message) {
+          console.log(`[${this.name}] ${message}`);
+        }
+      });
+
+      // Handle process exit
+      this.process.on('exit', (code, signal) => {
+        this.connected = false;
+        console.log(`[${this.name}] Process exited (code: ${code}, signal: ${signal})`);
+      });
+
+      // Handle process errors
+      this.process.on('error', (err) => {
+        console.error(`[${this.name}] Process error:`, err.message);
+        reject(err);
+      });
+
+      // Wait a moment for the process to start
+      setTimeout(() => {
+        if (this.process && !this.process.killed) {
+          this.connected = true;
+          console.log(`[${this.name}] ✓ Connected (PID: ${this.process.pid})`);
+          resolve();
+        } else {
+          reject(new Error(`Failed to start ${this.name}`));
+        }
+      }, 1000);
+    });
+  }
+
+  handleServerMessage(data) {
+    // MCP servers send JSON-RPC messages line by line
+    this.messageBuffer += data;
+    const lines = this.messageBuffer.split('\n');
+    
+    // Process complete lines, keep incomplete line in buffer
+    this.messageBuffer = lines.pop() || '';
+    
+    for (const line of lines) {
+      if (line.trim()) {
+        try {
+          const message = JSON.parse(line);
+          this.emit('message', message);
+        } catch (err) {
+          console.error(`[${this.name}] Failed to parse message:`, line);
+        }
       }
+    }
+  }
+
+  async sendRequest(method, params = {}) {
+    if (!this.connected || !this.process) {
+      throw new Error(`Server ${this.name} is not connected`);
+    }
+
+    const id = ++this.requestId;
+    const request = {
+      jsonrpc: '2.0',
+      id,
+      method,
+      params
+    };
+
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        this.pendingRequests.delete(id);
+        reject(new Error(`Request timeout for ${method}`));
+      }, 30000);
+
+      this.pendingRequests.set(id, { resolve, reject, timeout });
+
+      // Send request to server
+      const requestLine = JSON.stringify(request) + '\n';
+      this.process.stdin.write(requestLine);
+
+      // Listen for response
+      const responseHandler = (message) => {
+        if (message.id === id) {
+          clearTimeout(timeout);
+          this.pendingRequests.delete(id);
+          this.off('message', responseHandler);
+          
+          if (message.error) {
+            reject(new Error(message.error.message || 'Server error'));
+          } else {
+            resolve(message.result);
+          }
+        }
+      };
+
+      this.on('message', responseHandler);
     });
   }
 
   async disconnect() {
+    if (this.process) {
+      this.process.kill('SIGTERM');
+      this.process = null;
+    }
     this.connected = false;
     console.log(`[${this.name}] Disconnected`);
   }
 
   isConnected() {
-    return this.connected;
+    return this.connected && this.process && !this.process.killed;
   }
 
   getServerInfo() {
-    const pidFile = path.join(PID_DIR, `${this.name}.pid`);
-    if (!fs.existsSync(pidFile)) {
+    if (!this.process) {
       return { status: 'stopped', pid: null };
     }
-
-    const pid = parseInt(fs.readFileSync(pidFile, 'utf8'));
     
-    try {
-      process.kill(pid, 0);
-      return { status: 'running', pid };
-    } catch (err) {
-      return { status: 'crashed', pid };
+    if (this.process.killed) {
+      return { status: 'killed', pid: this.process.pid };
     }
+
+    return { status: 'running', pid: this.process.pid };
   }
 }
 
@@ -100,7 +207,7 @@ class MCPGateway extends EventEmitter {
   }
 
   async connectAll() {
-    console.log('\n🔌 Connecting to MCP servers...');
+    console.log('\n🔌 Starting MCP servers...');
     console.log('================================');
 
     const servers = Object.entries(this.config.mcpServers);
@@ -128,14 +235,14 @@ class MCPGateway extends EventEmitter {
   }
 
   async disconnectAll() {
-    console.log('\n🔌 Disconnecting from MCP servers...');
+    console.log('\n🔌 Stopping MCP servers...');
     
     for (const [name, client] of this.clients) {
       await client.disconnect();
     }
     
     this.clients.clear();
-    console.log('✓ All clients disconnected');
+    console.log('✓ All servers stopped');
   }
 
   getClient(name) {
@@ -195,18 +302,9 @@ async function main() {
     // Keep gateway alive and monitor connections
     console.log('Gateway is running. Press Ctrl+C to exit.\n');
 
-    // Monitor connections every 10 seconds
-    const monitorInterval = setInterval(() => {
-      const currentStatus = gateway.getStatus();
-      if (currentStatus.disconnected > 0) {
-        console.log(`[${new Date().toISOString()}] Warning: ${currentStatus.disconnected} server(s) disconnected`);
-      }
-    }, 10000);
-
     // Handle shutdown
     process.on('SIGINT', async () => {
       console.log('\n\nShutting down gateway...');
-      clearInterval(monitorInterval);
       await gateway.disconnectAll();
       console.log('✓ Gateway shutdown complete');
       process.exit(0);

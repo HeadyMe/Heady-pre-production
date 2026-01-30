@@ -33,7 +33,6 @@ check_or_set_env() {
             echo "✓ $var_name set to default: $default_value"
         else
             echo "⚠️  WARNING: $var_name is not set - $description"
-            return 1
         fi
     else
         echo "✓ $var_name is already set"

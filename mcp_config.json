@@ -5,8 +5,8 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/workspaces",
-        "/shared"
+        "/home/runner/work/Heady/Heady",
+        "/tmp"
       ]
     },
     "sequential-thinking": {
@@ -23,26 +23,22 @@
         "@modelcontextprotocol/server-memory"
       ]
     },
-    "fetch": {
+    "brave-search": {
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-fetch"
-      ]
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      }
     },
     "postgres": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-postgres",
-        "${DATABASE_URL}"
-      ]
-    },
-    "git": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-git"
+        "postgresql://postgres:postgres@localhost:5432/heady"
       ]
     },
     "puppeteer": {
