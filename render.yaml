@@ -1,81 +1,98 @@
-services:
-  - type: web
-    name: heady-manager
-    runtime: node
-    buildCommand: npm install && pip install -r requirements.txt
-    startCommand: node heady-manager.js
-    healthCheckPath: /api/health
-    envVars:
-      - fromGroup: heady-shared-secrets
-      - key: PORT
-        value: "3300"
-      - key: NODE_ENV
-        value: "production"
-      - key: HEADY_TRUST_PROXY
-        value: "true"
-      - key: HEADY_ADMIN_ROOT
-        value: "/opt/render/project/src"
-      - key: HEADY_ADMIN_ALLOWED_PATHS
-        value: "/opt/render/project/src"
-      - key: HEADY_ADMIN_MAX_BYTES
-        value: "524288"
-      - key: HEADY_ADMIN_BUILD_SCRIPT
-        value: "/opt/render/project/src/consolidated_builder.py"
-      - key: HEADY_ADMIN_AUDIT_SCRIPT
-        value: "/opt/render/project/src/admin_console.py"
-      - key: HEADY_PYTHON_BIN
-        value: "python3"
-      - key: HEADY_PY_WORKER_TIMEOUT_MS
-        value: "90000"
-      - key: HEADY_MCP_SERVER_TIMEOUT_MS
-        value: "30000"
-      - key: HEADY_MCP_MAX_CONCURRENT_REQUESTS
-        value: "10"
-      - key: HEADY_LOG_LEVEL
-        value: "info"
+﻿# Exported from Render on 2026-01-30T13:57:31Z
+version: "1"
+projects:
+- name: Heady
+  environments:
+  - name: Production
+    services:
+    - type: web
+      name: "1234"
+      runtime: docker
+      repo: https://github.com/HeadyMe/Heady
+      plan: standard
+      envVars:
+      - key: HEADY_JWT_EXPIRES_IN
+        sync: false
+      - key: HEADY_SESSION_SECRET
+        sync: false
       - key: HEADY_LOG_FORMAT
-        value: "json"
-      - key: HEADY_RATE_LIMIT_WINDOW_MS
-        value: "60000"
-      - key: HEADY_RATE_LIMIT_MAX
-        value: "120"
-      - key: HF_MAX_CONCURRENCY
-        value: "4"
-      - key: HEADY_PY_MAX_CONCURRENCY
-        value: "2"
-      - key: HEADY_QA_BACKEND
-        value: "auto"
-      - key: HEADY_QA_MAX_NEW_TOKENS
-        value: "256"
-      - key: HF_TEXT_MODEL
-        value: "gpt2"
-      - key: HF_EMBED_MODEL
-        value: "sentence-transformers/all-MiniLM-L6-v2"
+        sync: false
+      - key: HEADY_LOG_LEVEL
+        sync: false
+      - key: HEADY_MCP_MAX_CONCURRENT_REQUESTS
+        sync: false
+      - key: HEADY_MCP_SERVER_TIMEOUT_MS
+        sync: false
+      - key: HEADY_TRUST_PROXY
+        sync: false
       - key: HEADY_CORS_ORIGINS
-        value: "https://heady-systems.onrender.com"
-      - key: REMOTE_GPU_HOST
-        value: "${REMOTE_GPU_HOST}"
-      - key: REMOTE_GPU_PORT
-        value: "${REMOTE_GPU_PORT}"
-      - key: GPU_MEMORY_LIMIT
-        value: "${GPU_MEMORY_LIMIT}"
+        sync: false
       - key: ENABLE_GPUDIRECT
-        value: "${ENABLE_GPUDIRECT}"
-
-databases:
-  - name: heady-db
-    databaseName: heady
-    user: heady_user
-    ipAllowList: []
-
-envVarGroups:
-  - name: heady-shared-secrets
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: heady-db
-          property: connectionString
+        sync: false
+      - key: GPU_MEMORY_LIMIT
+        sync: false
+      - key: REMOTE_GPU_PORT
+        sync: false
+      - key: REMOTE_GPU_HOST
+        sync: false
+      - key: HEADY_ADMIN_ENABLE_GPU
+        sync: false
+      - key: HEADY_ADMIN_OP_LIMIT
+        sync: false
+      - key: HEADY_ADMIN_OP_LOG_LIMIT
+        sync: false
+      - key: HEADY_ADMIN_MAX_BYTES
+        sync: false
+      - key: HEADY_ADMIN_ALLOWED_PATHS
+        sync: false
+      - key: HEADY_ADMIN_ROOT
+        sync: false
+      - key: HEADY_QA_MAX_CONTEXT_CHARS
+        sync: false
+      - key: HEADY_QA_MAX_QUESTION_CHARS
+        sync: false
+      - key: HEADY_QA_MAX_NEW_TOKENS
+        sync: false
+      - key: HEADY_QA_BACKEND
+        sync: false
+      - key: HEADY_PY_WORKER_TIMEOUT_MS
+        sync: false
+      - key: HEADY_PYTHON_BIN
+        sync: false
+      - key: HEADY_PY_MAX_CONCURRENCY
+        sync: false
+      - key: HF_MAX_CONCURRENCY
+        sync: false
+      - key: HEADY_RATE_LIMIT_MAX
+        sync: false
+      - key: HEADY_RATE_LIMIT_WINDOW_MS
+        sync: false
+      - key: HF_EMBED_MODEL
+        sync: false
+      - key: HF_TEXT_MODEL
+        sync: false
+      - key: NODE_ENV
+        sync: false
+      - key: PORT
+        sync: false
+      - key: GH_TOKEN
+        sync: false
+      - key: GITHUB_APP_WEBHOOK_SECRET
+        sync: false
+      - key: GITHUB_APP_PRIVATE_KEY
+        sync: false
+      - key: GITHUB_APP_ID
+        sync: false
       - key: HEADY_API_KEY
-        generateValue: true
+        sync: false
+      - key: GOOGLE_API_KEY
+        sync: false
       - key: HF_TOKEN
-        value: "${HF_TOKEN}"
+        sync: false
+      - key: Var_Set_1
+        sync: false
+      region: oregon
+      dockerContext: .
+      dockerfilePath: ./Dockerfile
+      autoDeployTrigger: commit
+      rootDir: HeadyMe/Heady HeadyMe/main HeadySystems/Heady HeadySystems/HeadyConnection HeadyMe/HeadyConnection HeadySystems/sandbox HeadySystems/HeadyConnection
