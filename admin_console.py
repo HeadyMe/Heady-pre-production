@@ -128,7 +128,7 @@ def check_security(project_root):
     """Security audit checks"""
     security_info = {
         "has_env_file": (project_root / ".env").exists(),
-        "has_env_example": (project_root / ".env.example").exists(),
+        "has_env_template": (project_root / ".env.template").exists(),
         "secrets_in_config": [],
         "file_permissions": {}
     }

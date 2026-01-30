@@ -247,37 +247,41 @@ def handle_health_check() -> None:
 
 def main() -> None:
     """Main entry point for the Python worker"""
-    # Check if we're being called with a specific command
-    if len(sys.argv) > 1:
-        command = sys.argv[1]
-        if command == "qa":
-            handle_qa_command()
-        elif command == "health":
-            handle_health_check()
-        elif command == "test":
-            # Placeholder for test functionality
-            logger.info("Test functionality not yet implemented")
-            print(json.dumps({"status": "not_implemented", "message": "Test functionality not yet implemented"}))
-            sys.exit(0)
-        else:
-            logger.error(f"Unknown command: {command}")
-            print(json.dumps({"error": f"Unknown command: {command}"}))
-            sys.exit(1)
-    
-    # Default behavior: worker initialization
-    logger.info("∞ Heady Data Worker Initialized ∞")
-    logger.info("∞ Heady Hugging Face Bridge Online ∞")
-    print("∞ Heady Data Worker Initialized ∞")
-    print("∞ Heady Hugging Face Bridge Online ∞")
-
     try:
+        # Check if we're being called with a specific command
+        if len(sys.argv) > 1:
+            command = sys.argv[1]
+            if command == "qa":
+                handle_qa_command()
+            elif command == "health":
+                handle_health_check()
+            elif command == "test":
+                # Placeholder for test functionality
+                logger.info("Test functionality not yet implemented")
+                print(json.dumps({"status": "not_implemented", "message": "Test functionality not yet implemented"}))
+                sys.exit(0)
+            else:
+                logger.error(f"Unknown command: {command}")
+                print(json.dumps({"error": f"Unknown command: {command}"}))
+                sys.exit(1)
+
+        # Default behavior: worker initialization
+        logger.info("∞ Heady Data Worker Initialized ∞")
+        logger.info("∞ Heady Hugging Face Bridge Online ∞")
+        print("∞ Heady Data Worker Initialized ∞")
+        print("∞ Heady Hugging Face Bridge Online ∞")
+
         while True:
             time.sleep(60)
+
     except KeyboardInterrupt:
         logger.info("Worker shutting down gracefully...")
         print("Worker shutting down gracefully...")
         sys.exit(0)
-
+    except Exception as e:
+        logger.critical(f"Worker crashed: {e}", exc_info=True)
+        print(f"Worker crashed: {e}", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()

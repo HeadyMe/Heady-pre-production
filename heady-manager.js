@@ -86,9 +86,22 @@ function createRateLimiter({ windowMs, max }) {
       return res.status(429).json({ ok: false, error: 'Rate limit exceeded', request_id: req.requestId });
     }
 
-    if (hits.size > 10000) {
+    // Periodic cleanup (every 100 requests)
+    if (Math.random() < 0.01) {
       for (const [key, value] of hits.entries()) {
         if (value && typeof value.resetAt === 'number' && now >= value.resetAt) hits.delete(key);
+      }
+    }
+
+    if (hits.size > 10000) {
+      // Force cleanup if too large
+      for (const [key, value] of hits.entries()) {
+        if (value && typeof value.resetAt === 'number' && now >= value.resetAt) hits.delete(key);
+      }
+      // If still too large, clear oldest
+      if (hits.size > 10000) {
+        const oldest = hits.keys().next().value;
+        hits.delete(oldest);
       }
     }
 
@@ -649,11 +662,19 @@ async function runPythonQa({ question, context, model, parameters, requestId }) 
   return pySemaphore.run(
     () =>
       new Promise((resolve, reject) => {
-        const child = spawn(HEADY_PYTHON_BIN, [PY_WORKER_SCRIPT, 'qa'], {
-          stdio: ['pipe', 'pipe', 'pipe'],
-          env: { ...process.env, PYTHONUNBUFFERED: '1' },
-          windowsHide: true,
-        });
+        let child;
+        try {
+          child = spawn(HEADY_PYTHON_BIN, [PY_WORKER_SCRIPT, 'qa'], {
+            stdio: ['pipe', 'pipe', 'pipe'],
+            env: { ...process.env, PYTHONUNBUFFERED: '1' },
+            windowsHide: true,
+          });
+        } catch (spawnError) {
+          const err = new Error('Failed to spawn Python worker');
+          err.code = 'PY_SPAWN_FAILED';
+          err.details = { error: spawnError.message };
+          return reject(err);
+        }
 
         const maxBytes = 1024 * 1024;
         let stdout = '';
@@ -1366,7 +1387,16 @@ app.use((err, req, res, next) => {
   res.status(status).json(payload);
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  try {
+    if (!fs.existsSync(HEADY_ADMIN_ROOT)) {
+      await fsp.mkdir(HEADY_ADMIN_ROOT, { recursive: true });
+      logMessage('warn', `Created HEADY_ADMIN_ROOT at ${HEADY_ADMIN_ROOT}`);
+    }
+  } catch (err) {
+    logMessage('error', `Failed to create HEADY_ADMIN_ROOT: ${err.message}`);
+  }
+
   logMessage('info', `Heady System Active on Port ${PORT}`, { 
     port: PORT, 
     nodeEnv: process.env.NODE_ENV,
