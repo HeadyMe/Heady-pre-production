@@ -1,0 +1,63 @@
+# Cloudflare Edge Worker Configuration
+# Place this in the root of your project
+
+name = "heady-admin-edge-worker"
+type = "javascript"
+account_id = "" # Add your Cloudflare account ID
+workers_dev = true
+compatibility_date = "2024-01-01"
+
+# Main configuration
+main = "cloudflare-worker.js"
+
+[build]
+command = ""
+
+[build.upload]
+format = "service-worker"
+
+# Environment variables (DO NOT commit secrets)
+[vars]
+ORIGIN_URL = "https://heady-app.onrender.com"
+CACHE_TTL = "3600"
+ENVIRONMENT = "production"
+
+# Routes for production
+[[routes]]
+pattern = "admin.heady.example.com/*"
+zone_name = "heady.example.com"
+
+# Development environment
+[env.development]
+name = "heady-admin-edge-worker-dev"
+vars = { ORIGIN_URL = "http://localhost:3300", ENVIRONMENT = "development" }
+
+# Staging environment
+[env.staging]
+name = "heady-admin-edge-worker-staging"
+vars = { ORIGIN_URL = "https://heady-staging.onrender.com", ENVIRONMENT = "staging" }
+
+# Production environment
+[env.production]
+name = "heady-admin-edge-worker-prod"
+vars = { ENVIRONMENT = "production" }
+route = "admin.heady.example.com/*"
+zone_id = "" # Add your Cloudflare zone ID
+
+# KV Namespaces (for future enhancements)
+# [[kv_namespaces]]
+# binding = "ADMIN_CACHE"
+# id = "your_kv_namespace_id"
+
+# Durable Objects (for future real-time features)
+# [[durable_objects.bindings]]
+# name = "ADMIN_SESSIONS"
+# class_name = "AdminSession"
+
+# Observability
+[observability]
+enabled = true
+
+# Limits
+[limits]
+cpu_ms = 50
