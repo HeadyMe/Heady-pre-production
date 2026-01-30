@@ -19,9 +19,9 @@ Write-Host "[HEADY] Initiating Repository Synchronization..." -ForegroundColor C
 # 1. INTELLIGENT SCAN (Generate Commit Message based on files)
 $Status = git status --porcelain
 $ChangedFiles = @()
-foreach ($line in $Status -split "`n") {
-    if ($line.Trim()) {
-        $file = ($line -split '\s+', 2)[1]
+foreach ($line in $Status) {
+    if ($line.Length -gt 3) {
+        $file = $line.Substring(3).Trim()
         $ChangedFiles += $file
     }
 }

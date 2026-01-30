@@ -225,4 +225,6 @@ See LICENSE file.
 
 ## Commit Guidelines
 
-3. Make commits with clear messages following conventional commits format
+1. Use descriptive commit messages.
+2. Follow conventional commits format (e.g., feat:, fix:, docs:).
+3. Ensure atomicity of commits.
