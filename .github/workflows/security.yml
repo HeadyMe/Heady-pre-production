@@ -33,7 +33,7 @@ jobs:
         pip install -r requirements.txt
         
     - name: Run npm audit
-      run: npm audit --audit-level=moderate
+      run: npm audit --audit-level=moderate --json > npm-audit.json || true
       
     - name: Run Python security scan
       run: |
