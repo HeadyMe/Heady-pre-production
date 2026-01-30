@@ -17,7 +17,11 @@
     "admin:open": "./tools/admin-open",
     "admin:test": "./tools/test-admin-functional",
     "admin:test:security": "./tools/test-admin-security",
-    "admin:test:all": "./tools/test-admin-security && ./tools/test-admin-functional"
+    "admin:test:all": "./tools/test-admin-security && ./tools/test-admin-functional",
+    "secrets:generate": "./tools/generate-api-key",
+    "secrets:validate": "./tools/validate-env",
+    "secrets:list": "./tools/list-secrets",
+    "env:setup": "cp .env.example .env && echo 'Please edit .env with your secrets' && ./tools/validate-env"
   },
   "keywords": ["mcp", "sacred-geometry", "heady", "cognitive-interleaving", "model-context-protocol"],
   "author": "Heady Systems",
