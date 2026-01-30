@@ -1339,7 +1339,7 @@ app.get(
 app.get(
   '/admin',
   asyncHandler(async (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+    res.sendFile(path.join(__dirname, 'public', 'admin', 'index.html'));
   }),
 );
 

@@ -88,16 +88,10 @@ GOOGLE_API_KEY=AIzaSy_your_google_key_here
 
 ### Step 3: Access the Admin UI
 
-#### Primary Admin Interface
+#### Admin IDE Interface
 Open your browser and navigate to:
 ```
 http://localhost:3300/admin
-```
-
-#### Alternative Admin IDE
-For the Monaco editor-based IDE:
-```
-http://localhost:3300/admin/index.html
 ```
 
 ## Authentication
