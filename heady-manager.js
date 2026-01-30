@@ -766,18 +766,26 @@ app.post(
   '/api/github/webhooks',
   express.json({ type: 'application/json', limit: '5mb' }),
   asyncHandler(async (req, res) => {
+    // Validate payload is not empty
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        ok: false,
+        error: 'Empty payload'
+      });
+    }
+    
     await githubAppHandler.handleWebhook(req, res);
   })
 );
 
-// GitHub App setup endpoint
+// GitHub App setup endpoint (protected)
 app.get(
   '/api/github/setup',
+  requireApiKey,
   asyncHandler(async (req, res) => {
     res.json({
       ok: true,
       message: 'GitHub App setup endpoint',
-      appId: process.env.GITHUB_APP_ID || 'Not configured',
       configured: !!(process.env.GITHUB_APP_ID && process.env.GITHUB_APP_WEBHOOK_SECRET)
     });
   })
@@ -787,9 +795,13 @@ app.get(
 app.get(
   '/api/github/callback',
   asyncHandler(async (req, res) => {
-    const { code, installation_id, setup_action } = req.query;
+    const { installation_id, setup_action } = req.query;
     
-    logMessage('info', 'GitHub App callback', { code: !!code, installation_id, setup_action });
+    logMessage('info', 'GitHub App callback', { 
+      hasCode: !!req.query.code, 
+      installation_id, 
+      setup_action 
+    });
     
     res.json({
       ok: true,
@@ -799,15 +811,17 @@ app.get(
   })
 );
 
-// GitHub App status endpoint (public)
+// GitHub App status endpoint (minimal public info)
 app.get(
   '/api/github/app/status',
   asyncHandler(async (req, res) => {
     const stats = githubAppHandler.getStats();
     
+    // Only expose non-sensitive stats publicly
     res.json({
       ok: true,
-      ...stats
+      configured: stats.isConfigured,
+      uptime: stats.uptime
     });
   })
 );

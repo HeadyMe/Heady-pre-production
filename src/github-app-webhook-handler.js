@@ -8,6 +8,9 @@ const GITHUB_APP_PRIVATE_KEY = process.env.GITHUB_APP_PRIVATE_KEY
   : null;
 const GITHUB_APP_WEBHOOK_SECRET = process.env.GITHUB_APP_WEBHOOK_SECRET;
 
+// Configuration constants
+const MIN_PR_DESCRIPTION_LENGTH = 20;
+
 class GitHubAppWebhookHandler extends EventEmitter {
   constructor(options = {}) {
     super();
@@ -90,11 +93,16 @@ class GitHubAppWebhookHandler extends EventEmitter {
 
     } catch (error) {
       this.stats.webhooksFailed++;
-      console.error('Webhook processing error:', error);
+      console.error('Webhook processing error:', error.message);
+      
+      // Generate error ID for correlation
+      const errorId = crypto.randomUUID();
+      console.error(`Error ID ${errorId}:`, error.stack);
       
       res.status(500).json({
         ok: false,
-        error: 'Webhook processing failed'
+        error: 'Webhook processing failed',
+        errorId
       });
     }
   }
@@ -305,11 +313,11 @@ class GitHubAppWebhookHandler extends EventEmitter {
     const { payload } = context;
     const pr = payload.pull_request;
     
-    // Check PR description length
-    const hasDescription = pr.body && pr.body.length > 20;
+    // Check PR description length using constant
+    const hasDescription = pr.body && pr.body.length > MIN_PR_DESCRIPTION_LENGTH;
     
     if (!hasDescription) {
-      console.warn(`PR #${pr.number} has insufficient description`);
+      console.warn(`PR #${pr.number} has insufficient description (minimum ${MIN_PR_DESCRIPTION_LENGTH} characters)`);
     }
 
     return hasDescription;
@@ -355,16 +363,17 @@ class GitHubAppWebhookHandler extends EventEmitter {
 
     const labels = [];
 
-    if (content.includes('bug') || content.includes('error') || content.includes('issue')) {
+    // Use word boundary regex for more accurate matching
+    if (/\b(bug|error|issue|broken|crash|fail)\b/.test(content)) {
       labels.push('bug');
     }
-    if (content.includes('feature') || content.includes('enhancement')) {
+    if (/\b(feature|enhancement|improve|add)\b/.test(content)) {
       labels.push('enhancement');
     }
-    if (content.includes('documentation') || content.includes('docs')) {
+    if (/\b(documentation|docs|readme)\b/.test(content)) {
       labels.push('documentation');
     }
-    if (content.includes('security') || content.includes('vulnerability')) {
+    if (/\b(security|vulnerability|cve|exploit)\b/.test(content)) {
       labels.push('security');
     }
 
