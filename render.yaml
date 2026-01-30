@@ -67,3 +67,9 @@ services:
         value: "${HF_TOKEN}"
       - key: HEADY_API_KEY
         value: "${HEADY_API_KEY}"
+      - key: GITHUB_APP_ID
+        value: "${GITHUB_APP_ID}"
+      - key: GITHUB_APP_PRIVATE_KEY
+        value: "${GITHUB_APP_PRIVATE_KEY}"
+      - key: GITHUB_APP_WEBHOOK_SECRET
+        value: "${GITHUB_APP_WEBHOOK_SECRET}"

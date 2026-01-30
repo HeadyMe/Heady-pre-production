@@ -1,0 +1,35 @@
+{
+  "name": "Heady Governance Bot",
+  "url": "https://github.com/HeadyMe/Heady",
+  "description": "Custom GitHub App for HeadyConnection ecosystem - providing automated compliance checks, governance enforcement, and repository health monitoring aligned with stringent security and compliance requirements.",
+  "hook_attributes": {
+    "url": "https://heady-manager.onrender.com/api/github/webhooks"
+  },
+  "redirect_url": "https://heady-manager.onrender.com/api/github/callback",
+  "setup_url": "https://heady-manager.onrender.com/api/github/setup",
+  "public": false,
+  "default_permissions": {
+    "contents": "write",
+    "issues": "write",
+    "pull_requests": "write",
+    "checks": "write",
+    "statuses": "write",
+    "metadata": "read",
+    "actions": "read",
+    "security_events": "read",
+    "members": "read"
+  },
+  "default_events": [
+    "push",
+    "pull_request",
+    "pull_request_review",
+    "issues",
+    "issue_comment",
+    "check_run",
+    "check_suite",
+    "status",
+    "repository",
+    "member",
+    "security_advisory"
+  ]
+}
