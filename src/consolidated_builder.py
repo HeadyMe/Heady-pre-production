@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import subprocess
+import shlex
 import argparse
 from pathlib import Path
 from datetime import datetime
@@ -29,7 +30,8 @@ def run_command(cmd, cwd=None, timeout=300):
     try:
         # Convert string command to list for safer execution
         if isinstance(cmd, str):
-            cmd_list = cmd.split()
+            # Use shlex.split for proper handling of quoted strings and special characters
+            cmd_list = shlex.split(cmd)
         else:
             cmd_list = cmd
             
