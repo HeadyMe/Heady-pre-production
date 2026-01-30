@@ -68,6 +68,10 @@ The Admin UI is a web-based interface accessible via browser at `/admin` endpoin
 
 > 📄 **TL;DR**: See the [Quick Connection Reference](./ADMIN_CONNECTION_QUICK_REF.md) for a condensed guide, or run `./test-connection.sh` to verify your setup.
 
+> ℹ️ **Architecture Note**: This project supports two deployment architectures:
+> - **Primary (Node.js/Express)**: Single server on port 3300 serving both API and UI (documented below)
+> - **Alternative (FastAPI/React)**: Separate Python backend and React frontend (see [Alternative FastAPI Setup](#alternative-fastapi-setup))
+
 ### Local Development Access
 
 #### 1. Start the Server
@@ -294,6 +298,151 @@ Connection test completed successfully!
 - **Rotate API keys** regularly
 - **Use strong, unique keys** with minimum 32 characters for production
 - **Monitor access logs** for suspicious activity
+
+### Alternative FastAPI Setup
+
+This project also supports an alternative architecture using a FastAPI backend with a separate React frontend.
+
+#### Architecture Overview
+
+| Component | Technology | Location | Port |
+|-----------|------------|----------|------|
+| **Backend** | FastAPI/Python | `src/heady_project/` | 8000 |
+| **Frontend** | React/Vite | `frontend/` | Built & served by backend |
+| **API Module** | FastAPI routes | `src/heady_project/api.py` | - |
+
+#### Setup Instructions
+
+##### 1. Install Dependencies
+
+```bash
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Install and build frontend (if Node.js is available)
+cd frontend
+npm install
+npm run build
+cd ..
+```
+
+If Node.js is not available, the system will fall back to a placeholder HTML file.
+
+##### 2. Set Environment Variables
+
+```bash
+# Required for FastAPI setup
+export ADMIN_TOKEN="your-secure-admin-token-here"
+
+# Optional but recommended
+export DATABASE_URL="postgresql://..."
+export CLOUDFLARE_API_TOKEN="your-cloudflare-token"
+```
+
+##### 3. Start the FastAPI Server
+
+```bash
+# Start the API server
+python -m src.heady_project.admin_console --action serve_api
+```
+
+Expected output:
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [12345]
+INFO:     Started server process [12346]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+```
+
+##### 4. Access the Admin UI
+
+Open your browser to:
+```
+http://127.0.0.1:8000
+```
+
+**Important**: Due to security rules, only local access (`127.0.0.1`) is permitted, not `0.0.0.0` or `localhost`.
+
+#### Authentication (FastAPI)
+
+All API requests require authentication via the `X-Admin-Token` header:
+
+```bash
+# Example API request
+curl -H "X-Admin-Token: your-admin-token-here" \
+     http://127.0.0.1:8000/api/some-endpoint
+```
+
+**WebSocket connections** also require the `X-Admin-Token` header for log streaming and real-time updates.
+
+#### Verification Commands
+
+```bash
+# Run a full system audit
+python -m src.heady_project.admin_console --action full_audit
+
+# Expected output:
+# Audit complete. All systems nominal.
+```
+
+#### FastAPI Endpoints
+
+| Endpoint | Method | Auth Required | Description |
+|----------|--------|---------------|-------------|
+| `/` | GET | No | Serves React frontend |
+| `/api/*` | Various | Yes | API routes defined in `api.py` |
+| `/ws/logs` | WebSocket | Yes | Real-time log streaming |
+
+#### Scanning for Issues (FastAPI Setup)
+
+To scan the FastAPI backend and React frontend for runtime errors:
+
+```bash
+# Example prompt for AI-assisted scanning:
+# "I have a project called Heady Admin UI that consists of a FastAPI backend 
+#  and a React-based frontend. Please review the backend (src/heady_project) 
+#  and frontend (frontend) code to identify any runtime errors, missing 
+#  functionality or other issues. In particular, check that the API routes 
+#  defined in src/heady_project/api.py work correctly and that the front-end 
+#  components use them properly. After your scan, summarize any problems and 
+#  suggest fixes. Finally, explain how to run the admin UI locally, including 
+#  how to build the frontend, start the API server and authenticate using the 
+#  ADMIN_TOKEN."
+```
+
+#### Troubleshooting (FastAPI)
+
+**1. "Missing Admin Token" error**
+- Ensure `ADMIN_TOKEN` environment variable is set
+- Include `X-Admin-Token` header in all API requests
+- For WebSocket connections, pass token in connection parameters
+
+**2. Frontend not loading**
+- Verify `frontend/build` directory exists: `ls -la frontend/build`
+- Rebuild frontend: `cd frontend && npm run build`
+- Check FastAPI logs for static file mounting errors
+
+**3. Port 8000 already in use**
+- Check for running processes: `lsof -i:8000`
+- Kill existing process or use a different port
+- Modify the port in admin_console.py if needed
+
+**4. Cannot connect from browser**
+- Use `http://127.0.0.1:8000`, not `http://0.0.0.0:8000` or `http://localhost:8000`
+- Check firewall rules for port 8000
+- Verify FastAPI server is running: check console output
+
+#### Comparison: Node.js vs FastAPI Setup
+
+| Feature | Node.js/Express | FastAPI/Python |
+|---------|----------------|----------------|
+| **Port** | 3300 | 8000 |
+| **Auth Header** | `x-heady-api-key` or `Authorization: Bearer` | `X-Admin-Token` |
+| **Auth Variable** | `HEADY_API_KEY` | `ADMIN_TOKEN` |
+| **Start Command** | `npm start` | `python -m src.heady_project.admin_console --action serve_api` |
+| **Frontend Location** | `public/admin.html` | `frontend/build/` |
+| **Use Case** | Primary deployment, MCP integration | Alternative setup, separate frontend/backend |
 
 ## Configuration
 

@@ -1,6 +1,22 @@
 # Heady Admin UI - Quick Connection Reference
 
-## 🚀 Quick Start (Local)
+## 🏗️ Two Architecture Options
+
+This project supports two deployment architectures:
+
+### Option 1: Node.js/Express (Primary)
+- Port: **3300**
+- Auth: `HEADY_API_KEY`
+- Start: `npm start`
+
+### Option 2: FastAPI/Python (Alternative)
+- Port: **8000**
+- Auth: `ADMIN_TOKEN`
+- Start: `python -m src.heady_project.admin_console --action serve_api`
+
+---
+
+## 🚀 Quick Start (Node.js - Option 1)
 
 ```bash
 # 1. Install dependencies
@@ -95,6 +111,91 @@ sudo ufw allow 3300/tcp  # Linux
 ### Admin UI shows 404
 - Verify files exist: `ls -la public/admin.html`
 - Try full path: `http://localhost:3300/admin.html`
+
+---
+
+## 🐍 Quick Start (FastAPI - Option 2)
+
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+cd frontend && npm install && npm run build && cd ..
+
+# 2. Set environment variable
+export ADMIN_TOKEN="your-secure-admin-token-here"
+
+# 3. Start FastAPI server
+python -m src.heady_project.admin_console --action serve_api
+
+# 4. Open browser (use 127.0.0.1, not localhost!)
+http://127.0.0.1:8000
+```
+
+## 🔑 Authentication (FastAPI)
+
+### HTTP Header
+```
+X-Admin-Token: your-admin-token-here
+```
+
+**Required for:**
+- All API requests to `/api/*`
+- WebSocket connections to `/ws/logs`
+
+### Testing FastAPI Connection
+
+```bash
+# Health check (replace with actual endpoint)
+curl -H "X-Admin-Token: $ADMIN_TOKEN" \
+     http://127.0.0.1:8000/api/health
+
+# Run system audit
+python -m src.heady_project.admin_console --action full_audit
+```
+
+## 🆚 Quick Comparison
+
+| Feature | Node.js (Option 1) | FastAPI (Option 2) |
+|---------|-------------------|-------------------|
+| **Port** | 3300 | 8000 |
+| **Auth Env Var** | `HEADY_API_KEY` | `ADMIN_TOKEN` |
+| **Auth Header** | `x-heady-api-key` | `X-Admin-Token` |
+| **Start Command** | `npm start` | `python -m src.heady_project.admin_console --action serve_api` |
+| **URL** | `http://localhost:3300/admin.html` | `http://127.0.0.1:8000` |
+| **Frontend** | `public/admin.html` | `frontend/build/` |
+
+## 🔧 Common Issues (FastAPI)
+
+### "Missing Admin Token" error
+```bash
+# Ensure ADMIN_TOKEN is set
+echo $ADMIN_TOKEN
+
+# Include header in requests
+curl -H "X-Admin-Token: $ADMIN_TOKEN" http://127.0.0.1:8000/api/endpoint
+```
+
+### Frontend not loading
+```bash
+# Rebuild frontend
+cd frontend && npm run build && cd ..
+
+# Verify build directory exists
+ls -la frontend/build
+```
+
+### Port 8000 in use
+```bash
+# Find process
+lsof -i:8000
+
+# Kill process (use actual PID)
+kill <PID>
+```
+
+### Cannot connect
+- Use `http://127.0.0.1:8000`, **not** `localhost` or `0.0.0.0`
+- Security rules require local-only access
 
 ## 📚 More Information
 
