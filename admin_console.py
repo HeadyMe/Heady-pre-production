@@ -15,9 +15,13 @@ import psutil
 import platform
 
 def log_info(msg):
+    if isinstance(msg, (Path,)):
+        msg = str(msg)
     print(f"[INFO] {datetime.now().isoformat()} {msg}")
 
 def log_error(msg):
+    if isinstance(msg, (Path,)):
+        msg = str(msg)
     print(f"[ERROR] {datetime.now().isoformat()} {msg}", file=sys.stderr)
 
 def run_command(cmd, cwd=None, timeout=120):
@@ -39,6 +43,7 @@ def run_command(cmd, cwd=None, timeout=120):
 
 def check_system_health():
     """Check system health and resources"""
+    cwd_path = str(Path.cwd())
     health_info = {
         "timestamp": datetime.now().isoformat(),
         "platform": platform.platform(),
@@ -47,7 +52,7 @@ def check_system_health():
         "memory_total": psutil.virtual_memory().total,
         "memory_available": psutil.virtual_memory().available,
         "disk_usage": {
-            str(Path.cwd()): psutil.disk_usage(Path.cwd()).percent
+            cwd_path: psutil.disk_usage(cwd_path).percent
         }
     }
     return health_info
@@ -145,7 +150,7 @@ def check_security(project_root):
 
 def audit_project(project_root):
     """Main audit orchestration"""
-    log_info(f"Starting audit for project: {project_root}")
+    log_info(f"Starting audit for project: {str(project_root)}")
     
     audit_info = {
         "status": "success",
@@ -162,30 +167,34 @@ def audit_project(project_root):
 
 def main():
     parser = argparse.ArgumentParser(description="Admin console audit")
-    parser.add_argument("--project-root", type=Path, default=Path.cwd(), 
+    parser.add_argument("--project-root", type=str, default=str(Path.cwd()), 
                        help="Project root directory")
-    parser.add_argument("--output", type=Path, help="Output audit info to file")
+    parser.add_argument("--output", type=str, help="Output audit info to file")
     parser.add_argument("--check", choices=["health", "structure", "deps", "security"], 
                        help="Run specific check only")
     
     args = parser.parse_args()
     
+    # Convert string path to Path object
+    project_root = Path(args.project_root) if isinstance(args.project_root, str) else args.project_root
+    
     try:
         if args.check == "health":
             result = check_system_health()
         elif args.check == "structure":
-            result = check_project_structure(args.project_root)
+            result = check_project_structure(project_root)
         elif args.check == "deps":
-            result = check_dependencies(args.project_root)
+            result = check_dependencies(project_root)
         elif args.check == "security":
-            result = check_security(args.project_root)
+            result = check_security(project_root)
         else:
-            result = audit_project(args.project_root)
+            result = audit_project(project_root)
         
         if args.output:
-            with open(args.output, 'w') as f:
+            output_path = Path(args.output)
+            with open(output_path, 'w') as f:
                 json.dump(result, f, indent=2)
-            log_info(f"Audit info written to {args.output}")
+            log_info(f"Audit info written to {output_path}")
         else:
             print(json.dumps(result, indent=2))
             

@@ -41,7 +41,12 @@ def hf_infer(
     if not HF_TOKEN:
         raise RuntimeError("HF_TOKEN is not set")
 
-    url = f"https://api-inference.huggingface.co/models/{model}"
+    # Try router API first, fallback to legacy API
+    base_urls = [
+        f"https://router.huggingface.co/models/{model}",
+        f"https://api-inference.huggingface.co/models/{model}"
+    ]
+    
     payload: Dict[str, Any] = {"inputs": inputs}
     if parameters is not None:
         payload["parameters"] = parameters
@@ -54,32 +59,36 @@ def hf_infer(
         "Accept": "application/json",
     }
 
-    for attempt in range(max_retries + 1):
-        resp = requests.post(url, json=payload, headers=headers, timeout=timeout_s)
-        if resp.status_code == 503 and attempt < max_retries:
-            try:
-                data = resp.json()
-                estimated = data.get("estimated_time")
-                wait_ms = int(estimated * 1000) + 250 if isinstance(estimated, (int, float)) else 1500
-            except Exception:
-                wait_ms = 1500
-            _sleep_ms(wait_ms)
-            continue
+    for base_url in base_urls:
+        for attempt in range(max_retries + 1):
+            resp = requests.post(base_url, json=payload, headers=headers, timeout=timeout_s)
+            if resp.status_code == 503 and attempt < max_retries:
+                try:
+                    data = resp.json()
+                    estimated = data.get("estimated_time")
+                    wait_ms = int(estimated * 1000) + 250 if isinstance(estimated, (int, float)) else 1500
+                except Exception:
+                    wait_ms = 1500
+                _sleep_ms(wait_ms)
+                continue
 
-        if resp.status_code < 200 or resp.status_code >= 300:
-            try:
-                data = resp.json()
-            except Exception:
-                data = resp.text
+            if resp.status_code < 200 or resp.status_code >= 300:
+                if resp.status_code == 404 and base_url == base_urls[0]:
+                    # Try next base URL for 404 on router
+                    break
+                try:
+                    data = resp.json()
+                except Exception:
+                    data = resp.text
 
-            message = "Hugging Face inference failed"
-            if isinstance(data, dict) and isinstance(data.get("error"), str) and data["error"].strip():
-                message = data["error"].strip()
-            raise RuntimeError(f"{message} (status={resp.status_code})")
+                message = "Hugging Face inference failed"
+                if isinstance(data, dict) and isinstance(data.get("error"), str) and data["error"].strip():
+                    message = data["error"].strip()
+                raise RuntimeError(f"{message} (status={resp.status_code})")
 
-        return resp.json()
+            return resp.json()
 
-    raise RuntimeError("Hugging Face inference failed")
+    raise RuntimeError("Hugging Face inference failed - all endpoints exhausted")
 
 
 def hf_generate(

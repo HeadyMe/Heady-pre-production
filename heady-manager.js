@@ -250,64 +250,73 @@ async function hfInfer({ model, inputs, parameters, options, timeoutMs = 60000, 
 
   return hfSemaphore.run(async () => {
     const usedModel = model || DEFAULT_HF_TEXT_MODEL;
-    const url = `https://api-inference.huggingface.co/models/${encodeURIComponent(usedModel)}`;
+    const baseUrls = [
+      `https://router.huggingface.co/models/${encodeURIComponent(usedModel)}`,
+      `https://api-inference.huggingface.co/models/${encodeURIComponent(usedModel)}`
+    ];
 
     const payload = { inputs };
     if (parameters !== undefined) payload.parameters = parameters;
     if (options !== undefined) payload.options = options;
 
-    for (let attempt = 1; attempt <= maxRetries + 1; attempt += 1) {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    for (const baseUrl of baseUrls) {
+      for (let attempt = 1; attempt <= maxRetries + 1; attempt += 1) {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-      let status;
-      let data;
-      try {
-        const resp = await fetch(url, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${HF_TOKEN}`,
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(payload),
-          signal: controller.signal,
-        });
-
-        status = resp.status;
-        const text = await resp.text();
+        let status;
+        let data;
         try {
-          data = text ? JSON.parse(text) : null;
-        } catch {
-          data = text;
+          const resp = await fetch(baseUrl, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${HF_TOKEN}`,
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(payload),
+            signal: controller.signal,
+          });
+
+          status = resp.status;
+          const text = await resp.text();
+          try {
+            data = text ? JSON.parse(text) : null;
+          } catch {
+            data = text;
+          }
+        } finally {
+          clearTimeout(timeout);
         }
-      } finally {
-        clearTimeout(timeout);
+
+        if (status === 503 && attempt <= maxRetries) {
+          const estimated = data && typeof data === "object" ? data.estimated_time : undefined;
+          const waitMs = typeof estimated === "number" ? Math.ceil(estimated * 1000) + 250 : 1500;
+          await sleep(waitMs);
+          continue;
+        }
+
+        if (status < 200 || status >= 300) {
+          if (status === 404 && baseUrl === baseUrls[0]) {
+            // Try next base URL for 404 on router
+            break;
+          }
+          const message =
+            data && typeof data === "object" && typeof data.error === "string" && data.error.trim()
+              ? data.error
+              : "Hugging Face inference failed";
+
+          const err = new Error(message);
+          err.status = status;
+          err.response = data;
+          throw err;
+        }
+
+        return { model: usedModel, data };
       }
-
-      if (status === 503 && attempt <= maxRetries) {
-        const estimated = data && typeof data === "object" ? data.estimated_time : undefined;
-        const waitMs = typeof estimated === "number" ? Math.ceil(estimated * 1000) + 250 : 1500;
-        await sleep(waitMs);
-        continue;
-      }
-
-      if (status < 200 || status >= 300) {
-        const message =
-          data && typeof data === "object" && typeof data.error === "string" && data.error.trim()
-            ? data.error
-            : "Hugging Face inference failed";
-
-        const err = new Error(message);
-        err.status = status;
-        err.response = data;
-        throw err;
-      }
-
-      return { model: usedModel, data };
     }
 
-    throw new Error("Hugging Face inference failed");
+    throw new Error("Hugging Face inference failed - all endpoints exhausted");
   });
 }
 
