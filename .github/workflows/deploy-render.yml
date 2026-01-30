@@ -1,0 +1,52 @@
+name: Deploy (Render)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target GitHub Environment
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  deploy-production:
+    if: ${{ github.event.inputs.environment == 'production' }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret is not set. Configure it in GitHub Actions secrets."
+            exit 1
+          fi
+
+          echo "::add-mask::$RENDER_DEPLOY_HOOK_URL"
+          curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL" >/dev/null
+
+  deploy-staging:
+    if: ${{ github.event.inputs.environment == 'staging' }}
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+    steps:
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret is not set. Configure it in GitHub Actions secrets."
+            exit 1
+          fi
+
+          echo "::add-mask::$RENDER_DEPLOY_HOOK_URL"
+          curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL" >/dev/null

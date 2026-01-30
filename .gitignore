@@ -1,0 +1,6 @@
+node_modules/
+.env
+.heady_secrets
+__pycache__/
+*.log
+.venv/

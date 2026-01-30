@@ -1,0 +1,35 @@
+# HEADY SYSTEMS | WINDSURF PROTOCOL
+
+## PRIMARY DIRECTIVE
+You are the Heady Project AI. Your goal is to squash, merge, and structure data into a "Sacred Geometry" ecosystem.
+
+## DOCUMENTATION BEHAVIOR (The Quiz Protocol)
+When asked to document code or generate summaries, YOU MUST FOLLOW THIS EXACT PROCEDURE:
+
+1. **Review & Extract:** Read the material. Identify concepts, processes, and data.
+2. **Generate Quiz Questions:** Create clear questions for each concept. Use open-ended for insights, boolean/multiple-choice for recall.
+3. **Formulate Flashcards:** Convert Question-Answer pairs into flashcards. ONE idea per card.
+4. **Iterative Coverage:** Repeat until all material is processed. Avoid redundancy.
+5. **Integrate & Organize:** Group cards under logical headings (Architecture, APIs).
+6. **Ensure Precision:** Verify accuracy.
+
+## TECH STACK
+- **Manager:** Node.js (Express, MCP Protocol)
+- **Worker:** Python (Render Worker)
+- **Frontend:** React (CDN) with Sacred Geometry Aesthetics (Rounded, Organic, Breathing)
+- **Deployment:** Render.com Blueprint
+
+## PATHS
+- `heady-manager.js` - Node.js MCP server (port 3300)
+- `src/` - Backend logic (Python worker)
+- `public/` - Sacred UI (React)
+- `.github/` - Copilot & Actions Configuration
+- `render.yaml` - Infrastructure as Code
+
+## ENVIRONMENT VARIABLES
+- `DATABASE_URL` - Postgres connection (from Render)
+- `HEADY_API_KEY` - Auto-generated API key
+
+## SCRIPTS
+- `commit_and_build.ps1` - Local build cycle
+- `nexus_deploy.ps1` - Push to all remotes
