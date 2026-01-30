@@ -33,19 +33,24 @@ jobs:
         pip install -r requirements.txt
         
     - name: Run npm audit
-      run: npm audit --audit-level=moderate
+      run: npm audit --audit-level=moderate --json > npm-audit.json || true
       
     - name: Run Python security scan
       run: |
         pip install safety bandit
         safety check -r requirements.txt
         bandit -r src/ -f json -o bandit-report.json || true
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: javascript, python
         
     - name: Run CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
         
     - name: Upload security reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: security-reports

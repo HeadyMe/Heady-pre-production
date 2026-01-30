@@ -222,3 +222,9 @@ All documentation follows the **Quiz & Flashcard Methodology** (see `.github/cop
 ## License
 
 See LICENSE file.
+
+## Commit Guidelines
+
+1. Use descriptive commit messages.
+2. Follow conventional commits format (e.g., feat:, fix:, docs:).
+3. Ensure atomicity of commits.
