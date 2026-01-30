@@ -1,0 +1,29 @@
+# HeadySystems Code Owners
+# These owners will be automatically requested for review when someone opens a pull request
+
+# Default owners for everything in the repo
+*                           @HeadyMe
+
+# GitHub configuration and workflows
+/.github/                   @HeadyMe
+
+# Core manager and configuration files
+/heady-manager.js           @HeadyMe
+/package.json               @HeadyMe
+/render.yaml                @HeadyMe
+/mcp_config.json            @HeadyMe
+
+# Python source code
+/src/                       @HeadyMe
+
+# Admin and build scripts
+/admin_console.py           @HeadyMe
+/src/consolidated_builder.py @HeadyMe
+
+# Documentation
+*.md                        @HeadyMe
+/docs/                      @HeadyMe
+
+# Security-sensitive files
+/SECURITY.md                @HeadyMe
+/.github/workflows/security.yml @HeadyMe
