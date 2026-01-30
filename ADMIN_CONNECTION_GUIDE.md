@@ -275,7 +275,7 @@ async function listFiles(root, path) {
     `${ADMIN_BASE_URL}/api/admin/files?root=${root}&path=${path}`,
     {
       headers: {
-        'x-api-key': API_KEY
+        'x-heady-api-key': API_KEY
       }
     }
   );
@@ -296,7 +296,7 @@ def list_files(root, path):
     response = requests.get(
         f'{ADMIN_BASE_URL}/api/admin/files',
         params={'root': root, 'path': path},
-        headers={'x-api-key': API_KEY}
+        headers={'x-heady-api-key': API_KEY}
     )
     return response.json()
 ```
@@ -305,15 +305,15 @@ def list_files(root, path):
 
 ```bash
 # List roots
-curl -H "x-api-key: $HEADY_API_KEY" \
+curl -H "x-heady-api-key: $HEADY_API_KEY" \
   http://localhost:3300/api/admin/roots
 
 # Read file
-curl -H "x-api-key: $HEADY_API_KEY" \
+curl -H "x-heady-api-key: $HEADY_API_KEY" \
   "http://localhost:3300/api/admin/file?root=main&path=README.md"
 
 # Trigger build
-curl -X POST -H "x-api-key: $HEADY_API_KEY" \
+curl -X POST -H "x-heady-api-key: $HEADY_API_KEY" \
   http://localhost:3300/api/admin/build
 ```
 

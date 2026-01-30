@@ -180,12 +180,12 @@ Set via environment variables in your deployment platform (Render.com env groups
 
 ### Making Authenticated Requests
 
-Include the API key in the `x-api-key` header:
+Include the API key in the `x-heady-api-key` header:
 
 ```javascript
 fetch('/api/admin/files?root=main&path=/', {
   headers: {
-    'x-api-key': localStorage.getItem('headyApiKey')
+    'x-heady-api-key': localStorage.getItem('heady_api_key')
   }
 })
 ```
