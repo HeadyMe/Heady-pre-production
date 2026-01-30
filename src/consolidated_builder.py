@@ -19,10 +19,22 @@ def log_error(msg):
     print(f"[ERROR] {datetime.now().isoformat()} {msg}", file=sys.stderr)
 
 def run_command(cmd, cwd=None, timeout=300):
-    """Execute command with timeout and error handling"""
+    """Execute command with timeout and error handling
+    
+    Args:
+        cmd: Command to run (can be string or list of strings)
+        cwd: Working directory
+        timeout: Timeout in seconds
+    """
     try:
+        # Convert string command to list for safer execution
+        if isinstance(cmd, str):
+            cmd_list = cmd.split()
+        else:
+            cmd_list = cmd
+            
         result = subprocess.run(
-            cmd, shell=True, cwd=cwd, timeout=timeout,
+            cmd_list, shell=False, cwd=cwd, timeout=timeout,
             capture_output=True, text=True, check=True
         )
         return result.stdout.strip(), result.stderr.strip()
@@ -43,13 +55,13 @@ def build_project(project_root):
     package_json = project_root / "package.json"
     if package_json.exists():
         log_info("Installing Node.js dependencies...")
-        run_command("npm install", cwd=project_root)
+        run_command(["npm", "install"], cwd=project_root)
     
     # Check for requirements.txt and install Python dependencies
     requirements_txt = project_root / "requirements.txt"
     if requirements_txt.exists():
         log_info("Installing Python dependencies...")
-        run_command("pip install -r requirements.txt", cwd=project_root)
+        run_command(["pip", "install", "-r", "requirements.txt"], cwd=project_root)
     
     # Run tests if they exist
     test_dirs = ["tests", "test", "__tests__"]
@@ -60,10 +72,10 @@ def build_project(project_root):
             try:
                 # Try npm test first
                 if package_json.exists():
-                    run_command("npm test", cwd=project_root, timeout=600)
+                    run_command(["npm", "test"], cwd=project_root, timeout=600)
                 # Fall back to pytest
                 else:
-                    run_command("python -m pytest", cwd=project_root, timeout=600)
+                    run_command(["python", "-m", "pytest"], cwd=project_root, timeout=600)
             except subprocess.CalledProcessError:
                 log_error("Tests failed but continuing build...")
     
