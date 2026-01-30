@@ -95,6 +95,8 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a we
 - `.github/copilot-instructions.md` – Project overview and Quiz Protocol for documentation
 - `.github/copilot-mcp-config.json` – MCP server definitions
 - `.github/workflows/copilot-setup-steps.yml` – Setup workflow for Copilot
+- `docs/copilot-inline-suggestions.md` – Complete guide to Copilot inline suggestions
+- `examples/copilot-demonstrations/` – Working examples of Copilot features
 
 ## Documentation Protocol
 
