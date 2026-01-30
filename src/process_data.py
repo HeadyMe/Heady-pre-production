@@ -2,11 +2,19 @@ import os
 import sys
 import json
 import time
+import logging
 from typing import Any, Dict, List, Optional, Sequence, Union
 
 import requests
 from dotenv import load_dotenv
 
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 load_dotenv()
 
@@ -14,6 +22,7 @@ load_dotenv()
 HF_TOKEN = os.getenv("HF_TOKEN")
 DEFAULT_HF_TEXT_MODEL = os.getenv("HF_TEXT_MODEL", "gpt2")
 DEFAULT_HF_EMBED_MODEL = os.getenv("HF_EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+HEADY_PY_WORKER_TIMEOUT_MS = int(os.getenv("HEADY_PY_WORKER_TIMEOUT_MS", "90000"))
 
 
 def _sleep_ms(ms: int) -> None:
@@ -212,26 +221,53 @@ def handle_qa_command():
         sys.exit(1)
 
 
+def handle_health_check() -> None:
+    """Handle health check command"""
+    health_status = {
+        "status": "healthy",
+        "service": "heady-python-worker",
+        "timestamp": int(time.time()),
+        "hf_token_configured": bool(HF_TOKEN),
+        "default_text_model": DEFAULT_HF_TEXT_MODEL,
+        "default_embed_model": DEFAULT_HF_EMBED_MODEL,
+        "worker_timeout_ms": HEADY_PY_WORKER_TIMEOUT_MS,
+    }
+    print(json.dumps(health_status))
+    sys.exit(0)
+
+
 def main() -> None:
+    """Main entry point for the Python worker"""
     # Check if we're being called with a specific command
     if len(sys.argv) > 1:
         command = sys.argv[1]
         if command == "qa":
             handle_qa_command()
+        elif command == "health":
+            handle_health_check()
         elif command == "test":
             # Placeholder for test functionality
-            print("Test functionality not yet implemented")
+            logger.info("Test functionality not yet implemented")
+            print(json.dumps({"status": "not_implemented", "message": "Test functionality not yet implemented"}))
             sys.exit(0)
         else:
-            print(f"Unknown command: {command}")
+            logger.error(f"Unknown command: {command}")
+            print(json.dumps({"error": f"Unknown command: {command}"}))
             sys.exit(1)
     
     # Default behavior: worker initialization
+    logger.info("∞ Heady Data Worker Initialized ∞")
+    logger.info("∞ Heady Hugging Face Bridge Online ∞")
     print("∞ Heady Data Worker Initialized ∞")
     print("∞ Heady Hugging Face Bridge Online ∞")
 
-    while True:
-        time.sleep(60)
+    try:
+        while True:
+            time.sleep(60)
+    except KeyboardInterrupt:
+        logger.info("Worker shutting down gracefully...")
+        print("Worker shutting down gracefully...")
+        sys.exit(0)
 
 
 if __name__ == "__main__":

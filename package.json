@@ -1,7 +1,36 @@
 {
   "name": "heady-systems-core",
   "version": "1.0.0",
+  "description": "Heady Sacred Geometry Ecosystem - Hybrid Node.js/Python MCP Server",
   "main": "heady-manager.js",
-  "scripts": { "start": "node heady-manager.js" },
-  "dependencies": { "express": "^4.18.2", "cors": "^2.8.5", "dockerode": "^4.0.2", "@modelcontextprotocol/sdk": "^1.0.1", "python-shell": "^5.0.0" }
+  "scripts": {
+    "start": "node heady-manager.js",
+    "dev": "nodemon heady-manager.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"Build complete\"",
+    "lint": "eslint *.js",
+    "docker:build": "docker build -t heady-systems .",
+    "docker:run": "docker run -p 3300:3300 heady-systems"
+  },
+  "keywords": ["mcp", "sacred-geometry", "heady", "cognitive-interleaving", "model-context-protocol"],
+  "author": "Heady Systems",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dockerode": "^4.0.2",
+    "@modelcontextprotocol/sdk": "^1.0.1",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "python-shell": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
 }
