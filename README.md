@@ -195,13 +195,15 @@ chmod +x heady-sync.sh
 ```
 
 **Features:**
-- Automatically detects and stages all local changes
-- Generates descriptive commit messages with timestamps and file lists
+- Automatically detects and stages all local changes (warns about sensitive files)
+- Generates descriptive commit messages with timestamps and file lists (truncates long lists)
+- Commits local changes before syncing
 - Safely rebases with remote repository (allows unrelated histories)
-- Squashes local work into a single "Evolution" commit
-- Pushes changes to GitHub with error handling
+- Combines local commits with remote changes while maintaining history
+- Pushes changes to GitHub with comprehensive error handling
+- Provides helpful recovery instructions if conflicts occur
 
-**Note:** The script defaults to the `main` branch. Edit the `BRANCH` variable in the script to use a different branch.
+**Note:** The script defaults to the `main` branch. Edit the `BRANCH` variable in the script to use a different branch. Always ensure your `.gitignore` properly excludes sensitive files before running.
 
 ## GitHub Copilot Integration
 
