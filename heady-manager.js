@@ -48,6 +48,12 @@ const HEADY_ADMIN_BUILD_SCRIPT =
   process.env.HEADY_ADMIN_BUILD_SCRIPT || path.join(__dirname, "src", "consolidated_builder.py");
 const HEADY_ADMIN_AUDIT_SCRIPT = process.env.HEADY_ADMIN_AUDIT_SCRIPT || path.join(__dirname, "admin_console.py");
 
+const HEADY_ADMIN_ENABLE_GPU = process.env.HEADY_ADMIN_ENABLE_GPU === "true";
+const REMOTE_GPU_HOST = process.env.REMOTE_GPU_HOST || "";
+const REMOTE_GPU_PORT = process.env.REMOTE_GPU_PORT || "";
+const GPU_MEMORY_LIMIT = process.env.GPU_MEMORY_LIMIT || "";
+const ENABLE_GPUDIRECT = process.env.ENABLE_GPUDIRECT === "true";
+
 function getClientIp(req) {
   if (typeof req.ip === "string" && req.ip) return req.ip;
   if (req.socket && typeof req.socket.remoteAddress === "string" && req.socket.remoteAddress) return req.socket.remoteAddress;
@@ -721,6 +727,67 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 app.use("/api/admin", requireApiKey);
 
 app.get(
+  "/api/admin/config/render-yaml",
+  asyncHandler(async (req, res) => {
+    const renderPath = path.join(__dirname, "render.yaml");
+    if (!fs.existsSync(renderPath)) {
+      throw createHttpError(404, "render.yaml not found");
+    }
+    const content = await fsp.readFile(renderPath, "utf8");
+    res.json({ ok: true, content });
+  }),
+);
+
+app.get(
+  "/api/admin/config/mcp",
+  asyncHandler(async (req, res) => {
+    const mcpPath = path.join(__dirname, "mcp_config.json");
+    if (!fs.existsSync(mcpPath)) {
+      throw createHttpError(404, "mcp_config.json not found");
+    }
+    const raw = await fsp.readFile(mcpPath, "utf8");
+    const parsed = JSON.parse(raw);
+    // Mask secrets in known fields
+    const masked = JSON.parse(JSON.stringify(parsed, (k, v) => {
+      if (typeof v === "string" && (k.toLowerCase().includes("token") || k.toLowerCase().includes("password") || k.toLowerCase().includes("secret"))) {
+        return v ? "***MASKED***" : v;
+      }
+      return v;
+    }));
+    res.json({ ok: true, config: masked });
+  }),
+);
+
+app.get(
+  "/api/admin/settings/gpu",
+  asyncHandler(async (req, res) => {
+    res.json({
+      ok: true,
+      enabled: HEADY_ADMIN_ENABLE_GPU,
+      remoteHost: REMOTE_GPU_HOST ? "***MASKED***" : "",
+      remotePort: REMOTE_GPU_PORT ? "***MASKED***" : "",
+      memoryLimit: GPU_MEMORY_LIMIT,
+      enableGpuDirect: ENABLE_GPUDIRECT,
+    });
+  }),
+);
+
+app.post(
+  "/api/admin/assistant",
+  asyncHandler(async (req, res) => {
+    const { context, filePath, instruction } = req.body || {};
+    if (!instruction || typeof instruction !== "string") {
+      throw createHttpError(400, "instruction is required");
+    }
+    // Stub: echo back instruction and context for now
+    res.json({
+      ok: true,
+      response: `Assistant stub: received instruction "${instruction}" for ${filePath || "(no file)"}. Context length: ${context ? context.length : 0}.`,
+    });
+  }),
+);
+
+app.get(
   "/api/admin/roots",
   asyncHandler(async (req, res) => {
     res.json({ ok: true, roots: ADMIN_ROOTS });
@@ -1074,6 +1141,20 @@ app.post(
 
     const embeddings = poolFeatureExtractionOutput(result.data);
     return res.json({ ok: true, model: result.model, embeddings, raw: result.data });
+  }),
+);
+
+app.get(
+  "/",
+  asyncHandler(async (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
+  }),
+);
+
+app.get(
+  "/admin",
+  asyncHandler(async (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "admin", "index.html"));
   }),
 );
 
