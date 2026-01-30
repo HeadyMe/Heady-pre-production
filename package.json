@@ -10,7 +10,11 @@
     "build": "echo \"Build complete\"",
     "lint": "eslint *.js",
     "docker:build": "docker build -t heady-systems .",
-    "docker:run": "docker run -p 3300:3300 heady-systems"
+    "docker:run": "docker run -p 3300:3300 heady-systems",
+    "admin:dev": "nodemon heady-manager.js",
+    "admin:build": "echo \"Admin UI build complete (static files)\"",
+    "admin:start": "node heady-manager.js",
+    "admin:open": "./tools/admin-open"
   },
   "keywords": ["mcp", "sacred-geometry", "heady", "cognitive-interleaving", "model-context-protocol"],
   "author": "Heady Systems",

@@ -1,0 +1,31 @@
+#!/bin/bash
+# Admin Dev Server Helper
+# Starts the Heady Admin UI in development mode
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "🚀 Starting Heady Admin UI in development mode..."
+echo "📍 Admin UI will be available at: http://localhost:3300/admin"
+echo ""
+
+# Check if .env exists
+if [ ! -f .env ]; then
+    echo "⚠️  Warning: .env file not found"
+    echo "📝 Creating from template..."
+    cp .env.template .env
+    echo "✅ Please edit .env and set HEADY_API_KEY and HF_TOKEN"
+    echo ""
+fi
+
+# Check for required environment variables
+if [ -z "$HEADY_API_KEY" ] && ! grep -q "HEADY_API_KEY=." .env; then
+    echo "❌ Error: HEADY_API_KEY not set"
+    echo "   Please set HEADY_API_KEY in .env file"
+    exit 1
+fi
+
+# Start the server
+echo "🔄 Starting server..."
+npm run dev

@@ -1,0 +1,24 @@
+#!/bin/bash
+# Admin UI Browser Opener
+# Opens the Admin UI in the default browser
+
+PORT=${PORT:-3300}
+ADMIN_URL="http://localhost:${PORT}/admin"
+
+echo "🌐 Opening Heady Admin UI..."
+echo "📍 URL: ${ADMIN_URL}"
+
+# Detect OS and open browser
+if command -v xdg-open > /dev/null; then
+    xdg-open "${ADMIN_URL}"
+elif command -v open > /dev/null; then
+    open "${ADMIN_URL}"
+elif command -v start > /dev/null; then
+    start "${ADMIN_URL}"
+else
+    echo "❌ Could not detect browser opener"
+    echo "📋 Please open manually: ${ADMIN_URL}"
+    exit 1
+fi
+
+echo "✅ Browser opened"
