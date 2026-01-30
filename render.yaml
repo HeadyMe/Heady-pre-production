@@ -1,8 +1,30 @@
 services:
   - type: web
     name: heady-manager
-    env: node
+    runtime: node
     buildCommand: npm install
     startCommand: node heady-manager.js
     envVars:
       - fromGroup: heady-shared-secrets
+      - key: PORT
+        value: "3300"
+      - key: NODE_ENV
+        value: "production"
+      - key: HEADY_TRUST_PROXY
+        value: "true"
+      - key: HEADY_ADMIN_ROOT
+        value: "/opt/render/project/src"
+      - key: HEADY_ADMIN_ALLOWED_PATHS
+        value: "/opt/render/project/src"
+      - key: HEADY_ADMIN_MAX_BYTES
+        value: "524288"
+      - key: HEADY_ADMIN_BUILD_SCRIPT
+        value: "/opt/render/project/src/admin_console.py"
+      - key: HEADY_ADMIN_AUDIT_SCRIPT
+        value: "/opt/render/project/src/consolidated_builder.py"
+      - key: REMOTE_GPU_HOST
+        value: ""
+      - key: GPU_MEMORY_LIMIT
+        value: "8192"
+      - key: ENABLE_GPUDIRECT
+        value: "false"
