@@ -1,4 +1,5 @@
 services:
+  # Main Heady Manager Service (Node.js + Python hybrid)
   - type: web
     name: heady-manager
     runtime: node
@@ -52,7 +53,7 @@ services:
       - key: HF_EMBED_MODEL
         value: "sentence-transformers/all-MiniLM-L6-v2"
       - key: HEADY_CORS_ORIGINS
-        value: "https://heady-systems.onrender.com"
+        value: "https://heady-systems.onrender.com,https://heady-backend.onrender.com,https://heady-frontend.onrender.com"
       - key: REMOTE_GPU_HOST
         value: "${REMOTE_GPU_HOST}"
       - key: REMOTE_GPU_PORT
@@ -73,3 +74,43 @@ services:
         value: "${GITHUB_APP_PRIVATE_KEY}"
       - key: GITHUB_APP_WEBHOOK_SECRET
         value: "${GITHUB_APP_WEBHOOK_SECRET}"
+
+  # Backend API Service
+  - type: web
+    name: heady-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - fromGroup: heady-shared-secrets
+      - key: PORT
+        value: "4000"
+      - key: NODE_ENV
+        value: "production"
+      - key: DATABASE_URL
+        value: "${DATABASE_URL}"
+      - key: CORS_ORIGINS
+        value: "https://heady-frontend.onrender.com,https://heady-systems.onrender.com"
+
+  # Frontend Static Site
+  - type: web
+    name: heady-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: NODE_ENV
+        value: "production"
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: heady-postgres
+    databaseName: heady_db
+    user: heady_user
+    plan: starter
