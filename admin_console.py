@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Admin Console for Heady Project
-Implements audit and system health checks
+Implements audit and system health checks with parallel execution
 """
 
 import os
@@ -13,16 +13,23 @@ from pathlib import Path
 from datetime import datetime
 import psutil
 import platform
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
+
+# Thread-safe logging
+_log_lock = threading.Lock()
 
 def log_info(msg):
     if isinstance(msg, (Path,)):
         msg = str(msg)
-    print(f"[INFO] {datetime.now().isoformat()} {msg}")
+    with _log_lock:
+        print(f"[INFO] {datetime.now().isoformat()} {msg}")
 
 def log_error(msg):
     if isinstance(msg, (Path,)):
         msg = str(msg)
-    print(f"[ERROR] {datetime.now().isoformat()} {msg}", file=sys.stderr)
+    with _log_lock:
+        print(f"[ERROR] {datetime.now().isoformat()} {msg}", file=sys.stderr)
 
 def run_command(cmd, cwd=None, timeout=120):
     """Execute command with timeout and error handling"""
@@ -43,6 +50,8 @@ def run_command(cmd, cwd=None, timeout=120):
 
 def check_system_health():
     """Check system health and resources"""
+    log_info("Checking system health...")
+    start_time = datetime.now()
     cwd_path = str(Path.cwd())
     health_info = {
         "timestamp": datetime.now().isoformat(),
@@ -55,10 +64,14 @@ def check_system_health():
             cwd_path: psutil.disk_usage(cwd_path).percent
         }
     }
+    duration = (datetime.now() - start_time).total_seconds()
+    log_info(f"System health check completed in {duration:.2f}s")
     return health_info
 
 def check_project_structure(project_root):
     """Audit project structure and files"""
+    log_info("Checking project structure...")
+    start_time = datetime.now()
     structure_info = {
         "project_root": str(project_root),
         "has_package_json": (project_root / "package.json").exists(),
@@ -85,10 +98,14 @@ def check_project_structure(project_root):
             structure_info["python_venv"] = True
             break
     
+    duration = (datetime.now() - start_time).total_seconds()
+    log_info(f"Project structure check completed in {duration:.2f}s")
     return structure_info
 
 def check_dependencies(project_root):
     """Check installed dependencies"""
+    log_info("Checking dependencies...")
+    start_time = datetime.now()
     deps_info = {
         "node_packages": [],
         "python_packages": []
@@ -122,10 +139,14 @@ def check_dependencies(project_root):
         except Exception as e:
             log_error(f"Failed to get Python packages: {e}")
     
+    duration = (datetime.now() - start_time).total_seconds()
+    log_info(f"Dependency check completed in {duration:.2f}s")
     return deps_info
 
 def check_security(project_root):
     """Security audit checks"""
+    log_info("Checking security...")
+    start_time = datetime.now()
     security_info = {
         "has_env_file": (project_root / ".env").exists(),
         "has_env_example": (project_root / ".env.example").exists(),
@@ -146,32 +167,84 @@ def check_security(project_root):
             except Exception as e:
                 log_error(f"Failed to check {config_file}: {e}")
     
+    duration = (datetime.now() - start_time).total_seconds()
+    log_info(f"Security check completed in {duration:.2f}s")
     return security_info
 
-def audit_project(project_root):
-    """Main audit orchestration"""
-    log_info(f"Starting audit for project: {str(project_root)}")
+def audit_project(project_root, parallel=True, max_workers=4):
+    """Main audit orchestration with optional parallel execution"""
+    log_info(f"Starting audit for project: {str(project_root)} (parallel={parallel})")
+    audit_start = datetime.now()
     
     audit_info = {
         "status": "success",
         "timestamp": datetime.now().isoformat(),
         "project_root": str(project_root),
-        "system_health": check_system_health(),
-        "project_structure": check_project_structure(project_root),
-        "dependencies": check_dependencies(project_root),
-        "security": check_security(project_root)
+        "parallel_enabled": parallel
     }
     
-    log_info("Audit completed successfully")
+    if parallel:
+        # Run all checks in parallel
+        log_info("Running audit checks in parallel...")
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {
+                executor.submit(check_system_health): "system_health",
+                executor.submit(check_project_structure, project_root): "project_structure",
+                executor.submit(check_dependencies, project_root): "dependencies",
+                executor.submit(check_security, project_root): "security"
+            }
+            
+            for future in as_completed(futures):
+                check_name = futures[future]
+                try:
+                    result = future.result()
+                    audit_info[check_name] = result
+                except Exception as e:
+                    log_error(f"Failed to run {check_name} check: {e}")
+                    audit_info[check_name] = {"error": str(e)}
+    else:
+        # Sequential execution (fallback)
+        try:
+            audit_info["system_health"] = check_system_health()
+        except Exception as e:
+            log_error(f"System health check failed: {e}")
+            audit_info["system_health"] = {"error": str(e)}
+        
+        try:
+            audit_info["project_structure"] = check_project_structure(project_root)
+        except Exception as e:
+            log_error(f"Project structure check failed: {e}")
+            audit_info["project_structure"] = {"error": str(e)}
+        
+        try:
+            audit_info["dependencies"] = check_dependencies(project_root)
+        except Exception as e:
+            log_error(f"Dependencies check failed: {e}")
+            audit_info["dependencies"] = {"error": str(e)}
+        
+        try:
+            audit_info["security"] = check_security(project_root)
+        except Exception as e:
+            log_error(f"Security check failed: {e}")
+            audit_info["security"] = {"error": str(e)}
+    
+    audit_duration = (datetime.now() - audit_start).total_seconds()
+    audit_info["audit_duration_seconds"] = audit_duration
+    
+    log_info(f"Audit completed successfully in {audit_duration:.2f}s")
     return audit_info
 
 def main():
-    parser = argparse.ArgumentParser(description="Admin console audit")
+    parser = argparse.ArgumentParser(description="Admin console audit with parallel execution")
     parser.add_argument("--project-root", type=str, default=str(Path.cwd()), 
                        help="Project root directory")
     parser.add_argument("--output", type=str, help="Output audit info to file")
     parser.add_argument("--check", choices=["health", "structure", "deps", "security"], 
                        help="Run specific check only")
+    parser.add_argument("--no-parallel", action="store_true",
+                       help="Disable parallel execution (run checks sequentially)")
+    parser.add_argument("--max-workers", type=int, default=4,
+                       help="Maximum number of parallel workers (default: 4)")
     
     args = parser.parse_args()
     
@@ -188,7 +261,11 @@ def main():
         elif args.check == "security":
             result = check_security(project_root)
         else:
-            result = audit_project(project_root)
+            result = audit_project(
+                project_root,
+                parallel=not args.no_parallel,
+                max_workers=args.max_workers
+            )
         
         if args.output:
             output_path = Path(args.output)

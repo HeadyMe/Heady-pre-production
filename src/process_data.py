@@ -4,6 +4,7 @@ import json
 import time
 import logging
 from typing import Any, Dict, List, Optional, Sequence, Union
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
 from dotenv import load_dotenv
@@ -23,6 +24,7 @@ HF_TOKEN = os.getenv("HF_TOKEN")
 DEFAULT_HF_TEXT_MODEL = os.getenv("HF_TEXT_MODEL", "gpt2")
 DEFAULT_HF_EMBED_MODEL = os.getenv("HF_EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 HEADY_PY_WORKER_TIMEOUT_MS = int(os.getenv("HEADY_PY_WORKER_TIMEOUT_MS", "90000"))
+HEADY_BATCH_MAX_WORKERS = int(os.getenv("HEADY_BATCH_MAX_WORKERS", "3"))
 
 
 def _sleep_ms(ms: int) -> None:
@@ -240,9 +242,98 @@ def handle_health_check() -> None:
         "default_text_model": DEFAULT_HF_TEXT_MODEL,
         "default_embed_model": DEFAULT_HF_EMBED_MODEL,
         "worker_timeout_ms": HEADY_PY_WORKER_TIMEOUT_MS,
+        "batch_max_workers": HEADY_BATCH_MAX_WORKERS,
     }
     print(json.dumps(health_status))
     sys.exit(0)
+
+
+def batch_generate(
+    prompts: List[str],
+    *,
+    model: Optional[str] = None,
+    parameters: Optional[Dict[str, Any]] = None,
+    options: Optional[Dict[str, Any]] = None,
+    max_workers: Optional[int] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Generate text for multiple prompts in parallel
+    
+    Args:
+        prompts: List of text prompts
+        model: HuggingFace model to use
+        parameters: Model parameters
+        options: Inference options
+        max_workers: Maximum parallel workers (default: HEADY_BATCH_MAX_WORKERS)
+    
+    Returns:
+        List of generation results in same order as prompts
+    """
+    if not prompts:
+        return []
+    
+    workers = max_workers or HEADY_BATCH_MAX_WORKERS
+    results = [None] * len(prompts)
+    
+    def generate_single(index: int, prompt: str) -> tuple:
+        try:
+            result = hf_generate(prompt, model=model, parameters=parameters, options=options)
+            return (index, result)
+        except Exception as e:
+            logger.error(f"Batch generate failed for prompt {index}: {e}")
+            return (index, {"error": str(e), "output": None})
+    
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(generate_single, i, prompt) for i, prompt in enumerate(prompts)]
+        
+        for future in as_completed(futures):
+            index, result = future.result()
+            results[index] = result
+    
+    return results
+
+
+def batch_embed(
+    texts: List[str],
+    *,
+    model: Optional[str] = None,
+    options: Optional[Dict[str, Any]] = None,
+    max_workers: Optional[int] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Generate embeddings for multiple texts in parallel
+    
+    Args:
+        texts: List of text strings
+        model: HuggingFace embedding model to use
+        options: Inference options
+        max_workers: Maximum parallel workers (default: HEADY_BATCH_MAX_WORKERS)
+    
+    Returns:
+        List of embedding results in same order as texts
+    """
+    if not texts:
+        return []
+    
+    workers = max_workers or HEADY_BATCH_MAX_WORKERS
+    results = [None] * len(texts)
+    
+    def embed_single(index: int, text: str) -> tuple:
+        try:
+            result = hf_embed(text, model=model, options=options)
+            return (index, result)
+        except Exception as e:
+            logger.error(f"Batch embed failed for text {index}: {e}")
+            return (index, {"error": str(e), "embeddings": None})
+    
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(embed_single, i, text) for i, text in enumerate(texts)]
+        
+        for future in as_completed(futures):
+            index, result = future.result()
+            results[index] = result
+    
+    return results
 
 
 def main() -> None:
