@@ -7,7 +7,7 @@ This is a **Hybrid Node.js/Python** system designed for the HeadyConnection ecos
 - **Manager Layer:** Node.js with MCP Protocol (`heady-manager.js`)
 - **Worker Layer:** Python data processing (`src/process_data.py`)
 - **Frontend:** Single-file React application with Sacred Geometry aesthetics
-- **Admin UI:** Web-based management interface with integrated code editor
+- **Admin UI:** Web-based management interface (`/admin`) with integrated code editor and GPU settings
 - **Deployment:** Render.com Blueprint with managed Postgres
 
 ## Architecture
@@ -16,8 +16,10 @@ This is a **Hybrid Node.js/Python** system designed for the HeadyConnection ecos
 |-----------|------------|---------|
 | `heady-manager.js` | Node.js/Express | MCP server, API endpoints, static file serving |
 | `src/process_data.py` | Python | Background data processing worker |
+| `src/consolidated_builder.py` | Python | Build orchestration with multi-agent coordination |
+| `admin_console.py` | Python | System audit and health checks |
 | `public/index.html` | React (CDN) | Sacred Geometry UI dashboard |
-| `public/admin/` | React + Monaco | Admin UI with IDE editor and AI assistant |
+| `public/admin.html` | React + Monaco | Admin UI with IDE editor and AI assistant |
 | `render.yaml` | Render Blueprint | Infrastructure-as-code deployment |
 | `mcp_config.json` | MCP Config | Server definitions for Copilot integration |
 
@@ -29,17 +31,25 @@ This is a **Hybrid Node.js/Python** system designed for the HeadyConnection ecos
 npm install
 pip install -r requirements.txt
 
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your secrets
+
 # Start the manager
 npm start  # or node heady-manager.js
 
-# Build Admin UI (when implemented)
-npm run build  # from admin-ui/ directory
+# Access interfaces
+# Main UI: http://localhost:3300
+# Admin UI: http://localhost:3300/admin
 ```
 
 ### Testing
 ```bash
 # Run Python syntax checks
 python -m compileall src
+
+# Run Python tests
+python -m pytest tests/
 
 # Run Node.js tests (when implemented)
 npm test
@@ -54,6 +64,7 @@ npm test
 - `HEADY_ADMIN_ROOT` - Admin UI file system root
 - `HEADY_ADMIN_ALLOWED_PATHS` - Comma-separated allowed paths
 - `REMOTE_GPU_HOST` - Remote GPU server (optional)
+- `REMOTE_GPU_PORT` - Remote GPU port (optional)
 - `GPU_MEMORY_LIMIT` - GPU memory limit in MB
 - `ENABLE_GPUDIRECT` - Enable GPUDirect RDMA (true/false)
 
@@ -61,6 +72,8 @@ Managed via Render's `heady-shared-secrets` env group:
 - `DATABASE_URL` - Postgres connection string
 - `HEADY_API_KEY` - Auto-generated API key
 - `HF_TOKEN` - Hugging Face token
+- `COPILOT_MCP_CLOUDFLARE_API_TOKEN` - Cloudflare API for MCP
+- `COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID` - Cloudflare account ID
 
 ## API Endpoints
 
@@ -70,7 +83,21 @@ Managed via Render's `heady-shared-secrets` env group:
 | `/admin` | GET | Serves Admin IDE |
 | `/api/pulse` | GET | System status and Docker info |
 | `/api/health` | GET | Simple health check |
-| `/api/admin/*` | VAR | Admin API (protected by HEADY_API_KEY) |
+| `/api/admin/config/render-yaml` | GET | Get render.yaml configuration |
+| `/api/admin/config/mcp` | GET | Get MCP configuration |
+| `/api/admin/settings/gpu` | GET | Get GPU settings |
+| `/api/admin/gpu/infer` | POST | GPU inference endpoint |
+| `/api/admin/assistant` | POST | AI assistant for code editing |
+| `/api/admin/lint` | POST | Code linting |
+| `/api/admin/test` | POST | Run tests |
+| `/api/admin/roots` | GET | Available admin roots |
+| `/api/admin/files` | GET | File browser |
+| `/api/admin/file` | GET/POST | File read/write |
+| `/api/admin/ops` | GET | List operations |
+| `/api/admin/ops/:id/status` | GET | Operation status |
+| `/api/admin/ops/:id/stream` | GET | SSE log streaming |
+| `/api/admin/build` | POST | Run build script |
+| `/api/admin/audit` | POST | Run audit script |
 | `/api/hf/*` | VAR | Hugging Face inference (protected by HEADY_API_KEY) |
 
 ## Documentation Protocol
@@ -136,10 +163,12 @@ This project includes MCP server configurations for GitHub Copilot:
 - Secrets are managed via environment variables, never hardcoded
 - Rate limiting enabled on API endpoints
 - CORS configured for allowed origins
+- GPU settings support remote connections with fallback behavior
 
 ## Copilot Customization Documentation
 
 For more information about Copilot customization, see:
-- Official Copilot agent documentation
+- Official Copilot agent documentation: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/use-copilot-agents/coding-agent/extend-coding-agent-with-mcp
 - `.github/copilot-instructions.md` (this file)
 - `.github/copilot-mcp-config.json` (MCP server definitions)
+- `.github/workflows/copilot-setup-steps.yml` (Setup workflow)

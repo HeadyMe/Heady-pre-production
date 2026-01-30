@@ -19,12 +19,20 @@ services:
       - key: HEADY_ADMIN_MAX_BYTES
         value: "524288"
       - key: HEADY_ADMIN_BUILD_SCRIPT
-        value: "/opt/render/project/src/admin_console.py"
-      - key: HEADY_ADMIN_AUDIT_SCRIPT
         value: "/opt/render/project/src/consolidated_builder.py"
+      - key: HEADY_ADMIN_AUDIT_SCRIPT
+        value: "/opt/render/project/src/admin_console.py"
       - key: REMOTE_GPU_HOST
-        value: ""
+        value: "${REMOTE_GPU_HOST}"
+      - key: REMOTE_GPU_PORT
+        value: "${REMOTE_GPU_PORT}"
       - key: GPU_MEMORY_LIMIT
-        value: "8192"
+        value: "${GPU_MEMORY_LIMIT}"
       - key: ENABLE_GPUDIRECT
-        value: "false"
+        value: "${ENABLE_GPUDIRECT}"
+      - key: DATABASE_URL
+        value: "${DATABASE_URL}"
+      - key: HF_TOKEN
+        value: "${HF_TOKEN}"
+      - key: HEADY_API_KEY
+        value: "${HEADY_API_KEY}"
