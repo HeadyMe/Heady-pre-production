@@ -184,6 +184,47 @@ When the Copilot Coding Agent is enabled and a PR is created:
    - Once all checks pass, review the changes
    - Approve and merge the PR
 
+## Custom Agents
+
+This repository includes custom Copilot agents for specialized tasks:
+
+### Connected Apps & APIs Orchestrator
+
+**Agent Name:** `connected-apps-orchestrator`
+
+**Purpose:** A tool-using engineering and operations agent that orchestrates interactions with connected apps and APIs across the Heady ecosystem.
+
+**Key Features:**
+- Coordinates multiple tools (GitHub, Notion, Slack, monitoring systems, etc.)
+- Follows strict security principles (minimal changes, no hardcoded secrets)
+- Implements safety-first approach with auditable and reversible changes
+- Works seamlessly with MCP servers (filesystem, git, postgres, fetch, etc.)
+
+**When to Use:**
+- Orchestrating multi-tool workflows (e.g., read PR → update docs → notify Slack)
+- Automating operations tasks that span multiple systems
+- Coordinating deployments, monitoring, and incident response
+- Managing cross-system data updates and synchronization
+
+**Example Usage:**
+```
+@connected-apps-orchestrator Please summarize the last merged PR and create a Notion changelog entry
+@connected-apps-orchestrator Check staging health and post status to #engineering Slack channel
+@connected-apps-orchestrator Update the roadmap in Notion with completed issues from this milestone
+```
+
+**Tool Integration:**
+The orchestrator integrates with the following MCP servers:
+- **filesystem** - Reading/writing configuration files
+- **git** - Repository operations
+- **postgres** - Database queries
+- **fetch** - HTTP API calls
+- **memory** - Context maintenance across tasks
+- **sequential-thinking** - Complex multi-step reasoning
+
+For detailed orchestrator capabilities, see `.github/agents/connected-apps-orchestrator.agent.md`.
+
+
 ## Repository Structure for Copilot
 
 The repository is organized to support Copilot Coding Agent:
@@ -195,6 +236,8 @@ The repository is organized to support Copilot Coding Agent:
   │   ├── ci.yml              # Continuous integration
   │   ├── security.yml        # Security scanning
   │   └── copilot-setup-steps.yml
+  ├── agents/                 # Custom Copilot agents
+  │   └── connected-apps-orchestrator.agent.md # Tool-using agent for connected apps
   ├── CODEOWNERS              # Code review assignments
   ├── PULL_REQUEST_TEMPLATE.md # PR template with checklist
   ├── copilot-instructions.md  # Instructions for Copilot
