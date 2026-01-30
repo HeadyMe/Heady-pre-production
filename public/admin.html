@@ -342,6 +342,39 @@
 </head>
 <body>
     <div id="root"></div>
+    <div id="cdn-error" style="display:none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #0f172a; color: #f1f5f9; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 9999;">
+        <div style="max-width: 600px; text-align: center;">
+            <h1 style="color: #ef4444; margin-bottom: 20px;">⚠️ Admin UI Loading Error</h1>
+            <p style="margin-bottom: 15px;">Failed to load required dependencies from CDN. This could be due to:</p>
+            <ul style="text-align: left; margin-bottom: 20px;">
+                <li>Network connectivity issues</li>
+                <li>Ad blocker or content blocker</li>
+                <li>Corporate firewall restrictions</li>
+                <li>CDN service unavailable</li>
+            </ul>
+            <p style="margin-bottom: 15px;"><strong>Solutions:</strong></p>
+            <ol style="text-align: left; margin-bottom: 20px;">
+                <li>Disable ad blockers for this site</li>
+                <li>Check your network connection</li>
+                <li>Try accessing from a different network</li>
+                <li>Contact your system administrator</li>
+            </ol>
+            <button onclick="location.reload()" style="padding: 10px 20px; background: #6366f1; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">Retry</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if React loaded successfully
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
+                    document.getElementById('root').style.display = 'none';
+                    document.getElementById('cdn-error').style.display = 'flex';
+                    console.error('CDN dependencies failed to load. React or ReactDOM is undefined.');
+                }
+            }, 2000);
+        });
+    </script>
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
