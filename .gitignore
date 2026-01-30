@@ -5,6 +5,13 @@ __pycache__/
 *.log
 .venv/
 
+# Build artifacts
+dist/
+build/
+*.tsbuildinfo
+frontend/dist/
+backend/dist/
+
 # GitHub App private keys
 *.pem
 private-key-base64.txt
