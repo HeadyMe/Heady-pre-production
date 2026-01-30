@@ -68,7 +68,7 @@ function monitorImageAccessibility() {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
-        if (node.tagName === 'IMG' && (!node.alt || node.alt.trim() === '')) {
+        if (node instanceof HTMLImageElement && (!node.alt || node.alt.trim() === '')) {
           console.warn('Image added without alt text:', node.src);
           node.style.border = '3px solid red';
         }
@@ -91,6 +91,12 @@ function createAccessibilityOverlay() {
   if (imagesWithoutAlt.length === 0) {
     console.log('✅ All images have alt text!');
     return;
+  }
+  
+  // Remove existing overlay if present
+  const existingOverlay = document.getElementById('accessibility-overlay');
+  if (existingOverlay) {
+    existingOverlay.remove();
   }
   
   // Create overlay div
@@ -154,7 +160,7 @@ function fixAccessibilityIssues() {
     fixed++;
   });
   
-  console.log(`✅ Fixed ${fixed} image${fixed > 1 ? 's' : ''} with default alt text`);
+  console.log(`✅ Fixed ${fixed} image${fixed !== 1 ? 's' : ''} with default alt text`);
   return fixed;
 }
 
