@@ -165,12 +165,37 @@ This project includes MCP server configurations for GitHub Copilot:
 - CORS configured for allowed origins
 - GPU settings support remote connections with fallback behavior
 
+## Custom Agents
+
+This repository includes 7 specialized custom GitHub Copilot agents for different tasks:
+
+1. **python-nodejs-specialist** - Python and Node.js development expert
+2. **documentation-specialist** - Quiz & Flashcard methodology documentation
+3. **build-deployment-specialist** - Build processes, Docker, Render deployment
+4. **security-audit-specialist** - Security scans and vulnerability fixes
+5. **admin-ui-specialist** - React UI and Sacred Geometry design
+6. **mcp-integration-specialist** - MCP server configuration
+7. **heady-copilot-instructor** - Architecture and conventions guide
+
+See `.github/agents/README.md` for detailed documentation on each agent.
+
+### When to Use Custom Agents
+
+- **Code changes** → Use `python-nodejs-specialist`
+- **Documentation** → Use `documentation-specialist`
+- **Build/Deploy issues** → Use `build-deployment-specialist`
+- **Security concerns** → Use `security-audit-specialist`
+- **UI/Frontend** → Use `admin-ui-specialist`
+- **MCP configuration** → Use `mcp-integration-specialist`
+- **Learning/Onboarding** → Use `heady-copilot-instructor`
+
 ## Copilot Customization Documentation
 
 For more information about Copilot customization, see:
 - Official Copilot agent documentation: https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/use-copilot-agents/coding-agent/extend-coding-agent-with-mcp
 - `.github/copilot-instructions.md` (this file)
 - `.github/copilot-mcp-config.json` (MCP server definitions)
+- `.github/agents/README.md` (Custom agents documentation)
 - `.github/workflows/copilot-setup-steps.yml` (Setup workflow)
 # Squash all commits since branching from main
 git reset $(git merge-base main $(git rev-parse --abbrev-ref HEAD)) --soft
