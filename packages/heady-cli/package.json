@@ -1,0 +1,41 @@
+{
+  "name": "@heady/cli",
+  "version": "1.0.0",
+  "description": "Production-grade CLI for Heady Systems with service combination generation and wisdom monitoring",
+  "main": "lib/index.js",
+  "bin": {
+    "heady": "./bin/heady.js",
+    "heady-cli": "./bin/heady.js"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint lib/ bin/",
+    "prepare": "chmod +x bin/heady.js"
+  },
+  "keywords": [
+    "heady",
+    "cli",
+    "mcp",
+    "ai",
+    "orchestration"
+  ],
+  "author": "Heady Systems",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^11.1.0",
+    "chokidar": "^3.5.3",
+    "ora": "^5.4.1",
+    "inquirer": "^8.2.5",
+    "node-fetch": "^2.7.0",
+    "dotenv": "^16.3.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

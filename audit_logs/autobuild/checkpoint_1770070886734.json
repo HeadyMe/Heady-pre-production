@@ -1,0 +1,612 @@
+{
+  "services": [],
+  "mcpServers": [
+    {
+      "name": "filesystem",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/workspaces",
+        "/shared"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "write_file",
+          "delete_file",
+          "move_file"
+        ],
+        "allowedPaths": [
+          "./src",
+          "./public",
+          "./backend"
+        ],
+        "deniedPaths": [
+          ".env",
+          ".env.admin",
+          "*.key",
+          "*.pem"
+        ]
+      },
+      "status": "configured"
+    },
+    {
+      "name": "sequential-thinking",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "governance": {},
+      "status": "configured"
+    },
+    {
+      "name": "memory",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "governance": {},
+      "status": "configured"
+    },
+    {
+      "name": "fetch",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "fetch"
+        ],
+        "allowedDomains": [
+          "headysystems.com",
+          "api.headysystems.com",
+          "localhost"
+        ]
+      },
+      "status": "configured"
+    },
+    {
+      "name": "postgres",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "${DATABASE_URL}"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "execute_query",
+          "modify_schema"
+        ],
+        "readOnly": false
+      },
+      "status": "configured"
+    },
+    {
+      "name": "git",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-git"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "commit",
+          "push",
+          "merge"
+        ],
+        "allowedBranches": [
+          "main",
+          "develop",
+          "feature/*"
+        ]
+      },
+      "status": "configured"
+    },
+    {
+      "name": "puppeteer",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "governance": {},
+      "status": "configured"
+    },
+    {
+      "name": "cloudflare",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cloudflare/mcp-server-cloudflare"
+      ],
+      "governance": {},
+      "status": "configured"
+    },
+    {
+      "name": "filesystem",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/workspaces",
+        "/shared"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "write_file",
+          "delete_file",
+          "move_file"
+        ],
+        "allowedPaths": [
+          "./src",
+          "./public",
+          "./backend"
+        ],
+        "deniedPaths": [
+          ".env",
+          ".env.admin",
+          "*.key",
+          "*.pem"
+        ]
+      },
+      "status": "configured"
+    },
+    {
+      "name": "sequential-thinking",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "governance": {},
+      "status": "configured"
+    },
+    {
+      "name": "memory",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "governance": {},
+      "status": "configured"
+    },
+    {
+      "name": "fetch",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "fetch"
+        ],
+        "allowedDomains": [
+          "headysystems.com",
+          "api.headysystems.com",
+          "localhost"
+        ]
+      },
+      "status": "configured"
+    },
+    {
+      "name": "postgres",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "${DATABASE_URL}"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "execute_query",
+          "modify_schema"
+        ],
+        "readOnly": false
+      },
+      "status": "configured"
+    },
+    {
+      "name": "git",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-git"
+      ],
+      "governance": {
+        "requireConfirmation": [
+          "commit",
+          "push",
+          "merge"
+        ],
+        "allowedBranches": [
+          "main",
+          "develop",
+          "feature/*"
+        ]
+      },
+      "status": "configured"
+    },
+    {
+      "name": "puppeteer",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ],
+      "governance": {},
+      "status": "configured"
+    },
+    {
+      "name": "cloudflare",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@cloudflare/mcp-server-cloudflare"
+      ],
+      "governance": {},
+      "status": "configured"
+    }
+  ],
+  "infrastructure": [],
+  "docker": {
+    "error": "Command failed: docker ps --format \"{{.ID}}|{{.Names}}|{{.Status}}|{{.Ports}}\"\nfailed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n"
+  },
+  "processes": [
+    {
+      "name": "node.exe",
+      "pid": "43276",
+      "memory": "69"
+    },
+    {
+      "name": "node.exe",
+      "pid": "64968",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "3436",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "73736",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "68552",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "33044",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "60920",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "53968",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "23628",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "23340",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "67124",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "55144",
+      "memory": "12 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "58136",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "73252",
+      "memory": "12 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "43700",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "68120",
+      "memory": "12 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "74656",
+      "memory": "12 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "69596",
+      "memory": "12 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "24988",
+      "memory": "16 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "66904",
+      "memory": "12 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "67092",
+      "memory": "12 K\r"
+    },
+    {
+      "name": "node.exe",
+      "pid": "42844",
+      "memory": "48"
+    },
+    {
+      "name": "node.exe",
+      "pid": "48432",
+      "memory": "62"
+    },
+    {
+      "name": "node.exe",
+      "pid": "67328",
+      "memory": "84"
+    },
+    {
+      "name": "node.exe",
+      "pid": "56664",
+      "memory": "129"
+    },
+    {
+      "name": "node.exe",
+      "pid": "17692",
+      "memory": "84"
+    },
+    {
+      "name": "node.exe",
+      "pid": "41148",
+      "memory": "66"
+    },
+    {
+      "name": "node.exe",
+      "pid": "73548",
+      "memory": "65"
+    },
+    {
+      "name": "node.exe",
+      "pid": "62524",
+      "memory": "70"
+    }
+  ],
+  "files": [
+    {
+      "path": "src",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 31,
+      "modified": "2026-02-02T22:09:07.777Z"
+    },
+    {
+      "path": "public",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 17,
+      "modified": "2026-02-02T18:38:36.492Z"
+    },
+    {
+      "path": "scripts",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 54,
+      "modified": "2026-02-02T22:11:29.240Z"
+    },
+    {
+      "path": "mcp-servers",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 4,
+      "modified": "2026-02-02T12:31:18.454Z"
+    },
+    {
+      "path": "backend",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 3,
+      "modified": "2026-01-30T13:42:12.126Z"
+    },
+    {
+      "path": "frontend",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 8,
+      "modified": "2026-02-02T12:31:18.506Z"
+    },
+    {
+      "path": "docs",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 42,
+      "modified": "2026-02-02T22:20:39.423Z"
+    },
+    {
+      "path": ".heady-memory",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 16,
+      "modified": "2026-02-02T22:07:14.430Z"
+    },
+    {
+      "path": "audit_logs",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 12,
+      "modified": "2026-02-02T22:07:32.246Z"
+    },
+    {
+      "path": "src",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 31,
+      "modified": "2026-02-02T22:09:07.777Z"
+    },
+    {
+      "path": "public",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 17,
+      "modified": "2026-02-02T18:38:36.492Z"
+    },
+    {
+      "path": "scripts",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 54,
+      "modified": "2026-02-02T22:11:29.240Z"
+    },
+    {
+      "path": "mcp-servers",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 4,
+      "modified": "2026-02-02T12:31:18.454Z"
+    },
+    {
+      "path": "backend",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 3,
+      "modified": "2026-01-30T13:42:12.126Z"
+    },
+    {
+      "path": "frontend",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 8,
+      "modified": "2026-02-02T12:31:18.506Z"
+    },
+    {
+      "path": "docs",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 42,
+      "modified": "2026-02-02T22:20:39.423Z"
+    },
+    {
+      "path": ".heady-memory",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 16,
+      "modified": "2026-02-02T22:07:14.430Z"
+    },
+    {
+      "path": "audit_logs",
+      "exists": true,
+      "isDirectory": true,
+      "size": 0,
+      "fileCount": 15,
+      "modified": "2026-02-02T22:07:32.246Z"
+    }
+  ],
+  "git": {
+    "branch": "main",
+    "commit": "f0778925",
+    "fullCommit": "f077892510948ca1aecb701f4e1db93c629c8083",
+    "modified": 14,
+    "added": 0,
+    "deleted": 0,
+    "untracked": 3,
+    "remotes": 6,
+    "clean": false
+  },
+  "environment": {
+    "nodeVersion": "v24.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "cwd": "C:\\Users\\erich\\Heady",
+    "uptime": 13.0363541,
+    "memoryUsage": {
+      "rss": 71774208,
+      "heapTotal": 36847616,
+      "heapUsed": 21306640,
+      "external": 2161627,
+      "arrayBuffers": 103091
+    },
+    "envVars": {
+      "NODE_ENV": "development",
+      "PORT": "3300",
+      "HEADY_API_KEY": "✗ NOT SET",
+      "DATABASE_URL": "✗ NOT SET",
+      "HF_TOKEN": "✗ NOT SET",
+      "CLOUDFLARE_API_TOKEN": "✗ NOT SET"
+    },
+    "mcpConfig": {
+      "serverCount": 8,
+      "gatewayPort": 3301,
+      "governanceMode": "locked",
+      "governanceVersion": "v1.2.0"
+    }
+  },
+  "health": {
+    "Heady Manager": {
+      "status": "unhealthy",
+      "error": ""
+    },
+    "MCP Gateway": {
+      "status": "unhealthy",
+      "error": ""
+    },
+    "Admin UI": {
+      "status": "unhealthy",
+      "error": ""
+    }
+  },
+  "metrics": {
+    "auditLogs": 6,
+    "memoryPatterns": 2,
+    "validations": 12
+  }
+}

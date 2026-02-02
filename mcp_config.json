@@ -1,5 +1,16 @@
 {
   "mcpServers": {
+    "heady-windsurf-router": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-windsurf-router/server.js"
+      ],
+      "governance": {
+        "requireConfirmation": ["heady_write_file", "heady_edit_file", "heady_run_command"],
+        "auditAll": true,
+        "integrateHeadyMaid": true
+      }
+    },
     "filesystem": {
       "command": "npx",
       "args": [
