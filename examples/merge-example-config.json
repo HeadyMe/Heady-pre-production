@@ -1,0 +1,41 @@
+{
+  "sources": [
+    {
+      "path": "c:/Users/erich/Heady",
+      "weight": 0.6,
+      "name": "Heady Core System",
+      "metadata": {
+        "type": "core",
+        "priority": "critical",
+        "description": "Main Heady system with manager, MCP servers, and core infrastructure"
+      }
+    },
+    {
+      "path": "c:/Users/erich/Projects/HeadySystems",
+      "weight": 0.3,
+      "name": "HeadySystems Services",
+      "metadata": {
+        "type": "services",
+        "priority": "high",
+        "description": "Python services, MCP integrations, and orchestration"
+      }
+    },
+    {
+      "path": "c:/Users/erich/Projects/apps/hive",
+      "weight": 0.1,
+      "name": "Hive Orchestration",
+      "metadata": {
+        "type": "orchestration",
+        "priority": "medium",
+        "description": "Task orchestration and API services"
+      }
+    }
+  ],
+  "outputDir": "./heady-unified-app",
+  "options": {
+    "validateSyntax": true,
+    "runTests": false,
+    "invokeAgents": true,
+    "generateReport": true
+  }
+}

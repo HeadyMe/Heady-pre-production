@@ -1,11 +1,12 @@
-# HEADY CONTROL (hc) - Master Orchestration Command
+# HEADY CONTROL (hs) - Master Orchestration Command
 # "Pauses, catches all worktrees, eliminates conflict, fixes errors, and makes improvements."
 
 param(
     [Alias("a")]
     [string]$Action,
     [switch]$Restart,
-    [switch]$Force
+    [switch]$Force,
+    [switch]$Checkpoint
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,7 +27,29 @@ function Show-Step {
 
 Set-Location $RootDir
 
-# 0. CUSTOM ACTION HANDLER
+# 0. CHECKPOINT HANDLER
+if ($Checkpoint -or $Action -eq "checkpoint") {
+    Show-Header "HEADY CHECKPOINT: GENERATING SYSTEM STATUS REPORT"
+    Show-Step "Scanning all system components..."
+    
+    $CheckpointScript = "$ScriptDir\Invoke-Checkpoint.ps1"
+    if (Test-Path $CheckpointScript) {
+        & $CheckpointScript -Action generate
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "`n✅ Checkpoint generated successfully!" -ForegroundColor Green
+            Write-Host "📄 View with: hs -Action 'Invoke-Checkpoint.ps1 -Action view'" -ForegroundColor Cyan
+        } else {
+            Write-Error "Checkpoint generation failed."
+            exit 1
+        }
+    } else {
+        Write-Error "Checkpoint script not found at: $CheckpointScript"
+        exit 1
+    }
+    exit 0
+}
+
+# 1. CUSTOM ACTION HANDLER
 if ($Action) {
     Show-Header "HEADY CONTROL: EXECUTING ACTION '$Action'"
     

@@ -144,5 +144,62 @@
       "replacement": "hs",
       "date": "2026-02-02"
     }
+  },
+  "routing": {
+    "description": "HeadyRegistry Router - Intelligent request routing to ensure optimal component utilization",
+    "version": "1.0.0",
+    "router": {
+      "canonical": "HeadyRegistryRouter",
+      "description": "Analyzes requests and routes to appropriate Heady components",
+      "entrypoint": "src/heady_registry_router.js",
+      "bridge": "src/windsurf_heady_bridge.js"
+    },
+    "capabilities": {
+      "documentation": {
+        "component": "HeadyAcademy",
+        "agents": ["ATLAS", "MUSE", "ORACLE"],
+        "priority": "high"
+      },
+      "data_processing": {
+        "component": "HeadyManager",
+        "services": ["HuggingFace", "Python Worker"],
+        "priority": "high"
+      },
+      "code_generation": {
+        "component": "HeadyHive",
+        "agents": ["ARCHITECT", "JULES", "BUILDER"],
+        "priority": "high"
+      },
+      "security": {
+        "component": "HeadyChain",
+        "agents": ["SENTINEL", "MURPHY", "CIPHER"],
+        "priority": "critical"
+      },
+      "research": {
+        "component": "HeadyAcademy",
+        "agents": ["SCOUT", "SASHA", "NOVA"],
+        "priority": "medium"
+      },
+      "visualization": {
+        "component": "HeadyAcademy",
+        "agents": ["OCULUS", "ATLAS"],
+        "priority": "medium"
+      },
+      "orchestration": {
+        "component": "HeadyManager",
+        "services": ["OrchestrationManager", "MCP"],
+        "priority": "high"
+      },
+      "file_operations": {
+        "component": "HeadyManager",
+        "services": ["Admin File System"],
+        "priority": "medium"
+      }
+    },
+    "audit": {
+      "enabled": true,
+      "log_path": "audit_logs/windsurf_routing.jsonl",
+      "retention_days": 90
+    }
   }
 }
