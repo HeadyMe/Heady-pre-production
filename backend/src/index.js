@@ -79,8 +79,8 @@ app.post('/api/mcp/proxy', async (req, res) => {
     const method = tool.includes('.create') || tool.includes('.execute') || tool.includes('.record') 
       ? 'POST' 
       : tool.includes('.status') && args.status 
-      ? 'PUT'
-      : 'GET';
+        ? 'PUT'
+        : 'GET';
     
     // Make request to MCP server
     const fetch = (await import('node-fetch')).default;

@@ -4,7 +4,7 @@
 $ROOT = Get-Location
 Set-Location $ROOT
 
-Write-Host "∞ INITIATING SINGULARITY SQUASH ∞" -ForegroundColor Cyan
+Write-Host "INITIATING SINGULARITY SQUASH" -ForegroundColor Cyan
 
 if (-not (Test-Path ".git")) {
     Write-Host "  ! No .git directory found. Aborting." -ForegroundColor Red
@@ -20,5 +20,5 @@ Write-Host "  > Repacking objects..." -ForegroundColor DarkGray
 Write-Host "  > Garbage collection..." -ForegroundColor DarkGray
 & git gc --aggressive --prune=now | Out-Null
 
-Write-Host "  ✓ Repository optimized." -ForegroundColor Green
+Write-Host "  Repository optimized." -ForegroundColor Green
 Write-Host "PROTOCOL COMPLETE." -ForegroundColor Cyan
