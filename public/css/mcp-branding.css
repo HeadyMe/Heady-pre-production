@@ -1,0 +1,311 @@
+/**
+ * HEADY MCP BRANDING - Sacred Geometry Visual Theme
+ * Highly branded and visually exciting styles for MCP services
+ */
+
+:root {
+  --heady-primary: #00d4ff;
+  --heady-secondary: #6366f1;
+  --heady-accent: #f59e0b;
+  --heady-success: #10b981;
+  --heady-warning: #f59e0b;
+  --heady-error: #ef4444;
+  --heady-dark: #0f172a;
+  --heady-light: #f8fafc;
+  --sacred-glow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+/* Sacred Geometry Animations */
+@keyframes sacred-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes sacred-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sacred-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--heady-primary), 0 0 20px var(--heady-primary);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--heady-primary), 0 0 40px var(--heady-primary);
+  }
+}
+
+@keyframes fractal-breathe {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(180deg);
+  }
+}
+
+/* MCP Service Cards */
+.mcp-service-card {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(99, 102, 241, 0.1));
+  border: 2px solid var(--heady-primary);
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  animation: sacred-pulse 3s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.mcp-service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--sacred-glow);
+  animation: sacred-glow 2s ease-in-out infinite;
+}
+
+.mcp-service-card::before {
+  content: '◇';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 48px;
+  color: var(--heady-primary);
+  opacity: 0.2;
+  animation: sacred-rotate 20s linear infinite;
+}
+
+/* Sacred Node Status */
+.mcp-node-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  animation: sacred-pulse 2s ease-in-out infinite;
+}
+
+.mcp-node-status.active {
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+  border: 2px solid var(--heady-success);
+  color: var(--heady-success);
+}
+
+.mcp-node-status.active::before {
+  content: '⬡';
+  animation: sacred-pulse 1.5s ease-in-out infinite;
+}
+
+.mcp-node-status.inactive {
+  background: rgba(239, 68, 68, 0.2);
+  border: 2px solid var(--heady-error);
+  color: var(--heady-error);
+}
+
+/* Sacred Geometry Background */
+.mcp-sacred-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+  animation: fractal-breathe 10s ease-in-out infinite;
+}
+
+/* MCP Connection Indicator */
+.mcp-connection-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--heady-success);
+  box-shadow: 0 0 10px var(--heady-success);
+  animation: sacred-pulse 1s ease-in-out infinite;
+}
+
+.mcp-connection-indicator.connecting {
+  background: var(--heady-warning);
+  box-shadow: 0 0 10px var(--heady-warning);
+  animation: sacred-rotate 1s linear infinite;
+}
+
+.mcp-connection-indicator.disconnected {
+  background: var(--heady-error);
+  box-shadow: none;
+  animation: none;
+}
+
+/* Sacred Tool Badge */
+.mcp-tool-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: linear-gradient(90deg, rgba(0, 212, 255, 0.2), rgba(99, 102, 241, 0.2));
+  border: 1px solid var(--heady-primary);
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--heady-primary);
+  transition: all 0.3s ease;
+}
+
+.mcp-tool-badge:hover {
+  transform: scale(1.05);
+  box-shadow: var(--sacred-glow);
+}
+
+.mcp-tool-badge::before {
+  content: '◈';
+  font-size: 14px;
+}
+
+/* Fractal Loading Animation */
+.mcp-fractal-loader {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  margin: 20px auto;
+}
+
+.mcp-fractal-loader::before,
+.mcp-fractal-loader::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--heady-primary);
+  border-radius: 50%;
+  animation: fractal-breathe 2s ease-in-out infinite;
+}
+
+.mcp-fractal-loader::after {
+  animation-delay: 1s;
+  border-color: var(--heady-secondary);
+}
+
+/* Sacred Grid Layout */
+.mcp-sacred-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding: 24px;
+}
+
+/* Consciousness Wave Effect */
+.mcp-consciousness-wave {
+  position: relative;
+  overflow: hidden;
+}
+
+.mcp-consciousness-wave::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 212, 255, 0.3),
+    transparent
+  );
+  animation: wave-flow 3s linear infinite;
+}
+
+@keyframes wave-flow {
+  to {
+    left: 100%;
+  }
+}
+
+/* MCP Service Title */
+.mcp-service-title {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--heady-primary), var(--heady-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+
+.mcp-service-title::before {
+  content: '⬢ ';
+  color: var(--heady-primary);
+  -webkit-text-fill-color: var(--heady-primary);
+}
+
+/* Sacred Portal Button */
+.mcp-portal-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--heady-primary), var(--heady-secondary));
+  border: none;
+  border-radius: 24px;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+}
+
+.mcp-portal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.5);
+  animation: sacred-glow 1s ease-in-out infinite;
+}
+
+.mcp-portal-button::before {
+  content: '◇';
+  font-size: 18px;
+  animation: sacred-rotate 4s linear infinite;
+}
+
+/* Responsive Sacred Design */
+@media (max-width: 768px) {
+  .mcp-sacred-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mcp-service-card {
+    padding: 16px;
+  }
+  
+  .mcp-service-title {
+    font-size: 20px;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

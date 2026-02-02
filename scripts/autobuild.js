@@ -6,6 +6,7 @@
  */
 
 const CheckpointReporter = require('../src/checkpoint_reporter');
+const MCPClientWrapper = require('../src/mcp_client_wrapper');
 const { execSync } = require('child_process');
 const path = require('path');
 
@@ -16,6 +17,8 @@ class HeadyAutoBuild {
       rootDir: this.rootDir,
       outputDir: path.join(this.rootDir, 'audit_logs', 'autobuild')
     });
+    this.mcpClient = new MCPClientWrapper();
+    this.mcpConnected = false;
   }
 
   log(message, level = 'info') {
@@ -48,6 +51,20 @@ class HeadyAutoBuild {
     this.banner();
 
     try {
+      // Connect to all HeadyMCP services
+      this.log('Connecting to HeadyMCP services...', 'info');
+      try {
+        const serviceCount = await this.mcpClient.connectAll();
+        this.mcpConnected = true;
+        this.log(`Connected to ${serviceCount} MCP services`, 'success');
+        
+        // List available tools
+        const tools = this.mcpClient.listTools();
+        this.log(`Available tools: ${tools.length}`, 'info');
+      } catch (error) {
+        this.log(`MCP connection failed (continuing): ${error.message}`, 'warning');
+      }
+
       // Phase 1: Pre-build checkpoint
       this.log('Phase 1: Generating pre-build checkpoint...', 'info');
       await this.checkpointReporter.generateReport();
@@ -91,6 +108,12 @@ class HeadyAutoBuild {
       this.log('  1. Run: npm start', 'info');
       this.log('  2. Open: http://localhost:3300/admin', 'info');
       this.log('  3. View checkpoints: .\\scripts\\Invoke-Checkpoint.ps1 -Action list', 'info');
+
+      // Disconnect MCP services
+      if (this.mcpConnected) {
+        this.log('\nDisconnecting MCP services...', 'info');
+        await this.mcpClient.disconnectAll();
+      }
 
     } catch (error) {
       this.log(`Build failed: ${error.message}`, 'error');

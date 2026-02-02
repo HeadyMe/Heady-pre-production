@@ -11,6 +11,8 @@
     "test:mcp": "jest tests/mcp.test.js",
     "build": "node scripts/autobuild.js",
     "autobuild": "node scripts/autobuild.js",
+    "connect-mcp": "node heady-manager.js",
+    "mcp": "node heady-manager.js",
     "lint": "eslint *.js src/**/*.js backend/src/**/*.js",
     "docker:build": "docker build -t heady-systems .",
     "docker:run": "docker run -p 3300:3300 heady-systems",
