@@ -422,7 +422,7 @@ class HCAutoBuild {
    * Intelligent Squash Merge Implementation
    * Integrates HeadySquashMerge for advanced multi-codebase merging
    */
-  async intelligentSquashMerge(options = {}) {
+  async intelligentSquashMerge(_options = {}) {
     this.log('  Executing intelligent squash merge via HeadySquashMerge...', 'info');
     
     // Route through HeadyRegistry Router
@@ -967,22 +967,22 @@ class HCAutoBuild {
   async loadExtractionConfig() { return {}; }
   async extractComponent(spec) { return { name: spec.name, files: spec.files }; }
   async applyHeadyTransformations(component) { return { component: component.name, transformed: true }; }
-  async saveAnalysisReport(analysis) { }
-  async saveExtractionReport(extraction) { }
-  async saveMergeReport(merge) { }
-  async saveTestReport(testing) { }
-  async saveDeploymentReport(deployment) { }
+  async saveAnalysisReport(_analysis) { }
+  async saveExtractionReport(_extraction) { }
+  async saveMergeReport(_merge) { }
+  async saveTestReport(_testing) { }
+  async saveDeploymentReport(_deployment) { }
   async validateMergeReadiness() { return { passed: true, errors: [], warnings: [] }; }
   async detectMergeConflicts() { return []; }
-  async autoResolveConflicts(conflicts) { return []; }
-  async forceMerge(options) { return []; }
-  async safeMerge(options) { return []; }
+  async autoResolveConflicts(_conflicts) { return []; }
+  async forceMerge(_options) { return []; }
+  async safeMerge(_options) { return []; }
   async runTestSuite(suite) { return { name: suite, passed: 0, failed: 0, skipped: 0 }; }
   async calculateCoverage() { return 0; }
-  async buildArtifacts(options) { return []; }
-  async deployToTarget(target, artifacts) { }
-  async copyComponentFiles(component) { }
-  async scanDirectoryStructure(dirPath) { return {}; }
+  async buildArtifacts(_options) { return []; }
+  async deployToTarget(_target, _artifacts) { }
+  async copyComponentFiles(_component) { }
+  async scanDirectoryStructure(_dirPath) { return {}; }
   
   generateCommitMessage(component) {
     return `feat: Add ${component.name} component\n\nExtracted from ${component.source}\nPurpose: ${component.purpose}`;

@@ -1,0 +1,24 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2026-02-02T21:55:48.546Z",
+  "project": {
+    "name": "Heady",
+    "type": "hybrid",
+    "languages": [
+      "javascript",
+      "python"
+    ],
+    "frameworks": [
+      "express",
+      "react"
+    ]
+  },
+  "intelligence": {
+    "registry": true,
+    "checkpoints": true,
+    "routing": true,
+    "squashMerge": true
+  },
+  "lastOperation": null,
+  "operationHistory": []
+}

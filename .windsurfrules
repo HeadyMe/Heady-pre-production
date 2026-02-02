@@ -33,3 +33,58 @@ When asked to document code or generate summaries, YOU MUST FOLLOW THIS EXACT PR
 ## SCRIPTS
 - `commit_and_build.ps1` - Local build cycle
 - `nexus_deploy.ps1` - Push to all remotes
+- `hb` - Global autobuild with intelligence verification
+- `hs` - HeadySync repository synchronization
+- `hc` - Checkpoint generation
+
+## INTELLIGENCE VERIFICATION PROTOCOL
+**CRITICAL:** Before ANY Heady response, verify all systems are operational:
+
+1. **Run Pre-Response Verification:**
+   ```javascript
+   const HeadyIntelligenceVerifier = require('./src/heady_intelligence_verifier');
+   const verifier = new HeadyIntelligenceVerifier();
+   const results = await verifier.verify();
+   ```
+
+2. **Required Systems (Must Pass):**
+   - HeadyRegistry (component registry)
+   - Memory Storage (validations, patterns)
+   - Checkpoint System (state snapshots)
+   - Context Persistence (codemap, project context)
+   - Data Schema (processing modules)
+   - Codemap Access (codebase intelligence)
+   - SquashMerge System (multi-codebase merger)
+   - Routing System (HeadyRegistry router)
+   - Audit Logging (write access)
+   - File System Access (critical directories)
+
+3. **Optional Systems (Enhance Intelligence):**
+   - HeadyManager (port 3300/3100)
+   - MCP Servers (configured in mcp_config.json)
+   - Orchestrator (port 3100)
+   - Governance (governance_checkpoint.js)
+   - Validation Pipeline
+   - Git Operations
+
+4. **After Every Operation:**
+   - Update `.heady-context/project-context.json` with operation details
+   - Update `.heady-context/codemap.json` with codebase changes
+   - Log to audit trail
+   - Generate checkpoint if major change
+
+5. **Context Persistence:**
+   - Codemap and project context MUST be accessible for intelligence
+   - Operation history tracked in project-context.json (last 50 operations)
+   - All responses use verified data from persistent context
+
+## HEADY SYSTEMS UTILIZATION
+**ALWAYS route requests through HeadyRegistry Router:**
+- Documentation → HeadyAcademy (ATLAS, MUSE, ORACLE)
+- Code Generation → HeadyHive (ARCHITECT, JULES, BUILDER)
+- Security → HeadyChain (SENTINEL, MURPHY, CIPHER)
+- Data Processing → HeadyManager (HuggingFace, Python Worker)
+- Research → HeadyAcademy (SCOUT, SASHA, NOVA)
+
+## VERIFICATION COMMAND
+Run before responding: `node src/heady_intelligence_verifier.js`
