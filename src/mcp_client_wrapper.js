@@ -60,7 +60,8 @@ class MCPClientWrapper {
     // Spawn the MCP server process
     const serverProcess = spawn(config.command, config.args, {
       env: { ...process.env, ...config.env },
-      stdio: ['pipe', 'pipe', 'pipe']
+      stdio: ['pipe', 'pipe', 'pipe'],
+      shell: true
     });
 
     // Create transport
