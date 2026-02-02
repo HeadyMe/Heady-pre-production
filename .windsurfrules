@@ -86,5 +86,28 @@ When asked to document code or generate summaries, YOU MUST FOLLOW THIS EXACT PR
 - Data Processing → HeadyManager (HuggingFace, Python Worker)
 - Research → HeadyAcademy (SCOUT, SASHA, NOVA)
 
+## WINDSURF COMMAND ROUTING
+**CRITICAL:** ALL commands issued through Windsurf MUST be routed through HeadyMCP services:
+
+1. **Command Interception:**
+   - Every terminal command, file operation, and code action goes through MCP
+   - Use MCPClientWrapper for all programmatic operations
+   - Leverage MCP tools: filesystem, git, sequential-thinking, memory, etc.
+
+2. **MCP Service Priority:**
+   - filesystem → All file read/write operations
+   - git → All version control operations
+   - sequential-thinking → Complex multi-step tasks
+   - memory → Knowledge persistence and retrieval
+   - fetch → HTTP requests and API calls
+   - postgres → Database operations
+   - puppeteer → Browser automation
+   - cloudflare → Cloudflare API integration
+
+3. **Automatic Connection:**
+   - HeadyManager auto-connects to all MCP services on startup
+   - Scripts use MCPClientWrapper for unified access
+   - All operations logged through MCP governance
+
 ## VERIFICATION COMMAND
 Run before responding: `node src/heady_intelligence_verifier.js`
