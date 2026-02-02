@@ -88,7 +88,7 @@ function Move-HeadyItem {
     $destPath = Join-Path $Destination (Split-Path $Source -Leaf)
     $action = if ($DryRun) { "Would move" } else { "Moving" }
     
-    Write-Heady "$action $Description`: $Source → $Destination" "Cyan"
+    Write-Heady "$action $Description`: $Source → $destPath" "Cyan"
     
     if (-not $DryRun) {
         try {
@@ -134,10 +134,15 @@ function Move-InfrastructureFiles {
         @{ Source = "render.yaml"; Desc = "Render deployment config" },
         @{ Source = "Dockerfile"; Desc = "Docker configuration" },
         @{ Source = "docker-compose.yml"; Desc = "Docker Compose config" },
+        @{ Source = "mcp-compose.yaml"; Desc = "HeadyMCP Orchestration config" },
+        @{ Source = "mcp-servers"; Desc = "HeadyMCP microservices" },
         @{ Source = ".devcontainer"; Desc = "DevContainer config" },
         @{ Source = ".github"; Desc = "GitHub workflows" },
         @{ Source = "infrastructure"; Desc = "Infrastructure scripts" },
-        @{ Source = "deploy"; Desc = "Deployment scripts" }
+        @{ Source = "deploy"; Desc = "Deployment scripts" },
+        @{ Source = "start-heady-system.ps1"; Desc = "System startup script" },
+        @{ Source = "stop-heady-system.ps1"; Desc = "System shutdown script" },
+        @{ Source = "demo-heady-functionality.ps1"; Desc = "System demonstration script" }
     )
     
     foreach ($file in $infraFiles) {
@@ -149,6 +154,8 @@ function Move-ApplicationFiles {
     Write-Heady "🔗 Moving application files to HeadyConnection..." "Cyan"
     
     $appFiles = @(
+        @{ Source = "heady-manager.js"; Desc = "Main Application Entry Point" },
+        @{ Source = "backend"; Desc = "Backend Service Layer" },
         @{ Source = "src"; Desc = "Source code" },
         @{ Source = "public"; Desc = "Public assets" },
         @{ Source = "package.json"; Desc = "Node.js dependencies" },
@@ -178,7 +185,9 @@ function Move-GovernanceFiles {
         @{ Source = "docs"; Desc = "Documentation" },
         @{ Source = "CONTRIBUTING.md"; Desc = "Contributing guidelines" },
         @{ Source = "LICENSE"; Desc = "License file" },
-        @{ Source = "CHANGELOG.md"; Desc = "Changelog" }
+        @{ Source = "CHANGELOG.md"; Desc = "Changelog" },
+        @{ Source = "HEADY_CONTEXT.md"; Desc = "System Context & Master Protocol" },
+        @{ Source = "SQUASH_MERGE_PLAN.md"; Desc = "Squash Merge Strategy" }
     )
     
     foreach ($file in $docFiles) {
@@ -515,9 +524,13 @@ function Main {
         
         # Branch merging (optional)
         if (-not $DryRun) {
-            $mergeBranches = Read-Host "`nMerge feature branches? (y/N)"
-            if ($mergeBranches -match '^[Yy]') {
-                Merge-FeatureBranches
+            if ($Force) {
+                Write-Heady "Skipping branch merge prompt due to -Force." "Yellow"
+            } else {
+                $mergeBranches = Read-Host "`nMerge feature branches? (y/N)"
+                if ($mergeBranches -match '^[Yy]') {
+                    Merge-FeatureBranches
+                }
             }
         }
         

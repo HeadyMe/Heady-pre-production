@@ -1,0 +1,10 @@
+{
+  "id": "validation_1770034649729",
+  "type": "merge_validation",
+  "timestamp": "2026-02-02T12:17:29.729Z",
+  "passRate": 94,
+  "results": 29,
+  "warnings": 1,
+  "errors": 1,
+  "ready": false
+}

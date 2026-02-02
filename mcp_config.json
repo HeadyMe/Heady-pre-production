@@ -7,7 +7,12 @@
         "@modelcontextprotocol/server-filesystem",
         "/workspaces",
         "/shared"
-      ]
+      ],
+      "governance": {
+        "requireConfirmation": ["write_file", "delete_file", "move_file"],
+        "allowedPaths": ["./src", "./public", "./backend"],
+        "deniedPaths": [".env", ".env.admin", "*.key", "*.pem"]
+      }
     },
     "sequential-thinking": {
       "command": "npx",
@@ -28,7 +33,11 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-fetch"
-      ]
+      ],
+      "governance": {
+        "requireConfirmation": ["fetch"],
+        "allowedDomains": ["headysystems.com", "api.headysystems.com", "localhost"]
+      }
     },
     "postgres": {
       "command": "npx",
@@ -36,14 +45,22 @@
         "-y",
         "@modelcontextprotocol/server-postgres",
         "${DATABASE_URL}"
-      ]
+      ],
+      "governance": {
+        "requireConfirmation": ["execute_query", "modify_schema"],
+        "readOnly": false
+      }
     },
     "git": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-git"
-      ]
+      ],
+      "governance": {
+        "requireConfirmation": ["commit", "push", "merge"],
+        "allowedBranches": ["main", "develop", "feature/*"]
+      }
     },
     "puppeteer": {
       "command": "npx",
@@ -63,5 +80,31 @@
         "CLOUDFLARE_ACCOUNT_ID": "${COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID}"
       }
     }
+  },
+  "gateway": {
+    "bind": "127.0.0.1",
+    "port": 3301,
+    "allowHosts": ["127.0.0.1", "localhost"],
+    "allowOrigins": ["http://127.0.0.1", "http://localhost"],
+    "rateLimitPerMin": 60,
+    "jwt": {
+      "mode": "hs256",
+      "secretEnv": "MCP_GATEWAY_JWT_SECRET",
+      "audience": "app.headysystems.com",
+      "issuer": "headysystems.com"
+    }
+  },
+  "governance": {
+    "mode": "locked",
+    "version": "v1.2.0",
+    "repo": "HeadyConnection-Org/governance",
+    "auditEnabled": true,
+    "destructivePatterns": ["write", "delete", "rm", "exec", "shell", "edit_file"]
+  },
+  "identity": {
+    "trustDomain": "headysystems.com",
+    "appDomain": "app.headysystems.com",
+    "assignee": "HeadySystems Inc.",
+    "inventor": "Eric Haywood"
   }
 }

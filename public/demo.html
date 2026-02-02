@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady System Automated Demo</title>
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --secondary: #6366f1;
+            --bg-dark: #0a0e27;
+            --bg-card: #11142b;
+            --text-main: #e0e0e0;
+            --success: #00ff64;
+            --error: #ff4444;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .subtitle {
+            color: #889;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 10px;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #444;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        .status-dot.active { background: var(--success); box-shadow: 0 0 10px var(--success); }
+        .status-dot.error { background: var(--error); box-shadow: 0 0 10px var(--error); }
+        .status-dot.processing { background: var(--secondary); animation: pulse 1s infinite; }
+        
+        .output-area {
+            background: #000;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: #aaa;
+            min-height: 100px;
+            max-height: 200px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: #222;
+            border-radius: 2px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .control-panel {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.5; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 0.5; transform: scale(0.9); }
+        }
+
+        /* Sacred Geometry Background */
+        .sacred-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <svg class="sacred-bg" viewBox="0 0 1000 1000">
+        <circle cx="500" cy="500" r="300" fill="none" stroke="white" stroke-width="1"/>
+        <path d="M500 200 L760 650 L240 650 Z" fill="none" stroke="white" stroke-width="1"/>
+        <path d="M500 800 L240 350 L760 350 Z" fill="none" stroke="white" stroke-width="1"/>
+        <circle cx="500" cy="500" r="100" fill="none" stroke="white" stroke-width="1"/>
+    </svg>
+
+    <div class="container">
+        <header>
+            <h1>Heady System Automation</h1>
+            <div class="subtitle">Autonomous Orchestration & Intelligence Demo</div>
+        </header>
+
+        <div class="control-panel">
+            <button class="btn" id="startBtn" onclick="startDemo()">Initiate Sequence</button>
+        </div>
+
+        <div class="grid">
+            <!-- Node Orchestration -->
+            <div class="card" id="card-orchestrator">
+                <div class="card-header">
+                    <span class="card-title">1. Node Orchestration</span>
+                    <div class="status-dot" id="status-orchestrator"></div>
+                </div>
+                <div class="output-area" id="log-orchestrator">Waiting to start...</div>
+                <div class="progress-bar"><div class="progress-fill" id="prog-orchestrator"></div></div>
+            </div>
+
+            <!-- File System Ops -->
+            <div class="card" id="card-fs">
+                <div class="card-header">
+                    <span class="card-title">2. File Operations</span>
+                    <div class="status-dot" id="status-fs"></div>
+                </div>
+                <div class="output-area" id="log-fs">Waiting...</div>
+                <div class="progress-bar"><div class="progress-fill" id="prog-fs"></div></div>
+            </div>
+
+            <!-- AI Intelligence -->
+            <div class="card" id="card-ai">
+                <div class="card-header">
+                    <span class="card-title">3. AI Intelligence (HF)</span>
+                    <div class="status-dot" id="status-ai"></div>
+                </div>
+                <div class="output-area" id="log-ai">Waiting...</div>
+                <div class="progress-bar"><div class="progress-fill" id="prog-ai"></div></div>
+            </div>
+
+            <!-- MCP Tools -->
+            <div class="card" id="card-mcp">
+                <div class="card-header">
+                    <span class="card-title">4. MCP Tool Integration</span>
+                    <div class="status-dot" id="status-mcp"></div>
+                </div>
+                <div class="output-area" id="log-mcp">Waiting...</div>
+                <div class="progress-bar"><div class="progress-fill" id="prog-mcp"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = localStorage.getItem('headyApiKey') || 'heady-demo-key';
+        
+        function log(id, msg) {
+            const el = document.getElementById(`log-${id}`);
+            const time = new Date().toLocaleTimeString();
+            el.innerHTML += `[${time}] ${msg}\n`;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function setStatus(id, status) {
+            const el = document.getElementById(`status-${id}`);
+            el.className = `status-dot ${status}`;
+            
+            const prog = document.getElementById(`prog-${id}`);
+            if (status === 'processing') prog.style.width = '50%';
+            if (status === 'active') prog.style.width = '100%';
+            if (status === 'error') prog.style.background = 'var(--error)';
+        }
+
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const headers = {
+                'Content-Type': 'application/json',
+                'x-heady-api-key': API_KEY
+            };
+            try {
+                const res = await fetch(endpoint, {
+                    method,
+                    headers,
+                    body: body ? JSON.stringify(body) : null
+                });
+                return await res.json();
+            } catch (e) {
+                throw new Error(`Network error: ${e.message}`);
+            }
+        }
+
+        async function startDemo() {
+            const btn = document.getElementById('startBtn');
+            btn.disabled = true;
+            btn.innerText = 'Running Sequence...';
+
+            try {
+                // 1. Orchestration
+                setStatus('orchestrator', 'processing');
+                log('orchestrator', 'Provisioning worker node...');
+                const provRes = await apiCall('/api/orchestration/provision', 'POST', { nodeType: 'worker' });
+                if (provRes.node) {
+                    log('orchestrator', `Node ${provRes.node.id} provisioned.`);
+                    log('orchestrator', 'Verifying cluster health...');
+                    const health = await apiCall('/api/health');
+                    log('orchestrator', `Cluster size: ${health.orchestration.nodeCount} nodes`);
+                    setStatus('orchestrator', 'active');
+                } else {
+                    throw new Error('Provisioning failed');
+                }
+
+                await new Promise(r => setTimeout(r, 1000));
+
+                // 2. File Ops
+                setStatus('fs', 'processing');
+                log('fs', 'Writing test file via Admin API...');
+                const filePath = 'demo_test_' + Date.now() + '.txt';
+                const writeRes = await apiCall('/api/admin/file', 'POST', {
+                    root: 'root-1', // Assuming first root is valid
+                    path: filePath,
+                    content: 'Heady System Auto-Generated Test File'
+                });
+                if (writeRes.ok) {
+                    log('fs', `File written: ${filePath}`);
+                    log('fs', 'Verifying file existence...');
+                    const readRes = await apiCall(`/api/admin/file?root=root-1&path=${filePath}`);
+                    log('fs', `Read back: "${readRes.content}"`);
+                    setStatus('fs', 'active');
+                } else {
+                    throw new Error('File op failed');
+                }
+
+                await new Promise(r => setTimeout(r, 1000));
+
+                // 3. AI
+                setStatus('ai', 'processing');
+                log('ai', 'Sending prompt to Hugging Face...');
+                // Use a mock response if no token to avoid stalling demo
+                /* 
+                   In a real scenario, this calls the backend which calls HF. 
+                   If HF_TOKEN is missing, the backend errors. 
+                   We'll handle the error gracefully.
+                */
+                const aiRes = await apiCall('/api/hf/generate', 'POST', {
+                    prompt: 'The future of AI operating systems is',
+                    options: { wait_for_model: true }
+                });
+                
+                if (aiRes.ok && aiRes.output) {
+                    log('ai', `Generated: "${aiRes.output.substring(0, 100)}..."`);
+                    setStatus('ai', 'active');
+                } else {
+                    log('ai', 'AI Inference skipped (likely no HF_TOKEN or rate limit).');
+                    log('ai', `Error: ${aiRes.error || 'Unknown'}`);
+                    setStatus('ai', 'error'); // Show error but continue
+                }
+
+                await new Promise(r => setTimeout(r, 1000));
+
+                // 4. MCP
+                setStatus('mcp', 'processing');
+                log('mcp', 'Connecting to MCP servers...');
+                const toolsRes = await apiCall('/api/mcp/tools');
+                if (toolsRes.ok) {
+                    log('mcp', `Discovered ${toolsRes.tools.length} tools.`);
+                    if (toolsRes.tools.length > 0) {
+                        log('mcp', `Example tool: ${toolsRes.tools[0].name}`);
+                        // Try to call a simple tool if available, e.g., filesystem list
+                        const fsTool = toolsRes.tools.find(t => t.name === 'list_directory');
+                        if (fsTool) {
+                            log('mcp', 'Calling list_directory tool...');
+                            const callRes = await apiCall('/api/mcp/call', 'POST', {
+                                server: fsTool.server,
+                                tool: 'list_directory',
+                                args: { path: '.' }
+                            });
+                            log('mcp', `Result: ${JSON.stringify(callRes.result).substring(0, 100)}...`);
+                        }
+                    }
+                    setStatus('mcp', 'active');
+                } else {
+                    throw new Error('MCP discovery failed');
+                }
+
+                btn.innerText = 'Sequence Complete';
+                
+            } catch (e) {
+                console.error(e);
+                btn.innerText = 'Sequence Failed';
+                btn.style.background = 'var(--error)';
+            }
+        }
+    </script>
+</body>
+</html>

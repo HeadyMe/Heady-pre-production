@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Arena Dashboard - Windsurf Convergence</title>
+    <script src="/heady-design-system.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #020208;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #cosmic-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 50px 30px;
+            background: radial-gradient(circle at center, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+            border-radius: 30px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            animation: spin 30s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            background: linear-gradient(135deg, #00d4ff 0%, #6366f1 33%, #a855f7 66%, #ec4899 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 60px rgba(0, 212, 255, 0.8);
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.3em;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .arena-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(26, 30, 62, 0.6);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 212, 255, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 212, 255, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #6366f1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .graph-container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            position: relative;
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .graph-title {
+            font-size: 1.8em;
+            color: #00d4ff;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .graph-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .graph-btn {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            color: #6366f1;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .graph-btn:hover {
+            background: rgba(99, 102, 241, 0.4);
+            transform: scale(1.05);
+        }
+
+        .graph-btn.active {
+            background: #6366f1;
+            color: white;
+        }
+
+        #global-graph {
+            width: 100%;
+            height: 600px;
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .workspace-card {
+            background: linear-gradient(135deg, rgba(26, 30, 62, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border-radius: 20px;
+            padding: 28px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workspace-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .workspace-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.6);
+        }
+
+        .workspace-card:hover::before {
+            opacity: 1;
+        }
+
+        .workspace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .workspace-name {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 8px;
+        }
+
+        .workspace-branch {
+            color: #888;
+            font-size: 0.9em;
+            font-family: 'Monaco', monospace;
+        }
+
+        .workspace-status {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-ready {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+
+        .status-progress {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 1px solid #ffa500;
+        }
+
+        .workspace-tasks {
+            margin: 20px 0;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .task-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+            border-left-color: #00d4ff;
+        }
+
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid #00d4ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .task-checkbox.checked {
+            background: #10b981;
+            border-color: #10b981;
+        }
+
+        .task-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 0.9em;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .workspace-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .metric-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-box-value {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+
+        .metric-box-label {
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .convergence-board {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .board-title {
+            font-size: 1.8em;
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .board-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .board-column {
+            background: rgba(26, 30, 62, 0.5);
+            border-radius: 16px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .column-header {
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .column-unscoped { border-bottom-color: #888; color: #888; }
+        .column-progress { border-bottom-color: #00d4ff; color: #00d4ff; }
+        .column-ready { border-bottom-color: #10b981; color: #10b981; }
+        .column-merged { border-bottom-color: #a855f7; color: #a855f7; }
+
+        .column-count {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+        }
+
+        .board-item {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .board-item:hover {
+            background: rgba(0, 0, 0, 0.5);
+            transform: translateX(5px);
+        }
+
+        .item-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95em;
+        }
+
+        .item-meta {
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        .action-panel {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .heady-btn {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            border-radius: 28px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .heady-btn:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 10px 35px rgba(0, 212, 255, 0.6);
+        }
+
+        .heady-btn-secondary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .heady-btn-secondary:hover {
+            box-shadow: 0 10px 35px rgba(99, 102, 241, 0.6);
+        }
+
+        .heady-btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .heady-btn-success:hover {
+            box-shadow: 0 10px 35px rgba(16, 185, 129, 0.6);
+        }
+
+        .heady-btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .heady-btn-danger:hover {
+            box-shadow: 0 10px 35px rgba(239, 68, 68, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="cosmic-background"></canvas>
+
+    <div class="container">
+        <header>
+            <h1>∞ HEADY ARENA DASHBOARD ∞</h1>
+            <p class="subtitle">Windsurf Convergence • Multi-Model Orchestration • Sacred Intelligence</p>
+        </header>
+
+        <div class="arena-stats">
+            <div class="stat-card">
+                <div class="stat-value" id="total-workspaces">0</div>
+                <div class="stat-label">Active Workspaces</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-tasks">0</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completed-tasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="ready-merge">0</div>
+                <div class="stat-label">Ready for Merge</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="active-models">0</div>
+                <div class="stat-label">Active Models</div>
+            </div>
+        </div>
+
+        <div class="graph-container">
+            <div class="graph-header">
+                <div class="graph-title">
+                    <span>🌐</span>
+                    Global Workspace Graph
+                </div>
+                <div class="graph-controls">
+                    <button class="graph-btn active" onclick="setGraphLayout('force')">Force</button>
+                    <button class="graph-btn" onclick="setGraphLayout('radial')">Radial</button>
+                    <button class="graph-btn" onclick="setGraphLayout('hierarchical')">Hierarchical</button>
+                </div>
+            </div>
+            <canvas id="global-graph"></canvas>
+        </div>
+
+        <div class="convergence-board">
+            <div class="board-title">
+                <span>🎯</span>
+                Convergence Pipeline
+            </div>
+            <div class="board-columns">
+                <div class="board-column">
+                    <div class="column-header column-unscoped">
+                        <span>Unscoped Tasks</span>
+                        <span class="column-count" id="count-unscoped">0</span>
+                    </div>
+                    <div id="column-unscoped"></div>
+                </div>
+                <div class="board-column">
+                    <div class="column-header column-progress">
+                        <span>In Progress</span>
+                        <span class="column-count" id="count-progress">0</span>
+                    </div>
+                    <div id="column-progress"></div>
+                </div>
+                <div class="board-column">
+                    <div class="column-header column-ready">
+                        <span>Ready for Merge</span>
+                        <span class="column-count" id="count-ready">0</span>
+                    </div>
+                    <div id="column-ready"></div>
+                </div>
+                <div class="board-column">
+                    <div class="column-header column-merged">
+                        <span>Merged & Validated</span>
+                        <span class="column-count" id="count-merged">0</span>
+                    </div>
+                    <div id="column-merged"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="workspace-grid" id="workspace-grid"></div>
+
+        <div class="action-panel">
+            <button class="heady-btn" onclick="refreshArena()">🔄 Refresh Arena</button>
+            <button class="heady-btn heady-btn-secondary" onclick="scanWorkspaces()">🔍 Scan Workspaces</button>
+            <button class="heady-btn heady-btn-success" onclick="prepareSquashMerge()">✓ Prepare Squash Merge</button>
+            <button class="heady-btn heady-btn-danger" onclick="runDemo()">▶ Run Demo Mode</button>
+        </div>
+    </div>
+
+    <script>
+        let cosmicEngine;
+        let graphEngine;
+        let workspaces = [];
+        let currentLayout = 'force';
+
+        const mockWorkspaces = [
+            {
+                id: 'ws-1',
+                name: 'Heady-Main',
+                branch: 'feature/mcp-integration',
+                status: 'progress',
+                tasks: [
+                    { id: 't1', text: 'Implement HeadyMCP gateway', completed: true },
+                    { id: 't2', text: 'Add OAuth authentication', completed: true },
+                    { id: 't3', text: 'Create monitoring dashboard', completed: false }
+                ],
+                tests: { passed: 45, failed: 2, total: 47 },
+                commits: 23,
+                lastUpdate: '5 min ago'
+            },
+            {
+                id: 'ws-2',
+                name: 'Heady-UI',
+                branch: 'feature/sacred-geometry-theme',
+                status: 'ready',
+                tasks: [
+                    { id: 't4', text: 'Design system implementation', completed: true },
+                    { id: 't5', text: 'Arena dashboard UI', completed: true },
+                    { id: 't6', text: 'Visual engine integration', completed: true }
+                ],
+                tests: { passed: 32, failed: 0, total: 32 },
+                commits: 18,
+                lastUpdate: '2 min ago'
+            },
+            {
+                id: 'ws-3',
+                name: 'Heady-Backend',
+                branch: 'feature/python-worker',
+                status: 'progress',
+                tasks: [
+                    { id: 't7', text: 'Python worker optimization', completed: true },
+                    { id: 't8', text: 'HuggingFace integration', completed: false },
+                    { id: 't9', text: 'Add caching layer', completed: false }
+                ],
+                tests: { passed: 28, failed: 3, total: 31 },
+                commits: 15,
+                lastUpdate: '10 min ago'
+            }
+        ];
+
+        function initializeArena() {
+            createHeadyStyles();
+            
+            cosmicEngine = new HeadyVisualEngine('cosmic-background');
+            cosmicEngine.init();
+            cosmicEngine.updateMetrics({ activity: 0.7, health: 1, load: 0.5 });
+
+            graphEngine = new HeadyVisualEngine('global-graph');
+            graphEngine.init();
+
+            workspaces = mockWorkspaces;
+            updateArenaStats();
+            renderWorkspaces();
+            renderGraph();
+            renderConvergenceBoard();
+        }
+
+        function updateArenaStats() {
+            document.getElementById('total-workspaces').textContent = workspaces.length;
+            
+            const totalTasks = workspaces.reduce((sum, ws) => sum + ws.tasks.length, 0);
+            const completedTasks = workspaces.reduce((sum, ws) => 
+                sum + ws.tasks.filter(t => t.completed).length, 0);
+            const readyMerge = workspaces.filter(ws => ws.status === 'ready').length;
+            
+            document.getElementById('total-tasks').textContent = totalTasks;
+            document.getElementById('completed-tasks').textContent = completedTasks;
+            document.getElementById('ready-merge').textContent = readyMerge;
+            document.getElementById('active-models').textContent = Math.floor(Math.random() * 3 + 2);
+        }
+
+        function renderWorkspaces() {
+            const grid = document.getElementById('workspace-grid');
+            grid.innerHTML = workspaces.map(ws => {
+                const completedCount = ws.tasks.filter(t => t.completed).length;
+                const progressPercent = (completedCount / ws.tasks.length * 100).toFixed(0);
+                
+                return `
+                    <div class="workspace-card">
+                        <div class="workspace-header">
+                            <div>
+                                <div class="workspace-name">${ws.name}</div>
+                                <div class="workspace-branch">${ws.branch}</div>
+                            </div>
+                            <div class="workspace-status status-${ws.status}">
+                                ${ws.status === 'ready' ? 'Ready' : ws.status === 'progress' ? 'In Progress' : 'Pending'}
+                            </div>
+                        </div>
+                        
+                        <div class="workspace-tasks">
+                            ${ws.tasks.map(task => `
+                                <div class="task-item">
+                                    <div class="task-checkbox ${task.completed ? 'checked' : ''}"></div>
+                                    <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="workspace-metrics">
+                            <div class="metric-box">
+                                <div class="metric-box-value">${progressPercent}%</div>
+                                <div class="metric-box-label">Progress</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-box-value">${ws.tests.passed}/${ws.tests.total}</div>
+                                <div class="metric-box-label">Tests</div>
+                            </div>
+                            <div class="metric-box">
+                                <div class="metric-box-value">${ws.commits}</div>
+                                <div class="metric-box-label">Commits</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderGraph() {
+            const canvas = document.getElementById('global-graph');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            graphEngine.nodes = [];
+
+            if (currentLayout === 'force') {
+                workspaces.forEach((ws, i) => {
+                    const angle = (i / workspaces.length) * Math.PI * 2;
+                    const radius = 180;
+                    graphEngine.addNode({
+                        id: ws.id,
+                        label: ws.name,
+                        x: centerX + Math.cos(angle) * radius,
+                        y: centerY + Math.sin(angle) * radius,
+                        radius: 12,
+                        status: ws.status === 'ready' ? 'online' : 'offline',
+                        active: ws.status === 'progress'
+                    });
+                });
+
+                graphEngine.addNode({
+                    id: 'arena-core',
+                    label: 'Arena Core',
+                    x: centerX,
+                    y: centerY,
+                    radius: 18,
+                    status: 'online',
+                    active: true
+                });
+            }
+        }
+
+        function renderConvergenceBoard() {
+            const unscoped = workspaces.filter(ws => ws.status === 'pending');
+            const progress = workspaces.filter(ws => ws.status === 'progress');
+            const ready = workspaces.filter(ws => ws.status === 'ready');
+            const merged = [];
+
+            document.getElementById('count-unscoped').textContent = unscoped.length;
+            document.getElementById('count-progress').textContent = progress.length;
+            document.getElementById('count-ready').textContent = ready.length;
+            document.getElementById('count-merged').textContent = merged.length;
+
+            function renderColumn(items, columnId, borderColor) {
+                const column = document.getElementById(columnId);
+                column.innerHTML = items.map(ws => `
+                    <div class="board-item" style="border-left-color: ${borderColor}">
+                        <div class="item-title">${ws.name}</div>
+                        <div class="item-meta">${ws.branch} • ${ws.lastUpdate}</div>
+                    </div>
+                `).join('');
+            }
+
+            renderColumn(unscoped, 'column-unscoped', '#888');
+            renderColumn(progress, 'column-progress', '#00d4ff');
+            renderColumn(ready, 'column-ready', '#10b981');
+            renderColumn(merged, 'column-merged', '#a855f7');
+        }
+
+        function setGraphLayout(layout) {
+            currentLayout = layout;
+            document.querySelectorAll('.graph-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderGraph();
+        }
+
+        function refreshArena() {
+            console.log('Refreshing Arena dashboard...');
+            updateArenaStats();
+            renderWorkspaces();
+            renderGraph();
+            renderConvergenceBoard();
+        }
+
+        function scanWorkspaces() {
+            console.log('Scanning workspaces for unfinished tasks...');
+            alert('Workspace scan initiated. Check console for details.');
+        }
+
+        function prepareSquashMerge() {
+            console.log('Preparing squash merge strategy...');
+            alert('Squash merge preparation started. Ready workspaces will be merged.');
+        }
+
+        function runDemo() {
+            console.log('Starting automated demo mode...');
+            alert('Demo mode activated. Watch the system exercise key functionality.');
+        }
+
+        window.addEventListener('load', initializeArena);
+        window.addEventListener('beforeunload', () => {
+            if (cosmicEngine) cosmicEngine.destroy();
+            if (graphEngine) graphEngine.destroy();
+        });
+    </script>
+</body>
+</html>

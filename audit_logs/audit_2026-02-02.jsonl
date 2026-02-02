@@ -1,0 +1,1 @@
+{"timestamp":"2026-02-02T02:24:05.288Z","event":{"type":"auth_failure","context":{"ip":"::ffff:127.0.0.1"},"details":{"reason":"Invalid API key"}},"previousHash":"genesis","hash":"f191f4945bbf24d6e294afaf5207766aeb9ad7d367b6bb93feef9aa723d435cd"}

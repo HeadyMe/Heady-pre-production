@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady System Health Dashboard</title>
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+    <link rel="stylesheet" href="css/heady-theme.css">
+    <style>
+        .node-grid {
+=======
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+    <link rel="stylesheet" href="/heady-theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--hx-font, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif);
+            color: var(--hx-text, #e0e0e0);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(0, 212, 255, 0.1);
+            border-radius: 20px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        .grid {
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .node-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .node-chip.healthy { border-color: var(--success); color: var(--success); }
+        .node-chip.unhealthy { border-color: var(--error); color: var(--error); }
+        .node-chip.initializing { border-color: var(--warning); color: var(--warning); }
+        
+        .metric-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body>
+    <svg class="sacred-bg" viewBox="0 0 1000 1000">
+        <circle cx="500" cy="500" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+        <circle cx="500" cy="300" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+        <circle cx="673" cy="400" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+        <circle cx="673" cy="600" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+        <circle cx="500" cy="700" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+        <circle cx="327" cy="600" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+        <circle cx="327" cy="400" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+    </svg>
+
+    <div class="container">
+        <header style="text-align: center; margin-bottom: 40px;">
+            <h1>🔷 Heady System Health</h1>
+            <p style="color: var(--text-dim)">Real-time Orchestration & Intelligence Monitoring</p>
+        </header>
+
+        <div class="grid">
+            <!-- Manager Status -->
+            <div class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3>Unified Manager</h3>
+                    <span id="manager-status" class="btn-outline" style="padding: 4px 12px; border-radius: 12px; font-size: 0.8rem;">Connecting...</span>
+                </div>
+                <div class="metric-value" id="uptime-val">--:--:--</div>
+                <div style="color: var(--text-dim); font-size: 0.9rem;">System Uptime</div>
+            </div>
+
+            <!-- Orchestration -->
+            <div class="card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3>Orchestration</h3>
+                    <span id="orch-status" class="text-dim" style="font-size: 0.8rem;">Active</span>
+                </div>
+                <div class="flex justify-between">
+                    <div>
+                        <div class="metric-value" id="node-count">0</div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem;">Active Nodes</div>
+                    </div>
+                    <div>
+                        <div class="metric-value" id="avg-health">0%</div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem;">Avg Health</div>
+                    </div>
+                </div>
+                <div class="node-grid" id="node-grid">
+                    <!-- Nodes injected here -->
+                </div>
+            </div>
+
+            <!-- MCP Services -->
+            <div class="card">
+                <h3>MCP Gateway</h3>
+                <div id="mcp-list" style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="color: var(--text-dim);">Scanning for services...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <h3>System Logs</h3>
+            <div id="log-container" style="height: 200px; overflow-y: auto; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; font-family: monospace; font-size: 0.9rem; color: var(--text-dim);">
+                <div style="color: var(--primary);">[System] Dashboard initialized.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+<<<<<<< c:/Users/erich/Heady/public\health-dashboard.html
+        const API_KEY = localStorage.getItem('headyApiKey');
+        
+        function log(msg, type = 'info') {
+            const box = document.getElementById('log-container');
+            const color = type === 'error' ? 'var(--error)' : type === 'success' ? 'var(--success)' : 'var(--primary)';
+            box.innerHTML += `<div style="color: ${color}; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 2px 0;">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+            box.scrollTop = box.scrollHeight;
+=======
+        let logs = [];
+
+        function getOriginSafe() {
+            if (typeof window === 'undefined') return '';
+            if (!window.location) return '';
+            if (typeof window.location.origin !== 'string') return '';
+            if (!window.location.origin || window.location.origin === 'null') return '';
+            return window.location.origin;
+        }
+
+        function buildAbsoluteUrl(port, pathname) {
+            const origin = getOriginSafe();
+            if (!origin) return pathname;
+            try {
+                const url = new URL(origin);
+                if (port) url.port = String(port);
+                url.pathname = pathname;
+                url.search = '';
+                url.hash = '';
+                return url.toString();
+            } catch {
+                return pathname;
+            }
+        }
+
+        function getBackendBaseUrl() {
+            if (typeof window !== 'undefined') {
+                const stored = window.localStorage && window.localStorage.getItem('HEADY_BACKEND_BASE_URL');
+                if (stored && typeof stored === 'string') return stored.replace(/\/+$/g, '');
+            }
+
+            const hostname = (typeof window !== 'undefined' && window.location && window.location.hostname) ? window.location.hostname : '';
+            const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+            return isLocalhost ? buildAbsoluteUrl(4000, '/').replace(/\/+$/g, '') : '';
+        }
+
+        function addLog(level, message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.unshift({ timestamp, level, message });
+            if (logs.length > 50) logs.pop();
+            updateLogDisplay();
+        }
+
+        function updateLogDisplay() {
+            const container = document.getElementById('log-container');
+            container.innerHTML = logs.map(log => `
+                <div class="log-entry">
+                    <span class="log-timestamp">[${log.timestamp}]</span>
+                    <span class="log-level-${log.level}">${log.message}</span>
+                </div>
+            `).join('');
+        }
+
+        async function fetchHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+
+                const statusEl = document.getElementById('manager-status');
+                statusEl.className = 'status-badge status-online';
+                statusEl.textContent = 'Online';
+                statusEl.style.color = 'var(--success)';
+                statusEl.style.borderColor = 'var(--success)';
+
+                if (data && typeof data.uptime_s === 'number') {
+                    const uptime = Math.floor(data.uptime_s);
+                    const h = Math.floor(uptime / 3600);
+                    const m = Math.floor((uptime % 3600) / 60);
+                    const s = uptime % 60;
+                    document.getElementById('uptime-val').innerText = `${h}h ${m}m ${s}s`;
+                }
+
+                // Orchestration
+                if (data.orchestration) {
+                    document.getElementById('node-count').innerText = data.orchestration.nodeCount;
+                    document.getElementById('avg-health').innerText = Math.round(data.orchestration.avgHealth) + '%';
+                    const grid = document.getElementById('node-grid');
+                    grid.innerHTML = data.orchestration.nodes.map(n => `
+                        <div class="node-chip ${n.state === 'healthy' ? 'healthy' : 'unhealthy'}" title="ID: ${n.id}">
+                            ${n.type}<br>
+                            <small>${Math.round(n.health)}%</small>
+                        </div>
+                    `).join('');
+                }
+
+                addLog('success', '✓ Heady Manager is online');
+            } catch (error) {
+                const statusEl = document.getElementById('manager-status');
+                statusEl.className = 'status-badge status-offline';
+                statusEl.textContent = 'Offline';
+                statusEl.style.color = 'var(--error)';
+                statusEl.style.borderColor = 'var(--error)';
+                addLog('error', '✗ Heady Manager is offline');
+            }
+        }
+
+        async function checkBackendHealth() {
+            try {
+                const baseUrl = getBackendBaseUrl();
+                if (!baseUrl) {
+                    document.getElementById('backend-status').className = 'status-badge status-warning';
+                    document.getElementById('backend-status').textContent = 'Not Configured';
+                    addLog('info', 'ℹ Backend base URL not configured');
+                    return false;
+                }
+
+                const response = await fetch(`${baseUrl}/api/health`);
+                const data = await response.json();
+
+                document.getElementById('backend-status').className = 'status-badge status-online';
+                document.getElementById('backend-status').textContent = 'Online';
+                addLog('success', '✓ Backend services are online');
+                return true;
+            } catch (error) {
+                document.getElementById('backend-status').className = 'status-badge status-offline';
+                document.getElementById('backend-status').textContent = 'Offline';
+                addLog('error', '✗ Backend services are offline');
+                return false;
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/health-dashboard.html
+            }
+        }
+
+        async function fetchMCP() {
+            if (!API_KEY) {
+                document.getElementById('mcp-list').innerHTML = '<div style="color: var(--warning);">Auth required for MCP details</div>';
+                return;
+            }
+            try {
+                const res = await fetch('/api/mcp/servers', {
+                    headers: { 'x-heady-api-key': API_KEY }
+                });
+                const data = await res.json();
+                
+                if (data.servers && data.servers.length > 0) {
+                    document.getElementById('mcp-list').innerHTML = data.servers.map(s => `
+                        <div class="flex justify-between items-center" style="padding: 8px; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                            <span>${s.name}</span>
+                            <span style="color: var(--success); font-size: 0.8rem;">● Connected</span>
+                        </div>
+                    `).join('');
+                } else {
+                    document.getElementById('mcp-list').innerHTML = '<div style="color: var(--text-dim);">No MCP servers active</div>';
+                }
+            } catch (e) {
+                // Ignore auth errors quietly in dash
+            }
+        }
+
+        setInterval(fetchHealth, 2000);
+        fetchHealth();
+        fetchMCP();
+    </script>
+</body>
+</html>

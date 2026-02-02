@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heady Admin UI</title>
+    <link rel="stylesheet" href="/heady-theme.css">
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/@monaco-editor/loader@1.4.0/lib/esm/monaco-loader.js"></script>
     <style>
         :root {
@@ -348,6 +350,7 @@
         
         // API client
         const API = {
+            rootId: null,
             async request(endpoint, options = {}) {
                 const apiKey = localStorage.getItem('heady_api_key') || prompt('Enter Heady API Key:');
                 if (apiKey) {
@@ -379,6 +382,15 @@
                     method: 'POST',
                     body: JSON.stringify(data)
                 });
+            },
+
+            async initRoot() {
+                if (this.rootId) return this.rootId;
+                const data = await this.get('/api/admin/roots');
+                const roots = data.roots || [];
+                const selected = roots[0];
+                this.rootId = selected ? selected.id : null;
+                return this.rootId;
             }
         };
         
@@ -399,7 +411,7 @@
         // File browser component
         function FileBrowser({ onFileSelect }) {
             const [files, setFiles] = useState([]);
-            const [currentPath, setCurrentPath] = useState('/');
+            const [currentPath, setCurrentPath] = useState('');
             const [loading, setLoading] = useState(false);
             
             useEffect(() => {
@@ -409,8 +421,53 @@
             async function loadFiles(path) {
                 setLoading(true);
                 try {
-                    const data = await API.get(`/api/admin/files?path=${encodeURIComponent(path)}`);
-                    setFiles(data.files || []);
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+<<<<<<< c:/Users/erich/Heady/public\admin.html
+                    const data = await API.get(`/api/admin/files?path=${encodeURIComponent(path || '')}`);
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+=======
+                    const root = await API.initRoot();
+                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
+                    setFiles(data.entries || []);
                 } catch (error) {
                     console.error('Failed to load files:', error);
                 } finally {
@@ -427,20 +484,19 @@
             }
             
             function navigateUp() {
-                if (currentPath !== '/') {
-                    const parentPath = currentPath.split('/').slice(0, -1).join('/') || '/';
-                    setCurrentPath(parentPath);
-                }
+                if (!currentPath) return;
+                const parentPath = currentPath.split('/').slice(0, -1).join('/');
+                setCurrentPath(parentPath);
             }
             
             return (
                 <div className="file-browser">
                     <div style={{ marginBottom: '15px' }}>
-                        <button className="btn btn-secondary" onClick={navigateUp} disabled={currentPath === '/'}>
+                        <button className="btn btn-secondary" onClick={navigateUp} disabled={!currentPath}>
                             ↑ Up
                         </button>
                         <span style={{ marginLeft: '10px', color: 'var(--text-secondary)' }}>
-                            {currentPath}
+                            {currentPath || '/'}
                         </span>
                     </div>
                     
@@ -479,19 +535,33 @@
                 
                 const eventSource = new EventSource(`/api/admin/ops/${operationId}/stream`);
                 eventSourceRef.current = eventSource;
-                
-                eventSource.onmessage = (event) => {
-                    const logEntry = JSON.parse(event.data);
-                    setLogs(prev => [...prev, logEntry]);
-                };
-                
+
+                eventSource.addEventListener('snapshot', (event) => {
+                    try {
+                        const payload = JSON.parse(event.data);
+                        setLogs(Array.isArray(payload.logs) ? payload.logs : []);
+                    } catch (e) {
+                        console.warn('Failed to parse snapshot event', e);
+                    }
+                });
+
+                eventSource.addEventListener('log', (event) => {
+                    try {
+                        const entry = JSON.parse(event.data);
+                        setLogs(prev => [...prev, entry]);
+                    } catch (e) {
+                        console.warn('Failed to parse log event', e);
+                    }
+                });
+
+                eventSource.addEventListener('end', () => {
+                    setIsStreaming(false);
+                    eventSource.close();
+                });
+
                 eventSource.onerror = () => {
                     setIsStreaming(false);
                     eventSource.close();
-                };
-                
-                eventSource.onclose = () => {
-                    setIsStreaming(false);
                 };
                 
                 return () => {
@@ -510,7 +580,7 @@
                     )}
                     {logs.map((log, index) => (
                         <div key={index} className={`log-line ${log.level || 'info'}`}>
-                            [{log.timestamp}] {log.message}
+                            [{log.ts || log.timestamp}] {log.line || log.message}
                         </div>
                     ))}
                     {isStreaming && (
@@ -524,7 +594,7 @@
         }
         
         // Configuration editor component
-        function ConfigEditor() {
+        function ConfigEditor({ showToast }) {
             const [config, setConfig] = useState({
                 renderYaml: '',
                 mcpConfig: '',
@@ -540,16 +610,15 @@
             async function loadConfig() {
                 setLoading(true);
                 try {
-                    // Load render.yaml and mcp_config.json content
                     const [renderData, mcpData] = await Promise.all([
-                        API.get('/api/admin/file?path=render.yaml'),
-                        API.get('/api/admin/file?path=mcp_config.json')
+                        API.get('/api/admin/config/render-yaml'),
+                        API.get('/api/admin/config/mcp')
                     ]);
-                    
+
                     setConfig({
                         renderYaml: renderData.content || '',
-                        mcpConfig: mcpData.content || '',
-                        envVars: renderData.envVars || {}
+                        mcpConfig: JSON.stringify((mcpData.config || {}), null, 2),
+                        envVars: {}
                     });
                 } catch (error) {
                     console.error('Failed to load config:', error);
@@ -561,12 +630,15 @@
             async function saveConfig() {
                 setSaving(true);
                 try {
+                    const root = await API.initRoot();
                     await Promise.all([
                         API.post('/api/admin/file', {
+                            root,
                             path: 'render.yaml',
                             content: config.renderYaml
                         }),
                         API.post('/api/admin/file', {
+                            root,
                             path: 'mcp_config.json',
                             content: config.mcpConfig
                         })
@@ -617,7 +689,7 @@
         }
         
         // GPU Settings component
-        function GpuSettings() {
+        function GpuSettings({ showToast }) {
             const [gpuConfig, setGpuConfig] = useState({
                 enabled: false,
                 remoteHost: '',
@@ -635,7 +707,7 @@
             async function loadGpuConfig() {
                 setLoading(true);
                 try {
-                    const data = await API.get('/api/admin/gpu-status');
+                    const data = await API.get('/api/admin/settings/gpu');
                     setGpuConfig({
                         enabled: data.enabled || false,
                         remoteHost: data.remoteHost || '',
@@ -653,7 +725,7 @@
             async function testGpuConnection() {
                 setTesting(true);
                 try {
-                    const result = await API.post('/api/hf/infer', {
+                    await API.post('/api/admin/gpu/infer', {
                         inputs: 'test connection',
                         model: 'gpu-test'
                     });
@@ -760,8 +832,8 @@
             
             async function runBuild() {
                 try {
-                    const result = await API.post('/api/admin/build');
-                    setOperationId(result.operationId);
+                    const result = await API.post('/api/admin/build', {});
+                    setOperationId(result.op ? result.op.id : null);
                     setActiveTab('logs');
                     showToast('Build started', 'success');
                 } catch (error) {
@@ -772,8 +844,8 @@
             
             async function runAudit() {
                 try {
-                    const result = await API.post('/api/admin/audit');
-                    setOperationId(result.operationId);
+                    const result = await API.post('/api/admin/audit', {});
+                    setOperationId(result.op ? result.op.id : null);
                     setActiveTab('logs');
                     showToast('Audit started', 'success');
                 } catch (error) {
@@ -838,7 +910,7 @@
                                     <h3>System Information</h3>
                                     <div className="grid">
                                         <div>
-                                            <strong>Node.js Version:</strong> {process.version || 'Unknown'}
+                                            <strong>Runtime:</strong> Browser
                                         </div>
                                         <div>
                                             <strong>Platform:</strong> {navigator.platform}
@@ -869,9 +941,9 @@
                             </div>
                         )}
                         
-                        {activeTab === 'config' && <ConfigEditor />}
+                        {activeTab === 'config' && <ConfigEditor showToast={showToast} />}
                         
-                        {activeTab === 'gpu' && <GpuSettings />}
+                        {activeTab === 'gpu' && <GpuSettings showToast={showToast} />}
                         
                         {activeTab === 'logs' && (
                             <div>
@@ -900,29 +972,27 @@
         }
         
         // Initialize Monaco Editor when files tab is selected
-        useEffect(() => {
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.target.id === 'monaco-editor') {
-                        const editorContainer = document.getElementById('monaco-editor');
-                        if (editorContainer && !editorContainer.dataset.initialized) {
-                            editorContainer.dataset.initialized = 'true';
-                            import('https://unpkg.com/@monaco-editor/react@4.6.0/lib/es/index.js').then(() => {
-                                // Monaco Editor would be initialized here
-                                editorContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-secondary);">Monaco Editor placeholder<br />File editing capabilities</div>';
-                            });
-                        }
-                    }
-                });
-            });
-            
+        (() => {
+            const init = () => {
+                const editorContainer = document.getElementById('monaco-editor');
+                if (editorContainer && !editorContainer.dataset.initialized) {
+                    editorContainer.dataset.initialized = 'true';
+                    editorContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-secondary);">Monaco Editor placeholder<br />File editing capabilities</div>';
+                }
+            };
+
+            const observer = new MutationObserver(init);
             observer.observe(document.body, {
                 childList: true,
                 subtree: true
             });
-            
-            return () => observer.disconnect();
-        });
+
+            init();
+
+            window.addEventListener('beforeunload', () => {
+                observer.disconnect();
+            });
+        })();
         
         // Render the app
         ReactDOM.render(<App />, document.getElementById('root'));

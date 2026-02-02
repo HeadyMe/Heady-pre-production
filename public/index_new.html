@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Systems - Sacred Portal</title>
+    <link rel="stylesheet" href="css/sacred-geometry.css">
+    <style>
+        .portal-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a1a3a 0%, #020208 100%);
+        }
+
+        .portal-logo {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .logo-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid var(--sacred-gold);
+            animation: pulse 4s infinite;
+        }
+
+        .logo-ring:nth-child(2) {
+            transform: scale(0.8);
+            border-color: var(--heady-primary);
+            animation-delay: -1s;
+        }
+
+        .logo-ring:nth-child(3) {
+            transform: scale(0.6);
+            border-color: var(--heady-secondary);
+            animation-delay: -2s;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .nav-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-glow);
+            border-radius: 20px;
+            padding: 2rem;
+            width: 250px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px);
+            background: rgba(99, 102, 241, 0.1);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--sacred-gold);
+        }
+
+        .nav-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <canvas class="sacred-canvas" id="bgCanvas"></canvas>
+    
+    <div class="portal-container">
+        <div class="portal-logo">
+            <div class="logo-ring"></div>
+            <div class="logo-ring"></div>
+            <div class="logo-ring"></div>
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 3rem;">
+                ∞
+            </div>
+        </div>
+
+        <h1 class="sacred-title">HEADY SYSTEMS</h1>
+        <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 600px;">
+            Cognitive Interleaving & Sacred Geometry Ecosystem
+        </p>
+
+        <div class="nav-grid">
+            <a href="/admin" class="nav-card">
+                <span class="nav-icon">🏛️</span>
+                <div class="nav-title">Admin Console</div>
+                <div class="nav-desc">System configuration, files, and orchestration</div>
+            </a>
+
+            <a href="/monitoring" class="nav-card">
+                <span class="nav-icon">👁️</span>
+                <div class="nav-title">Live Monitor</div>
+                <div class="nav-desc">Real-time metrics, visuals, and consciousness stream</div>
+            </a>
+        </div>
+
+        <div style="margin-top: 4rem; opacity: 0.5; font-size: 0.8rem;">
+            System Status: <span style="color: var(--sacred-emerald)">● OPERATIONAL</span>
+        </div>
+    </div>
+
+    <script>
+        // Simple background particle animation
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const particles = Array(50).fill().map(() => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2
+        }));
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'rgba(99, 102, 241, 0.3)';
+            
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+                
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>

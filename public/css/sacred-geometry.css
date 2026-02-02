@@ -1,0 +1,347 @@
+/**
+ * Sacred Geometry Theme for Heady Systems
+ * Waves, fractals, breathing animations, and organic forms
+ */
+
+:root {
+  /* Sacred Colors */
+  --sacred-gold: #FFD700;
+  --sacred-purple: #9B59B6;
+  --sacred-cyan: #00CED1;
+  --sacred-emerald: #50C878;
+  --sacred-indigo: #4B0082;
+  --sacred-rose: #FF1493;
+  
+  /* Heady Brand Colors */
+  --heady-primary: #6366f1;
+  --heady-secondary: #22d3ee;
+  --heady-tertiary: #a855f7;
+  --heady-accent: #f59e0b;
+  
+  /* Dark Theme */
+  --bg-cosmos: #020208;
+  --bg-deep: #0a0a1a;
+  --bg-medium: #1a1a3a;
+  --bg-light: #2a2a5a;
+  --bg-surface: rgba(99, 102, 241, 0.05);
+  
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-accent: var(--sacred-gold);
+  
+  /* Borders & Effects */
+  --border-glow: rgba(99, 102, 241, 0.5);
+  --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.3);
+  --radius: 24px;
+  
+  /* Animation Timing */
+  --breathe-duration: 4s;
+  --wave-duration: 8s;
+  --fractal-duration: 12s;
+}
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-cosmos);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Sacred Background Canvas */
+.sacred-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* Breathing Animation */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+/* Wave Animation */
+@keyframes wave {
+  0% { transform: translateX(-100%) translateY(0); }
+  50% { transform: translateX(0) translateY(-20px); }
+  100% { transform: translateX(100%) translateY(0); }
+}
+
+/* Fractal Rotation */
+@keyframes fractal-rotate {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(90deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(0.9); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 var(--border-glow),
+                0 0 20px var(--border-glow);
+  }
+  50% { 
+    box-shadow: 0 0 0 10px transparent,
+                0 0 40px var(--border-glow);
+  }
+}
+
+/* Sacred Container */
+.sacred-container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* Sacred Header */
+.sacred-header {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, 
+    rgba(99, 102, 241, 0.1) 0%, 
+    rgba(168, 85, 247, 0.1) 50%,
+    rgba(34, 211, 238, 0.1) 100%);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-glow);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  animation: breathe var(--breathe-duration) ease-in-out infinite;
+}
+
+.sacred-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, 
+    var(--sacred-gold) 0%, 
+    transparent 70%);
+  opacity: 0.05;
+  animation: fractal-rotate var(--fractal-duration) linear infinite;
+}
+
+.sacred-title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, 
+    var(--sacred-gold) 0%, 
+    var(--heady-primary) 25%, 
+    var(--heady-secondary) 50%,
+    var(--heady-tertiary) 75%,
+    var(--sacred-gold) 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: wave var(--wave-duration) ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+/* Sacred Card */
+.sacred-card {
+  background: linear-gradient(135deg, 
+    var(--bg-surface) 0%, 
+    rgba(168, 85, 247, 0.05) 100%);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-glow);
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.sacred-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-glow);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.sacred-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 215, 0, 0.1) 50%, 
+    transparent 100%);
+  animation: wave var(--wave-duration) ease-in-out infinite;
+}
+
+/* Fractal Pattern */
+.fractal-pattern {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.fractal-pattern svg {
+  width: 100%;
+  height: 100%;
+  animation: fractal-rotate var(--fractal-duration) linear infinite;
+}
+
+/* Wave Pattern */
+.wave-pattern {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%236366f1" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,133.3C960,128,1056,96,1152,90.7C1248,85,1344,107,1392,117.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat;
+  background-size: cover;
+  animation: wave var(--wave-duration) ease-in-out infinite;
+}
+
+/* Sacred Button */
+.sacred-button {
+  background: linear-gradient(135deg, 
+    var(--heady-primary) 0%, 
+    var(--heady-secondary) 100%);
+  color: white;
+  border: none;
+  border-radius: calc(var(--radius) / 2);
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.sacred-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.sacred-button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.sacred-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+}
+
+/* Orb Animation */
+.sacred-orb {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, 
+    var(--sacred-cyan), 
+    var(--heady-primary));
+  box-shadow: 0 0 40px var(--heady-primary),
+              inset 0 0 20px rgba(255, 255, 255, 0.2);
+  animation: breathe var(--breathe-duration) ease-in-out infinite,
+             float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Sacred Grid */
+.sacred-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+/* Metric Visualization */
+.metric-viz {
+  position: relative;
+  height: 200px;
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.metric-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.6;
+}
+
+.metric-wave path {
+  stroke: var(--heady-primary);
+  stroke-width: 2;
+  fill: url(#waveGradient);
+  animation: wave-morph 4s ease-in-out infinite;
+}
+
+@keyframes wave-morph {
+  0%, 100% { d: path('M0,100 Q150,80 300,100 T600,100 L600,200 L0,200 Z'); }
+  50% { d: path('M0,100 Q150,120 300,100 T600,100 L600,200 L0,200 Z'); }
+}
+
+/* Connection Lines */
+.connection-line {
+  stroke: var(--sacred-gold);
+  stroke-width: 1;
+  stroke-dasharray: 5, 5;
+  animation: dash 20s linear infinite;
+  opacity: 0.3;
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -100; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sacred-title {
+    font-size: 2rem;
+  }
+  
+  .sacred-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .sacred-container {
+    padding: 1rem;
+  }
+}

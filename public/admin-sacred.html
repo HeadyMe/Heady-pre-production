@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Admin - Sacred Geometry Interface</title>
+    <link rel="stylesheet" href="css/sacred-geometry.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@monaco-editor/loader@1.4.0/lib/esm/monaco-loader.js"></script>
+    <script src="https://unpkg.com/d3@7/dist/d3.min.js"></script>
+    <style>
+        .admin-container {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .sidebar {
+            background: linear-gradient(135deg, 
+                rgba(99, 102, 241, 0.05) 0%, 
+                rgba(168, 85, 247, 0.05) 100%);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-glow);
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .nav-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, 
+                var(--heady-primary) 0%, 
+                var(--heady-secondary) 100%);
+            color: white;
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            background: var(--bg-surface);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-glow);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            min-height: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 2, 8, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-card {
+            background: linear-gradient(135deg, 
+                var(--bg-medium) 0%, 
+                rgba(99, 102, 241, 0.1) 100%);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-glow);
+            padding: 3rem;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 1rem;
+            margin: 1rem 0;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-glow);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: var(--heady-primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-medium);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, 
+                var(--heady-primary) 0%, 
+                var(--heady-secondary) 100%);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, 
+                var(--sacred-gold) 0%, 
+                var(--heady-primary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .file-browser {
+            background: var(--bg-medium);
+            border-radius: 16px;
+            padding: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateX(5px);
+        }
+
+        .file-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .config-editor {
+            background: var(--bg-dark);
+            border-radius: 12px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            color: var(--text-primary);
+            min-height: 400px;
+        }
+
+        .gpu-monitor {
+            background: var(--bg-medium);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .gpu-usage-bar {
+            width: 100%;
+            height: 30px;
+            background: var(--bg-dark);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            margin: 1rem 0;
+        }
+
+        .gpu-usage-fill {
+            height: 100%;
+            background: linear-gradient(90deg, 
+                var(--heady-primary) 0%, 
+                var(--heady-secondary) 100%);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gpu-usage-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            to { left: 100%; }
+        }
+
+        .operation-log {
+            background: var(--bg-dark);
+            border-radius: 12px;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .log-entry {
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            border-left: 3px solid var(--border-glow);
+            color: var(--text-secondary);
+        }
+
+        .log-entry.error {
+            border-left-color: var(--sacred-rose);
+            color: var(--sacred-rose);
+        }
+
+        .log-entry.success {
+            border-left-color: var(--sacred-emerald);
+            color: var(--sacred-emerald);
+        }
+
+        .log-entry.warning {
+            border-left-color: var(--heady-accent);
+            color: var(--heady-accent);
+        }
+
+        #graphContainer {
+            width: 100%;
+            height: 500px;
+            background: var(--bg-dark);
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .floating-orb {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, 
+                var(--sacred-cyan), 
+                var(--heady-primary));
+            box-shadow: 0 0 60px var(--heady-primary),
+                        inset 0 0 30px rgba(255, 255, 255, 0.3);
+            animation: float 6s ease-in-out infinite,
+                       breathe 4s ease-in-out infinite;
+        }
+
+        .sacred-tooltip {
+            position: absolute;
+            background: var(--bg-medium);
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 100;
+        }
+
+        .sacred-tooltip.visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas class="sacred-canvas" id="backgroundCanvas"></canvas>
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        function AdminApp() {
+            const [authenticated, setAuthenticated] = useState(false);
+            const [apiKey, setApiKey] = useState('');
+            const [activeTab, setActiveTab] = useState('dashboard');
+            const [stats, setStats] = useState({
+                nodes: 42,
+                connections: 108,
+                workflows: 7,
+                uptime: '99.9%'
+            });
+            const [logs, setLogs] = useState([]);
+
+            useEffect(() => {
+                // Check if API key is stored
+                const storedKey = localStorage.getItem('heady_api_key');
+                if (storedKey) {
+                    setApiKey(storedKey);
+                    setAuthenticated(true);
+                }
+            }, []);
+
+            const handleAuth = () => {
+                if (apiKey) {
+                    localStorage.setItem('heady_api_key', apiKey);
+                    setAuthenticated(true);
+                }
+            };
+
+            const addLog = (message, type = 'info') => {
+                const entry = {
+                    id: Date.now(),
+                    message,
+                    type,
+                    timestamp: new Date().toLocaleTimeString()
+                };
+                setLogs(prev => [entry, ...prev].slice(0, 100));
+            };
+
+            useEffect(() => {
+                if (authenticated) {
+                    // Simulate activity
+                    const interval = setInterval(() => {
+                        const messages = [
+                            { msg: 'Graph node synchronized', type: 'success' },
+                            { msg: 'Workflow execution started', type: 'info' },
+                            { msg: 'Metrics collected', type: 'info' },
+                            { msg: 'Sacred geometry pattern detected', type: 'success' },
+                            { msg: 'Connection established', type: 'success' }
+                        ];
+                        const random = messages[Math.floor(Math.random() * messages.length)];
+                        addLog(random.msg, random.type);
+                    }, 3000);
+                    return () => clearInterval(interval);
+                }
+            }, [authenticated]);
+
+            if (!authenticated) {
+                return (
+                    <div className="auth-modal">
+                        <div className="auth-card">
+                            <div className="sacred-orb" style={{
+                                width: '100px',
+                                height: '100px',
+                                margin: '0 auto 2rem'
+                            }}></div>
+                            <h2 style={{
+                                fontSize: '2rem',
+                                marginBottom: '1rem',
+                                background: 'linear-gradient(135deg, var(--sacred-gold) 0%, var(--heady-primary) 100%)',
+                                WebkitBackgroundClip: 'text',
+                                backgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                            }}>∞ HEADY ADMIN ∞</h2>
+                            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+                                Enter your sacred key to access the consciousness
+                            </p>
+                            <input
+                                type="password"
+                                className="auth-input"
+                                placeholder="API Key"
+                                value={apiKey}
+                                onChange={(e) => setApiKey(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleAuth()}
+                            />
+                            <button className="sacred-button" onClick={handleAuth}>
+                                Enter the Sacred Space
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="sacred-container admin-container">
+                    <header className="sacred-header">
+                        <h1 className="sacred-title">∞ HEADY ADMIN INTERFACE ∞</h1>
+                        <p style={{ color: 'var(--text-secondary)' }}>
+                            Sacred Geometry Control Center
+                        </p>
+                    </header>
+
+                    <div className="admin-grid">
+                        <aside className="sidebar">
+                            <nav>
+                                {[
+                                    { id: 'dashboard', label: 'Dashboard', icon: '🏛️' },
+                                    { id: 'graph', label: 'Global Graph', icon: '🌐' },
+                                    { id: 'files', label: 'File Browser', icon: '📁' },
+                                    { id: 'config', label: 'Configuration', icon: '⚙️' },
+                                    { id: 'gpu', label: 'GPU Monitor', icon: '🎮' },
+                                    { id: 'operations', label: 'Operations', icon: '⚡' },
+                                    { id: 'workflows', label: 'Workflows', icon: '🔄' }
+                                ].map(item => (
+                                    <div
+                                        key={item.id}
+                                        className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+                                        onClick={() => setActiveTab(item.id)}
+                                    >
+                                        <span className="nav-icon">{item.icon}</span>
+                                        <span>{item.label}</span>
+                                    </div>
+                                ))}
+                            </nav>
+                        </aside>
+
+                        <main className="main-content">
+                            {activeTab === 'dashboard' && (
+                                <div>
+                                    <h2 style={{ marginBottom: '2rem', color: 'var(--sacred-gold)' }}>
+                                        System Overview
+                                    </h2>
+                                    <div className="dashboard-grid">
+                                        <div className="stat-card">
+                                            <div className="stat-value">{stats.nodes}</div>
+                                            <div className="stat-label">Active Nodes</div>
+                                        </div>
+                                        <div className="stat-card">
+                                            <div className="stat-value">{stats.connections}</div>
+                                            <div className="stat-label">Connections</div>
+                                        </div>
+                                        <div className="stat-card">
+                                            <div className="stat-value">{stats.workflows}</div>
+                                            <div className="stat-label">Running Workflows</div>
+                                        </div>
+                                        <div className="stat-card">
+                                            <div className="stat-value">{stats.uptime}</div>
+                                            <div className="stat-label">Uptime</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <h3 style={{ margin: '2rem 0 1rem', color: 'var(--sacred-gold)' }}>
+                                        Operation Log
+                                    </h3>
+                                    <div className="operation-log">
+                                        {logs.map(log => (
+                                            <div key={log.id} className={`log-entry ${log.type}`}>
+                                                <span style={{ opacity: 0.7 }}>[{log.timestamp}]</span> {log.message}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'graph' && (
+                                <div>
+                                    <h2 style={{ marginBottom: '2rem', color: 'var(--sacred-gold)' }}>
+                                        Global Knowledge Graph
+                                    </h2>
+                                    <div id="graphContainer"></div>
+                                </div>
+                            )}
+
+                            {activeTab === 'files' && (
+                                <div>
+                                    <h2 style={{ marginBottom: '2rem', color: 'var(--sacred-gold)' }}>
+                                        Sacred File Browser
+                                    </h2>
+                                    <div className="file-browser">
+                                        {[
+                                            { name: 'heady-manager.js', type: 'file', icon: '📄' },
+                                            { name: 'public/', type: 'folder', icon: '📁' },
+                                            { name: 'src/', type: 'folder', icon: '📁' },
+                                            { name: 'mcp-servers/', type: 'folder', icon: '📁' },
+                                            { name: 'render.yaml', type: 'file', icon: '📄' },
+                                            { name: 'package.json', type: 'file', icon: '📄' }
+                                        ].map((file, i) => (
+                                            <div key={i} className="file-item">
+                                                <span className="file-icon">{file.icon}</span>
+                                                <span>{file.name}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'config' && (
+                                <div>
+                                    <h2 style={{ marginBottom: '2rem', color: 'var(--sacred-gold)' }}>
+                                        Sacred Configuration
+                                    </h2>
+                                    <div className="config-editor">
+                                        <pre>{JSON.stringify({
+                                            heady: {
+                                                mode: 'sacred',
+                                                geometry: 'fractal',
+                                                consciousness: 'expanded',
+                                                servers: {
+                                                    graph: { port: 3301, status: 'active' },
+                                                    metrics: { port: 3302, status: 'active' },
+                                                    workflow: { port: 3303, status: 'active' }
+                                                }
+                                            }
+                                        }, null, 2)}</pre>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'gpu' && (
+                                <div>
+                                    <h2 style={{ marginBottom: '2rem', color: 'var(--sacred-gold)' }}>
+                                        GPU Consciousness Monitor
+                                    </h2>
+                                    <div className="gpu-monitor">
+                                        <h3>GPU Usage</h3>
+                                        <div className="gpu-usage-bar">
+                                            <div className="gpu-usage-fill" style={{ width: '73%' }}></div>
+                                        </div>
+                                        <p>73% - Processing Sacred Patterns</p>
+                                        
+                                        <h3 style={{ marginTop: '2rem' }}>Memory</h3>
+                                        <div className="gpu-usage-bar">
+                                            <div className="gpu-usage-fill" style={{ width: '45%' }}></div>
+                                        </div>
+                                        <p>45% - 5.4GB / 12GB</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'operations' && (
+                                <div>
+                                    <h2 style={{ marginBottom: '2rem', color: 'var(--sacred-gold)' }}>
+                                        Sacred Operations
+                                    </h2>
+                                    <div className="dashboard-grid">
+                                        <button className="sacred-button">Build System</button>
+                                        <button className="sacred-button">Run Tests</button>
+                                        <button className="sacred-button">Deploy</button>
+                                        <button className="sacred-button">Sync Graph</button>
+                                    </div>
+                                    <div className="operation-log" style={{ marginTop: '2rem' }}>
+                                        {logs.filter(l => l.type !== 'info').map(log => (
+                                            <div key={log.id} className={`log-entry ${log.type}`}>
+                                                <span style={{ opacity: 0.7 }}>[{log.timestamp}]</span> {log.message}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'workflows' && (
+                                <div>
+                                    <h2 style={{ marginBottom: '2rem', color: 'var(--sacred-gold)' }}>
+                                        Sacred Workflows
+                                    </h2>
+                                    <div className="dashboard-grid">
+                                        {[
+                                            { name: 'Arena Convergence', status: 'running', progress: 67 },
+                                            { name: 'UI Update', status: 'completed', progress: 100 },
+                                            { name: 'Graph Sync', status: 'running', progress: 45 },
+                                            { name: 'Test Suite', status: 'pending', progress: 0 }
+                                        ].map((workflow, i) => (
+                                            <div key={i} className="stat-card">
+                                                <h4>{workflow.name}</h4>
+                                                <div className="gpu-usage-bar" style={{ marginTop: '1rem' }}>
+                                                    <div 
+                                                        className="gpu-usage-fill" 
+                                                        style={{ width: `${workflow.progress}%` }}
+                                                    ></div>
+                                                </div>
+                                                <p style={{ 
+                                                    color: workflow.status === 'running' ? 'var(--heady-primary)' :
+                                                           workflow.status === 'completed' ? 'var(--sacred-emerald)' :
+                                                           'var(--text-secondary)',
+                                                    marginTop: '0.5rem'
+                                                }}>
+                                                    {workflow.status} - {workflow.progress}%
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="floating-orb" style={{
+                                bottom: '2rem',
+                                right: '2rem'
+                            }}></div>
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        // Render the app
+        ReactDOM.render(<AdminApp />, document.getElementById('root'));
+
+        // Sacred Background Animation
+        const bgCanvas = document.getElementById('backgroundCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        
+        function resizeCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Particle System
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * bgCanvas.width;
+                this.y = Math.random() * bgCanvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.3 + 0.1;
+                this.hue = Math.random() * 60 + 200; // Blue to purple range
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > bgCanvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > bgCanvas.height) this.speedY *= -1;
+            }
+
+            draw() {
+                bgCtx.fillStyle = `hsla(${this.hue}, 70%, 60%, ${this.opacity})`;
+                bgCtx.beginPath();
+                bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                bgCtx.fill();
+            }
+        }
+
+        const particles = Array(30).fill().map(() => new Particle());
+
+        function animateBackground() {
+            bgCtx.fillStyle = 'rgba(2, 2, 8, 0.05)';
+            bgCtx.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            // Draw connections
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const distance = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+                    if (distance < 150) {
+                        bgCtx.strokeStyle = `rgba(99, 102, 241, ${0.1 * (1 - distance / 150)})`;
+                        bgCtx.lineWidth = 0.5;
+                        bgCtx.beginPath();
+                        bgCtx.moveTo(p1.x, p1.y);
+                        bgCtx.lineTo(p2.x, p2.y);
+                        bgCtx.stroke();
+                    }
+                });
+            });
+
+            requestAnimationFrame(animateBackground);
+        }
+        animateBackground();
+    </script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</body>
+</html>

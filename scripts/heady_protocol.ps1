@@ -216,11 +216,6 @@ def test_placeholder():
     """Placeholder test - replace with actual tests."""
     assert True
 
-def test_mint_coin_deterministic():
-    """Test that mint_coin produces deterministic output."""
-    # TODO: Import and test actual mint_coin function
-    pass
-
 def test_manifest_generation():
     """Test heady-manifest.json generation."""
     # TODO: Test manifest creation logic

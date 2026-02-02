@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Systems - Sacred Geometry Dashboard</title>
+    <style>
+        :root {
+            --golden-ratio: 1.618033988749895;
+            --primary: #6B46C1;
+            --secondary: #9333EA;
+            --accent: #A78BFA;
+            --dark: #1E1B4B;
+            --light: #F3F4F6;
+            --glow: 0 0 20px rgba(147, 51, 234, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sacred Geometry Background */
+        #sacred-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.2;
+        }
+
+        /* Header with Fractal Animation */
+        .header {
+            padding: 2rem;
+            text-align: center;
+            background: rgba(30, 27, 75, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(147, 51, 234, 0.3);
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--glow);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        /* Dashboard Grid - Golden Ratio Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1.618fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(30, 27, 75, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            border-radius: 1rem;
+            padding: 1.618rem;
+            box-shadow: var(--glow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--secondary), var(--accent), var(--secondary));
+            border-radius: 1rem;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .card:hover::before {
+            opacity: 0.3;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(147, 51, 234, 0.4);
+        }
+
+        /* Metrics Display */
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+        }
+
+        .metric:last-child {
+            border-bottom: none;
+        }
+
+        .metric-value {
+            font-size: 1.618rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        /* Wave Animation Display */
+        .wave-container {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            background: rgba(147, 51, 234, 0.1);
+        }
+
+        #wave-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Fractal Display */
+        .fractal-container {
+            height: 300px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #fractal-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Service Status */
+        .service-status {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            background: rgba(147, 51, 234, 0.1);
+            border-radius: 0.5rem;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .status-dot.healthy {
+            background: #10B981;
+            box-shadow: 0 0 10px #10B981;
+        }
+
+        .status-dot.degraded {
+            background: #F59E0B;
+            box-shadow: 0 0 10px #F59E0B;
+        }
+
+        .status-dot.unhealthy {
+            background: #EF4444;
+            box-shadow: 0 0 10px #EF4444;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Button Styles */
+        .btn {
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--glow);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="sacred-bg"></canvas>
+
+    <header class="header">
+        <h1 class="logo">⬡ HEADY SYSTEMS ⬡</h1>
+        <p>Sacred Geometry Dashboard</p>
+    </header>
+
+    <div class="dashboard">
+        <!-- Left Column -->
+        <div>
+            <!-- System Status Card -->
+            <div class="card">
+                <h2>System Status</h2>
+                <div class="service-status">
+                    <div class="status-indicator">
+                        <div class="status-dot healthy"></div>
+                        <span>Graph Server</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot healthy"></div>
+                        <span>Metrics Server</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot healthy"></div>
+                        <span>Workflow Server</span>
+                    </div>
+                    <div class="status-indicator">
+                        <div class="status-dot healthy"></div>
+                        <span>MCP Gateway</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Card -->
+            <div class="card" style="margin-top: 2rem;">
+                <h2>Live Metrics</h2>
+                <div class="metric">
+                    <span>CPU Usage</span>
+                    <span class="metric-value" id="cpu-value">0%</span>
+                </div>
+                <div class="metric">
+                    <span>Memory</span>
+                    <span class="metric-value" id="memory-value">0 MB</span>
+                </div>
+                <div class="metric">
+                    <span>Active Workflows</span>
+                    <span class="metric-value" id="workflows-value">0</span>
+                </div>
+                <div class="metric">
+                    <span>Graph Nodes</span>
+                    <span class="metric-value" id="nodes-value">0</span>
+                </div>
+            </div>
+
+            <!-- Actions Card -->
+            <div class="card" style="margin-top: 2rem;">
+                <h2>Quick Actions</h2>
+                <button class="btn" onclick="location.href='/admin'">Admin Panel</button>
+                <button class="btn" onclick="location.href='/api/health'">Health Check</button>
+                <button class="btn" onclick="location.href='/api/metrics'">Metrics</button>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div>
+            <!-- Wave Visualization -->
+            <div class="card">
+                <h2>Wave Pattern</h2>
+                <div class="wave-container">
+                    <canvas id="wave-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Fractal Visualization -->
+            <div class="card" style="margin-top: 2rem;">
+                <h2>Fractal Depth</h2>
+                <div class="fractal-container">
+                    <canvas id="fractal-canvas"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Sacred Geometry Background
+        const bgCanvas = document.getElementById('sacred-bg');
+        const bgCtx = bgCanvas.getContext('2d');
+
+        function resizeCanvas() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Draw Sacred Geometry Pattern
+        function drawSacredGeometry() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+            bgCtx.strokeStyle = 'rgba(147, 51, 234, 0.1)';
+            bgCtx.lineWidth = 1;
+
+            const centerX = bgCanvas.width / 2;
+            const centerY = bgCanvas.height / 2;
+            const radius = 100;
+            const goldenRatio = 1.618033988749895;
+
+            // Flower of Life pattern
+            for (let i = 0; i < 6; i++) {
+                const angle = (i * Math.PI * 2) / 6;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                bgCtx.beginPath();
+                bgCtx.arc(x, y, radius, 0, Math.PI * 2);
+                bgCtx.stroke();
+            }
+
+            // Central circle
+            bgCtx.beginPath();
+            bgCtx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            bgCtx.stroke();
+
+            // Golden spiral
+            let spiralRadius = 10;
+            let spiralAngle = 0;
+            bgCtx.beginPath();
+            bgCtx.moveTo(centerX, centerY);
+            
+            for (let i = 0; i < 200; i++) {
+                spiralRadius *= 1.01;
+                spiralAngle += 0.1;
+                const x = centerX + Math.cos(spiralAngle) * spiralRadius;
+                const y = centerY + Math.sin(spiralAngle) * spiralRadius;
+                bgCtx.lineTo(x, y);
+            }
+            bgCtx.stroke();
+        }
+        drawSacredGeometry();
+
+        // Wave Animation
+        const waveCanvas = document.getElementById('wave-canvas');
+        const waveCtx = waveCanvas.getContext('2d');
+        waveCanvas.width = waveCanvas.offsetWidth;
+        waveCanvas.height = waveCanvas.offsetHeight;
+
+        let wavePhase = 0;
+        function drawWave() {
+            waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
+            waveCtx.strokeStyle = 'rgba(167, 139, 250, 0.8)';
+            waveCtx.lineWidth = 2;
+            
+            waveCtx.beginPath();
+            for (let x = 0; x < waveCanvas.width; x++) {
+                const y = waveCanvas.height / 2 + 
+                         Math.sin((x * 0.02) + wavePhase) * 40 +
+                         Math.sin((x * 0.01) + wavePhase * 0.5) * 20;
+                if (x === 0) {
+                    waveCtx.moveTo(x, y);
+                } else {
+                    waveCtx.lineTo(x, y);
+                }
+            }
+            waveCtx.stroke();
+            
+            wavePhase += 0.05;
+            requestAnimationFrame(drawWave);
+        }
+        drawWave();
+
+        // Fractal Animation
+        const fractalCanvas = document.getElementById('fractal-canvas');
+        const fractalCtx = fractalCanvas.getContext('2d');
+        fractalCanvas.width = fractalCanvas.offsetWidth;
+        fractalCanvas.height = fractalCanvas.offsetHeight;
+
+        function drawFractalTree(x, y, angle, depth, length) {
+            if (depth === 0) return;
+            
+            const endX = x + Math.cos(angle) * length;
+            const endY = y + Math.sin(angle) * length;
+            
+            fractalCtx.beginPath();
+            fractalCtx.moveTo(x, y);
+            fractalCtx.lineTo(endX, endY);
+            fractalCtx.stroke();
+            
+            const newLength = length * 0.7;
+            const angleOffset = Math.PI / 6;
+            
+            drawFractalTree(endX, endY, angle - angleOffset, depth - 1, newLength);
+            drawFractalTree(endX, endY, angle + angleOffset, depth - 1, newLength);
+        }
+
+        let fractalRotation = 0;
+        function animateFractal() {
+            fractalCtx.clearRect(0, 0, fractalCanvas.width, fractalCanvas.height);
+            fractalCtx.strokeStyle = 'rgba(167, 139, 250, 0.6)';
+            fractalCtx.lineWidth = 1;
+            
+            fractalCtx.save();
+            fractalCtx.translate(fractalCanvas.width / 2, fractalCanvas.height);
+            
+            drawFractalTree(0, 0, -Math.PI / 2 + fractalRotation, 8, 60);
+            
+            fractalCtx.restore();
+            
+            fractalRotation += 0.01;
+            requestAnimationFrame(animateFractal);
+        }
+        animateFractal();
+
+        // Socket.io Connection
+        let socket;
+        try {
+            socket = io({
+                auth: {
+                    token: localStorage.getItem('heady-api-key')
+                }
+            });
+
+            socket.on('connect', () => {
+                console.log('Connected to real-time server');
+                socket.emit('metrics:subscribe', {
+                    metrics: ['system.cpu', 'system.memory', 'workflow.active', 'graph.nodes']
+                });
+            });
+
+            socket.on('metrics:update', (data) => {
+                if (data.metrics) {
+                    document.getElementById('cpu-value').textContent = 
+                        Math.round(data.metrics['system.cpu'] || 0) + '%';
+                    document.getElementById('memory-value').textContent = 
+                        Math.round((data.metrics['system.memory'] || 0) / 1024) + ' MB';
+                    document.getElementById('workflows-value').textContent = 
+                        Math.round(data.metrics['workflow.active'] || 0);
+                    document.getElementById('nodes-value').textContent = 
+                        Math.round(data.metrics['graph.nodes'] || 0);
+                }
+            });
+        } catch (error) {
+            console.log('Real-time connection not available');
+            // Fallback to polling
+            setInterval(async () => {
+                try {
+                    const response = await fetch('/api/health');
+                    const data = await response.json();
+                    // Update UI with polled data
+                } catch (err) {
+                    console.error('Health check failed:', err);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

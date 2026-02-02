@@ -1,1 +1,428 @@
-<!DOCTYPE html><html><head><title>Heady Codex</title><style>body{background:#020208;color:white;font-family:sans-serif;display:flex;justify-content:center;align-items:center;height:100vh;}</style></head><body><h1>∞ HEADY SYSTEMS ACTIVE ∞</h1></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Systems - Sacred Geometry Intelligence</title>
+    <script src="/heady-design-system.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #020208;
+            color: #e0e0e0;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #cosmic-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 40px;
+            background: radial-gradient(circle at center, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
+            border-radius: 30px;
+            border: 3px solid rgba(0, 212, 255, 0.4);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400%;
+            height: 400%;
+            background: conic-gradient(from 0deg, transparent, rgba(99, 102, 241, 0.15), transparent);
+            animation: spin 40s linear infinite;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 4em;
+            background: linear-gradient(135deg, #00d4ff 0%, #6366f1 25%, #a855f7 50%, #ec4899 75%, #00d4ff 100%);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            font-weight: 900;
+            position: relative;
+            z-index: 1;
+            animation: gradient-shift 8s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .tagline {
+            font-size: 1.4em;
+            color: #888;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff64;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; box-shadow: 0 0 10px #00ff64; }
+            50% { opacity: 0.6; box-shadow: 0 0 20px #00ff64; }
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .nav-card {
+            background: linear-gradient(135deg, rgba(26, 30, 62, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+            border-radius: 24px;
+            padding: 40px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-12px) scale(1.03);
+            box-shadow: 0 30px 60px rgba(0, 212, 255, 0.5);
+            border-color: rgba(0, 212, 255, 0.8);
+        }
+
+        .nav-card:hover::before {
+            opacity: 1;
+        }
+
+        .nav-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+
+        .nav-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-description {
+            color: #888;
+            font-size: 1em;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(99, 102, 241, 0.3);
+            color: #6366f1;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(99, 102, 241, 0.5);
+        }
+
+        .features-section {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 30px;
+            padding: 50px;
+            margin-bottom: 60px;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .features-title {
+            font-size: 2.5em;
+            text-align: center;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-item {
+            background: rgba(26, 30, 62, 0.5);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            background: rgba(26, 30, 62, 0.8);
+            border-color: rgba(99, 102, 241, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.2em;
+            color: #a855f7;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .feature-text {
+            color: #888;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #6366f1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="cosmic-canvas"></canvas>
+
+    <div class="container">
+        <header>
+            <h1>∞ HEADY SYSTEMS ∞</h1>
+            <p class="tagline">Sacred Geometry • Global Intelligence • Consciousness Network</p>
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-dot"></span>
+                    <span>Manager Online</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot"></span>
+                    <span>MCP Gateway Active</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-dot"></span>
+                    <span>Arena Connected</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="nav-grid">
+            <a href="/system-monitor.html" class="nav-card">
+                <span class="nav-badge">NEW</span>
+                <span class="nav-icon">🔷</span>
+                <h2 class="nav-title">System Monitor</h2>
+                <p class="nav-description">Real-time system health monitoring with Sacred Geometry visualization. Track manager status, MCP gateway, resources, and global graph activity.</p>
+            </a>
+
+            <a href="/arena-dashboard.html" class="nav-card">
+                <span class="nav-badge">NEW</span>
+                <span class="nav-icon">∞</span>
+                <h2 class="nav-title">Arena Dashboard</h2>
+                <p class="nav-description">Windsurf Arena orchestration center. Visualize workspaces, track convergence pipeline, and manage multi-model collaboration.</p>
+            </a>
+
+            <a href="/mcp-management.html" class="nav-card">
+                <span class="nav-badge">NEW</span>
+                <span class="nav-icon">🧠</span>
+                <h2 class="nav-title">MCP Management</h2>
+                <p class="nav-description">Model Context Protocol server control center. Monitor server health, manage tools, configure gateways, and view telemetry.</p>
+            </a>
+
+            <a href="/admin.html" class="nav-card">
+                <span class="nav-icon">⚙️</span>
+                <h2 class="nav-title">Admin Console</h2>
+                <p class="nav-description">Full-featured admin interface with file browser, configuration editor, GPU settings, and operation logs.</p>
+            </a>
+
+            <a href="/health-dashboard.html" class="nav-card">
+                <span class="nav-icon">💚</span>
+                <h2 class="nav-title">Health Dashboard</h2>
+                <p class="nav-description">Legacy health monitoring dashboard. View service status, system metrics, and activity logs.</p>
+            </a>
+        </div>
+
+        <div class="features-section">
+            <h2 class="features-title">🌟 Heady Ecosystem Features</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🔮</span>
+                    <h3 class="feature-title">Sacred Geometry Design</h3>
+                    <p class="feature-text">Unified design system with fractal patterns, wave motifs, and consciousness-expanding visuals.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🌐</span>
+                    <h3 class="feature-title">Global Graph</h3>
+                    <p class="feature-text">Knowledge graph connecting repos, workspaces, tasks, agents, and MCP servers with relationship mapping.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <h3 class="feature-title">Real-time Metrics</h3>
+                    <p class="feature-text">Live data streams with OpenTelemetry integration, metrics export, and visual feedback loops.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🔐</span>
+                    <h3 class="feature-title">Enterprise Security</h3>
+                    <p class="feature-text">OAuth 2.1 authentication, API key management, TLS 1.3, and comprehensive audit trails.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🤖</span>
+                    <h3 class="feature-title">Multi-Model Arena</h3>
+                    <p class="feature-text">Windsurf Arena orchestration for parallel model execution with convergence and merge strategies.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🔧</span>
+                    <h3 class="feature-title">MCP Integration</h3>
+                    <p class="feature-text">8+ MCP servers with 40+ tools for filesystem, memory, reasoning, browser automation, and more.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <h3 class="feature-title">Observability</h3>
+                    <p class="feature-text">Structured logging, distributed tracing, Prometheus metrics, and Grafana dashboards.</p>
+                </div>
+
+                <div class="feature-item">
+                    <span class="feature-icon">🚀</span>
+                    <h3 class="feature-title">Production Ready</h3>
+                    <p class="feature-text">Comprehensive checklist, CI/CD integration, health checks, and automated deployment pipelines.</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Heady Systems • <a href="https://headysystems.com">HeadySystems.com</a> • <a href="https://github.com/HeadyMe/Heady">GitHub</a></p>
+            <p style="margin-top: 15px; font-size: 0.9em;">Sacred Geometry Architecture • Global Consciousness • Cognitive Interleaving</p>
+        </footer>
+    </div>
+
+    <script>
+        let cosmicEngine;
+
+        function initializeHeadyHome() {
+            createHeadyStyles();
+            
+            cosmicEngine = new HeadyVisualEngine('cosmic-canvas');
+            cosmicEngine.init();
+            cosmicEngine.updateMetrics({ activity: 0.8, health: 1, load: 0.3 });
+
+            const navCards = document.querySelectorAll('.nav-card');
+            navCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        }
+
+        window.addEventListener('load', initializeHeadyHome);
+        window.addEventListener('beforeunload', () => {
+            if (cosmicEngine) cosmicEngine.destroy();
+        });
+    </script>
+</body>
+</html>

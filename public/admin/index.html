@@ -8,42 +8,173 @@
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/xterm@5.3.0/css/xterm.css" />
+  <script src="https://unpkg.com/xterm@5.3.0/lib/xterm.js"></script>
+  <script src="https://unpkg.com/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
   <style>
+    :root {
+      --primary: #00d4ff;
+      --primary-dim: rgba(0, 212, 255, 0.1);
+      --secondary: #6366f1;
+      --bg-dark: #0a0e27;
+      --bg-panel: #11142b;
+      --bg-header: #1a1e3e;
+      --text-main: #e0e0e0;
+      --text-dim: #889;
+      --border: #2a2e4e;
+      --radius: 12px;
+    }
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e0e0e0; }
-    .app { display: flex; height: 100vh; }
-    .sidebar { width: 240px; background: #111; border-right: 1px solid #333; overflow-y: auto; }
-    .sidebar h3 { margin: 0; padding: 12px 16px; background: #1a1a2e; color: #fff; font-size: 14px; }
-    .file-tree { padding: 8px 0; }
-    .file-item { padding: 6px 16px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-    .file-item:hover { background: #1f1f3a; }
-    .file-item.selected { background: #2a2a4e; }
-    .main { flex: 1; display: flex; flex-direction: column; }
-    .tabs { display: flex; background: #111; border-bottom: 1px solid #333; }
-    .tab { padding: 8px 16px; cursor: pointer; font-size: 13px; border-right: 1px solid #333; }
-    .tab:hover { background: #1f1f3a; }
-    .tab.active { background: #2a2a4e; }
+    body { 
+      margin: 0; 
+      font-family: 'Segoe UI', system-ui, sans-serif; 
+      background: var(--bg-dark); 
+      color: var(--text-main); 
+      overflow: hidden; 
+    }
+    .sacred-geometry {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        opacity: 0.05;
+        z-index: 0;
+    }
+    .app { display: flex; height: 100vh; position: relative; z-index: 1; }
+    .sidebar { 
+      width: 260px; 
+      background: var(--bg-panel); 
+      border-right: 1px solid var(--border); 
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 16px;
+      background: var(--bg-header);
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--primary);
+      text-shadow: 0 0 10px var(--primary-dim);
+      border-bottom: 1px solid var(--border);
+    }
+    .file-tree { flex: 1; overflow-y: auto; padding: 10px 0; }
+    .file-item { 
+      padding: 8px 16px; 
+      cursor: pointer; 
+      font-size: 13px; 
+      display: flex; 
+      align-items: center; 
+      gap: 8px; 
+      color: var(--text-dim);
+      transition: all 0.2s;
+    }
+    .file-item:hover { background: var(--primary-dim); color: var(--text-main); }
+    .file-item.selected { background: var(--primary-dim); color: var(--primary); border-left: 2px solid var(--primary); }
+    
+    .main { flex: 1; display: flex; flex-direction: column; background: var(--bg-dark); }
+    .tabs { display: flex; background: var(--bg-panel); border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tab { 
+      padding: 10px 20px; 
+      cursor: pointer; 
+      font-size: 13px; 
+      background: var(--bg-panel);
+      color: var(--text-dim);
+      border-right: 1px solid var(--border);
+      min-width: 120px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tab:hover { background: var(--bg-header); color: var(--text-main); }
+    .tab.active { 
+      background: var(--bg-dark); 
+      color: var(--primary); 
+      border-top: 2px solid var(--primary); 
+    }
+    
     .editor-container { flex: 1; position: relative; }
-    .panel-right { width: 360px; background: #111; border-left: 1px solid #333; display: flex; flex-direction: column; }
-    .panel-header { padding: 12px 16px; background: #1a1a2e; font-size: 14px; font-weight: 600; }
-    .panel-body { flex: 1; overflow-y: auto; padding: 12px; font-size: 13px; }
-    .logs { background: #0a0a0f; font-family: 'Consolas', 'Monaco', monospace; font-size: 11px; white-space: pre-wrap; padding: 8px; border: 1px solid #333; border-radius: 4px; max-height: 240px; overflow-y: auto; }
-    .log-line { margin: 0; }
-    .log-line.error { color: #f66; }
-    .log-line.success { color: #6f6; }
-    .log-line.warn { color: #fc3; }
-    .log-line.info { color: #6cf; }
-    .status-bar { display: flex; justify-content: space-between; padding: 4px 12px; background: #111; border-top: 1px solid #333; font-size: 11px; }
-    .btn { padding: 6px 12px; background: #2a2a4e; color: #fff; border: 1px solid #444; border-radius: 4px; cursor: pointer; font-size: 12px; }
-    .btn:hover { background: #3a3a5e; }
-    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    .input { padding: 6px 8px; background: #1a1a2e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 12px; }
-    .settings-group { margin-bottom: 16px; }
-    .settings-group label { display: block; margin-bottom: 4px; font-size: 12px; }
-    .settings-group input, .settings-group select { width: 100%; padding: 6px 8px; background: #1a1a2e; color: #fff; border: 1px solid #444; border-radius: 4px; font-size: 12px; }
+    
+    .panel-right { width: 320px; background: var(--bg-panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+    .panel-header { padding: 12px 16px; background: var(--bg-header); font-size: 13px; font-weight: 600; color: var(--secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+    .panel-body { flex: 1; overflow-y: auto; padding: 16px; font-size: 13px; }
+    
+    .logs { 
+      background: #000; 
+      font-family: 'Consolas', monospace; 
+      font-size: 12px; 
+      padding: 12px; 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+      height: 100%; 
+      overflow-y: auto; 
+      color: #aaa;
+    }
+    .log-line { margin-bottom: 4px; line-height: 1.4; border-bottom: 1px solid #111; padding-bottom: 2px; }
+    .log-line.error { color: #ff4444; }
+    .log-line.success { color: #00ff64; }
+    .log-line.warn { color: #ffaa00; }
+    .log-line.info { color: #00d4ff; }
+    
+    .status-bar { 
+      display: flex; 
+      justify-content: space-between; 
+      padding: 6px 16px; 
+      background: var(--bg-header); 
+      border-top: 1px solid var(--border); 
+      font-size: 11px; 
+      color: var(--text-dim);
+    }
+    
+    .btn { 
+      padding: 8px 16px; 
+      background: linear-gradient(135deg, var(--secondary) 0%, #4f46e5 100%); 
+      color: #fff; 
+      border: none; 
+      border-radius: 20px; 
+      cursor: pointer; 
+      font-size: 12px; 
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dim); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: none; }
+    
+    .input { 
+      width: 100%; 
+      padding: 10px; 
+      background: #000; 
+      color: #fff; 
+      border: 1px solid var(--border); 
+      border-radius: 6px; 
+      font-size: 13px; 
+      margin-top: 4px;
+    }
+    .input:focus { outline: none; border-color: var(--primary); }
+    
+    .settings-group { margin-bottom: 20px; }
+    .settings-group label { display: block; margin-bottom: 6px; font-size: 12px; color: var(--text-dim); }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--secondary); }
   </style>
 </head>
 <body>
+  <svg class="sacred-geometry" viewBox="0 0 1000 1000">
+      <circle cx="500" cy="500" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      <circle cx="500" cy="300" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      <circle cx="673" cy="400" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      <circle cx="673" cy="600" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      <circle cx="500" cy="700" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      <circle cx="327" cy="600" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      <circle cx="327" cy="400" r="200" fill="none" stroke="#00d4ff" stroke-width="1"/>
+      <path d="M500 100 L900 900 L100 900 Z" fill="none" stroke="#6366f1" stroke-width="1" opacity="0.3"/>
+  </svg>
   <div id="root"></div>
 
   <script type="text/babel">
@@ -87,13 +218,95 @@
       return { setActive };
     }
 
+    function Terminal() {
+      const termRef = useRef(null);
+      const wsRef = useRef(null);
+      
+      useEffect(() => {
+        if (!termRef.current) return;
+
+        // Initialize Xterm
+        const term = new window.Terminal({
+          theme: {
+            background: '#11142b',
+            foreground: '#e0e0e0',
+            cursor: '#00d4ff',
+            selectionBackground: 'rgba(0, 212, 255, 0.3)',
+            black: '#000000',
+            red: '#ff4444',
+            green: '#00ff64',
+            yellow: '#ffaa00',
+            blue: '#00d4ff',
+            magenta: '#6366f1',
+            cyan: '#22d3ee',
+            white: '#ffffff'
+          },
+          fontFamily: 'Consolas, monospace',
+          fontSize: 12,
+          cursorBlink: true,
+          convertEol: true // Important for Windows
+        });
+        
+        const fitAddon = new window.FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+        term.open(termRef.current);
+        fitAddon.fit();
+
+        // Connect WS
+        const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const ws = new WebSocket(`${proto}//${window.location.host}`);
+        wsRef.current = ws;
+
+        ws.onopen = () => {
+          term.write('\r\n\x1b[36m⚡ Heady Web Terminal Connected\x1b[0m\r\n');
+          ws.send(JSON.stringify({ type: 'term_init' }));
+        };
+
+        ws.onmessage = (event) => {
+          try {
+            const msg = JSON.parse(event.data);
+            if (msg.type === 'term_out') {
+              term.write(msg.data);
+            }
+          } catch (e) {}
+        };
+
+        term.onData(data => {
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({ type: 'term_input', data }));
+          }
+        });
+
+        const handleResize = () => fitAddon.fit();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+          window.removeEventListener('resize', handleResize);
+          term.dispose();
+          if (ws.readyState === WebSocket.OPEN) ws.close();
+        };
+      }, []);
+
+      return <div ref={termRef} style={{ height: '100%', width: '100%', overflow: 'hidden' }} />;
+    }
+
     function FileTree({ onSelect, selectedPath }) {
       const [roots, setRoots] = useState([]);
       const [tree, setTree] = useState({});
       const [expanded, setExpanded] = useState({});
+      const [contextMenu, setContextMenu] = useState(null);
+      const [showCreateDialog, setShowCreateDialog] = useState(false);
+      const [showRenameDialog, setShowRenameDialog] = useState(false);
+      const [dialogData, setDialogData] = useState(null);
 
       useEffect(() => {
         apiCall('/roots').then(r => setRoots(r.roots));
+      }, []);
+
+      useEffect(() => {
+        const handleClick = () => setContextMenu(null);
+        document.addEventListener('click', handleClick);
+        return () => document.removeEventListener('click', handleClick);
       }, []);
 
       const loadDir = useCallback(async (root, path) => {
@@ -117,9 +330,9 @@
             return (
               <div key={fullPath}>
                 <div className="file-item" style={{ paddingLeft: 8 + depth * 16 }} onClick={() => toggle(root, fullPath)}>
-                  <span>{expanded[key] ? '📂' : '📁'}</span> {item.name}
+                  <span>{expanded[`${root.id}:${fullPath}`] ? '📂' : '📁'}</span> {item.name}
                 </div>
-                {expanded[key] && renderTree(root, fullPath, depth + 1)}
+                {expanded[`${root.id}:${fullPath}`] && renderTree(root, fullPath, depth + 1)}
               </div>
             );
           }
@@ -133,7 +346,6 @@
 
       return (
         <div>
-          <h3>Explorer</h3>
           <div className="file-tree">
             {roots.map(root => (
               <div key={root.id}>
@@ -237,22 +449,29 @@
         setActive(true);
       }, []);
 
-      const startAudit = useCallback(async () => {
+      const sdiv className="sidebar-header">HEADY IDE</div>
+            <tartAudit = useCallback(async () => {
         const res = await apiCall('/audit', { method: 'POST', body: JSON.stringify({}) });
         setSelectedOp(res.op);
         setStreamUrl(res.streamUrl);
-        setActive(true);
+        setActive(true);(
+                4var(--text-dim),textAlign: 'center', marginTop: 100 
+                    <div style={{ fontSize: 40, marginBottom: 20, oacity: 0.2 }}>∞</div>
+                    <h3>Selct begin</h3>
+                   <p>Heady Sc Geomery Envroment Activep>
+                </
+            )
       }, []);
-
-      return (
+• Rady
+      return (Manager v14 • {winow.locato.hostname}
         <div>
           <div className="panel-header">Operations</div>
           <div className="panel-body">
             <div style={{ marginBottom: 12 }}>
               <button className="btn" onClick={startBuild}>Run Build</button>
-              <button className="btn" onClick={startAudit} style={{ marginLeft: 8 }}>Run Audit</button>
-            </div>
-            {selectedOp && (
+              <button className="btn" onClicackgrkund: 'va=(--bg-hea{st)', taddingA 8,ugat:=8rginLeft: 8 }}>Run Audit</button>
+            </div>e={`btn ${activePanl == 'logs' ? '' : 'tn-oulie'}`}6
+            {selectedOp && (e={`btn ${activePanl == 'settings' ? '' : 'tn-oulie'}`}6
               <div style={{ marginBottom: 12 }}>
                 <strong>Operation:</strong> {selectedOp.type} ({selectedOp.status})
               </div>

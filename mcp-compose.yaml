@@ -1,0 +1,109 @@
+# HeadyMCP Compose Configuration
+# Sacred Geometry Architecture for Multi-Server MCP Cluster
+
+version: '1.0'
+
+services:
+  heady-graph:
+    name: "Heady Global Graph"
+    description: "Knowledge graph server for the Heady ecosystem"
+    transport: http
+    command: "node"
+    args:
+      - "mcp-servers/heady-graph/server.js"
+    env:
+      PORT: "3301"
+      NODE_ENV: "production"
+    healthcheck:
+      endpoint: "/health"
+      interval: 30
+      timeout: 5
+    tools:
+      - name: get_subgraph
+        description: "Get subgraph for a workspace with specified depth"
+      - name: find_tasks
+        description: "Find tasks by session and status"
+      - name: list_dependencies
+        description: "List dependencies for an entity"
+      - name: add_entity
+        description: "Add new entity to the graph"
+      - name: add_relation
+        description: "Add relation between entities"
+      - name: query_graph
+        description: "Query the knowledge graph"
+
+  heady-metrics:
+    name: "Heady Metrics Server"
+    description: "Real-time metrics and monitoring"
+    transport: http
+    command: "node"
+    args:
+      - "mcp-servers/heady-metrics/server.js"
+    env:
+      PORT: "3302"
+      NODE_ENV: "production"
+    healthcheck:
+      endpoint: "/health"
+      interval: 30
+      timeout: 5
+    tools:
+      - name: record_metric
+        description: "Record a metric value with labels"
+      - name: get_metrics
+        description: "Get metrics by names and time range"
+      - name: get_aggregates
+        description: "Get aggregated metrics"
+      - name: stream_metrics
+        description: "Stream real-time metrics via WebSocket"
+
+  heady-workflow:
+    name: "Heady Workflow Server"
+    description: "Task and workflow orchestration"
+    transport: http
+    command: "node"
+    args:
+      - "mcp-servers/heady-workflow/server.js"
+    env:
+      PORT: "3303"
+      NODE_ENV: "production"
+    healthcheck:
+      endpoint: "/health"
+      interval: 30
+      timeout: 5
+    tools:
+      - name: create_workflow
+        description: "Create a new workflow"
+      - name: execute_workflow
+        description: "Execute a workflow with parameters"
+      - name: create_task
+        description: "Create a new task"
+      - name: update_task
+        description: "Update task status"
+      - name: get_tasks
+        description: "Get tasks by status and workspace"
+      - name: acquire_lock
+        description: "Acquire a distributed lock"
+      - name: release_lock
+        description: "Release a distributed lock"
+
+  heady-assets:
+    name: "Heady Assets Server"
+    description: "Sacred media and asset management"
+    transport: http
+    command: "node"
+    args:
+      - "mcp-servers/heady-assets/server.js"
+    env:
+      PORT: "3304"
+      NODE_ENV: "production"
+    healthcheck:
+      endpoint: "/health"
+      interval: 30
+      timeout: 5
+    tools:
+      - name: list_assets
+        description: "List available sacred assets"
+      - name: get_asset_url
+        description: "Get URL for a specific asset"
+      - name: generate_sacred_pattern
+        description: "Generate a new sacred geometry SVG pattern"
