@@ -1,4 +1,4 @@
-# Heady Systems - New Features & UI Improvements
+# HeadySystems - New Features & UI Improvements
 
 **Version:** 2.0.0  
 **Release Date:** 2024-01-30  
@@ -36,7 +36,7 @@ This release represents a **major upgrade** to the Heady ecosystem, introducing 
 - Auto-refresh with configurable intervals
 
 **Key Components:**
-- Heady Manager status and uptime
+- HeadyManager status and uptime
 - MCP Gateway with server count and latency
 - System resources with progress bars
 - Global graph topology visualization
@@ -551,5 +551,5 @@ npm run lint
 
 ---
 
-**Built with ∞ by Heady Systems**  
+**Built with ∞ by HeadySystems**  
 *Sacred Geometry • Global Intelligence • Consciousness Network*

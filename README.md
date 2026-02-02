@@ -6,6 +6,8 @@
 
 A hybrid Node.js/Python system for the HeadyConnection ecosystem, featuring a web‑based Admin IDE with AI assistance, real‑time build/audit monitoring, and optional remote GPU support.
 
+> **Naming Convention**: This project follows PascalCase naming for all components (e.g., HeadySync, HeadyManager, HeadyConnection). See `.heady-memory/heady-registry.json` for the complete component registry.
+
 **🤖 GitHub Copilot Coding Agent Enabled** - This repository is configured to work with GitHub Copilot's Coding Agent for automated fixes and improvements. See [Copilot Setup Guide](.github/COPILOT_SETUP.md) for details.
 
 ## Architecture

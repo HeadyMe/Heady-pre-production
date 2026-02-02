@@ -1,4 +1,4 @@
-# HEADY SYSTEM CONTEXT & GOLDEN MASTER PROTOCOL
+# HeadySystem CONTEXT & GOLDEN MASTER PROTOCOL
 
 ## 1. System Identity & Mission
 **Heady** is a living, breathing ecosystem designed to model global consciousness through "Sacred Geometry" and interconnected intelligence.
@@ -8,7 +8,7 @@
 The system utilizes the Model Context Protocol (MCP) as first-class infrastructure.
 
 ### Core Services
-- **Heady Manager (Integration Layer)**
+- **HeadyManager (Integration Layer)**
   - **Port**: 3300
   - **Role**: Entry point, UI hosting, Auth, API Gateway.
   - **Tech**: Node.js/Express.

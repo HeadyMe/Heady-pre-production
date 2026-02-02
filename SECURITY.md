@@ -8,7 +8,7 @@
 
 ## Reporting a Vulnerability
 
-Please report security vulnerabilities to the Heady Systems security team at:
+Please report security vulnerabilities to the HeadySystems security team at:
 
 **Email**: `security@heady.systems`
 
@@ -74,4 +74,4 @@ Bounty amounts depend on impact and exploitability.
 
 ---
 
-*This security policy is part of Heady Systems' commitment to maintaining a secure and trustworthy ecosystem.*
+*This security policy is part of HeadySystems' commitment to maintaining a secure and trustworthy ecosystem.*

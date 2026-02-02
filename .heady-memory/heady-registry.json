@@ -1,0 +1,148 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2026-02-02T12:57:00Z",
+  "description": "Heady System Component Registry - Canonical naming authority",
+  "namingConventions": {
+    "description": "All component names follow PascalCase without spaces or hyphens",
+    "pattern": "^Heady[A-Z][a-zA-Z0-9]*$",
+    "examples": [
+      "HeadySync",
+      "HeadyConnection",
+      "HeadySystem",
+      "HeadyManager",
+      "HeadyProtocol"
+    ]
+  },
+  "components": {
+    "core": {
+      "HeadySystem": {
+        "canonical": "HeadySystem",
+        "aliases": ["Heady System", "Heady-System"],
+        "description": "Core system orchestrator",
+        "type": "system"
+      },
+      "HeadyManager": {
+        "canonical": "HeadyManager",
+        "aliases": ["Heady Manager", "Heady-Manager"],
+        "description": "Node.js Express MCP server",
+        "type": "service",
+        "entrypoint": "heady-manager.js"
+      },
+      "HeadySync": {
+        "canonical": "HeadySync",
+        "aliases": ["Heady Sync", "Heady-Sync"],
+        "description": "Repository synchronization and squash merge protocol",
+        "type": "tool",
+        "entrypoint": "scripts/Heady-Sync.ps1",
+        "command": "hs"
+      },
+      "HeadyProtocol": {
+        "canonical": "HeadyProtocol",
+        "aliases": ["Heady Protocol", "Heady-Protocol"],
+        "description": "Core protocol orchestration",
+        "type": "protocol",
+        "entrypoint": "scripts/heady_protocol.ps1"
+      }
+    },
+    "ecosystem": {
+      "HeadyConnection": {
+        "canonical": "HeadyConnection",
+        "aliases": ["Heady Connection", "Heady-Connection"],
+        "description": "Non-profit entity defining 'The Why' - Creative Child",
+        "type": "entity",
+        "role": "interface_definition"
+      },
+      "HeadyEcosystem": {
+        "canonical": "HeadyEcosystem",
+        "aliases": ["Heady Ecosystem", "Heady-Ecosystem"],
+        "description": "Complete ecosystem orchestration",
+        "type": "system"
+      },
+      "HeadyHive": {
+        "canonical": "HeadyHive",
+        "aliases": ["Heady Hive", "Heady-Hive"],
+        "description": "Distributed collaboration network",
+        "type": "network"
+      },
+      "HeadyAcademy": {
+        "canonical": "HeadyAcademy",
+        "aliases": ["Heady Academy", "Heady-Academy"],
+        "description": "Python-based tooling and agent system",
+        "type": "tooling"
+      }
+    },
+    "mcp": {
+      "HeadyMCP": {
+        "canonical": "HeadyMCP",
+        "aliases": ["Heady MCP", "Heady-MCP"],
+        "description": "Model Context Protocol implementation",
+        "type": "protocol"
+      },
+      "HeadyGraph": {
+        "canonical": "HeadyGraph",
+        "aliases": ["Heady Graph", "Heady-Graph"],
+        "description": "Graph MCP server",
+        "type": "service",
+        "entrypoint": "mcp-servers/heady-graph/server.js"
+      },
+      "HeadyMetrics": {
+        "canonical": "HeadyMetrics",
+        "aliases": ["Heady Metrics", "Heady-Metrics"],
+        "description": "Metrics MCP server",
+        "type": "service",
+        "entrypoint": "mcp-servers/heady-metrics/server.js"
+      },
+      "HeadyWorkflow": {
+        "canonical": "HeadyWorkflow",
+        "aliases": ["Heady Workflow", "Heady-Workflow"],
+        "description": "Workflow MCP server",
+        "type": "service",
+        "entrypoint": "mcp-servers/heady-workflow/server.js"
+      },
+      "HeadyAssets": {
+        "canonical": "HeadyAssets",
+        "aliases": ["Heady Assets", "Heady-Assets"],
+        "description": "Assets MCP server",
+        "type": "service",
+        "entrypoint": "mcp-servers/heady-assets/server.js"
+      }
+    },
+    "ui": {
+      "HeadyAdmin": {
+        "canonical": "HeadyAdmin",
+        "aliases": ["Heady Admin", "Heady-Admin"],
+        "description": "Admin UI interface",
+        "type": "interface",
+        "entrypoint": "public/admin.html"
+      },
+      "HeadyIDE": {
+        "canonical": "HeadyIDE",
+        "aliases": ["Heady IDE", "Heady-IDE"],
+        "description": "Monaco-based IDE interface",
+        "type": "interface",
+        "entrypoint": "public/admin/index.html"
+      }
+    },
+    "security": {
+      "HeadyChain": {
+        "canonical": "HeadyChain",
+        "aliases": ["Heady Chain", "Heady-Chain"],
+        "description": "Authentication and audit ledger",
+        "type": "security"
+      },
+      "HeadyCrypt": {
+        "canonical": "HeadyCrypt",
+        "aliases": ["Heady Crypt", "Heady-Crypt"],
+        "description": "Encryption and obfuscation",
+        "type": "security"
+      }
+    }
+  },
+  "deprecated": {
+    "hc": {
+      "reason": "Renamed to 'hs' (HeadySync) to avoid confusion with existing hc command",
+      "replacement": "hs",
+      "date": "2026-02-02"
+    }
+  }
+}

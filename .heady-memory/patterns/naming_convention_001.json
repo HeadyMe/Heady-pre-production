@@ -1,0 +1,81 @@
+{
+  "id": "naming_convention_001",
+  "name": "Heady Component Naming Standard",
+  "type": "naming_pattern",
+  "created_at": "2026-02-02T12:57:00Z",
+  "description": "Canonical naming convention for all Heady system components",
+  "rules": {
+    "format": "PascalCase",
+    "prefix": "Heady",
+    "no_spaces": true,
+    "no_hyphens": true,
+    "pattern": "^Heady[A-Z][a-zA-Z0-9]*$"
+  },
+  "examples": {
+    "correct": [
+      "HeadySync",
+      "HeadyConnection",
+      "HeadySystem",
+      "HeadyManager",
+      "HeadyProtocol",
+      "HeadyMCP",
+      "HeadyGraph",
+      "HeadyAdmin"
+    ],
+    "incorrect": [
+      "Heady Sync",
+      "Heady-Sync",
+      "heady_sync",
+      "HEADY_SYNC",
+      "Heady Connection",
+      "Heady-Connection"
+    ]
+  },
+  "exceptions": {
+    "file_names": {
+      "description": "File names may use kebab-case for compatibility",
+      "examples": [
+        "heady-manager.js",
+        "Heady-Sync.ps1"
+      ],
+      "note": "Internal references should still use canonical PascalCase"
+    },
+    "commands": {
+      "description": "CLI commands use lowercase abbreviations",
+      "examples": [
+        "hs (HeadySync)",
+        "hc (deprecated)"
+      ]
+    }
+  },
+  "migration": {
+    "find_and_replace": [
+      {
+        "from": "Heady Sync",
+        "to": "HeadySync",
+        "context": "documentation, comments, UI text"
+      },
+      {
+        "from": "Heady Connection",
+        "to": "HeadyConnection",
+        "context": "documentation, comments, UI text"
+      },
+      {
+        "from": "Heady System",
+        "to": "HeadySystem",
+        "context": "documentation, comments, UI text"
+      },
+      {
+        "from": "Heady Manager",
+        "to": "HeadyManager",
+        "context": "documentation, comments, UI text"
+      },
+      {
+        "from": "Heady Protocol",
+        "to": "HeadyProtocol",
+        "context": "documentation, comments, UI text"
+      }
+    ]
+  },
+  "status": "active"
+}

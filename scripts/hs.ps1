@@ -112,9 +112,12 @@ if (Test-Path "$ScriptDir\Heady-Sync.ps1") {
         Write-Warning "Could not detect branch, defaulting to 'main'."
     }
 
-    $syncArgs = @("-Branch", $currentBranch)
-    if ($Force) { $syncArgs += "-Force" }
-    & "$ScriptDir\Heady-Sync.ps1" @syncArgs
+    # Call Heady-Sync with proper parameters
+    if ($Force) {
+        & "$ScriptDir\Heady-Sync.ps1" -Branch $currentBranch -Force
+    } else {
+        & "$ScriptDir\Heady-Sync.ps1" -Branch $currentBranch
+    }
 }
 
 # 6. RESTART (Optional)
@@ -125,5 +128,5 @@ if ($Restart) {
     }
 } else {
     Show-Header "CYCLE COMPLETE. SYSTEM PAUSED."
-    Write-Host "Run 'hc -Restart' next time to auto-resume, or run '.\scripts\start-heady-system.ps1' to start." -ForegroundColor Gray
+    Write-Host "Run 'hs -Restart' next time to auto-resume, or run '.\scripts\start-heady-system.ps1' to start." -ForegroundColor Gray
 }

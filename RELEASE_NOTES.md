@@ -129,7 +129,7 @@ node start-mcp-services.js
 4. Implement persistent storage layer
 
 ## 👥 Contributors
-- Heady Systems Team
+- HeadySystems Team
 - Cascade AI Assistant
 
 ---

@@ -57,7 +57,7 @@ Heady/
 - Vanilla JS - Visual engine
 
 **Backend:**
-- Node.js 18+ (Express) - Heady Manager (port 3300)
+- Node.js 18+ (Express) - HeadyManager (port 3300)
 - Python 3.11+ - Worker processes
 - HuggingFace API - AI inference
 
@@ -708,7 +708,7 @@ setInterval(async () => {
   <div class="metric-header">
     <div class="metric-title">
       <span class="metric-icon">🔷</span>
-      Heady Manager
+      HeadyManager
     </div>
     <span class="status-badge status-online">ONLINE</span>
   </div>

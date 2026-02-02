@@ -1,4 +1,4 @@
-# Heady Systems - Remaining Tasks & Merge Readiness
+# HeadySystems - Remaining Tasks & Merge Readiness
 
 ## 🚧 Outstanding Tasks
 
