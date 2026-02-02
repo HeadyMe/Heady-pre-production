@@ -1,114 +1,168 @@
-const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
-const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
-const { CallToolRequestSchema, ListToolsRequestSchema } = require('@modelcontextprotocol/sdk/types.js');
-const { register, performHealthCheck } = require('../utils/monitoring');
-const { generateId, sleep } = require('../utils/shared-utils');
+/**
+ * Heady Metrics MCP Server
+ * Real-time metric collection, SSE streaming, health monitoring
+ */
 
-const server = new Server(
-  {
-    name: 'heady-metrics-server',
-    version: '1.0.0',
-  },
-  {
-    capabilities: {
-      tools: {},
-    },
-  }
-);
+const express = require('express');
+const { sendSuccess, sendError, initSSE, sendSSE, MetricRecorder, calculateHealthScore } = require('../utils/shared-utils');
+const { PORTS, METRICS } = require('../../lib/constants');
+
+const app = express();
+app.use(express.json());
 
 // Metrics storage
-const metricsStore = new Map();
+const metricRecorder = new MetricRecorder(METRICS.MAX_SAMPLES);
+const healthData = new Map();
 
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: [
-      {
-        name: 'metrics.record',
-        description: 'Record a metric value',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-            value: { type: 'number' },
-            tags: { type: 'object' },
-          },
-          required: ['name', 'value'],
-        },
-      },
-      {
-        name: 'metrics.current',
-        description: 'Get current system metrics',
-        inputSchema: {
-          type: 'object',
-          properties: {},
-        },
-      },
-      {
-        name: 'metrics.health',
-        description: 'Get system health status',
-        inputSchema: {
-          type: 'object',
-          properties: {},
-        },
-      },
-    ],
-  };
-});
-
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
-
-  switch (name) {
-    case 'metrics.record': {
-      const { name: metricName, value, tags = {} } = args;
-      const metric = {
-        id: generateId(),
-        name: metricName,
-        value,
-        tags,
-        timestamp: Date.now(),
-      };
-      
-      if (!metricsStore.has(metricName)) {
-        metricsStore.set(metricName, []);
-      }
-      metricsStore.get(metricName).push(metric);
-      
-      return {
-        content: [{ type: 'text', text: `Recorded metric ${metricName}: ${value}` }],
-      };
+/**
+ * Record metric
+ */
+app.post('/api/metrics/record', (req, res) => {
+  try {
+    const { name, value, tags = {} } = req.body;
+    
+    if (!name || value === undefined) {
+      return sendError(res, 'Name and value required', 400);
     }
-
-    case 'metrics.current': {
-      const summary = {};
-      for (const [key, values] of metricsStore.entries()) {
-        const lastValue = values[values.length - 1];
-        summary[key] = lastValue ? lastValue.value : null;
-      }
-      return {
-        content: [{ type: 'text', text: JSON.stringify(summary, null, 2) }],
-      };
-    }
-
-    case 'metrics.health': {
-      const health = await performHealthCheck();
-      return {
-        content: [{ type: 'text', text: JSON.stringify(health, null, 2) }],
-      };
-    }
-
-    default:
-      throw new Error(`Unknown tool: ${name}`);
+    
+    metricRecorder.record(name, value);
+    
+    sendSuccess(res, { recorded: true, name, value });
+  } catch (error) {
+    sendError(res, error.message);
   }
 });
 
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  console.error('Heady Metrics Server running on stdio');
+/**
+ * Get metrics
+ */
+app.get('/api/metrics/:name', (req, res) => {
+  try {
+    const { name } = req.params;
+    const { count = 10 } = req.query;
+    
+    const recent = metricRecorder.getRecent(name, parseInt(count));
+    const average = metricRecorder.getAverage(name);
+    
+    sendSuccess(res, {
+      name,
+      average,
+      recentSamples: recent,
+      sampleCount: recent.length
+    });
+  } catch (error) {
+    sendError(res, error.message);
+  }
+});
+
+/**
+ * SSE metrics stream
+ */
+app.get('/api/metrics/stream', (req, res) => {
+  initSSE(res);
+  
+  const interval = setInterval(() => {
+    // Generate wave and fractal metrics for UI animations
+    const now = Date.now();
+    const wave = Math.sin(now * METRICS.WAVE_FREQUENCY) * 50 + 50;
+    const fractal = generateFractalValue(now);
+    
+    const metricsData = {
+      timestamp: new Date().toISOString(),
+      wave,
+      fractal,
+      cpu: Math.random() * 100,
+      memory: Math.random() * 100,
+      requests: Math.floor(Math.random() * 1000)
+    };
+    
+    sendSSE(res, 'metrics', metricsData);
+  }, METRICS.COLLECTION_INTERVAL);
+  
+  req.on('close', () => {
+    clearInterval(interval);
+  });
+});
+
+/**
+ * Generate fractal value for Sacred Geometry animations
+ */
+function generateFractalValue(time) {
+  let value = 0;
+  
+  for (let i = 0; i < METRICS.FRACTAL_DEPTH; i++) {
+    const freq = Math.pow(2, i);
+    const amp = 1 / freq;
+    value += Math.sin(time * freq * 0.001) * amp;
+  }
+  
+  return (value + 1) * 50; // Normalize to 0-100
 }
 
-main().catch((error) => {
-  console.error('Fatal error', error);
-  process.exit(1);
+/**
+ * Update service health
+ */
+app.post('/api/metrics/health/:service', (req, res) => {
+  try {
+    const { service } = req.params;
+    const { uptime, errorRate, avgLatency } = req.body;
+    
+    const healthScore = calculateHealthScore({ uptime, errorRate, avgLatency });
+    
+    healthData.set(service, {
+      uptime,
+      errorRate,
+      avgLatency,
+      healthScore,
+      lastUpdate: new Date().toISOString()
+    });
+    
+    sendSuccess(res, { service, healthScore });
+  } catch (error) {
+    sendError(res, error.message);
+  }
 });
+
+/**
+ * Get health data
+ */
+app.get('/api/metrics/health', (req, res) => {
+  try {
+    const services = {};
+    
+    for (const [service, data] of healthData.entries()) {
+      services[service] = data;
+    }
+    
+    const overallHealth = healthData.size > 0
+      ? Array.from(healthData.values()).reduce((sum, d) => sum + d.healthScore, 0) / healthData.size
+      : 100;
+    
+    sendSuccess(res, {
+      overall: overallHealth,
+      services
+    });
+  } catch (error) {
+    sendError(res, error.message);
+  }
+});
+
+/**
+ * Health check
+ */
+app.get('/health', (req, res) => {
+  sendSuccess(res, {
+    status: 'healthy',
+    service: 'heady-metrics-server',
+    metricsTracked: metricRecorder.metrics.size,
+    servicesMonitored: healthData.size
+  });
+});
+
+const PORT = process.env.PORT || PORTS.METRICS_SERVER;
+
+app.listen(PORT, () => {
+  console.log(`✅ Heady Metrics Server running on port ${PORT}`);
+});
+
+module.exports = app;

@@ -421,52 +421,8 @@
             async function loadFiles(path) {
                 setLoading(true);
                 try {
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-<<<<<<< c:/Users/erich/Heady/public\admin.html
-                    const data = await API.get(`/api/admin/files?path=${encodeURIComponent(path || '')}`);
-=======
                     const root = await API.initRoot();
                     const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
-=======
-                    const root = await API.initRoot();
-                    const data = await API.get(`/api/admin/files?root=${encodeURIComponent(root || '')}&path=${encodeURIComponent(path || '')}`);
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b11478a9/public/admin.html
                     setFiles(data.entries || []);
                 } catch (error) {
                     console.error('Failed to load files:', error);

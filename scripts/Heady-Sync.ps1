@@ -41,9 +41,12 @@ $CommitMsg = "HeadyHive Evolution [$Timestamp]: Updates to $FilesList"
 Write-Host "[SCAN] Detected changes in $ChangedCount files." -ForegroundColor Yellow
 Write-Host "[SCAN] Files: $FilesList" -ForegroundColor Gray
 
-# 2. STAGE
+# 2. STAGE & COMMIT
 Write-Host "[STAGE] Adding all changes..." -ForegroundColor Green
 git add .
+
+Write-Host "[COMMIT] Stamping version..." -ForegroundColor Magenta
+git commit -m $CommitMsg
 
 # 3. SAFE REBASE (The "Squash Merge" Logic)
 # We pull changes. If histories are unrelated, we allow it.
@@ -51,17 +54,16 @@ git add .
 # your local HeadyHive build is the Source of Truth.
 Write-Host "[SYNC] Aligning with remote..." -ForegroundColor Blue
 try {
+    # Fetch first to ensure we have latest refs
+    git fetch origin $Branch
+    # Rebase our new commit on top of origin
     git pull origin $Branch --rebase --strategy-option=theirs --allow-unrelated-histories
 } catch {
     Write-Host "[WARNING] Rebase encountered conflicts, using local changes..." -ForegroundColor Yellow
     git pull origin $Branch --rebase --strategy-option=ours --allow-unrelated-histories
 }
 
-# 4. COMMIT
-Write-Host "[COMMIT] Stamping version..." -ForegroundColor Magenta
-git commit -m $CommitMsg
-
-# 5. PUSH
+# 4. PUSH
 Write-Host "[UPLINK] Pushing to GitHub..." -ForegroundColor Green
 if ($Force) {
     git push origin $Branch --force

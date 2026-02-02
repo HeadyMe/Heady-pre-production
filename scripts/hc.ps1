@@ -1,0 +1,90 @@
+# HEADY CONTROL (hc) - Master Orchestration Command
+# "Pauses, catches all worktrees, eliminates conflict, fixes errors, and makes improvements."
+
+param(
+    [switch]$Restart,
+    [switch]$Force
+)
+
+$ErrorActionPreference = "Stop"
+$ScriptDir = $PSScriptRoot
+$RootDir = "$ScriptDir\.."
+
+function Show-Header {
+    param($Message)
+    Write-Host "`n════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+    Write-Host " $Message" -ForegroundColor White
+    Write-Host "════════════════════════════════════════════════════════════════" -ForegroundColor Cyan
+}
+
+function Show-Step {
+    param($Message)
+    Write-Host "`n[HC] $Message" -ForegroundColor Yellow
+}
+
+Set-Location $RootDir
+
+# 1. PAUSE (Stop Services)
+Show-Header "HEADY CONTROL: INITIATING MAINTENANCE CYCLE"
+Show-Step "Pausing System (Stopping Services)..."
+if (Test-Path "$ScriptDir\stop-heady-system.ps1") {
+    & "$ScriptDir\stop-heady-system.ps1"
+} else {
+    Write-Warning "stop-heady-system.ps1 not found."
+}
+
+# 2. INTELLIGENT CATCH (Fetch & Update Knowledge)
+Show-Step "Catching up (Fetching all remotes & Pruning worktrees)..."
+git fetch --all --prune
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "Failed to fetch remotes (Exit Code: $LASTEXITCODE). Proceeding locally."
+    $LASTEXITCODE = 0 # Reset
+}
+# Prune stale worktree entries (safe cleanup)
+git worktree prune
+
+
+# 3. FIX ERRORS (Linting & Auto-correction)
+Show-Step "Fixing Errors & standardizing code..."
+if (Test-Path "package.json") {
+    Write-Host "Running ESLint Auto-Fix..." -ForegroundColor Gray
+    # Run in cmd /c to ensure npm is found and execution doesn't abort script on lint errors
+    cmd /c "npm run lint -- --fix"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Linting found issues that could not be auto-fixed, or exited with error."
+        $LASTEXITCODE = 0 # Reset to allow script to continue
+    }
+}
+
+# 4. MAKE IMPROVEMENTS (Optimization)
+Show-Step "Making Improvements (Optimization)..."
+if (Test-Path "$ScriptDir\optimize_repos.ps1") {
+    & "$ScriptDir\optimize_repos.ps1"
+}
+
+# 5. FINAL SYNC (Squash & Push)
+Show-Step "Finalizing Synchronization..."
+if (Test-Path "$ScriptDir\Heady-Sync.ps1") {
+    $currentBranch = git rev-parse --abbrev-ref HEAD
+    if ($LASTEXITCODE -eq 0 -and !([string]::IsNullOrWhiteSpace($currentBranch))) {
+        Write-Host "Detected active branch: $currentBranch" -ForegroundColor DarkGray
+    } else {
+        $currentBranch = "main"
+        Write-Warning "Could not detect branch, defaulting to 'main'."
+    }
+
+    $syncArgs = @("-Branch", $currentBranch)
+    if ($Force) { $syncArgs += "-Force" }
+    & "$ScriptDir\Heady-Sync.ps1" @syncArgs
+}
+
+# 6. RESTART (Optional)
+if ($Restart) {
+    Show-Step "Restarting System..."
+    if (Test-Path "$ScriptDir\start-heady-system.ps1") {
+        & "$ScriptDir\start-heady-system.ps1"
+    }
+} else {
+    Show-Header "CYCLE COMPLETE. SYSTEM PAUSED."
+    Write-Host "Run 'hc -Restart' next time to auto-resume, or run '.\scripts\start-heady-system.ps1' to start." -ForegroundColor Gray
+}

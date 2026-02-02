@@ -1,124 +1,223 @@
-const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
-const { StdioServerTransport } = require('@modelcontextprotocol/sdk/server/stdio.js');
-const { CallToolRequestSchema, ListToolsRequestSchema } = require('@modelcontextprotocol/sdk/types.js');
-const { main: logger } = require('../utils/logger');
+/**
+ * Heady Graph MCP Server
+ * Manages entities, relationships, and workspace knowledge graphs
+ */
 
-const server = new Server(
-  {
-    name: 'heady-graph-server',
-    version: '1.0.0',
-  },
-  {
-    capabilities: {
-      tools: {},
-    },
-  }
-);
+const express = require('express');
+const { sendSuccess, sendError, generateId } = require('../utils/shared-utils');
+const logger = require('../utils/logger');
+const { PORTS } = require('../../lib/constants');
 
-// Graph state (in-memory for now)
-const graph = {
-  entities: new Map(),
-  relationships: [],
-};
+const app = express();
+app.use(express.json());
 
-server.setRequestHandler(ListToolsRequestSchema, async () => {
-  return {
-    tools: [
-      {
-        name: 'entity.create',
-        description: 'Create a new entity in the knowledge graph',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            type: { type: 'string' },
-            name: { type: 'string' },
-            properties: { type: 'object' },
-          },
-          required: ['type', 'name'],
-        },
-      },
-      {
-        name: 'relationship.create',
-        description: 'Create a relationship between two entities',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            from: { type: 'string' },
-            to: { type: 'string' },
-            type: { type: 'string' },
-            properties: { type: 'object' },
-          },
-          required: ['from', 'to', 'type'],
-        },
-      },
-      {
-        name: 'graph.query',
-        description: 'Query the knowledge graph',
-        inputSchema: {
-          type: 'object',
-          properties: {
-            query: { type: 'string' },
-          },
-          required: ['query'],
-        },
-      },
-    ],
-  };
-});
+// In-memory graph storage
+const entities = new Map();
+const relationships = new Map();
+const workspaces = new Map();
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  const { name, arguments: args } = request.params;
-
+/**
+ * Create entity
+ */
+app.post('/api/graph/entities', (req, res) => {
   try {
-    switch (name) {
-      case 'entity.create': {
-        const id = `ent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        const entity = { id, ...args, createdAt: new Date().toISOString() };
-        graph.entities.set(id, entity);
-        logger.info(`Created entity: ${entity.name} (${id})`);
-        return {
-          content: [{ type: 'text', text: JSON.stringify(entity, null, 2) }],
-        };
-      }
-
-      case 'relationship.create': {
-        const rel = { ...args, createdAt: new Date().toISOString() };
-        graph.relationships.push(rel);
-        logger.info(`Created relationship: ${rel.from} -> ${rel.type} -> ${rel.to}`);
-        return {
-          content: [{ type: 'text', text: JSON.stringify(rel, null, 2) }],
-        };
-      }
-
-      case 'graph.query': {
-        // Simple mock query for now
-        const entities = Array.from(graph.entities.values());
-        const result = {
-          entityCount: entities.length,
-          relationshipCount: graph.relationships.length,
-          entities: entities.slice(0, 10), // Limit result
-        };
-        return {
-          content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-        };
-      }
-
-      default:
-        throw new Error(`Unknown tool: ${name}`);
+    const { name, type, properties = {}, workspace = 'default' } = req.body;
+    
+    if (!name || !type) {
+      return sendError(res, 'Name and type are required', 400);
     }
+    
+    const entity = {
+      id: generateId('entity'),
+      name,
+      type,
+      properties,
+      workspace,
+      createdAt: new Date().toISOString()
+    };
+    
+    entities.set(entity.id, entity);
+    
+    // Track in workspace
+    if (!workspaces.has(workspace)) {
+      workspaces.set(workspace, { entities: [], relationships: [] });
+    }
+    workspaces.get(workspace).entities.push(entity.id);
+    
+    sendSuccess(res, entity, 201);
   } catch (error) {
-    logger.error(`Error executing tool ${name}: ${error.message}`);
-    throw error;
+    sendError(res, error.message);
   }
 });
 
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  logger.info('Heady Graph Server running on stdio');
-}
-
-main().catch((error) => {
-  logger.error('Fatal error in main loop', error);
-  process.exit(1);
+/**
+ * Get entity
+ */
+app.get('/api/graph/entities/:id', (req, res) => {
+  try {
+    const entity = entities.get(req.params.id);
+    
+    if (!entity) {
+      return sendError(res, 'Entity not found', 404);
+    }
+    
+    sendSuccess(res, entity);
+  } catch (error) {
+    sendError(res, error.message);
+  }
 });
+
+/**
+ * Create relationship
+ */
+app.post('/api/graph/relationships', (req, res) => {
+  try {
+    const { from, to, type, properties = {}, workspace = 'default' } = req.body;
+    
+    if (!from || !to || !type) {
+      return sendError(res, 'From, to, and type are required', 400);
+    }
+    
+    if (!entities.has(from) || !entities.has(to)) {
+      return sendError(res, 'Source or target entity not found', 404);
+    }
+    
+    const relationship = {
+      id: generateId('rel'),
+      from,
+      to,
+      type,
+      properties,
+      workspace,
+      createdAt: new Date().toISOString()
+    };
+    
+    relationships.set(relationship.id, relationship);
+    
+    // Track in workspace
+    if (!workspaces.has(workspace)) {
+      workspaces.set(workspace, { entities: [], relationships: [] });
+    }
+    workspaces.get(workspace).relationships.push(relationship.id);
+    
+    sendSuccess(res, relationship, 201);
+  } catch (error) {
+    sendError(res, error.message);
+  }
+});
+
+/**
+ * Query subgraph
+ */
+app.post('/api/graph/query', (req, res) => {
+  try {
+    const { entityIds, depth = 1, workspace } = req.body;
+    
+    if (!entityIds || !Array.isArray(entityIds)) {
+      return sendError(res, 'entityIds array required', 400);
+    }
+    
+    const subgraphEntities = new Set(entityIds);
+    const subgraphRelationships = new Set();
+    
+    // BFS to specified depth
+    let currentLevel = new Set(entityIds);
+    
+    for (let d = 0; d < depth; d++) {
+      const nextLevel = new Set();
+      
+      for (const rel of relationships.values()) {
+        if (workspace && rel.workspace !== workspace) continue;
+        
+        if (currentLevel.has(rel.from)) {
+          subgraphRelationships.add(rel.id);
+          subgraphEntities.add(rel.to);
+          nextLevel.add(rel.to);
+        }
+        
+        if (currentLevel.has(rel.to)) {
+          subgraphRelationships.add(rel.id);
+          subgraphEntities.add(rel.from);
+          nextLevel.add(rel.from);
+        }
+      }
+      
+      currentLevel = nextLevel;
+    }
+    
+    const result = {
+      entities: Array.from(subgraphEntities).map(id => entities.get(id)).filter(Boolean),
+      relationships: Array.from(subgraphRelationships).map(id => relationships.get(id)).filter(Boolean)
+    };
+    
+    sendSuccess(res, result);
+  } catch (error) {
+    sendError(res, error.message);
+  }
+});
+
+/**
+ * Get workspace graph
+ */
+app.get('/api/graph/workspace/:workspace', (req, res) => {
+  try {
+    const { workspace } = req.params;
+    const ws = workspaces.get(workspace);
+    
+    if (!ws) {
+      return sendError(res, 'Workspace not found', 404);
+    }
+    
+    const result = {
+      workspace,
+      entities: ws.entities.map(id => entities.get(id)).filter(Boolean),
+      relationships: ws.relationships.map(id => relationships.get(id)).filter(Boolean),
+      stats: {
+        entityCount: ws.entities.length,
+        relationshipCount: ws.relationships.length
+      }
+    };
+    
+    sendSuccess(res, result);
+  } catch (error) {
+    sendError(res, error.message);
+  }
+});
+
+/**
+ * Graph metrics
+ */
+app.get('/api/graph/metrics', (req, res) => {
+  try {
+    const metrics = {
+      totalEntities: entities.size,
+      totalRelationships: relationships.size,
+      totalWorkspaces: workspaces.size,
+      workspaces: Array.from(workspaces.keys())
+    };
+    
+    sendSuccess(res, metrics);
+  } catch (error) {
+    sendError(res, error.message);
+  }
+});
+
+/**
+ * Health check
+ */
+app.get('/health', (req, res) => {
+  sendSuccess(res, { 
+    status: 'healthy',
+    service: 'heady-graph-server',
+    entities: entities.size,
+    relationships: relationships.size
+  });
+});
+
+const PORT = process.env.PORT || PORTS.GRAPH_SERVER;
+
+app.listen(PORT, () => {
+  console.log(`✅ Heady Graph Server running on port ${PORT}`);
+});
+
+module.exports = app;
