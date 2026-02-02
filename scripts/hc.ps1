@@ -2,6 +2,8 @@
 # "Pauses, catches all worktrees, eliminates conflict, fixes errors, and makes improvements."
 
 param(
+    [Alias("a")]
+    [string]$Action,
     [switch]$Restart,
     [switch]$Force
 )
@@ -23,6 +25,43 @@ function Show-Step {
 }
 
 Set-Location $RootDir
+
+# 0. CUSTOM ACTION HANDLER
+if ($Action) {
+    Show-Header "HEADY CONTROL: EXECUTING ACTION '$Action'"
+    
+    # Resolve target path
+    $Target = "$ScriptDir\$Action"
+    if (-not (Test-Path $Target)) {
+        # Try checking if it's just a file in current dir or absolute path
+        if (Test-Path $Action) {
+            $Target = $Action
+        }
+    }
+    
+    if (Test-Path $Target) {
+        Show-Step "Running script: $Target"
+        if ($Target -match "\.js$") {
+            node $Target
+        } elseif ($Target -match "\.ps1$") {
+            & $Target
+        } else {
+            # Fallback for other files
+            Invoke-Item $Target
+        }
+    } else {
+        # Try as a raw command or alias if file not found
+        Show-Step "Executing command: $Action"
+        try {
+            Invoke-Expression $Action
+        } catch {
+            Write-Error "Action failed: $_"
+            exit 1
+        }
+    }
+    
+    exit $LASTEXITCODE
+}
 
 # 1. PAUSE (Stop Services)
 Show-Header "HEADY CONTROL: INITIATING MAINTENANCE CYCLE"
