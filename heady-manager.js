@@ -731,6 +731,42 @@ const authenticate = async (req, res, next) => {
 
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
+// HTTP request helper for environments without native fetch
+function httpRequest(url, options) {
+  return new Promise((resolve, reject) => {
+    const urlObj = new URL(url);
+    const httpModule = urlObj.protocol === 'https:' ? require('https') : http;
+    
+    const reqOptions = {
+      hostname: urlObj.hostname,
+      port: urlObj.port,
+      path: urlObj.pathname + urlObj.search,
+      method: options.method || 'GET',
+      headers: options.headers || {}
+    };
+    
+    const req = httpModule.request(reqOptions, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        resolve({
+          ok: res.statusCode >= 200 && res.statusCode < 300,
+          status: res.statusCode,
+          json: async () => JSON.parse(data)
+        });
+      });
+    });
+    
+    req.on('error', reject);
+    
+    if (options.body) {
+      req.write(options.body);
+    }
+    
+    req.end();
+  });
+}
+
 // --- API Routes ---
 
 // Health & Status
@@ -1076,7 +1112,6 @@ app.post('/api/mcp/orchestrator', authenticate, asyncHandler(async (req, res) =>
   
   // Route through selected services
   // For now, forward to orchestrator (future: use selected services)
-  const fetch = require('node-fetch');
   const orchestratorBases = ['http://localhost:3100', 'http://localhost:3000'];
   
   for (const base of orchestratorBases) {
@@ -1091,7 +1126,8 @@ app.post('/api/mcp/orchestrator', authenticate, asyncHandler(async (req, res) =>
         options.body = JSON.stringify(body);
       }
       
-      const response = await fetch(url, options);
+      // Use native fetch (Node 18+) or http module
+      const response = typeof fetch !== 'undefined' ? await fetch(url, options) : await httpRequest(url, options);
       const data = await response.json();
       
       // Add routing metadata

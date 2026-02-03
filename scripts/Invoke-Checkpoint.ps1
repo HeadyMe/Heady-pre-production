@@ -36,9 +36,9 @@ function Write-HeadyBanner {
     Write-Host "║           HEADY CHECKPOINT STORY DRIVER                   ║" -ForegroundColor Cyan
     Write-Host "╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "  .\Invoke-Checkpoint.ps1 [-Action <action>]"
-    Write-Host "  • Environment and Configuration"
-    Write-Host "  • Checkpoint will be saved to: audit_logs/checkpoint_<timestamp>.md" -ForegroundColor Cyan
+    Write-Host '  .\Invoke-Checkpoint.ps1 [-Action ACTION]'
+    Write-Host '  - Environment and Configuration'
+    Write-Host '  • Checkpoint will be saved to: audit_logs/checkpoint_{timestamp}.md' -ForegroundColor Cyan
     Write-Host ""
 }
 
@@ -93,7 +93,7 @@ function Show-Help {
     Write-Host "Generate comprehensive system status reports at checkpoints." -ForegroundColor White
     Write-Host ""
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  .\Invoke-Checkpoint.ps1 [-Action <action>]"
+    Write-Host '  .\Invoke-Checkpoint.ps1 [-Action ACTION]'
     Write-Host ""
     Write-Host "ACTIONS:" -ForegroundColor Yellow
     Write-Host "  generate    Generate a new checkpoint report (default)"
@@ -108,18 +108,18 @@ function Show-Help {
     Write-Host "  .\Invoke-Checkpoint.ps1 -Action list"
     Write-Host ""
     Write-Host "REPORT CONTENTS:" -ForegroundColor Yellow
-    Write-Host "  • Executive Summary"
-    Write-Host "  • Environment & Configuration"
-    Write-Host "  • Docker Services Status"
-    Write-Host "  • MCP Server Status"
-    Write-Host "  • Health Checks"
-    Write-Host "  • Git Repository Status"
-    Write-Host "  • File System Structure"
-    Write-Host "  • Running Processes"
-    Write-Host "  • Operational Metrics"
-    Write-Host "  • Memory Usage"
+    Write-Host '  - Executive Summary'
+    Write-Host '  - Environment and Configuration'
+    Write-Host '  - Docker Services Status'
+    Write-Host '  - MCP Server Status'
+    Write-Host '  - Health Checks'
+    Write-Host '  - Git Repository Status'
+    Write-Host '  - File System Structure'
+    Write-Host '  - Running Processes'
+    Write-Host '  - Operational Metrics'
+    Write-Host '  - Memory Usage'
     Write-Host ""
-    Write-Host "Reports are saved to: audit_logs/checkpoint_<timestamp>.md" -ForegroundColor Cyan
+    Write-Host 'Reports are saved to: audit_logs/checkpoint_{timestamp}.md' -ForegroundColor Cyan
     Write-Host ""
 }
 
