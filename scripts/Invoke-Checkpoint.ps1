@@ -36,6 +36,10 @@ function Write-HeadyBanner {
     Write-Host "║           HEADY CHECKPOINT STORY DRIVER                   ║" -ForegroundColor Cyan
     Write-Host "╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
     Write-Host ""
+    Write-Host "  .\Invoke-Checkpoint.ps1 [-Action <action>]"
+    Write-Host "  • Environment and Configuration"
+    Write-Host "  • Checkpoint will be saved to: audit_logs/checkpoint_<timestamp>.md" -ForegroundColor Cyan
+    Write-Host ""
 }
 
 function Invoke-CheckpointGenerate {

@@ -1,0 +1,43 @@
+<div class="stat-card">
+    <div class="stat-value"></div>
+    <div class="stat-label"></div>
+</div>
+
+<style>
+    .stat-card {
+        background: var(--bg-medium);
+        border-radius: 16px;
+        padding: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, 
+            var(--heady-primary) 0%, 
+            var(--heady-secondary) 100%);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, 
+            var(--sacred-gold) 0%, 
+            var(--heady-primary) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+</style>

@@ -1,0 +1,44 @@
+<a href="" class="nav-card">
+    <span class="nav-icon"></span>
+    <div class="nav-title"></div>
+    <div class="nav-desc"></div>
+</a>
+
+<style>
+    .nav-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border-glow);
+        border-radius: 20px;
+        padding: 2rem;
+        width: 250px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: var(--text-primary);
+        backdrop-filter: blur(10px);
+    }
+
+    .nav-card:hover {
+        transform: translateY(-10px);
+        background: rgba(99, 102, 241, 0.1);
+        box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+    }
+
+    .nav-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+    }
+
+    .nav-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: var(--sacred-gold);
+    }
+
+    .nav-desc {
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+    }
+</style>

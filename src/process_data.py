@@ -23,6 +23,8 @@ HF_TOKEN = os.getenv("HF_TOKEN")
 DEFAULT_HF_TEXT_MODEL = os.getenv("HF_TEXT_MODEL", "gpt2")
 DEFAULT_HF_EMBED_MODEL = os.getenv("HF_EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 HEADY_PY_WORKER_TIMEOUT_MS = int(os.getenv("HEADY_PY_WORKER_TIMEOUT_MS", "90000"))
+REMOTE_GPU_HOST = os.getenv("REMOTE_GPU_HOST")
+REMOTE_GPU_PORT = int(os.getenv("REMOTE_GPU_PORT", "8080"))
 
 
 def _sleep_ms(ms: int) -> None:
@@ -200,6 +202,51 @@ Answer:"""
             "error": str(e),
             "backend": "python-hf",
             "request_id": request_id,
+        }
+
+
+def gpu_worker_interface(
+    task: str,
+    data: Any,
+    model: Optional[str] = None,
+    parameters: Optional[Dict[str, Any]] = None,
+    request_id: str = ""
+) -> Dict[str, Any]:
+    """Interface for GPU worker communication"""
+    try:
+        if not REMOTE_GPU_HOST:
+            raise RuntimeError("GPU worker host not configured")
+            
+        # Connect to GPU worker service
+        url = f"http://{REMOTE_GPU_HOST}:{REMOTE_GPU_PORT}/process"
+        payload = {
+            "task": task,
+            "data": data,
+            "model": model,
+            "parameters": parameters,
+            "request_id": request_id
+        }
+        
+        response = requests.post(
+            url,
+            json=payload,
+            headers={"Content-Type": "application/json"},
+            timeout=30
+        )
+        response.raise_for_status()
+        
+        return {
+            "ok": True,
+            "result": response.json(),
+            "backend": "python-gpu",
+            "request_id": request_id
+        }
+    except Exception as e:
+        return {
+            "ok": False,
+            "error": str(e),
+            "backend": "python-gpu",
+            "request_id": request_id
         }
 
 

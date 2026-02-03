@@ -1,6 +1,6 @@
 {
   "version": "2.0.0",
-  "timestamp": "2026-02-03T15:33:35.549Z",
+  "timestamp": "2026-02-03T16:33:40.439Z",
   "rootDir": "c:\\Users\\erich\\Heady",
   "files": [
     {
@@ -2984,8 +2984,8 @@
       {
         "type": "codemap",
         "path": "c:\\Users\\erich\\Heady\\.heady-context\\codemap.json",
-        "timestamp": "2026-02-02T21:55:48.545Z",
-        "version": "1.0.0"
+        "timestamp": "2026-02-03T15:33:35.549Z",
+        "version": "2.0.0"
       },
       {
         "type": "codemap",
@@ -3006,7 +3006,7 @@
       {
         "type": "project_context",
         "path": "c:\\Users\\erich\\Heady\\.heady-context\\project-context.json",
-        "timestamp": "2026-02-02T21:55:48.546Z"
+        "timestamp": "2026-02-03T15:33:35.549Z"
       },
       {
         "type": "heady_registry",
