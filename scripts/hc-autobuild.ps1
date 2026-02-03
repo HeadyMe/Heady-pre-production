@@ -41,7 +41,7 @@ param(
     [switch]$DryRun,
     
     [Parameter()]
-    [switch]$Verbose,
+    [switch]$ShowDetails,
     
     [Parameter()]
     [string]$Config = '',
@@ -58,14 +58,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $ScriptRoot = Split-Path -Parent $PSScriptRoot
-$NodeScript = Join-Path $ScriptRoot 'src' 'hc_autobuild.js'
+$NodeScript = Join-Path (Join-Path (Join-Path $ScriptRoot 'src') 'client') 'hc_autobuild.js'
 
 function Write-Banner {
     Write-Host ""
-    Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║         HC AUTOBUILD - Heady Connection              ║" -ForegroundColor Cyan
-    Write-Host "║     Intelligent Build & Squash Merge System          ║" -ForegroundColor Cyan
-    Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+    Write-Host "========================================================" -ForegroundColor Cyan
+    Write-Host "         HC AUTOBUILD - Heady Connection                " -ForegroundColor Cyan
+    Write-Host "     Intelligent Build & Squash Merge System            " -ForegroundColor Cyan
+    Write-Host "========================================================" -ForegroundColor Cyan
     Write-Host ""
 }
 
@@ -81,11 +81,11 @@ function Write-Status {
     }
     
     $prefix = switch ($Level) {
-        'Success' { '✓' }
-        'Warning' { '⚠' }
-        'Error' { '✗' }
-        'Info' { 'ℹ' }
-        default { '•' }
+        'Success' { '[OK]' }
+        'Warning' { '[!]' }
+        'Error' { '[X]' }
+        'Info' { '[i]' }
+        default { '[*]' }
     }
     
     Write-Host "$prefix $Message" -ForegroundColor $color
@@ -94,7 +94,7 @@ function Write-Status {
 function Show-Help {
     Write-Banner
     Write-Host "USAGE:" -ForegroundColor Yellow
-    Write-Host "  hc-autobuild.ps1 -Action <action> [options]"
+    Write-Host '  hc-autobuild.ps1 -Action [action] [options]'
     Write-Host ""
     Write-Host "ACTIONS:" -ForegroundColor Yellow
     Write-Host "  build     - Execute full autobuild cycle"
@@ -106,11 +106,11 @@ function Show-Help {
     Write-Host "  help      - Show this help message"
     Write-Host ""
     Write-Host "OPTIONS:" -ForegroundColor Yellow
-    Write-Host "  -Mode <auto|manual|hybrid>  Build mode (default: auto)"
+    Write-Host '  -Mode [auto|manual|hybrid]  Build mode (default: auto)'
     Write-Host "  -DryRun                     Preview changes without executing"
     Write-Host "  -Verbose                    Enable verbose output"
-    Write-Host "  -Config <path>              Path to configuration file"
-    Write-Host "  -Target <env>               Deployment target (default: production)"
+    Write-Host '  -Config [path]              Path to configuration file'
+    Write-Host '  -Target [env]               Deployment target (default: production)'
     Write-Host "  -SkipTests                  Skip test phase"
     Write-Host "  -Force                      Force execution (skip confirmations)"
     Write-Host ""
@@ -170,7 +170,7 @@ function Invoke-HCAutoBuild {
     # Build command arguments
     $nodeArgs = @($NodeScript)
     
-    if ($Verbose) { $nodeArgs += '--verbose' }
+    if ($ShowDetails) { $nodeArgs += '--verbose' }
     if ($DryRun) { $nodeArgs += '--dry-run' }
     if ($Mode -eq 'manual') { $nodeArgs += '--manual' }
     
