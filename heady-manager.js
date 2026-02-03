@@ -40,8 +40,8 @@ const path = require('path');
 const WebSocket = require('ws');
 const EventEmitter = require('events');
 const Docker = require('dockerode');
-const MCPInputInterceptor = require('./src/mcp_input_interceptor');
-const HeadyMaid = require('./src/heady_maid');
+const MCPInputInterceptor = require('./src/client/mcp_input_interceptor');
+// const HeadyMaid = require('./src/client/heady_maid'); // Commented out
 const MCPServiceSelector = require('./src/mcp_service_selector');
 const RoutingOptimizer = require('./src/routing_optimizer');
 const TaskCollector = require('./src/task_collector');
@@ -53,6 +53,8 @@ const HeadyConductor = require('./src/heady_conductor');
 const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery');
 const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator');
 const apicache = require('apicache');
+const StandbyOrchestrator = require('./src/standby_orchestrator');
+const HeadyIntelligenceVerifier = require('./src/client/heady_intelligence_verifier');
 
 // Import environment configuration
 const envConfig = require('./src/utils/environment');
@@ -814,6 +816,11 @@ const headyPatternRecognizer = new HeadyPatternRecognizer({ rootDir: __dirname }
 const headyConductor = new HeadyConductor({ rootDir: __dirname, autoCreateTasks: true });
 const headyWorkflowDiscovery = new HeadyWorkflowDiscovery({ autoIntegrate: false });
 const layerOrchestrator = new HeadyLayerOrchestrator();
+const standbyOrchestrator = new StandbyOrchestrator({
+  services: ['heady-manager', 'mcp-gateway', 'graph-server'],
+  resourceThresholds: { cpu: 20, memory: 30 },
+  activationTriggers: ['api-request', 'schedule', 'system-event']
+});
 
 // Initialize MCP (Async) - Moved to startServer or main execution
 // mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));
@@ -1473,21 +1480,21 @@ if (require.main === module) {
   });
 
   // Initialize HeadyMaid
-  const headyMaid = new HeadyMaid({
-    scanInterval: 30000,
-    deepScanInterval: 300000,
-    rootDirs: [__dirname],
-    enableRealtime: true
-  });
+  // const headyMaid = new HeadyMaid({
+  //   scanInterval: 30000,
+  //   deepScanInterval: 300000,
+  //   rootDirs: [__dirname],
+  //   enableRealtime: true
+  // });
 
   // Integrate HeadyMaid with interceptor
-  mcpInterceptor.integrateHeadyMaid(headyMaid);
+  // mcpInterceptor.integrateHeadyMaid(headyMaid);
 
   // Apply MCP interceptor middleware FIRST (before all routes)
   app.use(mcpInterceptor.middleware());
 
   // Initialize HeadyMaid
-  headyMaid.initialize().catch(err => console.error('[HEADY MAID] Init failed:', err));
+  // headyMaid.initialize().catch(err => console.error('[HEADY MAID] Init failed:', err));
 
   // Initialize MCP
   mcpManager.initialize().then(() => {
@@ -1496,19 +1503,19 @@ if (require.main === module) {
     if (router && router.client) {
       console.log('[INTEGRATION] Connecting HeadyMaid to HeadyWindsurf Router...');
       // Store HeadyMaid reference for router access
-      mcpManager.headyMaidInstance = headyMaid;
+      // mcpManager.headyMaidInstance = headyMaid;
       console.log('[INTEGRATION] HeadyMaid <-> HeadyWindsurf Router connected');
     }
     
     // Connect HeadyMaid tasks to RoutingOptimizer
-    headyMaid.on('task-detected', (task) => {
-      console.log(`[TASK ROUTING] HeadyMaid detected task: ${task.description}`);
-      routingOptimizer.queueTask(task);
-    });
+    // headyMaid.on('task-detected', (task) => {
+    //   console.log(`[TASK ROUTING] HeadyMaid detected task: ${task.description}`);
+    //   routingOptimizer.queueTask(task);
+    // });
     
-    headyMaid.on('opportunities-detected', (opportunities) => {
-      console.log(`[TASK ROUTING] ${Object.values(opportunities).flat().length} optimization opportunities queued`);
-    });
+    // headyMaid.on('opportunities-detected', (opportunities) => {
+    //   console.log(`[TASK ROUTING] ${Object.values(opportunities).flat().length} optimization opportunities queued`);
+    // });
     
     console.log('[INTEGRATION] HeadyMaid tasks connected to RoutingOptimizer');
     
@@ -1618,7 +1625,7 @@ if (require.main === module) {
     console.log('[INTEGRATION] HeadyPatternRecognizer → HeadyConductor → RoutingOptimizer connected');
     
     // Connect PatternRecognizer to optimization components
-    headyPatternRecognizer.connectToHeadyMaid(headyMaid);
+    // headyPatternRecognizer.connectToHeadyMaid(headyMaid);
     headyPatternRecognizer.connectToRoutingOptimizer(routingOptimizer);
     headyPatternRecognizer.connectToHeadyEnforcer(headyEnforcer);
     
@@ -1661,6 +1668,9 @@ if (require.main === module) {
     console.log('[INTEGRATION] HeadyWorkflowDiscovery → HeadyConductor connected');
   }).catch(err => console.error('[MCP] Init failed:', err));
 
+  // Initialize standby orchestrator
+  standbyOrchestrator.initializeStandbyMode();
+
   server = app.listen(PORT, '0.0.0.0', () => {
     console.log(branding.getHeadyBanner());
     console.log(`
@@ -1692,6 +1702,7 @@ if (require.main === module) {
 // Graceful Shutdown
 process.on('SIGTERM', async () => {
   console.log('Shutting down...');
+  standbyOrchestrator.enterStandbyMode();
   server.close(() => process.exit(0));
 });
 

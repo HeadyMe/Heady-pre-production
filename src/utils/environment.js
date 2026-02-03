@@ -38,6 +38,20 @@ const envConfig = {
     }
   },
   
+  // CMS (Drupal 11)
+  cms: {
+    local: {
+      host: 'localhost',
+      port: 8080,
+      protocol: 'http'
+    },
+    remote: {
+      host: process.env.REMOTE_CMS_HOST || 'cms.headysystems.com',
+      port: process.env.REMOTE_CMS_PORT || 443,
+      protocol: 'https'
+    }
+  },
+  
   // Environment detection
   get current() {
     return process.env.NODE_ENV === 'production' ? 'remote' : 'local';

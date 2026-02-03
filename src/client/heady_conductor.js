@@ -402,15 +402,15 @@ class HeadyConductor extends EventEmitter {
    * Get conductor status
    */
   getStatus() {
+    const existingStates = this.metrics;  // Fixed variable name
     return {
       active: true,
-    const  xistingSmatesi= cs: this.metrics,
+      metrics: existingStates,
       recentChanges: this.handledChanges.slice(-5),
-      pendingTasks: this.createdTasks.filter(t => !t.completed).length
+      pendingTasks: this.createdTasks.filter(t => !t.completed).length,
+      workerStatus: this.workerManager.getStatus()
     };
-    return {
-      ...existiStatus,
-      workerStaus: tis.workerManager.getStatus()
+  }
 
   /**
    * Get conductor report

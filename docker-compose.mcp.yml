@@ -98,4 +98,5 @@ volumes:
 
 networks:
   mcp-network:
+    name: heady-apps-network
     driver: bridge

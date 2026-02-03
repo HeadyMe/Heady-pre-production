@@ -1,0 +1,27 @@
+{
+  "name": "heady-desktop-overlay",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^26.7.0"
+  },
+  "build": {
+    "appId": "com.heady.overlay",
+    "productName": "Heady Desktop Overlay",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Heady Desktop Overlay"
+    }
+  }
+}

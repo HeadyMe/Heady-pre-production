@@ -21,7 +21,41 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    networks:
+      - heady-network
+
+  heady-auto-ide:
+    build:
+      context: ./heady-auto-ide
+    ports:
+      - "3500:3500"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - heady-network
+
+  heady-e:
+    build:
+      context: ./heady-e
+    ports:
+      - "3600:3600"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - heady-network
+
+  heady-mcp:
+    build:
+      context: ./heady-mcp
+    ports:
+      - "3700:3700"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - heady-network
 
 networks:
-  default:
-    name: heady-network
+  heady-network:
+    external: true
+    name: heady-apps-network
+    driver: bridge

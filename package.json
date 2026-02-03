@@ -13,10 +13,12 @@
     "build:prod": "webpack --mode production"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.14.3",
     "@modelcontextprotocol/sdk": "^1.25.3",
     "apicache": "^1.6.3",
     "axios": "^1.13.4",
     "compression": "^1.8.1",
+    "dockerode": "^4.0.9",
     "helmet": "^8.1.0",
     "winston": "^3.19.0",
     "ws": "^8.19.0"
