@@ -1,0 +1,22 @@
+{
+  "icon": "public/sacred-geometry-logo.svg",
+  "title": "HeadyMCP",
+  "description": "Sacred Geometry AI Orchestration for Docker Desktop. Provides real-time observability and control over your containerized MCP servers.",
+  "publisher": "HeadySystems",
+  "vm": {
+    "image": "${DESKTOP_PLUGIN_IMAGE}"
+  },
+  "ui": {
+    "dashboard-tab": {
+      "title": "HeadyLimb",
+      "src": "index.html"
+    }
+  },
+  "host": {
+    "binaries": [
+      {
+        "path": "/usr/bin/heady-mcp-helper"
+      }
+    ]
+  }
+}

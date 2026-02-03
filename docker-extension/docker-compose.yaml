@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  heady-proxy:
+    image: heady-mcp-proxy
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    ports:
+      - "3701:3701"
+    networks:
+      - heady-net
+
+networks:
+  heady-net:
+    driver: bridge
