@@ -71,6 +71,9 @@ if ($missingVars.Count -gt 0) {
 Write-Host "[OK] Environment verified" -ForegroundColor Green
 Write-Host ""
 
+# Load environment configuration
+$envConfig = Get-Content -Path "$PSScriptRoot\..\src\utils\environment.js" -Raw | ConvertFrom-Json
+
 # Step 2: Dependency Installation
 Write-Host "[INSTALL] Step 2: Installing Dependencies..." -ForegroundColor Yellow
 Set-Location $ROOT
@@ -148,6 +151,12 @@ if (-not $allHealthy) {
     Write-Host "[OK] All services healthy" -ForegroundColor Green
 }
 Write-Host ""
+
+# Set remote configuration
+$env:REMOTE_MANAGER_HOST = $envConfig.manager.remote.host
+$env:REMOTE_MANAGER_PORT = $envConfig.manager.remote.port
+$env:REMOTE_GPU_HOST = $envConfig.gpu.remote.host
+$env:REMOTE_GPU_PORT = $envConfig.gpu.remote.port
 
 # Step 5: Git Operations
 Write-Host "[GIT] Step 5: Preparing Squash Merge..." -ForegroundColor Yellow

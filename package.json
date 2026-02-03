@@ -9,10 +9,24 @@
     "lint": "echo 'Linting skipped - no ESLint config'",
     "test": "node --test tests/*.test.js",
     "verify": "node src/heady_intelligence_verifier.js",
-    "cleanup": "powershell -ExecutionPolicy Bypass -File scripts/cleanup-unnecessary-files.ps1"
+    "cleanup": "powershell -ExecutionPolicy Bypass -File scripts/cleanup-unnecessary-files.ps1",
+    "build:prod": "webpack --mode production"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.25.3",
-    "compression": "^1.8.1"
+    "apicache": "^1.6.3",
+    "axios": "^1.13.4",
+    "compression": "^1.8.1",
+    "helmet": "^8.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-react": "^7.28.5",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.3",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.105.0",
+    "webpack-cli": "^6.0.1"
   }
 }

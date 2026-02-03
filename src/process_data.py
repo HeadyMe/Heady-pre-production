@@ -24,7 +24,8 @@ DEFAULT_HF_TEXT_MODEL = os.getenv("HF_TEXT_MODEL", "gpt2")
 DEFAULT_HF_EMBED_MODEL = os.getenv("HF_EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 HEADY_PY_WORKER_TIMEOUT_MS = int(os.getenv("HEADY_PY_WORKER_TIMEOUT_MS", "90000"))
 REMOTE_GPU_HOST = os.getenv("REMOTE_GPU_HOST")
-REMOTE_GPU_PORT = int(os.getenv("REMOTE_GPU_PORT", "8080"))
+port = os.getenv("REMOTE_GPU_PORT", "8080")
+REMOTE_GPU_PORT = int(port) if port else 8080
 
 
 def _sleep_ms(ms: int) -> None:
@@ -214,11 +215,20 @@ def gpu_worker_interface(
 ) -> Dict[str, Any]:
     """Interface for GPU worker communication"""
     try:
-        if not REMOTE_GPU_HOST:
-            raise RuntimeError("GPU worker host not configured")
+        # Check if local GPU is enabled
+        local_gpu_enabled = os.getenv('ENABLE_LOCAL_GPU', 'false').lower() == 'true'
+
+        if local_gpu_enabled:
+            # Use local GPU service
+            gpu_host = 'localhost'
+            gpu_port = 5000
+        else:
+            # Use remote GPU service
+            gpu_host = os.getenv('REMOTE_GPU_HOST', 'gpu.headysystems.com')
+            gpu_port = int(os.getenv('REMOTE_GPU_PORT', '443'))
             
         # Connect to GPU worker service
-        url = f"http://{REMOTE_GPU_HOST}:{REMOTE_GPU_PORT}/process"
+        url = f"http://{gpu_host}:{gpu_port}/process"
         payload = {
             "task": task,
             "data": data,
@@ -292,6 +302,13 @@ def handle_health_check() -> None:
     sys.exit(0)
 
 
+def handle_worker_command():
+    """Handle worker command"""
+    logger.info("Worker command executed")
+    print("Worker command executed")
+    sys.exit(0)
+
+
 def main() -> None:
     """Main entry point for the Python worker"""
     # Check if we're being called with a specific command
@@ -306,6 +323,20 @@ def main() -> None:
             logger.info("Test functionality not yet implemented")
             print(json.dumps({"status": "not_implemented", "message": "Test functionality not yet implemented"}))
             sys.exit(0)
+        elif command == "worker":
+            handle_worker_command()
+        elif command == "worker_command":
+            handle_worker_command()
+        elif command == "command":
+            handle_worker_command()
+        elif command == "worker":
+            handle_worker_command()
+        elif command == "worker_command":
+            handle_worker_command()
+        elif command == "worker":
+            handle_worker_command()
+        elif command == "worker":
+            handle_worker_command()
         else:
             logger.error(f"Unknown command: {command}")
             print(json.dumps({"error": f"Unknown command: {command}"}))
@@ -327,4 +358,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    port = os.getenv("REMOTE_GPU_PORT", "8080")
+    REMOTE_GPU_PORT = int(port) if port else 8080
     main()

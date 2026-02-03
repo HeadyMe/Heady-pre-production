@@ -52,9 +52,13 @@ const HeadyPatternRecognizer = require('./src/heady_pattern_recognizer');
 const HeadyConductor = require('./src/heady_conductor');
 const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery');
 const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator');
+const apicache = require('apicache');
+
+// Import environment configuration
+const envConfig = require('./src/utils/environment');
 
 // --- Environment Configuration ---
-const PORT = Number(process.env.PORT || 3300);
+const PORT = envConfig.manager[envConfig.current].port || 3300;
 const HEADY_API_KEY = process.env.HEADY_API_KEY || crypto.randomBytes(32).toString('hex');
 // const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
 // const TRUST_DOMAIN = 'headysystems.com';
@@ -704,6 +708,94 @@ class TerminalManager {
 }
 */
 
+// --- Worker Orchestration System ---
+class WorkerManager {
+  constructor() {
+    this.workers = new Map();
+    this.taskQueue = [];
+    this.results = new Map();
+  }
+
+  registerWorker(workerId, capabilities) {
+    this.workers.set(workerId, {
+      lastHeartbeat: Date.now(),
+      capabilities,
+      currentTask: null
+    });
+  }
+
+  assignTask(workerId) {
+    const worker = this.workers.get(workerId);
+    if (!worker) return null;
+    
+    // Find matching task
+    for (const task of this.taskQueue) {
+      if (worker.capabilities.some(cap => task.requirements.includes(cap))) {
+        worker.currentTask = task.id;
+        return task;
+      }
+    }
+    return null;
+  }
+
+  submitResult(taskId, result) {
+    this.results.set(taskId, result);
+    // Free worker
+    for (const [id, worker] of this.workers) {
+      if (worker.currentTask === taskId) worker.currentTask = null;
+    }
+  }
+
+  checkHealth() {
+    const now = Date.now();
+    for (const [id, worker] of this.workers) {
+      if (now - worker.lastHeartbeat > 30000) {
+        this.workers.delete(id);
+      }
+    }
+  }
+}
+
+const workerManager = new WorkerManager();
+
+// Worker registration endpoint
+app.post('/api/workers/register', asyncHandler(async (req, res) => {
+  const { workerId, capabilities } = req.body;
+  if (!workerId || !capabilities) {
+    throw createHttpError(400, 'Missing workerId or capabilities');
+  }
+  workerManager.registerWorker(workerId, capabilities);
+  res.json({ status: 'registered' });
+}));
+
+// Task assignment endpoint
+app.get('/api/workers/task', asyncHandler(async (req, res) => {
+  const { workerId } = req.query;
+  const task = workerManager.assignTask(workerId);
+  res.json({ task });
+}));
+
+// Result submission endpoint
+app.post('/api/workers/result', asyncHandler(async (req, res) => {
+  const { taskId, result } = req.body;
+  workerManager.submitResult(taskId, result);
+  res.json({ status: 'result_accepted' });
+}));
+
+// Health check endpoint
+app.get('/api/workers/health', asyncHandler(async (req, res) => {
+  workerManager.checkHealth();
+  res.json({
+    workerCount: workerManager.workers.size,
+    taskQueue: workerManager.taskQueue.length,
+    activeTasks: Array.from(workerManager.workers.values())
+      .filter(w => w.currentTask !== null).length
+  });
+}));
+
+// Add to health monitoring
+setInterval(() => workerManager.checkHealth(), 10000);
+
 // --- App Initialization ---
 
 const app = express();
@@ -728,6 +820,7 @@ const layerOrchestrator = new HeadyLayerOrchestrator();
 
 // Performance Optimization: Gzip Compression
 app.use(compression());
+app.use(apicache.middleware('5 minutes'));
 
 // Security Middleware
 app.use(helmet({
@@ -1350,7 +1443,14 @@ app.post('/api/mcp/orchestrator', authenticate, asyncHandler(async (req, res) =>
 }));
 
 // Static Files
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dist'), {
+  maxAge: '1d',
+  setHeaders: (res, path) => {
+    if (path.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 // Fallback Error Handler
 app.use((err, req, res, _next) => {
