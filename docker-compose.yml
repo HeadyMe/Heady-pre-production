@@ -7,7 +7,8 @@ services:
       - "3300:3300"
     environment:
       - NODE_ENV=production
-      - PORT=3300
+      - MANAGER_HOST=headymcp.com
+      - MANAGER_PORT=3300
       - HEADY_TRUST_PROXY=true
     env_file:
       - .env
@@ -41,6 +42,8 @@ services:
       - "3600:3600"
     environment:
       - NODE_ENV=production
+      - HEADY_E_HOST=headymcp.com
+      - HEADY_E_PORT=3600
     networks:
       - heady-network
 
@@ -54,8 +57,16 @@ services:
     networks:
       - heady-network
 
+  postgres:
+    ports:
+      - "5436:5432"
+    networks:
+      - heady-network
+
 networks:
   heady-network:
     external: true
     name: heady-apps-network
     driver: bridge
+  heady-apps-network:
+    external: true

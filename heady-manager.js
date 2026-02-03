@@ -41,6 +41,7 @@ const WebSocket = require('ws');
 const EventEmitter = require('events');
 const Docker = require('dockerode');
 const MCPInputInterceptor = require('./src/client/mcp_input_interceptor');
+const InputInterceptor = require('./src/services/input-interceptor');
 // const HeadyMaid = require('./src/client/heady_maid'); // Commented out
 const MCPServiceSelector = require('./src/mcp_service_selector');
 const RoutingOptimizer = require('./src/routing_optimizer');
@@ -55,6 +56,7 @@ const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator');
 const apicache = require('apicache');
 const StandbyOrchestrator = require('./src/standby_orchestrator');
 const HeadyIntelligenceVerifier = require('./src/client/heady_intelligence_verifier');
+const InputInterceptor = require('./src/services/input-interceptor');
 
 // Import environment configuration
 const envConfig = require('./src/utils/environment');
@@ -710,6 +712,12 @@ class TerminalManager {
 }
 */
 
+// User Input Endpoint
+app.post('/api/input', asyncHandler(async (req, res) => {
+  const result = await InputInterceptor.process(req.body.input, 'api');
+  res.json(result);
+}));
+
 // --- Worker Orchestration System ---
 class WorkerManager {
   constructor() {
@@ -851,6 +859,23 @@ const generalLimiter = rateLimit({
   message: { error: 'Too many requests' }
 });
 app.use('/api/', generalLimiter);
+
+// JWT Authentication Middleware
+const jwtAuth = require('./src/security/jwt-auth');
+
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    
+    try {
+      req.user = jwtAuth.verify(token);
+    } catch (err) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+  }
+  next();
+});
 
 // Auth Middleware
 const authenticate = async (req, res, next) => {

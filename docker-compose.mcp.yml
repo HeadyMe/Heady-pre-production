@@ -15,6 +15,8 @@ services:
     command: npx -y @modelcontextprotocol/server-filesystem /workspace
     environment:
       - NODE_ENV=production
+      - MCP_HOST=headymcp.com
+      - MCP_PORT=3700
     restart: unless-stopped
     networks:
       - mcp-network
@@ -35,6 +37,8 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:password@postgres:5432/heady
       - NODE_ENV=production
+      - MCP_HOST=headymcp.com
+      - MCP_PORT=3700
     restart: unless-stopped
     networks:
       - mcp-network
@@ -54,6 +58,8 @@ services:
     environment:
       - NODE_ENV=production
       - MEMORY_STORAGE_PATH=/data
+      - MCP_HOST=headymcp.com
+      - MCP_PORT=3700
     restart: unless-stopped
     networks:
       - mcp-network
@@ -71,6 +77,8 @@ services:
     command: npx -y @modelcontextprotocol/server-fetch
     environment:
       - NODE_ENV=production
+      - MCP_HOST=headymcp.com
+      - MCP_PORT=3700
     restart: unless-stopped
     networks:
       - mcp-network
@@ -116,5 +124,6 @@ volumes:
 
 networks:
   mcp-network:
+    external: true
     name: heady-apps-network
     driver: bridge

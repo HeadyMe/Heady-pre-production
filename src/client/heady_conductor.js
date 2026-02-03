@@ -452,4 +452,6 @@ class HeadyConductor extends EventEmitter {
   }
 }
 
+const baseUrl = 'http://headymcp.com:3300';
+
 module.exports = HeadyConductor;
