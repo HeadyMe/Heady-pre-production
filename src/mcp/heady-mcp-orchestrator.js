@@ -46,6 +46,17 @@ const initClients = async () => {
   }
 };
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'operational',
+    service: 'heady-mcp-orchestrator',
+    port: PORT,
+    uptime: process.uptime(),
+    clients: Array.from(clients.keys())
+  });
+});
+
 // List tools from a specific server
 app.get('/tools/:server', async (req, res) => {
   const { server } = req.params;
