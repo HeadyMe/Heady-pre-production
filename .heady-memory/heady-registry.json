@@ -5,13 +5,33 @@
   "namingConventions": {
     "description": "All component names follow PascalCase without spaces or hyphens",
     "pattern": "^Heady[A-Z][a-zA-Z0-9]*$",
+    "enforcement": "STRICT",
+    "autoCorrect": true,
     "examples": [
       "HeadySync",
       "HeadyConnection",
       "HeadySystem",
       "HeadyManager",
-      "HeadyProtocol"
-    ]
+      "HeadyProtocol",
+      "HeadyOrchestrator"
+    ],
+    "rules": {
+      "noSpaces": "Component names must not contain spaces",
+      "noHyphens": "Component names must not contain hyphens (except in file/directory names)",
+      "pascalCase": "Component names must use PascalCase",
+      "headyPrefix": "All components must start with 'Heady'"
+    },
+    "exceptions": {
+      "fileNames": ["Can use kebab-case for files: heady-manager.js"],
+      "envVars": ["Can use SCREAMING_SNAKE_CASE: HEADY_API_KEY"],
+      "packages": ["Can use kebab-case for npm: @heady/core"]
+    },
+    "orchestrator": {
+      "mandate": "ALWAYS use HeadyOrchestrator, never just 'orchestrator'",
+      "canonical": "HeadyOrchestrator",
+      "forbidden": ["orchestrator", "Orchestrator", "heady orchestrator"],
+      "reason": "Prevents confusion with generic orchestration concepts"
+    }
   },
   "components": {
     "core": {
@@ -42,6 +62,22 @@
         "description": "Core protocol orchestration",
         "type": "protocol",
         "entrypoint": "scripts/heady_protocol.ps1"
+      },
+      "HeadyEnforcer": {
+        "canonical": "HeadyEnforcer",
+        "aliases": ["Heady Enforcer", "Heady-Enforcer"],
+        "description": "System guardian - enforces naming, security, performance, and configuration standards",
+        "type": "service",
+        "entrypoint": "src/heady_enforcer.js",
+        "responsibilities": [
+          "Naming convention enforcement",
+          "Security compliance checking",
+          "Performance monitoring",
+          "Configuration validation",
+          "Dependency auditing",
+          "Auto-healing capabilities",
+          "Governance enforcement"
+        ]
       }
     },
     "ecosystem": {

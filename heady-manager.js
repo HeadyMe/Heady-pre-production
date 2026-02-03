@@ -1,10 +1,27 @@
 #!/usr/bin/env node
 /**
- * HEADY MANAGER UNIFIED v14
- * Merges:
- *  - Security, Orchestration, Auditing (from Enhanced)
- *  - File System Operations, Hugging Face Inference (from Original)
- *  - System Monitoring & Health (Unified)
+ * ╔══════════════════════════════════════════════════════════════╗
+ * ║              HEADY MANAGER UNIFIED v14.3                     ║
+ * ║                                                              ║
+ * ║     💖 Made with Love by HeadyConnection & HeadySystems     ║
+ * ║                        Team 💖                               ║
+ * ╚══════════════════════════════════════════════════════════════╝
+ * 
+ * ASCII Architecture:
+ * 
+ *     📥 INPUT          🔐 AUTH          🔧 PROCESS        📤 OUTPUT
+ *        │                  │                  │                  │
+ *        ▼                  ▼                  ▼                  ▼
+ *    ┌────────┐      ┌──────────┐      ┌──────────┐      ┌──────────┐
+ *    │ MCP    │─────▶│ Security │─────▶│ Route &  │─────▶│ Response │
+ *    │ Request│      │ Context  │      │ Execute  │      │ + Track  │
+ *    └────────┘      └──────────┘      └──────────┘      └──────────┘
+ * 
+ * Unified System:
+ *  - Security, Orchestration, Auditing
+ *  - File System Operations, Hugging Face Inference
+ *  - MCP Protocol, Task Management, Secrets Management
+ *  - Performance Monitoring & Health Tracking
  */
 
 const express = require('express');
@@ -30,6 +47,7 @@ const RoutingOptimizer = require('./src/routing_optimizer');
 const TaskCollector = require('./src/task_collector');
 const SecretsManager = require('./src/secrets_manager');
 const HeadyBranding = require('./src/branding');
+const HeadyEnforcer = require('./src/heady_enforcer');
 
 // --- Environment Configuration ---
 const PORT = Number(process.env.PORT || 3300);
@@ -686,7 +704,7 @@ class TerminalManager {
 
 const app = express();
 const securityManager = new SecurityContextManager();
-const orchestrator = new OrchestrationManager();
+const headyOrchestrator = new OrchestrationManager();
 const auditLogger = new AuditLogger();
 const mcpManager = new McpClientManager();
 // const terminalManager = new TerminalManager();
@@ -695,6 +713,7 @@ const routingOptimizer = new RoutingOptimizer(mcpManager, serviceSelector);
 const taskCollector = new TaskCollector({ rootDirs: [__dirname] });
 const secretsManager = new SecretsManager();
 const branding = new HeadyBranding();
+const headyEnforcer = new HeadyEnforcer({ rootDir: __dirname, autoFix: true });
 
 // Initialize MCP (Async) - Moved to startServer or main execution
 // mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));
@@ -800,7 +819,7 @@ app.get('/api/health', (req, res) => {
     version: '14.0.0',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    orchestration: orchestrator.getClusterStatus(),
+    orchestration: headyOrchestrator.getClusterStatus(),
     env: {
       has_hf_token: !!HF_TOKEN,
       has_api_key: !!HEADY_API_KEY
@@ -932,7 +951,7 @@ app.post('/api/admin/build', asyncHandler(async (req, res) => {
 // Orchestration Endpoints
 app.post('/api/orchestration/provision', authenticate, asyncHandler(async (req, res) => {
   const { nodeType } = req.body;
-  const node = await orchestrator.provisionNode(nodeType || 'worker');
+  const node = await headyOrchestrator.provisionNode(nodeType || 'worker');
   await auditLogger.logSecurityEvent('node_provisioned', req.securityContext, { nodeId: node.id, type: node.type });
   res.json({ ok: true, node });
 }));
@@ -940,7 +959,7 @@ app.post('/api/orchestration/provision', authenticate, asyncHandler(async (req, 
 app.post('/api/orchestration/deprovision', authenticate, asyncHandler(async (req, res) => {
   const { nodeId } = req.body;
   if (!nodeId) throw { status: 400, message: 'nodeId required' };
-  await orchestrator.deprovisionNode(nodeId);
+  await headyOrchestrator.deprovisionNode(nodeId);
   await auditLogger.logSecurityEvent('node_deprovisioned', req.securityContext, { nodeId });
   res.json({ ok: true, nodeId });
 }));
@@ -1142,6 +1161,29 @@ app.post('/api/secrets/inject', authenticate, asyncHandler(async (req, res) => {
   res.json({ ok: true, count, message: `Injected ${count} secrets into environment` });
 }));
 
+// HeadyEnforcer Endpoints
+app.get('/api/enforcer/status', authenticate, asyncHandler(async (req, res) => {
+  const status = headyEnforcer.getStatus();
+  res.json({ ok: true, status });
+}));
+
+app.get('/api/enforcer/report', authenticate, asyncHandler(async (req, res) => {
+  const report = headyEnforcer.generateReport();
+  res.json({ ok: true, report });
+}));
+
+app.post('/api/enforcer/heal', authenticate, asyncHandler(async (req, res) => {
+  const fixed = await headyEnforcer.autoHeal();
+  await auditLogger.logSecurityEvent('auto_heal_executed', req.securityContext, { fixed });
+  
+  res.json({ ok: true, fixed, message: `Auto-healed ${fixed} violations` });
+}));
+
+app.post('/api/enforcer/enforce', authenticate, asyncHandler(async (req, res) => {
+  const result = await headyEnforcer.performFullEnforcement();
+  res.json({ ok: true, result });
+}));
+
 // MCP Service Selection Endpoints
 app.get('/api/mcp/services', authenticate, asyncHandler(async (req, res) => {
   const services = serviceSelector.listServices();
@@ -1318,13 +1360,25 @@ if (require.main === module) {
     
     // Initialize SecretsManager
     secretsManager.initialize().catch(err => console.error('[SECRETS] Init failed:', err));
+    
+    // Initialize HeadyEnforcer
+    headyEnforcer.start().catch(err => console.error('[ENFORCER] Init failed:', err));
+    
+    // Listen to enforcement events
+    headyEnforcer.on('enforcement-complete', (data) => {
+      if (data.violations.naming.length > 0 || data.violations.security.length > 0) {
+        console.log(`[ENFORCER] Found ${Object.values(data.violations).flat().length} violations`);
+      }
+    });
+    
+    console.log('[INTEGRATION] HeadyEnforcer active and monitoring');
   }).catch(err => console.error('[MCP] Init failed:', err));
 
   server = app.listen(PORT, '0.0.0.0', () => {
     console.log(branding.getHeadyBanner());
     console.log(`
     ║  Port: ${String(PORT).padEnd(54)}║
-    ║  Nodes: ${String(orchestrator.nodes.size).padEnd(53)}║
+    ║  Nodes: ${String(headyOrchestrator.nodes.size).padEnd(53)}║
     ║  MCP Services: ${String(mcpManager.clients.size).padEnd(45)}║
     ║  Task Collector: ACTIVE${' '.padEnd(40)}║
     ║  Secrets Manager: READY${' '.padEnd(40)}║
@@ -1334,7 +1388,7 @@ if (require.main === module) {
         
     // Init min nodes
     (async () => {
-      while (orchestrator.nodes.size < orchestrator.minNodes) await orchestrator.provisionNode();
+      while (headyOrchestrator.nodes.size < headyOrchestrator.minNodes) await headyOrchestrator.provisionNode();
     })();
   });
 
@@ -1354,4 +1408,4 @@ process.on('SIGTERM', async () => {
   server.close(() => process.exit(0));
 });
 
-module.exports = { app, orchestrator, securityManager, mcpManager };
+module.exports = { app, headyOrchestrator, securityManager, mcpManager };
