@@ -1,0 +1,79 @@
+#!/usr/bin/env pwsh
+<#
+.SYNOPSIS
+    Heady Checkpoint Story Driver - PowerShell Wrapper
+#>
+
+param(
+    [Parameter(Mandatory=$false)]
+    [ValidateSet('generate', 'view', 'list', 'help')]
+    [string]$Action = 'generate'
+)
+
+$ErrorActionPreference = 'Stop'
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$RootDir = Split-Path -Parent $ScriptDir
+$CheckpointScript = Join-Path $ScriptDir 'checkpoint.js'
+
+function Write-HeadyBanner {
+    Write-Host ""
+    Write-Host "╔═══════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+    Write-Host "║           HEADY CHECKPOINT STORY DRIVER                   ║" -ForegroundColor Cyan
+    Write-Host "╚═══════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+    Write-Host ""
+}
+
+function Invoke-CheckpointGenerate {
+    Write-HeadyBanner
+    Write-Host "🚀 Generating checkpoint report..." -ForegroundColor Yellow
+    
+    Push-Location $RootDir
+    try {
+        node $CheckpointScript generate
+    } finally {
+        Pop-Location
+    }
+}
+
+function Invoke-CheckpointView {
+    Write-HeadyBanner
+    Push-Location $RootDir
+    try {
+        node $CheckpointScript view
+    } finally {
+        Pop-Location
+    }
+}
+
+function Invoke-CheckpointList {
+    Write-HeadyBanner
+    Push-Location $RootDir
+    try {
+        node $CheckpointScript list
+    } finally {
+        Pop-Location
+    }
+}
+
+function Show-Help {
+    Write-HeadyBanner
+    Write-Host "Generate comprehensive system status reports at checkpoints." -ForegroundColor White
+    Write-Host ""
+    Write-Host "USAGE:" -ForegroundColor Yellow
+    Write-Host '  .\Invoke-Checkpoint.ps1 [-Action ACTION]'
+    Write-Host ""
+    Write-Host "ACTIONS:" -ForegroundColor Yellow
+    Write-Host "  generate    Generate a new checkpoint report (default)"
+    Write-Host "  view        View the latest checkpoint report"
+    Write-Host "  list        List all checkpoint reports"
+    Write-Host "  help        Show this help message"
+}
+
+# Main execution
+switch ($Action) {
+    'generate' { Invoke-CheckpointGenerate }
+    'view' { Invoke-CheckpointView }
+    'list' { Invoke-CheckpointList }
+    'help' { Show-Help }
+    default { Show-Help }
+}
