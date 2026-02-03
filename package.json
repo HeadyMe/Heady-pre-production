@@ -12,6 +12,7 @@
     "cleanup": "powershell -ExecutionPolicy Bypass -File scripts/cleanup-unnecessary-files.ps1"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.3",
     "compression": "^1.8.1"
   }
 }

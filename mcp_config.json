@@ -1,5 +1,54 @@
 {
   "mcpServers": {
+    "heady-assets": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-assets/server.js"
+      ],
+      "description": "Asset management service"
+    },
+    "heady-autobuild": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-autobuild/server.js"
+      ],
+      "description": "AutoBuild service"
+    },
+    "heady-brain": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-brain/server.js"
+      ],
+      "description": "AI logic and workflow intelligence service"
+    },
+    "heady-cleanup": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-cleanup/server.js"
+      ],
+      "description": "Cleanup and storage organization service"
+    },
+    "heady-graph": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-graph/server.js"
+      ],
+      "description": "Graph server for data relationships"
+    },
+    "heady-metrics": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-metrics/server.js"
+      ],
+      "description": "Metrics collection and reporting"
+    },
+    "heady-monorepo": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-monorepo/server.js"
+      ],
+      "description": "Monorepo merge and push service"
+    },
     "heady-router": {
       "command": "node",
       "args": [
@@ -11,17 +60,32 @@
         "integrateHeadyMaid": true
       }
     },
+    "heady-windsurf-router": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-windsurf-router/server.js"
+      ],
+      "description": "Router for Windsurf operations"
+    },
+    "heady-workflow": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-workflow/server.js"
+      ],
+      "description": "Workflow execution service"
+    },
     "filesystem": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/workspaces",
-        "/shared"
+        "c:\\Users\\erich\\Heady",
+        "c:\\Users\\erich\\Projects",
+        "c:\\Users\\erich\\CascadeProjects"
       ],
       "governance": {
         "requireConfirmation": ["write_file", "delete_file", "move_file"],
-        "allowedPaths": ["./src", "./public", "./backend"],
+        "allowedPaths": ["./src", "./public", "./backend", "./scripts"],
         "deniedPaths": [".env", ".env.admin", "*.key", "*.pem"]
       }
     },
@@ -38,29 +102,6 @@
         "-y",
         "@modelcontextprotocol/server-memory"
       ]
-    },
-    "fetch": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-fetch"
-      ],
-      "governance": {
-        "requireConfirmation": ["fetch"],
-        "allowedDomains": ["headysystems.com", "api.headysystems.com", "localhost"]
-      }
-    },
-    "postgres": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "${DATABASE_URL}"
-      ],
-      "governance": {
-        "requireConfirmation": ["execute_query", "modify_schema"],
-        "readOnly": false
-      }
     },
     "git": {
       "command": "npx",
@@ -91,26 +132,28 @@
         "CLOUDFLARE_ACCOUNT_ID": "${COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID}"
       }
     },
-    "heady-cleanup": {
-      "command": "node",
+    "fetch": {
+      "command": "npx",
       "args": [
-        "./mcp-servers/heady-cleanup/server.js"
+        "-y",
+        "@modelcontextprotocol/server-fetch"
       ],
-      "description": "Cleanup and storage organization service"
+      "governance": {
+        "requireConfirmation": ["fetch"],
+        "allowedDomains": ["headysystems.com", "api.headysystems.com", "localhost"]
+      }
     },
-    "heady-monorepo": {
-      "command": "node",
+    "postgres": {
+      "command": "npx",
       "args": [
-        "./mcp-servers/heady-monorepo/server.js"
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "${DATABASE_URL}"
       ],
-      "description": "Monorepo merge and push service"
-    },
-    "heady-brain": {
-      "command": "node",
-      "args": [
-        "./mcp-servers/heady-brain/server.js"
-      ],
-      "description": "AI logic and workflow intelligence service"
+      "governance": {
+        "requireConfirmation": ["execute_query", "modify_schema"],
+        "readOnly": false
+      }
     }
   },
   "gateway": {
