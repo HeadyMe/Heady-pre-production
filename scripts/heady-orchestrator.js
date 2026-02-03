@@ -20,7 +20,7 @@ const crypto = require('crypto');
 const HEADY_TRUST_DOMAIN = process.env.HEADY_TRUST_DOMAIN || 'headysystems.com';
 const HEADY_APP_DOMAIN = process.env.HEADY_APP_DOMAIN || 'app.headysystems.com';
 const HEADY_ASSIGNEE = process.env.HEADY_ASSIGNEE || 'HeadySystems Inc.';
-const HEADY_INVENTOR = process.env.HEADY_INVENTOR || 'Eric Haywood';
+const HEADY_INVENTOR = process.env.HEADY_INVENTOR || 'HeadyConnection & HeadySystems Team';
 const HEADY_GOVERNANCE_MODE = process.env.HEADY_GOVERNANCE_MODE || 'locked';
 const HEADY_AUDIT_ENABLED = process.env.HEADY_AUDIT_ENABLED !== 'false';
 

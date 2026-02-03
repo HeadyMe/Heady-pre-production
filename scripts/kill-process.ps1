@@ -30,6 +30,6 @@ foreach ($port in $Ports) {
             Write-Host "No processes found using port $port" -ForegroundColor Cyan
         }
     } catch {
-        Write-Host "Error terminating process on port $port: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Error terminating process on port ${port}: $($_.Exception.Message)" -ForegroundColor Red
     }
 }

@@ -139,7 +139,7 @@ async function verifySquashMergeReady() {
 async function verifyRoutingSystem() {
   const requiredFiles = [
     'src/heady_registry_router.js',
-    'src/windsurf_heady_bridge.js'
+    'src/heady_ai_bridge.js'
   ];
   
   const missing = requiredFiles.filter(f => !fs.existsSync(path.join(process.cwd(), f)));

@@ -1,9 +1,9 @@
 {
   "mcpServers": {
-    "heady-windsurf-router": {
+    "heady-router": {
       "command": "node",
       "args": [
-        "./mcp-servers/heady-windsurf-router/server.js"
+        "./mcp-servers/heady-router/server.js"
       ],
       "governance": {
         "requireConfirmation": ["heady_write_file", "heady_edit_file", "heady_run_command"],
@@ -90,16 +90,6 @@
         "CLOUDFLARE_API_TOKEN": "${COPILOT_MCP_CLOUDFLARE_API_TOKEN}",
         "CLOUDFLARE_ACCOUNT_ID": "${COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID}"
       }
-    },
-    "heady-autobuild": {
-      "command": "node",
-      "args": [
-        "./mcp-servers/heady-autobuild/server.js"
-      ],
-      "governance": {
-        "requireConfirmation": ["hc_autobuild_merge", "hc_autobuild_deploy"],
-        "auditAll": true
-      }
     }
   },
   "gateway": {
@@ -126,6 +116,6 @@
     "trustDomain": "headysystems.com",
     "appDomain": "app.headysystems.com",
     "assignee": "HeadySystems Inc.",
-    "inventor": "Eric Haywood"
+    "inventor": "HeadyConnection & HeadySystems Team"
   }
 }

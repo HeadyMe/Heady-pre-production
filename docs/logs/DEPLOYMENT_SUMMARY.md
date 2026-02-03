@@ -61,7 +61,7 @@ Successfully cloned, analyzed, merged, and optimized the HeadySystems/main repos
 - **Trust Domain:** headysystems.com
 - **App Domain:** app.headysystems.com
 - **Assignee:** HeadySystems Inc.
-- **Inventor:** Eric Haywood
+- **Inventor:** HeadyConnection & HeadySystems Team
 
 ### Governance Framework
 - **Mode:** Locked (v1.2.0)
@@ -193,7 +193,7 @@ NODE_ENV=development
 HEADY_TRUST_DOMAIN=headysystems.com
 HEADY_APP_DOMAIN=app.headysystems.com
 HEADY_ASSIGNEE=HeadySystems Inc.
-HEADY_INVENTOR=Eric Haywood
+HEADY_INVENTOR=HeadyConnection & HeadySystems Team
 ```
 
 #### Governance

@@ -8,29 +8,35 @@
  */
 
 const express = require('express');
+const compression = require('compression');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const { body, validationResult } = require('express-validator');
-const jwt = require('jsonwebtoken');
+const http = require('http');
+const https = require('https');
+// Express validator and JWT available if needed in future
 const crypto = require('crypto');
 const fs = require('fs');
 const fsp = fs.promises;
 const path = require('path');
-const { spawn } = require('child_process');
+// const { spawn } = require('child_process'); // Disabled with TerminalManager
 const WebSocket = require('ws');
 const EventEmitter = require('events');
 const Docker = require('dockerode');
 const MCPInputInterceptor = require('./src/mcp_input_interceptor');
 const HeadyMaid = require('./src/heady_maid');
 const MCPServiceSelector = require('./src/mcp_service_selector');
+const RoutingOptimizer = require('./src/routing_optimizer');
+const TaskCollector = require('./src/task_collector');
+const SecretsManager = require('./src/secrets_manager');
+const HeadyBranding = require('./src/branding');
 
 // --- Environment Configuration ---
 const PORT = Number(process.env.PORT || 3300);
 const HEADY_API_KEY = process.env.HEADY_API_KEY || crypto.randomBytes(32).toString('hex');
-const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
-const TRUST_DOMAIN = 'headysystems.com';
-const APP_DOMAIN = 'app.headysystems.com';
+// const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString('hex');
+// const TRUST_DOMAIN = 'headysystems.com';
+// const APP_DOMAIN = 'app.headysystems.com';
 
 // HF / AI Config
 const HF_TOKEN = process.env.HF_TOKEN;
@@ -45,8 +51,8 @@ const HEADY_ADMIN_ALLOWED_PATHS = (process.env.HEADY_ADMIN_ALLOWED_PATHS || '')
   .map((s) => s.trim())
   .filter(Boolean);
 const HEADY_ADMIN_MAX_BYTES = Number(process.env.HEADY_ADMIN_MAX_BYTES) || 512_000;
-const HEADY_ADMIN_OP_LOG_LIMIT = Number(process.env.HEADY_ADMIN_OP_LOG_LIMIT) || 2000;
-const HEADY_ADMIN_OP_LIMIT = Number(process.env.HEADY_ADMIN_OP_LIMIT) || 50;
+// const HEADY_ADMIN_OP_LOG_LIMIT = Number(process.env.HEADY_ADMIN_OP_LOG_LIMIT) || 2000;
+// const HEADY_ADMIN_OP_LIMIT = Number(process.env.HEADY_ADMIN_OP_LIMIT) || 50;
 const HEADY_ADMIN_ENABLE_GPU = process.env.HEADY_ADMIN_ENABLE_GPU === 'true';
 
 // GPU Config
@@ -56,7 +62,7 @@ const ENABLE_GPUDIRECT = process.env.ENABLE_GPUDIRECT === 'true';
 
 // Security Constants
 const DESTRUCTIVE_PATTERNS = ['delete', 'rm', 'drop', 'truncate', 'exec', 'shell', 'format'];
-const PHI = 1.618033988749895;
+// const PHI = 1.618033988749895;
 
 // --- Helpers from Original ---
 
@@ -610,6 +616,7 @@ class AuditLogger {
   }
 }
 
+/* Disabled - not currently used
 class TerminalManager {
   constructor() {
     this.sessions = new Map();
@@ -660,7 +667,7 @@ class TerminalManager {
     }
   }
 
-  resize(id, cols, rows) {
+  resize(_id, _cols, _rows) {
     // Without node-pty, true resizing is limited, but we stub it here
     // to support the interface.
   }
@@ -673,6 +680,7 @@ class TerminalManager {
     }
   }
 }
+*/
 
 // --- App Initialization ---
 
@@ -681,11 +689,18 @@ const securityManager = new SecurityContextManager();
 const orchestrator = new OrchestrationManager();
 const auditLogger = new AuditLogger();
 const mcpManager = new McpClientManager();
-const terminalManager = new TerminalManager();
+// const terminalManager = new TerminalManager();
 const serviceSelector = new MCPServiceSelector(mcpManager);
+const routingOptimizer = new RoutingOptimizer(mcpManager, serviceSelector);
+const taskCollector = new TaskCollector({ rootDirs: [__dirname] });
+const secretsManager = new SecretsManager();
+const branding = new HeadyBranding();
 
 // Initialize MCP (Async) - Moved to startServer or main execution
 // mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));
+
+// Performance Optimization: Gzip Compression
+app.use(compression());
 
 // Security Middleware
 app.use(helmet({
@@ -731,11 +746,19 @@ const authenticate = async (req, res, next) => {
 
 const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
+// HTTP error helper
+function createHttpError(status, message, details = {}) {
+  const error = new Error(message);
+  error.status = status;
+  Object.assign(error, details);
+  return error;
+}
+
 // HTTP request helper for environments without native fetch
 function httpRequest(url, options) {
   return new Promise((resolve, reject) => {
     const urlObj = new URL(url);
-    const httpModule = urlObj.protocol === 'https:' ? require('https') : http;
+    const httpModule = urlObj.protocol === 'https:' ? https : http;
     
     const reqOptions = {
       hostname: urlObj.hostname,
@@ -1024,9 +1047,6 @@ app.post('/api/mcp/call', authenticate, asyncHandler(async (req, res) => {
 }));
 
 app.get('/api/mcp/routing-stats', authenticate, asyncHandler(async (req, res) => {
-  // Get routing statistics from interceptor
-  const interceptorStats = mcpInterceptor.getStats();
-  
   // Get MCP server status
   const servers = Array.from(mcpManager.clients.keys()).map(name => ({
     name,
@@ -1034,16 +1054,92 @@ app.get('/api/mcp/routing-stats', authenticate, asyncHandler(async (req, res) =>
     hasHeadyMaid: name === 'heady-windsurf-router' && !!mcpManager.headyMaidInstance
   }));
   
+  // Get routing optimizer analytics
+  const analytics = routingOptimizer.getAnalytics();
+  const recentDecisions = routingOptimizer.getRecentDecisions(10);
+  
   res.json({
     ok: true,
     routing: {
-      interceptor: interceptorStats,
       servers,
       headyMaidIntegrated: !!mcpManager.headyMaidInstance,
-      routingActive: servers.length > 0
+      routingActive: servers.length > 0,
+      optimizer: analytics,
+      recentDecisions,
+      taskManagement: {
+        queuedTasks: analytics.queueSizes,
+        totalQueued: analytics.queueSizes.high + analytics.queueSizes.normal + analytics.queueSizes.low
+      }
     },
     timestamp: new Date().toISOString()
   });
+}));
+
+app.get('/api/tasks/queued', authenticate, asyncHandler(async (req, res) => {
+  const analytics = routingOptimizer.getAnalytics();
+  
+  res.json({
+    ok: true,
+    tasks: {
+      high: routingOptimizer.taskQueues.high,
+      normal: routingOptimizer.taskQueues.normal,
+      low: routingOptimizer.taskQueues.low,
+      summary: analytics.queueSizes
+    },
+    timestamp: new Date().toISOString()
+  });
+}));
+
+app.get('/api/tasks/collected', authenticate, asyncHandler(async (req, res) => {
+  const tasks = taskCollector.getAllTasks();
+  const metrics = taskCollector.getMetrics();
+  
+  res.json({
+    ok: true,
+    tasks,
+    metrics,
+    sources: Array.from(taskCollector.taskSources.keys())
+  });
+}));
+
+// Secrets Management Endpoints
+app.post('/api/secrets/ingest', authenticate, asyncHandler(async (req, res) => {
+  const { name, value, source } = req.body;
+  
+  if (!name || !value) {
+    throw { status: 400, message: 'Name and value required' };
+  }
+  
+  await secretsManager.storeSecret(name, value);
+  await auditLogger.logSecurityEvent('secret_ingested', req.securityContext, { secretName: name, source });
+  
+  res.json({ ok: true, message: `Secret '${name}' stored securely` });
+}));
+
+app.post('/api/secrets/ingest-env', authenticate, asyncHandler(async (req, res) => {
+  const { filepath } = req.body;
+  
+  if (!filepath) {
+    throw { status: 400, message: 'Filepath required' };
+  }
+  
+  const count = await secretsManager.ingestFromEnvFile(filepath);
+  await auditLogger.logSecurityEvent('secrets_bulk_ingested', req.securityContext, { filepath, count });
+  
+  res.json({ ok: true, count, message: `Ingested ${count} secrets` });
+}));
+
+app.get('/api/secrets/list', authenticate, asyncHandler(async (req, res) => {
+  const secrets = await secretsManager.listSecrets();
+  
+  res.json({ ok: true, secrets, count: secrets.length });
+}));
+
+app.post('/api/secrets/inject', authenticate, asyncHandler(async (req, res) => {
+  const count = await secretsManager.injectIntoEnvironment();
+  await auditLogger.logSecurityEvent('secrets_injected_to_env', req.securityContext, { count });
+  
+  res.json({ ok: true, count, message: `Injected ${count} secrets into environment` });
 }));
 
 // MCP Service Selection Endpoints
@@ -1150,7 +1246,7 @@ app.post('/api/mcp/orchestrator', authenticate, asyncHandler(async (req, res) =>
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Fallback Error Handler
-app.use((err, req, res, next) => {
+app.use((err, req, res, _next) => {
   const status = err.status || 500;
   const message = err.message || 'Server Error';
   console.error(`[Error] ${status} - ${message}`, err);
@@ -1196,16 +1292,45 @@ if (require.main === module) {
       mcpManager.headyMaidInstance = headyMaid;
       console.log('[INTEGRATION] HeadyMaid <-> HeadyWindsurf Router connected');
     }
+    
+    // Connect HeadyMaid tasks to RoutingOptimizer
+    headyMaid.on('task-detected', (task) => {
+      console.log(`[TASK ROUTING] HeadyMaid detected task: ${task.description}`);
+      routingOptimizer.queueTask(task);
+    });
+    
+    headyMaid.on('opportunities-detected', (opportunities) => {
+      console.log(`[TASK ROUTING] ${Object.values(opportunities).flat().length} optimization opportunities queued`);
+    });
+    
+    console.log('[INTEGRATION] HeadyMaid tasks connected to RoutingOptimizer');
+    
+    // Initialize TaskCollector
+    taskCollector.start().catch(err => console.error('[TASK COLLECTOR] Init failed:', err));
+    
+    // Connect TaskCollector to RoutingOptimizer
+    taskCollector.on('tasks-collected', (data) => {
+      console.log(`[TASK ROUTING] Collected ${data.tasks.length} tasks from all nodes`);
+      data.tasks.forEach(task => routingOptimizer.queueTask(task));
+    });
+    
+    console.log('[INTEGRATION] TaskCollector connected to RoutingOptimizer');
+    
+    // Initialize SecretsManager
+    secretsManager.initialize().catch(err => console.error('[SECRETS] Init failed:', err));
   }).catch(err => console.error('[MCP] Init failed:', err));
 
   server = app.listen(PORT, '0.0.0.0', () => {
+    console.log(branding.getHeadyBanner());
     console.log(`
-    ╔══════════════════════════════════════════════════════════════╗
-    ║                  HEADY MANAGER UNIFIED v14                   ║
-    ║  Port: ${String(PORT).padEnd(46)}║
-    ║  Nodes: ${String(orchestrator.nodes.size).padEnd(45)}║
+    ║  Port: ${String(PORT).padEnd(54)}║
+    ║  Nodes: ${String(orchestrator.nodes.size).padEnd(53)}║
+    ║  MCP Services: ${String(mcpManager.clients.size).padEnd(45)}║
+    ║  Task Collector: ACTIVE${' '.padEnd(40)}║
+    ║  Secrets Manager: READY${' '.padEnd(40)}║
     ╚══════════════════════════════════════════════════════════════╝
-        `);
+    `);
+    console.log(branding.getMadeWithLove());
         
     // Init min nodes
     (async () => {

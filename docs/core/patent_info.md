@@ -2,7 +2,7 @@
 THE FOUNDATIONAL PATENT PORTFOLIO (Assets 1–42)
 
 Assignee: HeadySystems Inc.
-Inventor: Eric Haywood
+Inventor: HeadyConnection & HeadySystems Team
 
 I. THE HARDWARE ORIGINS (1-10)
 

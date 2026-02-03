@@ -259,7 +259,7 @@ The goal of the Heady Project is to eliminate the distinction between "System" a
 
 ---
 
-**Maintained By:** Eric Haywood / Heady Systems  
+**Maintained By:** HeadyConnection & HeadySystems Team  
 **Version:** 4.0.0  
 **Last Updated:** 2026-02-02  
 **Status:** ⬢ MASTER REFERENCE ACTIVE

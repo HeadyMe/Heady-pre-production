@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * WINDSURF CHAT INTERCEPTOR
- * Routes all Windsurf chat input through HeadyMCP before Cascade processes it
- * Architecture: User Input → HeadyMCP → Intelligence Verification → Cascade
+ * HEADY CHAT INTERCEPTOR
+ * Routes all AI chat input through HeadyMCP for processing
+ * Architecture: User Input → HeadyMCP → Intelligence Verification → AI Processing
  */
 
 const express = require('express');
@@ -14,7 +14,7 @@ const PORT = process.env.HEADY_INTERCEPTOR_PORT || 3350;
 const HEADY_MANAGER_URL = process.env.HEADY_MANAGER_URL || 'http://localhost:3300';
 const INTELLIGENCE_VERIFIER = path.join(__dirname, 'heady_intelligence_verifier.js');
 
-class WindsurfChatInterceptor {
+class HeadyChatInterceptor {
   constructor() {
     this.app = express();
     this.app.use(express.json());
@@ -38,7 +38,7 @@ class WindsurfChatInterceptor {
         // Step 3: Enrich with Heady context
         const enrichedMessage = this.enrichMessage(message, mcpProcessed, intelligenceStatus);
                 
-        // Step 4: Return to Windsurf/Cascade
+        // Step 4: Return to AI assistant
         res.json({
           original: message,
           processed: enrichedMessage,
@@ -62,7 +62,7 @@ class WindsurfChatInterceptor {
     this.app.get('/health', (req, res) => {
       res.json({ 
         status: 'healthy',
-        service: 'windsurf-chat-interceptor',
+        service: 'heady-chat-interceptor',
         port: PORT
       });
     });
@@ -239,7 +239,7 @@ class WindsurfChatInterceptor {
   start() {
     this.app.listen(PORT, () => {
       console.log('═══════════════════════════════════════════════════════════');
-      console.log('🚀 Windsurf Chat Interceptor ACTIVE');
+      console.log('🚀 Heady Chat Interceptor ACTIVE');
       console.log('═══════════════════════════════════════════════════════════');
       console.log(`   Port: ${PORT}`);
       console.log(`   HeadyMCP: ${HEADY_MANAGER_URL}`);
@@ -251,8 +251,8 @@ class WindsurfChatInterceptor {
 
 // Start interceptor if run directly
 if (require.main === module) {
-  const interceptor = new WindsurfChatInterceptor();
+  const interceptor = new HeadyChatInterceptor();
   interceptor.start();
 }
 
-module.exports = WindsurfChatInterceptor;
+module.exports = HeadyChatInterceptor;

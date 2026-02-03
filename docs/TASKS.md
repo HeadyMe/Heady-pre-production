@@ -21,6 +21,7 @@
 - [x] **Automation**: Created `public/demo.html` for self-driving system demonstration.
 - [x] **Design System**: Centralized tokens in `public/css/heady-theme.css`.
 - [x] **MCP Integration**: Added native MCP Client support to the Node.js manager.
+- [x] **HeadyE Initialization**: Created base Electron app with React UI overlay (Checkpoint: `HeadyE/checkpoints/init_complete.md`)
 
 ## 🚀 Merge Readiness
 - **Status**: Ready for Squash Merge (Pending final manual verification of demo).

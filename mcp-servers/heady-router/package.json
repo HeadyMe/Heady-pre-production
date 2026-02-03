@@ -1,0 +1,22 @@
+{
+  "name": "heady-windsurf-router",
+  "version": "1.0.0",
+  "description": "Routes all Windsurf operations through HeadyMCP for complete observability",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0"
+  },
+  "keywords": [
+    "mcp",
+    "heady",
+    "windsurf",
+    "router",
+    "observability"
+  ],
+  "author": "Heady Systems",
+  "license": "MIT"
+}
