@@ -31,7 +31,7 @@ const { EventEmitter } = require('events');
 const fs = require('fs').promises;
 const path = require('path');
 const NamingEnforcer = require('./naming_enforcer');
-const PerformanceBenchmarker = require('./performance_benchmarker');
+const PerformanceBenchmarker = require('../performance_benchmarker');
 
 class HeadyEnforcer extends EventEmitter {
   constructor(config = {}) {

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyLimb - MCP Docker Extension</title>
+    <style>
+        :root {
+            --sacred-gold: #ffd700;
+            --sacred-blue: #001f3f;
+            --sacred-glow: 0 0 15px rgba(255, 215, 0, 0.5);
+            --bg-gradient: radial-gradient(circle at center, #001f3f 0%, #000 100%);
+        }
+        body {
+            background: var(--bg-gradient);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 21px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: var(--sacred-glow);
+        }
+        .orb {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, var(--sacred-gold), transparent);
+            border-radius: 50%;
+            margin-bottom: 2rem;
+            animation: breathe 4s ease-in-out infinite;
+            box-shadow: 0 0 30px var(--sacred-gold);
+        }
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        h1 { color: var(--sacred-gold); letter-spacing: 2px; }
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .status-card {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 13px;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="orb"></div>
+        <h1>HeadyLimb</h1>
+        <p>Sacred Geometry AI Orchestration for Docker Desktop</p>
+        <div class="status-grid">
+            <div class="status-card">
+                <div>MCP Status</div>
+                <div style="color: var(--sacred-gold)">CONNECTED</div>
+            </div>
+            <div class="status-card">
+                <div>Active Servers</div>
+                <div style="color: var(--sacred-gold)">5</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
