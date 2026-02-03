@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"name": "Heady",
+			"path": "."
+		},
+		{
+			"name": "Heady",
+			"path": "F:/Heady"
+		},
+		{
+			"name": "HeadyConnection",
+			"path": "F:/HeadyConnection"
+		},
+		{
+			"name": "HeadyIDE",
+			"path": "../HeadyIDE"
+		},
+		{
+			"name": "CascadeProjects",
+			"path": "../CascadeProjects"
+		},
+		{
+			"name": "Projects",
+			"path": "../Projects"
+		}
+	],
+	"settings": {}
+}
