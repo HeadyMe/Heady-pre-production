@@ -1,4 +1,16 @@
 {
+  "name": "heady-systems",
+  "version": "14.3.0",
+  "description": "Heady Systems - Sacred Geometry AI Ecosystem",
+  "main": "heady-manager.js",
+  "scripts": {
+    "start": "node heady-manager.js",
+    "dev": "node heady-manager.js",
+    "lint": "echo 'Linting skipped - no ESLint config'",
+    "test": "node --test tests/*.test.js",
+    "verify": "node src/heady_intelligence_verifier.js",
+    "cleanup": "powershell -ExecutionPolicy Bypass -File scripts/cleanup-unnecessary-files.ps1"
+  },
   "dependencies": {
     "compression": "^1.8.1"
   }
