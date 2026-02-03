@@ -5,6 +5,9 @@ services:
   mcp-filesystem:
     image: node:18-alpine
     container_name: heady-mcp-filesystem
+    labels:
+      - "com.docker.compose.project=HeadyMCP"
+      - "com.docker.compose.service=mcp-filesystem"
     volumes:
       - /Users/erich/Heady:/workspace
       - ./node_modules:/app/node_modules
@@ -20,6 +23,9 @@ services:
   mcp-postgres:
     image: node:18-alpine
     container_name: heady-mcp-postgres
+    labels:
+      - "com.docker.compose.project=HeadyMCP"
+      - "com.docker.compose.service=mcp-postgres"
     depends_on:
       - postgres
     volumes:
@@ -37,6 +43,9 @@ services:
   mcp-memory:
     image: node:18-alpine
     container_name: heady-mcp-memory
+    labels:
+      - "com.docker.compose.project=HeadyMCP"
+      - "com.docker.compose.service=mcp-memory"
     volumes:
       - ./mcp-data:/data
       - ./node_modules:/app/node_modules
@@ -53,6 +62,9 @@ services:
   mcp-fetch:
     image: node:18-alpine
     container_name: heady-mcp-fetch
+    labels:
+      - "com.docker.compose.project=HeadyMCP"
+      - "com.docker.compose.service=mcp-fetch"
     volumes:
       - ./node_modules:/app/node_modules
     working_dir: /app
@@ -67,6 +79,9 @@ services:
   postgres:
     image: postgres:15-alpine
     container_name: heady-postgres
+    labels:
+      - "com.docker.compose.project=HeadyMCP"
+      - "com.docker.compose.service=postgres"
     environment:
       - POSTGRES_DB=heady
       - POSTGRES_USER=postgres
@@ -84,6 +99,9 @@ services:
   redis:
     image: redis:7-alpine
     container_name: heady-redis
+    labels:
+      - "com.docker.compose.project=HeadyMCP"
+      - "com.docker.compose.service=redis"
     ports:
       - "6379:6379"
     volumes:
