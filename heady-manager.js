@@ -20,7 +20,10 @@ const path = require('path');
 const { spawn } = require('child_process');
 const WebSocket = require('ws');
 const EventEmitter = require('events');
-const Docker = require('dockerode'); // From Original
+const Docker = require('dockerode');
+const MCPInputInterceptor = require('./src/mcp_input_interceptor');
+const HeadyMaid = require('./src/heady_maid');
+const MCPServiceSelector = require('./src/mcp_service_selector');
 
 // --- Environment Configuration ---
 const PORT = Number(process.env.PORT || 3300);
@@ -44,10 +47,16 @@ const HEADY_ADMIN_ALLOWED_PATHS = (process.env.HEADY_ADMIN_ALLOWED_PATHS || '')
 const HEADY_ADMIN_MAX_BYTES = Number(process.env.HEADY_ADMIN_MAX_BYTES) || 512_000;
 const HEADY_ADMIN_OP_LOG_LIMIT = Number(process.env.HEADY_ADMIN_OP_LOG_LIMIT) || 2000;
 const HEADY_ADMIN_OP_LIMIT = Number(process.env.HEADY_ADMIN_OP_LIMIT) || 50;
+const HEADY_ADMIN_ENABLE_GPU = process.env.HEADY_ADMIN_ENABLE_GPU === 'true';
+
+// GPU Config
+const REMOTE_GPU_HOST = process.env.REMOTE_GPU_HOST;
+const REMOTE_GPU_PORT = Number(process.env.REMOTE_GPU_PORT) || 8080;
+const ENABLE_GPUDIRECT = process.env.ENABLE_GPUDIRECT === 'true';
 
 // Security Constants
 const DESTRUCTIVE_PATTERNS = ['delete', 'rm', 'drop', 'truncate', 'exec', 'shell', 'format'];
-const PHI = 1.618033988749895; // Golden ratio for optimization
+const PHI = 1.618033988749895;
 
 // --- Helpers from Original ---
 
@@ -302,8 +311,8 @@ class McpClientManager {
     const servers = config.mcpServers || {};
         
     for (const [name, serverConfig] of Object.entries(servers)) {
-      // Filter enabled servers or try all? Let's try 'filesystem' and 'memory' first for demo
-      if (['filesystem', 'memory', 'sequential-thinking'].includes(name)) {
+      // Connect to core MCP servers including heady-windsurf-router
+      if (['heady-windsurf-router', 'filesystem', 'memory', 'sequential-thinking', 'git'].includes(name)) {
         // Fix filesystem args for this environment if needed
         if (name === 'filesystem') {
           // Update args to point to current dir if generic /workspaces is used
@@ -338,6 +347,83 @@ class McpClientManager {
       name: toolName,
       arguments: args
     });
+  }
+
+  /**
+   * Route file read through MCP
+   */
+  async readFileMCP(filePath) {
+    try {
+      // Try heady-windsurf-router first for full observability
+      if (this.clients.has('heady-windsurf-router')) {
+        const result = await this.callTool('heady-windsurf-router', 'heady_read_file', { file_path: filePath });
+        const data = JSON.parse(result.content[0].text);
+        return data.content;
+      }
+      // Fallback to filesystem server
+      if (this.clients.has('filesystem')) {
+        const result = await this.callTool('filesystem', 'read_file', { path: filePath });
+        return result.content[0].text;
+      }
+      // Last resort: direct fs
+      return await fsp.readFile(filePath, 'utf8');
+    } catch (err) {
+      console.warn(`[MCP] File read routing failed, using direct: ${err.message}`);
+      return await fsp.readFile(filePath, 'utf8');
+    }
+  }
+
+  /**
+   * Route file write through MCP
+   */
+  async writeFileMCP(filePath, content) {
+    try {
+      // Try heady-windsurf-router first for full observability
+      if (this.clients.has('heady-windsurf-router')) {
+        await this.callTool('heady-windsurf-router', 'heady_write_file', { 
+          file_path: filePath, 
+          content 
+        });
+        return;
+      }
+      // Fallback to filesystem server
+      if (this.clients.has('filesystem')) {
+        await this.callTool('filesystem', 'write_file', { path: filePath, content });
+        return;
+      }
+      // Last resort: direct fs
+      await fsp.writeFile(filePath, content, 'utf8');
+    } catch (err) {
+      console.warn(`[MCP] File write routing failed, using direct: ${err.message}`);
+      await fsp.writeFile(filePath, content, 'utf8');
+    }
+  }
+
+  /**
+   * Route command execution through MCP
+   */
+  async runCommandMCP(command, options = {}) {
+    try {
+      // Route through heady-windsurf-router for governance
+      if (this.clients.has('heady-windsurf-router')) {
+        const result = await this.callTool('heady-windsurf-router', 'heady_run_command', {
+          command,
+          cwd: options.cwd || process.cwd(),
+          require_approval: options.requireApproval !== false
+        });
+        const data = JSON.parse(result.content[0].text);
+        return data.output;
+      }
+      // Fallback: direct execution (not recommended)
+      console.warn('[MCP] Command routing unavailable, executing directly');
+      const { execSync } = require('child_process');
+      return execSync(command, {
+        cwd: options.cwd || process.cwd(),
+        encoding: 'utf8'
+      });
+    } catch (err) {
+      throw new Error(`Command execution failed: ${err.message}`);
+    }
   }
 
   async closeAll() {
@@ -596,6 +682,7 @@ const orchestrator = new OrchestrationManager();
 const auditLogger = new AuditLogger();
 const mcpManager = new McpClientManager();
 const terminalManager = new TerminalManager();
+const serviceSelector = new MCPServiceSelector(mcpManager);
 
 // Initialize MCP (Async) - Moved to startServer or main execution
 // mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));
@@ -718,7 +805,9 @@ app.get('/api/admin/file', asyncHandler(async (req, res) => {
   if (!stat.isFile()) throw { status: 400, message: 'Not a file' };
   if (stat.size > HEADY_ADMIN_MAX_BYTES) throw { status: 413, message: 'File too large' };
     
-  const buffer = await fsp.readFile(targetPath);
+  // Route through MCP for observability
+  const content = await mcpManager.readFileMCP(targetPath);
+  const buffer = Buffer.from(content, 'utf8');
   if (buffer.includes(0)) throw { status: 415, message: 'Binary files not supported' };
     
   res.json({
@@ -728,7 +817,8 @@ app.get('/api/admin/file', asyncHandler(async (req, res) => {
     bytes: stat.size,
     mtime: stat.mtime.toISOString(),
     sha: hashBuffer(buffer),
-    content: buffer.toString('utf8')
+    content,
+    routed_via: 'mcp'
   });
 }));
 
@@ -739,10 +829,11 @@ app.post('/api/admin/file', asyncHandler(async (req, res) => {
   const root = assertAdminRoot(rootParam);
   const targetPath = resolveAdminPath(root.path, relPath);
     
-  await fsp.writeFile(targetPath, content, 'utf8');
+  // Route through MCP for observability and governance
+  await mcpManager.writeFileMCP(targetPath, content);
   await auditLogger.logSecurityEvent('file_write', req.securityContext, { path: targetPath });
     
-  res.json({ ok: true, path: relPath, size: content.length });
+  res.json({ ok: true, path: relPath, size: content.length, routed_via: 'mcp' });
 }));
 
 app.delete('/api/admin/file', asyncHandler(async (req, res) => {
@@ -896,6 +987,129 @@ app.post('/api/mcp/call', authenticate, asyncHandler(async (req, res) => {
   res.json({ ok: true, result });
 }));
 
+app.get('/api/mcp/routing-stats', authenticate, asyncHandler(async (req, res) => {
+  // Get routing statistics from interceptor
+  const interceptorStats = mcpInterceptor.getStats();
+  
+  // Get MCP server status
+  const servers = Array.from(mcpManager.clients.keys()).map(name => ({
+    name,
+    status: 'connected',
+    hasHeadyMaid: name === 'heady-windsurf-router' && !!mcpManager.headyMaidInstance
+  }));
+  
+  res.json({
+    ok: true,
+    routing: {
+      interceptor: interceptorStats,
+      servers,
+      headyMaidIntegrated: !!mcpManager.headyMaidInstance,
+      routingActive: servers.length > 0
+    },
+    timestamp: new Date().toISOString()
+  });
+}));
+
+// MCP Service Selection Endpoints
+app.get('/api/mcp/services', authenticate, asyncHandler(async (req, res) => {
+  const services = serviceSelector.listServices();
+  res.json({ ok: true, services });
+}));
+
+app.get('/api/mcp/presets', authenticate, asyncHandler(async (req, res) => {
+  const presets = serviceSelector.listPresets();
+  res.json({ ok: true, presets });
+}));
+
+app.post('/api/mcp/recommend', authenticate, asyncHandler(async (req, res) => {
+  const { task } = req.body;
+  if (!task) throw { status: 400, message: 'Task description required' };
+  
+  const recommendation = serviceSelector.recommendServices(task);
+  res.json({ ok: true, recommendation });
+}));
+
+app.post('/api/mcp/validate', authenticate, asyncHandler(async (req, res) => {
+  const { services } = req.body;
+  if (!services || !Array.isArray(services)) {
+    throw { status: 400, message: 'Services array required' };
+  }
+  
+  const validation = serviceSelector.validateCombination(services);
+  res.json({ ok: true, validation });
+}));
+
+app.post('/api/mcp/select', authenticate, asyncHandler(async (req, res) => {
+  const { preset, services, task } = req.body;
+  
+  const combination = serviceSelector.getCombination({
+    preset,
+    services,
+    task,
+    includeRecommendations: true
+  });
+  
+  res.json({ ok: true, combination });
+}));
+
+app.post('/api/mcp/orchestrator', authenticate, asyncHandler(async (req, res) => {
+  const { method, path, body, services, preset } = req.body;
+  
+  // Select services for this operation
+  const combination = serviceSelector.getCombination({ services, preset });
+  
+  // Validate services are available
+  if (!combination.validation.canProceed) {
+    throw { 
+      status: 503, 
+      message: 'Required MCP services unavailable',
+      missing: combination.validation.missing
+    };
+  }
+  
+  // Log service selection
+  await auditLogger.logSecurityEvent('mcp_service_selection', req.securityContext, {
+    selected: combination.services,
+    source: combination.source,
+    operation: `${method} ${path}`
+  });
+  
+  // Route through selected services
+  // For now, forward to orchestrator (future: use selected services)
+  const fetch = require('node-fetch');
+  const orchestratorBases = ['http://localhost:3100', 'http://localhost:3000'];
+  
+  for (const base of orchestratorBases) {
+    try {
+      const url = `${base}${path}`;
+      const options = {
+        method,
+        headers: { 'Content-Type': 'application/json' }
+      };
+      
+      if (body) {
+        options.body = JSON.stringify(body);
+      }
+      
+      const response = await fetch(url, options);
+      const data = await response.json();
+      
+      // Add routing metadata
+      data._routing = {
+        via: 'HeadyMCP',
+        services: combination.services,
+        source: combination.source
+      };
+      
+      return res.json(data);
+    } catch (error) {
+      continue;
+    }
+  }
+  
+  throw { status: 503, message: 'Orchestrator unavailable' };
+}));
+
 // Static Files
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -909,9 +1123,44 @@ app.use((err, req, res, next) => {
 
 // --- Server Start ---
 let server;
+let wss;
 if (require.main === module) {
+  // Initialize MCP Input Interceptor
+  const mcpInterceptor = new MCPInputInterceptor({
+    mcpGatewayUrl: 'http://localhost:3301',
+    enableGovernance: true,
+    enableAudit: true,
+    enableHeadyMaid: true
+  });
+
+  // Initialize HeadyMaid
+  const headyMaid = new HeadyMaid({
+    scanInterval: 30000,
+    deepScanInterval: 300000,
+    rootDirs: [__dirname],
+    enableRealtime: true
+  });
+
+  // Integrate HeadyMaid with interceptor
+  mcpInterceptor.integrateHeadyMaid(headyMaid);
+
+  // Apply MCP interceptor middleware FIRST (before all routes)
+  app.use(mcpInterceptor.middleware());
+
+  // Initialize HeadyMaid
+  headyMaid.initialize().catch(err => console.error('[HEADY MAID] Init failed:', err));
+
   // Initialize MCP
-  mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));
+  mcpManager.initialize().then(() => {
+    // Integrate HeadyMaid with HeadyWindsurf Router
+    const router = mcpManager.clients.get('heady-windsurf-router');
+    if (router && router.client) {
+      console.log('[INTEGRATION] Connecting HeadyMaid to HeadyWindsurf Router...');
+      // Store HeadyMaid reference for router access
+      mcpManager.headyMaidInstance = headyMaid;
+      console.log('[INTEGRATION] HeadyMaid <-> HeadyWindsurf Router connected');
+    }
+  }).catch(err => console.error('[MCP] Init failed:', err));
 
   server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`
@@ -928,8 +1177,10 @@ if (require.main === module) {
     })();
   });
 
+  // Initialize WebSocket server
+  wss = new WebSocket.Server({ noServer: true });
+
   server.on('upgrade', (request, socket, head) => {
-    // Simplified auth for WS for this iteration
     wss.handleUpgrade(request, socket, head, (ws) => {
       wss.emit('connection', ws, request);
     });

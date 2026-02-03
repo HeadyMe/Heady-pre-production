@@ -1,0 +1,21 @@
+{
+  "name": "@heady/mcp-autobuild",
+  "version": "1.0.0",
+  "description": "HeadyMCP AutoBuild Server - Automated build orchestration",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "mcp",
+    "heady",
+    "autobuild",
+    "automation"
+  ],
+  "author": "Heady Systems",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.1"
+  }
+}

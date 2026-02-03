@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heady System Automated Demo</title>
+    <script src="/heady-design-system.js"></script>
+    <link rel="stylesheet" href="/css/sacred-geometry.css">
     <style>
         :root {
             --primary: #00d4ff;
@@ -17,7 +19,12 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-dark);
+            background-color: var(--bg-dark);
+            background-image: url('assets/images/background-1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
             color: var(--text-main);
             overflow-x: hidden;
         }
@@ -167,19 +174,28 @@
         <circle cx="500" cy="500" r="100" fill="none" stroke="white" stroke-width="1"/>
     </svg>
 
-    <div class="container">
-        <header>
-            <h1>Heady System Automation</h1>
+    <div class="container sacred-container">
+        <header class="sacred-header">
+            <div class="brand-container">
+                <img src="assets/images/HC-Logo.png" class="brand-logo" alt="HeadyConnection" />
+                <img src="assets/images/HS-Logo.png" class="brand-logo" alt="HeadySystems" />
+            </div>
+            <h1 class="sacred-title">Heady System Automation</h1>
             <div class="subtitle">Autonomous Orchestration & Intelligence Demo</div>
         </header>
 
+        <div class="foundation-badge">
+            <img src="assets/images/HC-favicon.png" title="HeadyConnection Foundation" />
+            <img src="assets/images/HS-favicon.png" title="HeadySystems Core" />
+        </div>
+
         <div class="control-panel">
-            <button class="btn" id="startBtn" onclick="startDemo()">Initiate Sequence</button>
+            <button class="btn sacred-button" id="startBtn" onclick="startDemo()">Initiate Sequence</button>
         </div>
 
         <div class="grid">
             <!-- Node Orchestration -->
-            <div class="card" id="card-orchestrator">
+            <div class="card sacred-card" id="card-orchestrator">
                 <div class="card-header">
                     <span class="card-title">1. Node Orchestration</span>
                     <div class="status-dot" id="status-orchestrator"></div>
@@ -189,7 +205,7 @@
             </div>
 
             <!-- File System Ops -->
-            <div class="card" id="card-fs">
+            <div class="card sacred-card" id="card-fs">
                 <div class="card-header">
                     <span class="card-title">2. File Operations</span>
                     <div class="status-dot" id="status-fs"></div>
@@ -199,7 +215,7 @@
             </div>
 
             <!-- AI Intelligence -->
-            <div class="card" id="card-ai">
+            <div class="card sacred-card" id="card-ai">
                 <div class="card-header">
                     <span class="card-title">3. AI Intelligence (HF)</span>
                     <div class="status-dot" id="status-ai"></div>
@@ -209,7 +225,7 @@
             </div>
 
             <!-- MCP Tools -->
-            <div class="card" id="card-mcp">
+            <div class="card sacred-card" id="card-mcp">
                 <div class="card-header">
                     <span class="card-title">4. MCP Tool Integration</span>
                     <div class="status-dot" id="status-mcp"></div>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCAutoBuild - Heady Admin</title>
+    <link rel="stylesheet" href="/css/sacred-geometry.css">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #22d3ee;
+            --bg-dark: #0f172a;
+            --bg-medium: #1e293b;
+            --bg-light: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border: #475569;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #1a1f3a 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .card {
+            background: var(--bg-medium);
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: var(--bg-light);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-success:hover {
+            background: #059669;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--error); }
+        .toast.info { background: var(--primary); }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        function HCAutoBuildApp() {
+            const [buildStatus, setBuildStatus] = useState(null);
+            const [buildHistory, setBuildHistory] = useState([]);
+            const [isBuilding, setIsBuilding] = useState(false);
+            const [selectedPhases, setSelectedPhases] = useState(['analyze', 'extract', 'merge', 'test', 'deploy']);
+            const [buildMode, setBuildMode] = useState('auto');
+            const [dryRun, setDryRun] = useState(false);
+            const [verbose, setVerbose] = useState(false);
+            const [currentPhase, setCurrentPhase] = useState(null);
+            const [phaseProgress, setPhaseProgress] = useState({});
+            const [toasts, setToasts] = useState([]);
+
+            useEffect(() => {
+                fetchBuildStatus();
+                const interval = setInterval(fetchBuildStatus, 3000);
+                return () => clearInterval(interval);
+            }, []);
+
+            const showToast = (message, type = 'info') => {
+                const id = Date.now();
+                setToasts(prev => [...prev, { id, message, type }]);
+                setTimeout(() => {
+                    setToasts(prev => prev.filter(t => t.id !== id));
+                }, 5000);
+            };
+
+            const fetchBuildStatus = async () => {
+                try {
+                    const apiKey = localStorage.getItem('heady_api_key');
+                    if (!apiKey) return;
+
+                    const response = await fetch('/api/mcp/call', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-heady-api-key': apiKey
+                        },
+                        body: JSON.stringify({
+                            server: 'heady-autobuild',
+                            tool: 'hc_autobuild_status',
+                            args: { includeHistory: true }
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.ok && data.result) {
+                        const result = JSON.parse(data.result.content[0].text);
+                        setBuildStatus(result.status);
+                        if (result.status.history) {
+                            setBuildHistory(result.status.history);
+                        }
+                        
+                        if (result.status.autobuildState?.status === 'running') {
+                            setIsBuilding(true);
+                            setCurrentPhase(result.status.buildConfig?.currentPhase);
+                            setPhaseProgress(result.status.buildConfig?.phaseResults || {});
+                        } else {
+                            setIsBuilding(false);
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch build status:', error);
+                }
+            };
+
+            const executeBuild = async () => {
+                if (isBuilding) {
+                    showToast('Build already in progress', 'info');
+                    return;
+                }
+
+                const apiKey = localStorage.getItem('heady_api_key') || prompt('Enter Heady API Key:');
+                if (!apiKey) return;
+                localStorage.setItem('heady_api_key', apiKey);
+
+                setIsBuilding(true);
+                showToast('Starting HCAutoBuild...', 'info');
+
+                try {
+                    const response = await fetch('/api/mcp/call', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-heady-api-key': apiKey
+                        },
+                        body: JSON.stringify({
+                            server: 'heady-autobuild',
+                            tool: 'hc_autobuild_execute',
+                            args: {
+                                mode: buildMode,
+                                phases: selectedPhases,
+                                dryRun,
+                                verbose
+                            }
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.ok) {
+                        const result = JSON.parse(data.result.content[0].text);
+                        showToast(`Build completed: ${result.buildId}`, 'success');
+                        fetchBuildStatus();
+                    } else {
+                        showToast('Build failed', 'error');
+                    }
+                } catch (error) {
+                    showToast(`Build error: ${error.message}`, 'error');
+                } finally {
+                    setIsBuilding(false);
+                }
+            };
+
+            const executePhase = async (phase) => {
+                const apiKey = localStorage.getItem('heady_api_key');
+                if (!apiKey) return;
+
+                showToast(`Executing ${phase} phase...`, 'info');
+                try {
+                    await fetch('/api/mcp/call', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-heady-api-key': apiKey
+                        },
+                        body: JSON.stringify({
+                            server: 'heady-autobuild',
+                            tool: `hc_autobuild_${phase}`,
+                            args: {}
+                        })
+                    });
+                    showToast(`${phase} phase completed`, 'success');
+                    fetchBuildStatus();
+                } catch (error) {
+                    showToast(`${phase} failed: ${error.message}`, 'error');
+                }
+            };
+
+            const togglePhase = (phase) => {
+                setSelectedPhases(prev => 
+                    prev.includes(phase) 
+                        ? prev.filter(p => p !== phase)
+                        : [...prev, phase]
+                );
+            };
+
+            const getPhaseStatus = (phase) => {
+                return phaseProgress[phase]?.status || 'pending';
+            };
+
+            const getPhaseIcon = (status) => {
+                switch (status) {
+                    case 'success': return '✓';
+                    case 'failed': return '✗';
+                    case 'running': return '⟳';
+                    default: return '○';
+                }
+            };
+
+            const getPhaseColor = (status) => {
+                switch (status) {
+                    case 'success': return 'var(--success)';
+                    case 'failed': return 'var(--error)';
+                    case 'running': return 'var(--warning)';
+                    default: return 'var(--text-secondary)';
+                }
+            };
+
+            return (
+                <div className="container">
+                    <div className="header">
+                        <h1>🏗️ HCAutoBuild</h1>
+                        <p style={{ color: 'var(--text-secondary)' }}>
+                            Automated Build Orchestration System
+                        </p>
+                    </div>
+
+                    {/* Build Configuration */}
+                    <div className="card">
+                        <h3>Build Configuration</h3>
+                        
+                        <div className="grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                            <div className="form-group">
+                                <label>Build Mode</label>
+                                <select value={buildMode} onChange={(e) => setBuildMode(e.target.value)}>
+                                    <option value="auto">Auto</option>
+                                    <option value="manual">Manual</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </select>
+                            </div>
+                            
+                            <div className="form-group">
+                                <label>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={dryRun} 
+                                        onChange={(e) => setDryRun(e.target.checked)}
+                                        style={{ width: 'auto', marginRight: '8px' }}
+                                    />
+                                    Dry Run
+                                </label>
+                            </div>
+                            
+                            <div className="form-group">
+                                <label>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={verbose} 
+                                        onChange={(e) => setVerbose(e.target.checked)}
+                                        style={{ width: 'auto', marginRight: '8px' }}
+                                    />
+                                    Verbose
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style={{ marginBottom: '20px' }}>
+                            <label style={{ display: 'block', marginBottom: '10px', fontWeight: '500' }}>
+                                Build Phases
+                            </label>
+                            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                                {['analyze', 'extract', 'merge', 'test', 'deploy'].map(phase => (
+                                    <button
+                                        key={phase}
+                                        onClick={() => togglePhase(phase)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            background: selectedPhases.includes(phase) ? 'var(--primary)' : 'var(--bg-light)',
+                                            color: selectedPhases.includes(phase) ? 'white' : 'var(--text-secondary)',
+                                            border: '1px solid var(--border)',
+                                            borderRadius: '8px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        <span style={{ color: getPhaseColor(getPhaseStatus(phase)) }}>
+                                            {getPhaseIcon(getPhaseStatus(phase))}
+                                        </span>
+                                        {' '}
+                                        {phase.charAt(0).toUpperCase() + phase.slice(1)}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                            <button 
+                                className="btn btn-success" 
+                                onClick={executeBuild}
+                                disabled={isBuilding || selectedPhases.length === 0}
+                            >
+                                {isBuilding ? '⟳ Building...' : '▶ Execute Build'}
+                            </button>
+                            
+                            <button className="btn btn-secondary" onClick={() => executePhase('analyze')}>
+                                🔍 Analyze
+                            </button>
+                            
+                            <button className="btn btn-secondary" onClick={() => executePhase('merge')}>
+                                🔀 Merge
+                            </button>
+                            
+                            <button className="btn btn-secondary" onClick={fetchBuildStatus}>
+                                🔄 Refresh
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Current Build Status */}
+                    {buildStatus?.currentBuild && (
+                        <div className="card">
+                            <h3>Current Build</h3>
+                            
+                            <div className="grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}>
+                                <div>
+                                    <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Build ID</div>
+                                    <div style={{ fontFamily: 'monospace', fontSize: '14px' }}>
+                                        {buildStatus.currentBuild.id}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Status</div>
+                                    <div style={{ 
+                                        color: buildStatus.currentBuild.status === 'completed' ? 'var(--success)' :
+                                               buildStatus.currentBuild.status === 'failed' ? 'var(--error)' :
+                                               'var(--warning)',
+                                        fontWeight: '500'
+                                    }}>
+                                        {buildStatus.currentBuild.status?.toUpperCase()}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Phase</div>
+                                    <div style={{ fontWeight: '500' }}>
+                                        {currentPhase || 'N/A'}
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Duration</div>
+                                    <div style={{ fontFamily: 'monospace' }}>
+                                        {buildStatus.currentBuild.endTime 
+                                            ? `${Math.round((new Date(buildStatus.currentBuild.endTime) - new Date(buildStatus.currentBuild.startTime)) / 1000)}s`
+                                            : 'In progress...'}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {Object.keys(phaseProgress).length > 0 && (
+                                <div style={{ marginTop: '20px' }}>
+                                    <h4 style={{ marginBottom: '10px', fontSize: '14px', color: 'var(--text-secondary)' }}>
+                                        Phase Progress
+                                    </h4>
+                                    {Object.entries(phaseProgress).map(([phase, result]) => (
+                                        <div key={phase} style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            padding: '8px',
+                                            marginBottom: '5px',
+                                            background: 'var(--bg-dark)',
+                                            borderRadius: '6px'
+                                        }}>
+                                            <span style={{ 
+                                                color: getPhaseColor(result.status),
+                                                marginRight: '10px',
+                                                fontSize: '16px'
+                                            }}>
+                                                {getPhaseIcon(result.status)}
+                                            </span>
+                                            <span style={{ flex: 1, textTransform: 'capitalize' }}>
+                                                {phase}
+                                            </span>
+                                            <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>
+                                                {result.duration ? `${result.duration}ms` : ''}
+                                            </span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Build History */}
+                    <div className="card sacred-card">
+                        <h3>Build History</h3>
+                        
+                        {buildHistory.length === 0 ? (
+                            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)' }}>
+                                No build history available
+                            </div>
+                        ) : (
+                            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                {buildHistory.slice().reverse().map((build, index) => (
+                                    <div key={build.id} style={{
+                                        padding: '15px',
+                                        marginBottom: '10px',
+                                        background: 'var(--bg-dark)',
+                                        borderRadius: '8px',
+                                        borderLeft: `4px solid ${
+                                            build.status === 'completed' ? 'var(--success)' :
+                                            build.status === 'failed' ? 'var(--error)' :
+                                            'var(--warning)'
+                                        }`
+                                    }}>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                                            <div style={{ fontWeight: '500' }}>
+                                                Build #{buildHistory.length - index}
+                                            </div>
+                                            <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
+                                                {new Date(build.startTime).toLocaleString()}
+                                            </div>
+                                        </div>
+                                        
+                                        <div className="grid" style={{ gridTemplateColumns: 'repeat(4, 1fr)', fontSize: '13px' }}>
+                                            <div>
+                                                <span style={{ color: 'var(--text-secondary)' }}>Status: </span>
+                                                <span style={{ 
+                                                    color: build.status === 'completed' ? 'var(--success)' :
+                                                           build.status === 'failed' ? 'var(--error)' :
+                                                           'var(--warning)',
+                                                    fontWeight: '500'
+                                                }}>
+                                                    {build.status}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span style={{ color: 'var(--text-secondary)' }}>Duration: </span>
+                                                <span>
+                                                    {build.endTime 
+                                                        ? `${Math.round((new Date(build.endTime) - new Date(build.startTime)) / 1000)}s`
+                                                        : 'N/A'}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <span style={{ color: 'var(--text-secondary)' }}>Phases: </span>
+                                                <span>{build.summary?.phases || 0}</span>
+                                            </div>
+                                            <div>
+                                                <span style={{ color: 'var(--text-secondary)' }}>Errors: </span>
+                                                <span style={{ color: build.summary?.errors > 0 ? 'var(--error)' : 'var(--success)' }}>
+                                                    {build.summary?.errors || 0}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Toasts */}
+                    {toasts.map(toast => (
+                        <div key={toast.id} className={`toast ${toast.type}`}>
+                            {toast.message}
+                        </div>
+                    ))}
+                </div>
+            );
+        }
+        
+        ReactDOM.render(<HCAutoBuildApp />, document.getElementById('root'));
+    </script>
+</body>
+</html>

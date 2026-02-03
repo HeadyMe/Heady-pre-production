@@ -326,6 +326,34 @@
         .sacred-tooltip.visible {
             opacity: 1;
         }
+        
+        .foundation-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            opacity: 0.8;
+            z-index: 100;
+        }
+
+        .foundation-badge img {
+            height: 30px;
+            width: auto;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        .foundation-badge:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+        
+        .brand-logo-small {
+            height: 24px;
+            width: auto;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -396,11 +424,9 @@
                 return (
                     <div className="auth-modal">
                         <div className="auth-card">
-                            <div className="sacred-orb" style={{
-                                width: '100px',
-                                height: '100px',
-                                margin: '0 auto 2rem'
-                            }}></div>
+                            <div className="brand-container" style={{ marginBottom: '2rem' }}>
+                                <img src="/assets/images/HC-Logo.png" className="brand-logo" style={{ height: '60px' }} alt="HeadyConnection" />
+                            </div>
                             <h2 style={{
                                 fontSize: '2rem',
                                 marginBottom: '1rem',
@@ -408,7 +434,9 @@
                                 WebkitBackgroundClip: 'text',
                                 backgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent'
-                            }}>∞ HEADY ADMIN ∞</h2>
+                            }}>
+                                Sacred Admin Access
+                            </h2>
                             <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
                                 Enter your sacred key to access the consciousness
                             </p>
@@ -634,6 +662,11 @@
                                 right: '2rem'
                             }}></div>
                         </main>
+                    </div>
+                    
+                    <div className="foundation-badge">
+                        <img src="/assets/images/HC-favicon.png" title="HeadyConnection Foundation" />
+                        <img src="/assets/images/HS-favicon.png" title="HeadySystems Core" />
                     </div>
                 </div>
             );

@@ -347,8 +347,13 @@ class HeadyVisualEngine {
   animate() {
     if (!this.ctx) return;
 
-    this.ctx.fillStyle = HeadyDesignSystem.colors.background.darkest;
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    // Clear canvas but allow background image to show through
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    // Optional: Add a very subtle dark overlay to ensure text contrast if needed, 
+    // but relying on CSS background-blend-mode is better.
+    // this.ctx.fillStyle = 'rgba(2, 2, 8, 0.2)';
+    // this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.drawSacredGeometry();
     this.drawWaves();
@@ -436,14 +441,53 @@ function createHeadyStyles() {
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
+
+    /* Ensure global branding elements are styled if injected dynamically */
+    .foundation-badge-dynamic {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        gap: 15px;
+        opacity: 0.8;
+        z-index: 9999;
+        pointer-events: none;
+    }
+    
+    .foundation-badge-dynamic img {
+        height: 30px;
+        width: auto;
+        filter: grayscale(100%);
+        transition: all 0.3s ease;
+        pointer-events: auto;
+    }
+    
+    .foundation-badge-dynamic:hover img {
+        filter: grayscale(0%);
+        transform: scale(1.1);
+    }
   `;
   document.head.appendChild(style);
+}
+
+// Function to inject branding if missing
+function injectHeadyBranding() {
+    if (!document.querySelector('.foundation-badge')) {
+        const badge = document.createElement('div');
+        badge.className = 'foundation-badge-dynamic';
+        badge.innerHTML = `
+            <img src="/assets/images/HC-favicon.png" title="HeadyConnection Foundation" alt="HC" />
+            <img src="/assets/images/HS-favicon.png" title="HeadySystems Core" alt="HS" />
+        `;
+        document.body.appendChild(badge);
+    }
 }
 
 if (typeof window !== 'undefined') {
   window.HeadyDesignSystem = HeadyDesignSystem;
   window.HeadyVisualEngine = HeadyVisualEngine;
   window.createHeadyStyles = createHeadyStyles;
+  window.addEventListener('load', injectHeadyBranding);
 }
 
 if (typeof module !== 'undefined' && module.exports) {

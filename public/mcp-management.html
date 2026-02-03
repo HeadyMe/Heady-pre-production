@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heady MCP Management - Server Control Center</title>
     <script src="/heady-design-system.js"></script>
+    <link rel="stylesheet" href="/css/sacred-geometry.css">
     <style>
         * {
             margin: 0;
@@ -14,7 +15,12 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #020208 0%, #0a0e27 50%, #1a1e3e 100%);
+            background-color: #020208;
+            background-image: url('assets/images/background-2.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
             color: #e0e0e0;
             min-height: 100vh;
         }
@@ -464,11 +470,20 @@
 <body>
     <canvas id="background-canvas"></canvas>
 
-    <div class="container">
-        <header>
-            <h1>🧠 HEADY MCP MANAGEMENT</h1>
+    <div class="container sacred-container">
+        <header class="sacred-header">
+            <div class="brand-container">
+                <img src="assets/images/HC-Logo.png" class="brand-logo" alt="HeadyConnection" />
+                <img src="assets/images/HS-Logo.png" class="brand-logo" alt="HeadySystems" />
+            </div>
+            <h1 class="sacred-title">🧠 HEADY MCP MANAGEMENT</h1>
             <p class="subtitle">Model Context Protocol • Server Control Center</p>
         </header>
+
+        <div class="foundation-badge">
+            <img src="assets/images/HC-favicon.png" title="HeadyConnection Foundation" />
+            <img src="assets/images/HS-favicon.png" title="HeadySystems Core" />
+        </div>
 
         <div class="overview-grid">
             <div class="overview-card">

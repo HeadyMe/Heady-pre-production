@@ -1,9 +1,3080 @@
 {
-  "version": "1.0.0",
-  "timestamp": "2026-02-02T21:55:48.545Z",
-  "rootDir": "C:\\Users\\erich\\Heady",
-  "files": [],
+  "version": "2.0.0",
+  "timestamp": "2026-02-03T15:33:35.549Z",
+  "rootDir": "c:\\Users\\erich\\Heady",
+  "files": [
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Admin\\Dashboard.py",
+      "concepts": [
+        "Dashboard",
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Admin\\Dashboard.py",
+      "concepts": [
+        "Dashboard",
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Admin\\Dashboard.py",
+      "concepts": [
+        "Dashboard",
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Admin\\Dashboard.py",
+      "concepts": [
+        "Dashboard",
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\HeadyMaster.py",
+      "concepts": [
+        "Governance",
+        "HeadyMaster"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\consolidator.py",
+      "concepts": [
+        "Governance",
+        "ConsolidationWorker"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Gap_Scanner.py",
+      "concepts": [
+        "Governance",
+        "Gap",
+        "Scanner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Heady_Chain.py",
+      "concepts": [
+        "Governance",
+        "Heady",
+        "Chain",
+        "Block",
+        "HeadyChain"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Optimizer.py",
+      "concepts": [
+        "Governance",
+        "Optimizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\Key_Manager.py",
+      "concepts": [
+        "Governance",
+        "Manager",
+        "Key",
+        "KeyManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security_Audit.py",
+      "concepts": [
+        "Governance",
+        "Security",
+        "Audit"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\HeadyMaster.py",
+      "concepts": [
+        "Governance",
+        "HeadyMaster"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Murphy.ps1",
+      "concepts": [
+        "Governance",
+        "Call",
+        "Murphy"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\consolidator.py",
+      "concepts": [
+        "Governance",
+        "ConsolidationWorker"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Daemons\\Natural_Observer.py",
+      "concepts": [
+        "Governance",
+        "Observer",
+        "Natural"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Gap_Scanner.py",
+      "concepts": [
+        "Governance",
+        "Gap",
+        "Scanner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Heady_Chain.py",
+      "concepts": [
+        "Governance",
+        "Heady",
+        "Chain",
+        "Block",
+        "HeadyChain"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Optimizer.py",
+      "concepts": [
+        "Governance",
+        "Optimizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\Key_Manager.py",
+      "concepts": [
+        "Governance",
+        "Manager",
+        "Key",
+        "KeyManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security_Audit.py",
+      "concepts": [
+        "Governance",
+        "Security",
+        "Audit"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\HeadyMaster.py",
+      "concepts": [
+        "Governance",
+        "HeadyMaster"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Gap_Scanner.py",
+      "concepts": [
+        "Governance",
+        "Gap",
+        "Scanner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Heady_Chain.py",
+      "concepts": [
+        "Governance",
+        "Heady",
+        "Chain",
+        "Block",
+        "HeadyChain"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Optimizer.py",
+      "concepts": [
+        "Governance",
+        "Optimizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\Key_Manager.py",
+      "concepts": [
+        "Governance",
+        "Manager",
+        "Key",
+        "KeyManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\MCP_Auth.py",
+      "concepts": [
+        "Governance",
+        "Auth",
+        "MCPAuthManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\Setup_Security.ps1",
+      "concepts": [
+        "Governance",
+        "Setup",
+        "Security",
+        "SentinelHandler"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security_Audit.py",
+      "concepts": [
+        "Governance",
+        "Security",
+        "Audit"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyEcosystem\\scripts\\setup-desktop-icons.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\governance\\src\\index.ts",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\governance\\src\\protocol\\manager.ts",
+      "concepts": [
+        "Governance",
+        "GovernanceProtocolManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\governance\\src\\types.ts",
+      "concepts": [
+        "Governance",
+        "GovernanceStandard",
+        "GovernanceRule",
+        "ComplianceReport",
+        "AuditLogEntry",
+        "Concept"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\required-server-files.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\dcb60_next_dist_447a77a7._.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\[root-of-the-server]__6ca81b50._.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\static\\chunks\\07a9c0481e7f74ee.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\governance-worker\\.wrangler\\tmp\\dev-MObmXI\\index.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\governance-worker\\scripts\\test-integration.ts",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\governance-worker\\src\\index.ts",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\governance-worker\\src\\protocol.ts",
+      "concepts": [
+        "Governance",
+        "GovernanceProtocolManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\governance-worker\\src\\types.ts",
+      "concepts": [
+        "Governance",
+        "GovernanceStandard",
+        "GovernanceRule",
+        "ComplianceReport",
+        "AuditLogEntry",
+        "Concept",
+        "GovernanceDecision",
+        "ScanResult"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\client\\components\\MonitoringDashboard.tsx",
+      "concepts": [
+        "Governance",
+        "SacredGeometry",
+        "MonitoringDashboard",
+        "TabProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\realtime-task-manager.ts",
+      "concepts": [
+        "Governance",
+        "TaskDefinition",
+        "TaskExecution",
+        "TaskLog",
+        "TaskFilter",
+        "RealtimeTaskManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\utils\\logger.ts",
+      "concepts": [
+        "Governance",
+        "LogContext",
+        "LogEntry",
+        "Logger"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-lens\\.next\\server\\app\\page.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-lens\\.next\\server\\chunks\\87.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": false
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-lens\\src\\app\\page.tsx",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\app\\(tabs)\\activity.tsx",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\app\\(tabs)\\settings.tsx",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\server\\app\\api\\status\\route.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\server\\chunks\\812.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\server\\app\\api\\status\\route.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\server\\chunks\\641.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\hc.ps1",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\HeadyMaster.py",
+      "concepts": [
+        "Governance",
+        "HeadyMaster"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Start_HeadyAcademy.ps1",
+      "concepts": [
+        "Governance",
+        "Start",
+        "HeadyAcademy"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Janitor.ps1",
+      "concepts": [
+        "Governance",
+        "Call",
+        "Janitor"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Murphy.ps1",
+      "concepts": [
+        "Governance",
+        "Call",
+        "Murphy"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Consolidator.py",
+      "concepts": [
+        "Governance",
+        "Consolidator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Daemons\\Natural_Observer.py",
+      "concepts": [
+        "Governance",
+        "Observer",
+        "Natural"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Gap_Scanner.py",
+      "concepts": [
+        "Governance",
+        "Gap",
+        "Scanner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Heady_Chain.py",
+      "concepts": [
+        "Governance",
+        "Heady",
+        "Chain",
+        "Block",
+        "HeadyChain"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\MCP\\secret-manager.js",
+      "concepts": [
+        "Governance",
+        "SecretManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\MCP\\Server.py",
+      "concepts": [
+        "Governance",
+        "Server",
+        "AutoCommitTracker"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Optimizer.py",
+      "concepts": [
+        "Governance",
+        "Optimizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\Key_Manager.py",
+      "concepts": [
+        "Governance",
+        "Manager",
+        "Key",
+        "KeyManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\MCP_Auth.py",
+      "concepts": [
+        "Governance",
+        "Auth",
+        "MCPAuthManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\Setup_Security.ps1",
+      "concepts": [
+        "Governance",
+        "Setup",
+        "Security",
+        "SentinelHandler"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security_Audit.py",
+      "concepts": [
+        "Governance",
+        "Security",
+        "Audit"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\index.ts",
+      "concepts": [
+        "Governance",
+        "Task",
+        "User",
+        "Project",
+        "AutomationTask"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\mcp-server.ts",
+      "concepts": [
+        "Governance",
+        "SacredGeometry",
+        "Logger"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\arena-manager.js",
+      "concepts": [
+        "Governance",
+        "ArenaManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\arena-manager.ts",
+      "concepts": [
+        "Governance",
+        "ArenaManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\squash-merger.d.ts",
+      "concepts": [
+        "Governance",
+        "MergeOptions",
+        "QualityMetrics",
+        "ComparisonFactor",
+        "ComparisonDecision",
+        "MergeResult",
+        "SquashMerger"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\squash-merger.js",
+      "concepts": [
+        "Governance",
+        "SquashMerger"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\squash-merger.ts",
+      "concepts": [
+        "Governance",
+        "MergeOptions",
+        "QualityMetrics",
+        "ComparisonFactor",
+        "ComparisonDecision",
+        "MergeResult",
+        "SquashMerger"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\utils\\logger.d.ts",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\utils\\logger.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\utils\\logger.ts",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\scripts\\auto-merge.js",
+      "concepts": [
+        "Governance",
+        "IntelligentMerger"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\scripts\\ingest-data.js",
+      "concepts": [
+        "Governance"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\scripts\\verify-mcp-new.js",
+      "concepts": [
+        "Governance",
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Setup_Vault.ps1",
+      "concepts": [
+        "Setup",
+        "Vault"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\Setup_Security.ps1",
+      "concepts": [
+        "Setup",
+        "Security"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Setup_Vault.ps1",
+      "concepts": [
+        "Setup",
+        "Vault"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\Setup_Security.ps1",
+      "concepts": [
+        "Setup",
+        "Security"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Setup_Vault.ps1",
+      "concepts": [
+        "Setup",
+        "Vault"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Setup_Vault.ps1",
+      "concepts": [
+        "Setup",
+        "Vault"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Atlas.ps1",
+      "concepts": [
+        "Call",
+        "Atlas"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Bridge.ps1",
+      "concepts": [
+        "Call",
+        "Bridge"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Builder.ps1",
+      "concepts": [
+        "Call",
+        "Builder"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Cipher.ps1",
+      "concepts": [
+        "Call",
+        "Cipher"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Janitor.ps1",
+      "concepts": [
+        "Call",
+        "Janitor"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Jules.ps1",
+      "concepts": [
+        "Call",
+        "Jules"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Murphy.ps1",
+      "concepts": [
+        "Call",
+        "Murphy"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Muse.ps1",
+      "concepts": [
+        "Call",
+        "Muse"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Nova.ps1",
+      "concepts": [
+        "Call",
+        "Nova"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Observer.ps1",
+      "concepts": [
+        "Call",
+        "Observer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Oculus.ps1",
+      "concepts": [
+        "Call",
+        "Oculus"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sasha.ps1",
+      "concepts": [
+        "Call",
+        "Sasha"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Scout.ps1",
+      "concepts": [
+        "Call",
+        "Scout"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sentinel.ps1",
+      "concepts": [
+        "Call",
+        "Sentinel"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sophia.ps1",
+      "concepts": [
+        "Call",
+        "Sophia"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Atlas.ps1",
+      "concepts": [
+        "Call",
+        "Atlas"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Bridge.ps1",
+      "concepts": [
+        "Call",
+        "Bridge"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Builder.ps1",
+      "concepts": [
+        "Call",
+        "Builder"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Cipher.ps1",
+      "concepts": [
+        "Call",
+        "Cipher"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Janitor.ps1",
+      "concepts": [
+        "Call",
+        "Janitor"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Jules.ps1",
+      "concepts": [
+        "Call",
+        "Jules"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Muse.ps1",
+      "concepts": [
+        "Call",
+        "Muse"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Nova.ps1",
+      "concepts": [
+        "Call",
+        "Nova"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Observer.ps1",
+      "concepts": [
+        "Call",
+        "Observer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Oculus.ps1",
+      "concepts": [
+        "Call",
+        "Oculus"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sasha.ps1",
+      "concepts": [
+        "Call",
+        "Sasha"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Scout.ps1",
+      "concepts": [
+        "Call",
+        "Scout"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sentinel.ps1",
+      "concepts": [
+        "Call",
+        "Sentinel"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sophia.ps1",
+      "concepts": [
+        "Call",
+        "Sophia"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Atlas.ps1",
+      "concepts": [
+        "Call",
+        "Atlas"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Bridge.ps1",
+      "concepts": [
+        "Call",
+        "Bridge"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Builder.ps1",
+      "concepts": [
+        "Call",
+        "Builder"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Cipher.ps1",
+      "concepts": [
+        "Call",
+        "Cipher"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Janitor.ps1",
+      "concepts": [
+        "Call",
+        "Janitor"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Jules.ps1",
+      "concepts": [
+        "Call",
+        "Jules"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Murphy.ps1",
+      "concepts": [
+        "Call",
+        "Murphy"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Muse.ps1",
+      "concepts": [
+        "Call",
+        "Muse"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Nova.ps1",
+      "concepts": [
+        "Call",
+        "Nova"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Observer.ps1",
+      "concepts": [
+        "Call",
+        "Observer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Oculus.ps1",
+      "concepts": [
+        "Call",
+        "Oculus"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sasha.ps1",
+      "concepts": [
+        "Call",
+        "Sasha"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Scout.ps1",
+      "concepts": [
+        "Call",
+        "Scout"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sentinel.ps1",
+      "concepts": [
+        "Call",
+        "Sentinel"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sophia.ps1",
+      "concepts": [
+        "Call",
+        "Sophia"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Atlas.ps1",
+      "concepts": [
+        "Call",
+        "Atlas"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Bridge.ps1",
+      "concepts": [
+        "Call",
+        "Bridge"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Builder.ps1",
+      "concepts": [
+        "Call",
+        "Builder"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Cipher.ps1",
+      "concepts": [
+        "Call",
+        "Cipher"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Foreman.ps1",
+      "concepts": [
+        "Call",
+        "Foreman"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Jules.ps1",
+      "concepts": [
+        "Call",
+        "Jules"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Muse.ps1",
+      "concepts": [
+        "Call",
+        "Muse"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Nexus.ps1",
+      "concepts": [
+        "Call",
+        "Nexus"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Nova.ps1",
+      "concepts": [
+        "Call",
+        "Nova"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Observer.ps1",
+      "concepts": [
+        "Call",
+        "Observer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Oculus.ps1",
+      "concepts": [
+        "Call",
+        "Oculus"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Oracle.ps1",
+      "concepts": [
+        "Call",
+        "Oracle"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sasha.ps1",
+      "concepts": [
+        "Call",
+        "Sasha"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Scout.ps1",
+      "concepts": [
+        "Call",
+        "Scout"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sentinel.ps1",
+      "concepts": [
+        "Call",
+        "Sentinel"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Students\\Wrappers\\Call_Sophia.ps1",
+      "concepts": [
+        "Call",
+        "Sophia"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Daemons\\Natural_Observer.py",
+      "concepts": [
+        "Observer",
+        "Natural"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Daemons\\Natural_Observer.py",
+      "concepts": [
+        "Observer",
+        "Natural"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Auto_Doc.py",
+      "concepts": [
+        "Auto",
+        "Doc"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Auto_Doc.py",
+      "concepts": [
+        "Auto",
+        "Doc"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Auto_Doc.py",
+      "concepts": [
+        "Auto",
+        "Doc"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Auto_Doc.py",
+      "concepts": [
+        "Auto",
+        "Doc"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Brainstorm.py",
+      "concepts": [
+        "Brainstorm"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Brainstorm.py",
+      "concepts": [
+        "Brainstorm"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Brainstorm.py",
+      "concepts": [
+        "Brainstorm"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Brainstorm.py",
+      "concepts": [
+        "Brainstorm"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Clean_Sweep.py",
+      "concepts": [
+        "Clean",
+        "Sweep"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Clean_Sweep.py",
+      "concepts": [
+        "Clean",
+        "Sweep"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Clean_Sweep.py",
+      "concepts": [
+        "Clean",
+        "Sweep"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Clean_Sweep.py",
+      "concepts": [
+        "Clean",
+        "Sweep"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Content_Generator.py",
+      "concepts": [
+        "Content",
+        "Generator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Content_Generator.py",
+      "concepts": [
+        "Content",
+        "Generator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Content_Generator.py",
+      "concepts": [
+        "Content",
+        "Generator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Content_Generator.py",
+      "concepts": [
+        "Content",
+        "Generator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Github_Scanner.py",
+      "concepts": [
+        "Scanner",
+        "Github"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Github_Scanner.py",
+      "concepts": [
+        "Scanner",
+        "Github"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Github_Scanner.py",
+      "concepts": [
+        "Scanner",
+        "Github"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Github_Scanner.py",
+      "concepts": [
+        "Scanner",
+        "Github"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Heady_Crypt.py",
+      "concepts": [
+        "Heady",
+        "Crypt"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Heady_Crypt.py",
+      "concepts": [
+        "Heady",
+        "Crypt"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Heady_Crypt.py",
+      "concepts": [
+        "Heady",
+        "Crypt"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Heady_Crypt.py",
+      "concepts": [
+        "Heady",
+        "Crypt"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Hydrator.py",
+      "concepts": [
+        "Hydrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Hydrator.py",
+      "concepts": [
+        "Hydrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Hydrator.py",
+      "concepts": [
+        "Hydrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Hydrator.py",
+      "concepts": [
+        "Hydrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\MCP\\Client.py",
+      "concepts": [
+        "Client"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\MCP\\Client.py",
+      "concepts": [
+        "Client"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\MCP\\Client.py",
+      "concepts": [
+        "Client"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\MCP\\Client.py",
+      "concepts": [
+        "Client"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\MCP\\Server.py",
+      "concepts": [
+        "Server"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\MCP\\Server.py",
+      "concepts": [
+        "Server"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\MCP\\Server.py",
+      "concepts": [
+        "Server"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Network\\Warp_Manager.py",
+      "concepts": [
+        "Warp",
+        "Manager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Network\\Warp_Manager.py",
+      "concepts": [
+        "Warp",
+        "Manager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Network\\Warp_Manager.py",
+      "concepts": [
+        "Warp",
+        "Manager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Network\\Warp_Manager.py",
+      "concepts": [
+        "Warp",
+        "Manager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\Auth_Protocol.py",
+      "concepts": [
+        "Auth",
+        "Protocol",
+        "AuthProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\MCP_Auth.py",
+      "concepts": [
+        "Auth",
+        "MCPAuthManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\Auth_Protocol.py",
+      "concepts": [
+        "Auth",
+        "Protocol",
+        "AuthProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\MCP_Auth.py",
+      "concepts": [
+        "Auth",
+        "MCPAuthManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Security\\Auth_Protocol.py",
+      "concepts": [
+        "Auth",
+        "Protocol",
+        "AuthProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Security\\Auth_Protocol.py",
+      "concepts": [
+        "Auth",
+        "Protocol",
+        "AuthProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Grand_Build_Protocol.ps1",
+      "concepts": [
+        "Protocol",
+        "SacredGeometry",
+        "Grand",
+        "Build"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Tool_Learner.py",
+      "concepts": [
+        "Tool",
+        "Learner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Tool_Learner.py",
+      "concepts": [
+        "Tool",
+        "Learner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Tool_Learner.py",
+      "concepts": [
+        "Tool",
+        "Learner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Tool_Learner.py",
+      "concepts": [
+        "Tool",
+        "Learner"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Visualizer.py",
+      "concepts": [
+        "Visualizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\GoldenMaster_HeadySystems\\Heady\\HeadyAcademy\\Tools\\Visualizer.py",
+      "concepts": [
+        "Visualizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyConnection\\Heady\\HeadyAcademy\\Tools\\Visualizer.py",
+      "concepts": [
+        "Visualizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\Tools\\Visualizer.py",
+      "concepts": [
+        "Visualizer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyEcosystem\\apps\\api\\src\\services\\task.service.ts",
+      "concepts": [
+        "TaskService"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyEcosystem\\services\\browser-automation\\src\\index.ts",
+      "concepts": [
+        "TaskConfig",
+        "Action",
+        "BrowserAutomationService"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\governance-client.ts",
+      "concepts": [
+        "GovernanceStandard",
+        "ComplianceReport",
+        "Concept",
+        "GovernanceClient"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\dev\\types\\routes.d.ts",
+      "concepts": [
+        "AppRoutes",
+        "PageRoutes",
+        "LayoutRoutes",
+        "RedirectRoutes",
+        "RewriteRoutes",
+        "Routes",
+        "ParamMap",
+        "ParamsOf",
+        "LayoutSlotMap",
+        "PageProps",
+        "LayoutProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\types\\routes.d.ts",
+      "concepts": [
+        "AppRoutes",
+        "PageRoutes",
+        "LayoutRoutes",
+        "RedirectRoutes",
+        "RewriteRoutes",
+        "Routes",
+        "ParamMap",
+        "ParamsOf",
+        "LayoutSlotMap",
+        "PageProps",
+        "LayoutProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-lens\\.next\\types\\app\\layout.ts",
+      "concepts": [
+        "PageProps",
+        "LayoutProps",
+        "TEntry",
+        "PageParams",
+        "RevalidateRange",
+        "OmitWithTag",
+        "Diff",
+        "FirstArg",
+        "SecondArg",
+        "MaybeField",
+        "Numeric",
+        "Zero",
+        "Negative",
+        "NonNegative"
+      ],
+      "exists": false
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-lens\\.next\\types\\app\\page.ts",
+      "concepts": [
+        "PageProps",
+        "LayoutProps",
+        "TEntry",
+        "PageParams",
+        "RevalidateRange",
+        "OmitWithTag",
+        "Diff",
+        "FirstArg",
+        "SecondArg",
+        "MaybeField",
+        "Numeric",
+        "Zero",
+        "Negative",
+        "NonNegative"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\types\\app\\api\\status\\route.ts",
+      "concepts": [
+        "PageProps",
+        "LayoutProps",
+        "TEntry",
+        "PageParams",
+        "RevalidateRange",
+        "OmitWithTag",
+        "Diff",
+        "FirstArg",
+        "SecondArg",
+        "MaybeField",
+        "Numeric",
+        "Zero",
+        "Negative",
+        "NonNegative",
+        "ParamCheck"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\types\\app\\page.ts",
+      "concepts": [
+        "PageProps",
+        "LayoutProps",
+        "TEntry",
+        "PageParams",
+        "RevalidateRange",
+        "OmitWithTag",
+        "Diff",
+        "FirstArg",
+        "SecondArg",
+        "MaybeField",
+        "Numeric",
+        "Zero",
+        "Negative",
+        "NonNegative"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\types\\app\\api\\status\\route.ts",
+      "concepts": [
+        "PageProps",
+        "LayoutProps",
+        "TEntry",
+        "PageParams",
+        "RevalidateRange",
+        "OmitWithTag",
+        "Diff",
+        "FirstArg",
+        "SecondArg",
+        "MaybeField",
+        "Numeric",
+        "Zero",
+        "Negative",
+        "NonNegative",
+        "ParamCheck"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\types\\app\\page.ts",
+      "concepts": [
+        "PageProps",
+        "LayoutProps",
+        "TEntry",
+        "PageParams",
+        "RevalidateRange",
+        "OmitWithTag",
+        "Diff",
+        "FirstArg",
+        "SecondArg",
+        "MaybeField",
+        "Numeric",
+        "Zero",
+        "Negative",
+        "NonNegative"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\app\\page_client-reference-manifest.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\CascadeProjects_HeadyGenesis_61ae08a4._.js",
+      "concepts": [
+        "SacredGeometry",
+        "HeadyGenesis",
+        "CascadeProjects"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\CascadeProjects_HeadyGenesis_660722d8._.js",
+      "concepts": [
+        "SacredGeometry",
+        "HeadyGenesis",
+        "CascadeProjects"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\static\\chunks\\c64739c73e736673.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\app\\page.tsx",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\ui\\src\\components\\SacredGeometry\\BreathingOrb.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "BreathingOrb",
+        "BreathingOrbProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\ui\\src\\components\\SacredGeometry\\SacredCard.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "SacredCard",
+        "SacredCardProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\ui\\src\\components\\SacredGeometry\\SacredContainer.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "SacredContainer",
+        "SacredContainerProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\ui\\src\\index.ts",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\client\\App.tsx",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\app\\(tabs)\\index.tsx",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\app\\(tabs)\\nodes.tsx",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\app\\(tabs)\\tasks.tsx",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\components\\SacredGeometry\\SacredCard.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "SacredCard",
+        "SacredCardProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\components\\SacredGeometry\\SacredContainer.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "SacredContainer",
+        "SacredContainerProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\server\\app\\page.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\server\\app\\page_client-reference-manifest.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\server\\app\\_not-found\\page_client-reference-manifest.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\server\\chunks\\383.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\static\\chunks\\app\\layout-830f59a7d2676efa.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\.next\\static\\chunks\\app\\page-f25985d1723f9cff.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\src\\app\\page.tsx",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\src\\components\\LiveStatusOrbs.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "ServiceStatus",
+        "LiveStatusOrbs"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\server\\app\\page.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\server\\app\\page_client-reference-manifest.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\server\\app\\_not-found\\page_client-reference-manifest.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\server\\chunks\\606.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\static\\chunks\\app\\layout-e22558563d321f14.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\.next\\static\\chunks\\app\\page-62f13fa4be24cc60.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\src\\app\\page.tsx",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-systems\\src\\components\\LiveStatusOrbs.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "ServiceStatus",
+        "LiveStatusOrbs"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\heady-manager.js",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\Heady\\HeadyAcademy\\launch_heady.ps1",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\SacredGeometry\\BreathingOrb.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "BreathingOrb",
+        "BreathingOrbProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\SacredGeometry\\SacredCard.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "SacredCard",
+        "SacredCardProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\SacredGeometry\\SacredContainer.tsx",
+      "concepts": [
+        "SacredGeometry",
+        "SacredContainer",
+        "SacredContainerProps",
+        "ClassValue"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\index.ts",
+      "concepts": [
+        "SacredGeometry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\81458_HeadyGenesis_apps_web__next-internal_server_app_page_actions_d92b66e8.js",
+      "concepts": [
+        "HeadyGenesis"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\CascadeProjects_HeadyGenesis_9a9f6ced._.js",
+      "concepts": [
+        "HeadyGenesis",
+        "CascadeProjects"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\CascadeProjects_HeadyGenesis_apps_web_app_layout_tsx_27939788._.js",
+      "concepts": [
+        "HeadyGenesis",
+        "CascadeProjects"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\CascadeProjects_HeadyGenesis_bf03a4ab._.js",
+      "concepts": [
+        "HeadyGenesis",
+        "CascadeProjects"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\apps\\web\\.next\\server\\chunks\\ssr\\CascadeProjects_HeadyGenesis_dcac4531._.js",
+      "concepts": [
+        "HeadyGenesis",
+        "CascadeProjects"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\core\\src\\application\\greeting\\get-greeting.ts",
+      "concepts": [
+        "GetGreetingRequest",
+        "GetGreetingResponse",
+        "GetGreeting"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\core\\src\\application\\use-case.ts",
+      "concepts": [
+        "UseCase"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\core\\src\\domain\\base\\domain-event.ts",
+      "concepts": [
+        "DomainEvent",
+        "Handle"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\core\\src\\domain\\base\\entity.ts",
+      "concepts": [
+        "Entity"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\core\\src\\domain\\base\\value-object.ts",
+      "concepts": [
+        "ValueObject"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\core\\src\\domain\\greeting\\greeting.ts",
+      "concepts": [
+        "GreetingProps",
+        "Greeting"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\ui\\src\\components\\Button.tsx",
+      "concepts": [
+        "Button",
+        "ButtonProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\Button.tsx",
+      "concepts": [
+        "Button",
+        "ButtonProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\components\\ui.tsx",
+      "concepts": [
+        "ButtonProps",
+        "ClassValue",
+        "GradientCardProps",
+        "MetricCardProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\ui\\src\\components\\GreetingCard.tsx",
+      "concepts": [
+        "GreetingCard",
+        "GreetingCardProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadyGenesis\\packages\\ui\\src\\components\\SacredGeometry\\GoldenSpiral.tsx",
+      "concepts": [
+        "GoldenSpiral",
+        "GoldenSpiralProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\SacredGeometry\\GoldenSpiral.tsx",
+      "concepts": [
+        "GoldenSpiral",
+        "GoldenSpiralProps",
+        "ClassValue"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\governance-worker\\src\\engine.ts",
+      "concepts": [
+        "GovernanceEngine"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\governance-worker\\worker-configuration.d.ts",
+      "concepts": [
+        "Env"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\infra\\cloudflare-workers\\edge-router.ts",
+      "concepts": [
+        "Env"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\client\\components\\AIAssistantPanel.tsx",
+      "concepts": [
+        "Message",
+        "ContextItem"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\context\\schema.ts",
+      "concepts": [
+        "ContextItem",
+        "ValidationResult",
+        "ContextExtractor",
+        "ContextValidator",
+        "DeterministicPipeline"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\client\\components\\ArenaMode.tsx",
+      "concepts": [
+        "ArenaMode",
+        "ArenaModeProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\client\\components\\TaskMonitor.tsx",
+      "concepts": [
+        "TaskMonitor",
+        "Task",
+        "SystemMetrics",
+        "Alert"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\task-router.ts",
+      "concepts": [
+        "Task",
+        "TaskResult",
+        "TaskRouter"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\shared\\types.ts",
+      "concepts": [
+        "Task",
+        "SystemMetrics",
+        "TaskResult",
+        "TaskType",
+        "MCPServiceInfo",
+        "MCPServiceStatus",
+        "ApiResponse",
+        "HealthResponse",
+        "ServiceMetrics",
+        "QueueStatus",
+        "QueuedTaskInfo",
+        "SocketEvent",
+        "SocketMessage",
+        "ScreenshotRequest",
+        "ScreenshotResult",
+        "ServerConfig",
+        "User",
+        "AuthRequest",
+        "ErrorResponse"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\types\\index.ts",
+      "concepts": [
+        "Task",
+        "SystemMetrics",
+        "Alert",
+        "ServiceStatus"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\optimized-task-router.d.ts",
+      "concepts": [
+        "Task",
+        "TaskResult",
+        "RoutingDecision",
+        "OptimizedTaskRouter"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\optimized-task-router.ts",
+      "concepts": [
+        "Task",
+        "TaskResult",
+        "RoutingDecision",
+        "OptimizedTaskRouter"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\types\\task.types.d.ts",
+      "concepts": [
+        "Task",
+        "TaskExecutor",
+        "TaskEvent",
+        "TaskMetrics"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\types\\task.types.ts",
+      "concepts": [
+        "Task",
+        "TaskExecutor",
+        "TaskEvent",
+        "TaskMetrics"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\monitoring-service.ts",
+      "concepts": [
+        "SystemMetrics",
+        "Alert",
+        "ServiceStatus",
+        "MonitoringService"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\client\\vite-env.d.ts",
+      "concepts": [
+        "ImportMetaEnv",
+        "ImportMeta"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\api\\task-routes.ts",
+      "concepts": [
+        "Router"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\middleware\\error-handler.ts",
+      "concepts": [
+        "AppError",
+        "ValidationError",
+        "UnauthorizedError",
+        "NotFoundError",
+        "MCPServiceError",
+        "TaskExecutionError"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\middleware\\rate-limiter.ts",
+      "concepts": [
+        "RateLimitConfig",
+        "RateLimitStore",
+        "RateLimiter"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\gist-manager.ts",
+      "concepts": [
+        "GistFile",
+        "GistMetadata",
+        "GistManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\mcp-client.ts",
+      "concepts": [
+        "MCPService",
+        "MCPRequest",
+        "MCPResponse",
+        "MCPClient"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\mcp-manager.ts",
+      "concepts": [
+        "MCPConfig",
+        "MCPManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\node-registry.ts",
+      "concepts": [
+        "NodeName",
+        "SystemNode",
+        "NodeRegistry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\persistent-task-manager.ts",
+      "concepts": [
+        "PersistentTaskManagerService"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\resource-allocator.ts",
+      "concepts": [
+        "ResourceAllocatorConfig",
+        "AllocationUpdate",
+        "ResourceAllocatorStatus",
+        "ResourceAllocator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\services\\task-queue.ts",
+      "concepts": [
+        "QueuedTask",
+        "TaskQueue"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\task-queue.d.ts",
+      "concepts": [
+        "TaskQueue",
+        "QueueConfig"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\task-queue.js",
+      "concepts": [
+        "TaskQueue"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\task-queue.ts",
+      "concepts": [
+        "TaskQueue",
+        "QueueConfig"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\utils\\metrics.ts",
+      "concepts": [
+        "Metric",
+        "ServiceHealth",
+        "MetricsCollector"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\monitoring\\metrics-collector.d.ts",
+      "concepts": [
+        "MetricsCollector"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\monitoring\\metrics-collector.js",
+      "concepts": [
+        "MetricsCollector"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\monitoring\\metrics-collector.ts",
+      "concepts": [
+        "MetricsCollector"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\heady-automation-ide\\src\\server\\websocket\\realtime-events.ts",
+      "concepts": [
+        "RealtimeEventsHandler"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\mobile\\components\\SocketProvider.tsx",
+      "concepts": [
+        "SocketProvider",
+        "SocketContextType",
+        "SocketProviderProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\apps\\web-heady-connection\\src\\components\\LiveStatus.tsx",
+      "concepts": [
+        "LiveStatus"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\auth\\schema.ts",
+      "concepts": [
+        "AuthToken",
+        "Session",
+        "SessionManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\context\\client.ts",
+      "concepts": [
+        "ContextClientOptions",
+        "ContextClient"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\context\\protocol.ts",
+      "concepts": [
+        "ContextMessage",
+        "ServiceDescriptor",
+        "ContextObserver",
+        "DeterministicClock"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\context\\state-store.ts",
+      "concepts": [
+        "ContextEvent",
+        "SystemContext",
+        "ServiceState",
+        "DeterministicStateStore"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\core-domain\\src\\scp\\schema.ts",
+      "concepts": [
+        "SystemComponent",
+        "ComponentMetadata",
+        "ComponentRegistry"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\api\\rest-api.d.ts",
+      "concepts": [
+        "TaskRestAPI"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\api\\rest-api.js",
+      "concepts": [
+        "TaskRestAPI"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\api\\rest-api.ts",
+      "concepts": [
+        "TaskRestAPI"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\arena-manager.d.ts",
+      "concepts": [
+        "ArenaManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\arena-protocol.d.ts",
+      "concepts": [
+        "ArenaConfig",
+        "ArenaMatch",
+        "MatchRound",
+        "PlayerSubmission",
+        "ArenaEvent",
+        "ArenaProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\arena-protocol.ts",
+      "concepts": [
+        "ArenaConfig",
+        "ArenaMatch",
+        "MatchRound",
+        "PlayerSubmission",
+        "ArenaEvent",
+        "ArenaProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\communication-protocol.d.ts",
+      "concepts": [
+        "ProtocolMessage",
+        "ProtocolConfig",
+        "NodeCommunicationProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\communication-protocol.ts",
+      "concepts": [
+        "ProtocolMessage",
+        "ProtocolConfig",
+        "NodeCommunicationProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\communication-protocol.js",
+      "concepts": [
+        "NodeCommunicationProtocol"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\deterministic-workflow.d.ts",
+      "concepts": [
+        "WorkflowStep",
+        "Workflow",
+        "WorkflowExecution",
+        "DeterministicWorkflowEngine"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\deterministic-workflow.ts",
+      "concepts": [
+        "WorkflowStep",
+        "Workflow",
+        "WorkflowExecution",
+        "DeterministicWorkflowEngine"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\deterministic-workflow.js",
+      "concepts": [
+        "DeterministicWorkflowEngine"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\node-orchestrator.d.ts",
+      "concepts": [
+        "NodeMessage",
+        "NodeCapabilities",
+        "RoutingStrategy",
+        "NodeOrchestrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\node-orchestrator.ts",
+      "concepts": [
+        "NodeMessage",
+        "NodeCapabilities",
+        "RoutingStrategy",
+        "NodeOrchestrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\node-orchestrator.js",
+      "concepts": [
+        "NodeOrchestrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\optimized-task-router.js",
+      "concepts": [
+        "OptimizedTaskRouter"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\system-integrator.d.ts",
+      "concepts": [
+        "SystemConfig",
+        "SystemStatus",
+        "SystemIntegrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\system-integrator.ts",
+      "concepts": [
+        "SystemConfig",
+        "SystemStatus",
+        "SystemIntegrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\system-integrator.js",
+      "concepts": [
+        "SystemIntegrator"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\task-manager.d.ts",
+      "concepts": [
+        "TaskManagerConfig",
+        "TaskManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\task-manager.ts",
+      "concepts": [
+        "TaskManagerConfig",
+        "TaskManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\task-manager.js",
+      "concepts": [
+        "TaskManager"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\websocket-server.d.ts",
+      "concepts": [
+        "WebSocketConfig",
+        "TaskWebSocketServer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\websocket-server.ts",
+      "concepts": [
+        "WebSocketConfig",
+        "TaskWebSocketServer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\core\\websocket-server.js",
+      "concepts": [
+        "TaskWebSocketServer"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\index.d.ts",
+      "concepts": [
+        "TaskSystemConfig",
+        "TaskSystem"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\index.ts",
+      "concepts": [
+        "TaskSystemConfig",
+        "TaskSystem"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\index.js",
+      "concepts": [
+        "TaskSystem"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\monitoring\\performance-monitor.d.ts",
+      "concepts": [
+        "MetricPoint",
+        "PerformanceMetrics",
+        "HealthCheck",
+        "PerformanceMonitor"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\monitoring\\performance-monitor.ts",
+      "concepts": [
+        "MetricPoint",
+        "PerformanceMetrics",
+        "HealthCheck",
+        "PerformanceMonitor"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\monitoring\\performance-monitor.js",
+      "concepts": [
+        "PerformanceMonitor"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\persistence\\task-repository.d.ts",
+      "concepts": [
+        "TaskRepository"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\persistence\\task-repository.js",
+      "concepts": [
+        "TaskRepository",
+        "VARCHAR"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\task-manager\\src\\persistence\\task-repository.ts",
+      "concepts": [
+        "TaskRepository",
+        "VARCHAR"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\Card.tsx",
+      "concepts": [
+        "Card",
+        "CardProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\Footer.tsx",
+      "concepts": [
+        "Footer",
+        "FooterProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\SacredGeometry\\FractalGrid.tsx",
+      "concepts": [
+        "FractalGrid",
+        "FractalGridProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\SacredGeometry\\NeuralMesh.tsx",
+      "concepts": [
+        "NeuralMesh",
+        "NeuralMeshProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\Sidebar.tsx",
+      "concepts": [
+        "Sidebar",
+        "SidebarItem",
+        "SidebarProps"
+      ],
+      "exists": true
+    },
+    {
+      "path": "C:\\Users\\erich\\CascadeProjects\\HeadySystems\\packages\\ui\\src\\components\\StatusBadge.tsx",
+      "concepts": [
+        "StatusBadge",
+        "StatusBadgeProps"
+      ],
+      "exists": true
+    }
+  ],
   "directories": [],
   "dependencies": {},
-  "metadata": {}
+  "metadata": {
+    "sources": [
+      {
+        "type": "codemap",
+        "path": "c:\\Users\\erich\\Heady\\.heady-context\\codemap.json",
+        "timestamp": "2026-02-02T21:55:48.545Z",
+        "version": "1.0.0"
+      },
+      {
+        "type": "codemap",
+        "path": "c:\\Users\\erich\\Projects\\packages\\shared\\state\\codemap.json",
+        "timestamp": "2026-01-31T22:23:00Z",
+        "version": "1.0"
+      },
+      {
+        "type": "codemap",
+        "path": "c:\\Users\\erich\\Projects\\_archive\\shared_legacy\\state\\codemap.json",
+        "timestamp": "2026-01-31T22:23:00Z",
+        "version": "1.0"
+      },
+      {
+        "type": "concept_registry",
+        "path": "c:\\Users\\erich\\CascadeProjects\\heady_concept_registry.json"
+      },
+      {
+        "type": "project_context",
+        "path": "c:\\Users\\erich\\Heady\\.heady-context\\project-context.json",
+        "timestamp": "2026-02-02T21:55:48.546Z"
+      },
+      {
+        "type": "heady_registry",
+        "path": "c:\\Users\\erich\\Heady\\.heady-memory\\heady-registry.json"
+      }
+    ],
+    "services": {
+      "secret_gateway": {
+        "path": "HeadySystems/services/secret_gateway",
+        "status": "ACTIVE"
+      },
+      "google_mcp": {
+        "path": "HeadySystems/services/google_mcp",
+        "status": "ACTIVE"
+      },
+      "perplexity_mcp": {
+        "path": "HeadySystems/services/perplexity_mcp",
+        "status": "ACTIVE"
+      },
+      "jules_mcp": {
+        "path": "HeadySystems/services/jules_mcp",
+        "status": "ACTIVE"
+      },
+      "huggingface_gateway": {
+        "path": "HeadySystems/services/huggingface_gateway",
+        "status": "ACTIVE"
+      },
+      "memory_mcp": {
+        "path": "HeadySystems/services/memory_mcp",
+        "status": "ACTIVE"
+      },
+      "ai_router": {
+        "path": "HeadySystems/services/ai_router",
+        "status": "ACTIVE"
+      },
+      "cli_service": {
+        "path": "HeadySystems/services/cli_service",
+        "status": "ACTIVE"
+      },
+      "colab_gateway": {
+        "path": "HeadySystems/services/colab_gateway",
+        "status": "ACTIVE"
+      },
+      "silicon_bridge": {
+        "path": "HeadySystems/services/silicon_bridge",
+        "status": "ACTIVE"
+      },
+      "model_gateway": {
+        "path": "HeadySystems/services/model_gateway",
+        "status": "ACTIVE"
+      }
+    },
+    "infrastructure": {
+      "docker_compose": {
+        "path": "docker-compose.yml",
+        "services": 8
+      },
+      "cloudflare_workers": {
+        "supervisor_worker": "HeadySystems/cloudflare/supervisor-worker",
+        "node_swarm_worker": "HeadySystems/cloudflare/node_swarm_worker"
+      },
+      "github_workflows": {
+        "heady_orchestrator": ".github/workflows/heady-orchestrator.yml",
+        "supervisor_enforce": ".github/workflows/supervisor-enforce.yml"
+      }
+    },
+    "concepts": 293,
+    "agents": 0,
+    "tools": 0
+  }
 }

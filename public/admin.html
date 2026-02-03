@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heady Admin UI</title>
     <link rel="stylesheet" href="/heady-theme.css">
+    <link rel="stylesheet" href="/css/sacred-geometry.css">
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -811,37 +812,50 @@
             }
             
             return (
-                <div className="container">
-                    <div className="header">
-                        <h1>Heady Admin UI</h1>
+                <div className="container sacred-container">
+                    <div className="sacred-canvas"></div>
+                    <div className="header sacred-header">
+                        <div className="brand-container">
+                            <img src="/assets/images/HC-Logo.png" className="brand-logo" alt="HeadyConnection" />
+                            <img src="/assets/images/HS-Logo.png" className="brand-logo" alt="HeadySystems" />
+                        </div>
+                        <h1 className="sacred-title">Heady Admin UI</h1>
                         <p style={{ color: 'var(--text-secondary)' }}>
                             System Management & Configuration Interface
                         </p>
                     </div>
                     
-                    <div className="tabs">
-                        <button className={`tab ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
+                    <div className="foundation-badge">
+                        <img src="/assets/images/HC-favicon.png" title="HeadyConnection Foundation" />
+                        <img src="/assets/images/HS-favicon.png" title="HeadySystems Core" />
+                    </div>
+                    
+                    <div className="tabs sacred-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '10px', marginBottom: '20px' }}>
+                        <button className={`tab sacred-button ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
                             Dashboard
                         </button>
-                        <button className={`tab ${activeTab === 'files' ? 'active' : ''}`} onClick={() => setActiveTab('files')}>
+                        <button className={`tab sacred-button ${activeTab === 'autobuild' ? 'active' : ''}`} onClick={() => setActiveTab('autobuild')}>
+                            🏗️ AutoBuild
+                        </button>
+                        <button className={`tab sacred-button ${activeTab === 'files' ? 'active' : ''}`} onClick={() => setActiveTab('files')}>
                             Files
                         </button>
-                        <button className={`tab ${activeTab === 'config' ? 'active' : ''}`} onClick={() => setActiveTab('config')}>
+                        <button className={`tab sacred-button ${activeTab === 'config' ? 'active' : ''}`} onClick={() => setActiveTab('config')}>
                             Configuration
                         </button>
-                        <button className={`tab ${activeTab === 'gpu' ? 'active' : ''}`} onClick={() => setActiveTab('gpu')}>
+                        <button className={`tab sacred-button ${activeTab === 'gpu' ? 'active' : ''}`} onClick={() => setActiveTab('gpu')}>
                             GPU Settings
                         </button>
-                        <button className={`tab ${activeTab === 'logs' ? 'active' : ''}`} onClick={() => setActiveTab('logs')}>
+                        <button className={`tab sacred-button ${activeTab === 'logs' ? 'active' : ''}`} onClick={() => setActiveTab('logs')}>
                             Logs
                         </button>
                     </div>
                     
-                    <div className="content">
+                    <div className="content sacred-card">
                         {activeTab === 'dashboard' && (
                             <div>
                                 <div className="grid">
-                                    <div className="card">
+                                    <div className="card sacred-card">
                                         <h3>System Status</h3>
                                         <div style={{ marginBottom: '15px' }}>
                                             <span className="status online">Online</span>
@@ -849,20 +863,20 @@
                                         <p>Heady Manager is running and responsive</p>
                                     </div>
                                     
-                                    <div className="card">
+                                    <div className="card sacred-card">
                                         <h3>Quick Actions</h3>
                                         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                                            <button className="btn btn-success" onClick={runBuild}>
+                                            <button className="btn sacred-button" onClick={runBuild}>
                                                 Run Build
                                             </button>
-                                            <button className="btn btn-warning" onClick={runAudit}>
+                                            <button className="btn sacred-button" style={{ filter: 'hue-rotate(45deg)' }} onClick={runAudit}>
                                                 Run Audit
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <div className="card" style={{ marginTop: '20px' }}>
+                                <div className="card sacred-card" style={{ marginTop: '20px' }}>
                                     <h3>System Information</h3>
                                     <div className="grid">
                                         <div>
@@ -878,6 +892,8 @@
                                 </div>
                             </div>
                         )}
+                        
+                        {activeTab === 'autobuild' && <HCAutoBuildPanel showToast={showToast} />}
                         
                         {activeTab === 'files' && (
                             <div className="grid">

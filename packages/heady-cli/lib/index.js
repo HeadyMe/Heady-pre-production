@@ -393,8 +393,37 @@ class HeadyCLI {
   }
 
   async invokeOrchestrator(path, method = 'GET', body = null) {
-    let lastError;
+    // Try routing through HeadyMCP first
+    try {
+      const mcpUrl = 'http://localhost:3300/api/mcp/orchestrator';
+      const mcpBody = {
+        method,
+        path,
+        body
+      };
+      
+      const headers = { 'Content-Type': 'application/json' };
+      if (process.env.HEADY_API_KEY) {
+        headers['x-heady-api-key'] = process.env.HEADY_API_KEY;
+      }
+      
+      const response = await fetch(mcpUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(mcpBody),
+        timeout: 5000
+      });
+      
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (error) {
+      // Fallback to direct orchestrator call
+      this.logger.warn('HeadyMCP unavailable, using direct orchestrator');
+    }
     
+    // Fallback: Direct orchestrator call
+    let lastError;
     for (const base of this.orchestratorBases) {
       try {
         const url = `${base}${path}`;

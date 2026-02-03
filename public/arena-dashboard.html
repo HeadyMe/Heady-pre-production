@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heady Arena Dashboard - Windsurf Convergence</title>
     <script src="/heady-design-system.js"></script>
+    <link rel="stylesheet" href="/css/sacred-geometry.css">
     <style>
         * {
             margin: 0;
@@ -14,7 +15,12 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #020208;
+            background-color: #020208;
+            background-image: url('assets/images/background-2.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
             color: #e0e0e0;
             min-height: 100vh;
             overflow-x: hidden;
@@ -492,11 +498,20 @@
 <body>
     <canvas id="cosmic-background"></canvas>
 
-    <div class="container">
-        <header>
-            <h1>∞ HEADY ARENA DASHBOARD ∞</h1>
+    <div class="container sacred-container">
+        <header class="sacred-header">
+            <div class="brand-container">
+                <img src="assets/images/HC-Logo.png" class="brand-logo" alt="HeadyConnection" />
+                <img src="assets/images/HS-Logo.png" class="brand-logo" alt="HeadySystems" />
+            </div>
+            <h1 class="sacred-title">∞ HEADY ARENA DASHBOARD ∞</h1>
             <p class="subtitle">Windsurf Convergence • Multi-Model Orchestration • Sacred Intelligence</p>
         </header>
+
+        <div class="foundation-badge">
+            <img src="assets/images/HC-favicon.png" title="HeadyConnection Foundation" />
+            <img src="assets/images/HS-favicon.png" title="HeadySystems Core" />
+        </div>
 
         <div class="arena-stats">
             <div class="stat-card">
@@ -521,22 +536,22 @@
             </div>
         </div>
 
-        <div class="graph-container">
+        <div class="graph-container sacred-card">
             <div class="graph-header">
                 <div class="graph-title">
                     <span>🌐</span>
                     Global Workspace Graph
                 </div>
                 <div class="graph-controls">
-                    <button class="graph-btn active" onclick="setGraphLayout('force')">Force</button>
-                    <button class="graph-btn" onclick="setGraphLayout('radial')">Radial</button>
-                    <button class="graph-btn" onclick="setGraphLayout('hierarchical')">Hierarchical</button>
+                    <button class="graph-btn active sacred-button" onclick="setGraphLayout('force')">Force</button>
+                    <button class="graph-btn sacred-button" onclick="setGraphLayout('radial')">Radial</button>
+                    <button class="graph-btn sacred-button" onclick="setGraphLayout('hierarchical')">Hierarchical</button>
                 </div>
             </div>
             <canvas id="global-graph"></canvas>
         </div>
 
-        <div class="convergence-board">
+        <div class="convergence-board sacred-card">
             <div class="board-title">
                 <span>🎯</span>
                 Convergence Pipeline
@@ -576,10 +591,10 @@
         <div class="workspace-grid" id="workspace-grid"></div>
 
         <div class="action-panel">
-            <button class="heady-btn" onclick="refreshArena()">🔄 Refresh Arena</button>
-            <button class="heady-btn heady-btn-secondary" onclick="scanWorkspaces()">🔍 Scan Workspaces</button>
-            <button class="heady-btn heady-btn-success" onclick="prepareSquashMerge()">✓ Prepare Squash Merge</button>
-            <button class="heady-btn heady-btn-danger" onclick="runDemo()">▶ Run Demo Mode</button>
+            <button class="heady-btn sacred-button" onclick="refreshArena()">🔄 Refresh Arena</button>
+            <button class="heady-btn heady-btn-secondary sacred-button" onclick="scanWorkspaces()">🔍 Scan Workspaces</button>
+            <button class="heady-btn heady-btn-success sacred-button" onclick="prepareSquashMerge()">✓ Prepare Squash Merge</button>
+            <button class="heady-btn heady-btn-danger sacred-button" onclick="runDemo()">▶ Run Demo Mode</button>
         </div>
     </div>
 

@@ -90,6 +90,16 @@
         "CLOUDFLARE_API_TOKEN": "${COPILOT_MCP_CLOUDFLARE_API_TOKEN}",
         "CLOUDFLARE_ACCOUNT_ID": "${COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID}"
       }
+    },
+    "heady-autobuild": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-autobuild/server.js"
+      ],
+      "governance": {
+        "requireConfirmation": ["hc_autobuild_merge", "hc_autobuild_deploy"],
+        "auditAll": true
+      }
     }
   },
   "gateway": {

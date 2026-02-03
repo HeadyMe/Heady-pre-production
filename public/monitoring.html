@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Heady Monitoring Dashboard</title>
+    <link rel="stylesheet" href="/css/sacred-geometry.css">
+    <script src="/heady-design-system.js"></script>
     <style>
         :root {
             --primary: #6B46C1;
@@ -22,7 +24,12 @@
 
         body {
             font-family: 'Inter', system-ui, sans-serif;
-            background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+            background-color: #020208;
+            background-image: url('assets/images/background-1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
             color: var(--light);
             min-height: 100vh;
             overflow-x: hidden;
@@ -191,48 +198,57 @@
 <body>
     <canvas class="sacred-pattern" id="sacredCanvas"></canvas>
     
-    <div class="container">
-        <header>
-            <h1>⬡ Heady Monitoring ⬡</h1>
+    <div class="container sacred-container">
+        <header class="sacred-header">
+            <div class="brand-container">
+                <img src="assets/images/HC-Logo.png" class="brand-logo" alt="HeadyConnection" />
+                <img src="assets/images/HS-Logo.png" class="brand-logo" alt="HeadySystems" />
+            </div>
+            <h1 class="sacred-title">⬡ Heady Monitoring ⬡</h1>
             <div class="subtitle">Real-time System Metrics & Sacred Geometry</div>
         </header>
+
+        <div class="foundation-badge">
+            <img src="assets/images/HC-favicon.png" title="HeadyConnection Foundation" />
+            <img src="assets/images/HS-favicon.png" title="HeadySystems Core" />
+        </div>
 
         <div class="alert-banner" id="alertBanner">
             <strong>⚠️ System Alert:</strong> <span id="alertMessage"></span>
         </div>
 
         <div class="metrics-grid">
-            <div class="metric-card">
+            <div class="metric-card sacred-card">
                 <div class="metric-label">CPU Usage</div>
                 <div class="metric-value" id="cpuMetric">0%</div>
                 <div class="metric-trend" id="cpuTrend">↑ +5%</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card sacred-card">
                 <div class="metric-label">Memory Usage</div>
                 <div class="metric-value" id="memoryMetric">0 MB</div>
                 <div class="metric-trend" id="memoryTrend">→ Stable</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card sacred-card">
                 <div class="metric-label">MCP Calls</div>
                 <div class="metric-value" id="mcpCalls">0</div>
                 <div class="metric-trend" id="mcpTrend">↑ +12</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card sacred-card">
                 <div class="metric-label">Graph Nodes</div>
                 <div class="metric-value" id="graphNodes">0</div>
                 <div class="metric-trend">→ Stable</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card sacred-card">
                 <div class="metric-label">Active Workflows</div>
                 <div class="metric-value" id="activeWorkflows">0</div>
                 <div class="metric-trend">↓ -2</div>
             </div>
             
-            <div class="metric-card">
+            <div class="metric-card sacred-card">
                 <div class="metric-label">Fractal Depth</div>
                 <div class="metric-value" id="fractalDepth">5</div>
                 <div class="metric-trend">→ Optimal</div>
@@ -241,14 +257,14 @@
 
         <div class="visualization-section">
             <h2 class="viz-title">Wave Pattern Visualization</h2>
-            <div class="canvas-container">
+            <div class="canvas-container sacred-card">
                 <canvas id="waveCanvas"></canvas>
             </div>
         </div>
 
         <div class="visualization-section">
             <h2 class="viz-title">System Performance</h2>
-            <div class="canvas-container">
+            <div class="canvas-container sacred-card">
                 <canvas id="perfCanvas"></canvas>
             </div>
         </div>
@@ -256,28 +272,28 @@
         <div class="visualization-section">
             <h2 class="viz-title">MCP Service Status</h2>
             <div class="service-status">
-                <div class="service-card">
+                <div class="service-card sacred-card">
                     <span class="status-indicator healthy"></span>
                     <div>
                         <div style="font-weight: bold;">Graph Server</div>
                         <div style="font-size: 0.85rem; opacity: 0.8;">Port 3301</div>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card sacred-card">
                     <span class="status-indicator healthy"></span>
                     <div>
                         <div style="font-weight: bold;">Metrics Server</div>
                         <div style="font-size: 0.85rem; opacity: 0.8;">Port 3302</div>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card sacred-card">
                     <span class="status-indicator healthy"></span>
                     <div>
                         <div style="font-weight: bold;">Workflow Server</div>
                         <div style="font-size: 0.85rem; opacity: 0.8;">Port 3303</div>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card sacred-card">
                     <span class="status-indicator degraded"></span>
                     <div>
                         <div style="font-weight: bold;">Assets Server</div>

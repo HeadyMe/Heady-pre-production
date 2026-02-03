@@ -1,70 +1,39 @@
 {
   "version": "2.0.0",
   "timestamp": "2026-02-03T15:33:35.549Z",
-  "project": {
-    "name": "Heady",
-    "type": "hybrid",
-    "languages": [
-      "javascript",
-      "python"
-    ],
-    "frameworks": [
-      "express",
-      "react"
-    ]
-  },
-  "intelligence": {
-    "registry": true,
-    "checkpoints": true,
-    "routing": true,
-    "squashMerge": true
-  },
-  "services": {
-    "secret_gateway": {
-      "path": "HeadySystems/services/secret_gateway",
-      "status": "ACTIVE"
+  "sources": [
+    {
+      "type": "codemap",
+      "path": "c:\\Users\\erich\\Heady\\.heady-context\\codemap.json",
+      "timestamp": "2026-02-02T21:55:48.545Z",
+      "version": "1.0.0"
     },
-    "google_mcp": {
-      "path": "HeadySystems/services/google_mcp",
-      "status": "ACTIVE"
+    {
+      "type": "codemap",
+      "path": "c:\\Users\\erich\\Projects\\packages\\shared\\state\\codemap.json",
+      "timestamp": "2026-01-31T22:23:00Z",
+      "version": "1.0"
     },
-    "perplexity_mcp": {
-      "path": "HeadySystems/services/perplexity_mcp",
-      "status": "ACTIVE"
+    {
+      "type": "codemap",
+      "path": "c:\\Users\\erich\\Projects\\_archive\\shared_legacy\\state\\codemap.json",
+      "timestamp": "2026-01-31T22:23:00Z",
+      "version": "1.0"
     },
-    "jules_mcp": {
-      "path": "HeadySystems/services/jules_mcp",
-      "status": "ACTIVE"
+    {
+      "type": "concept_registry",
+      "path": "c:\\Users\\erich\\CascadeProjects\\heady_concept_registry.json"
     },
-    "huggingface_gateway": {
-      "path": "HeadySystems/services/huggingface_gateway",
-      "status": "ACTIVE"
+    {
+      "type": "project_context",
+      "path": "c:\\Users\\erich\\Heady\\.heady-context\\project-context.json",
+      "timestamp": "2026-02-02T21:55:48.546Z"
     },
-    "memory_mcp": {
-      "path": "HeadySystems/services/memory_mcp",
-      "status": "ACTIVE"
-    },
-    "ai_router": {
-      "path": "HeadySystems/services/ai_router",
-      "status": "ACTIVE"
-    },
-    "cli_service": {
-      "path": "HeadySystems/services/cli_service",
-      "status": "ACTIVE"
-    },
-    "colab_gateway": {
-      "path": "HeadySystems/services/colab_gateway",
-      "status": "ACTIVE"
-    },
-    "silicon_bridge": {
-      "path": "HeadySystems/services/silicon_bridge",
-      "status": "ACTIVE"
-    },
-    "model_gateway": {
-      "path": "HeadySystems/services/model_gateway",
-      "status": "ACTIVE"
+    {
+      "type": "heady_registry",
+      "path": "c:\\Users\\erich\\Heady\\.heady-memory\\heady-registry.json"
     }
-  },
+  ],
   "concepts": {
     "Dashboard": {
       "name": "Dashboard",
@@ -3284,8 +3253,54 @@
       "totalScore": 1.5
     }
   },
-  "agents": {},
+  "services": {
+    "secret_gateway": {
+      "path": "HeadySystems/services/secret_gateway",
+      "status": "ACTIVE"
+    },
+    "google_mcp": {
+      "path": "HeadySystems/services/google_mcp",
+      "status": "ACTIVE"
+    },
+    "perplexity_mcp": {
+      "path": "HeadySystems/services/perplexity_mcp",
+      "status": "ACTIVE"
+    },
+    "jules_mcp": {
+      "path": "HeadySystems/services/jules_mcp",
+      "status": "ACTIVE"
+    },
+    "huggingface_gateway": {
+      "path": "HeadySystems/services/huggingface_gateway",
+      "status": "ACTIVE"
+    },
+    "memory_mcp": {
+      "path": "HeadySystems/services/memory_mcp",
+      "status": "ACTIVE"
+    },
+    "ai_router": {
+      "path": "HeadySystems/services/ai_router",
+      "status": "ACTIVE"
+    },
+    "cli_service": {
+      "path": "HeadySystems/services/cli_service",
+      "status": "ACTIVE"
+    },
+    "colab_gateway": {
+      "path": "HeadySystems/services/colab_gateway",
+      "status": "ACTIVE"
+    },
+    "silicon_bridge": {
+      "path": "HeadySystems/services/silicon_bridge",
+      "status": "ACTIVE"
+    },
+    "model_gateway": {
+      "path": "HeadySystems/services/model_gateway",
+      "status": "ACTIVE"
+    }
+  },
   "tools": {},
+  "agents": {},
   "infrastructure": {
     "docker_compose": {
       "path": "docker-compose.yml",
@@ -3392,11 +3407,25 @@
       "description": "No automated test suite for core services"
     }
   ],
-  "lastOperation": {
-    "type": "codemap_integration",
-    "timestamp": "2026-02-03T15:33:35.549Z",
-    "sources": 6,
-    "filesIntegrated": 350
-  },
-  "operationHistory": []
+  "files": {},
+  "metadata": {
+    "project": {
+      "name": "Heady",
+      "type": "hybrid",
+      "languages": [
+        "javascript",
+        "python"
+      ],
+      "frameworks": [
+        "express",
+        "react"
+      ]
+    },
+    "intelligence": {
+      "registry": true,
+      "checkpoints": true,
+      "routing": true,
+      "squashMerge": true
+    }
+  }
 }

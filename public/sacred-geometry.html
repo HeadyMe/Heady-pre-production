@@ -238,15 +238,51 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        .foundation-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 15px;
+            opacity: 0.8;
+            z-index: 100;
+        }
+
+        .foundation-badge img {
+            height: 30px;
+            width: auto;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        .foundation-badge:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.1);
+        }
+        
+        .brand-logo {
+            height: 40px;
+            vertical-align: middle;
+            margin-right: 15px;
+        }
     </style>
 </head>
 <body>
     <canvas id="sacred-bg"></canvas>
 
     <header class="header">
-        <h1 class="logo">⬡ HEADY SYSTEMS ⬡</h1>
+        <h1 class="logo">
+            <img src="/assets/images/HSHC-logos.png" class="brand-logo" alt="Heady Logo" />
+            ⬡ HEADY SYSTEMS ⬡
+        </h1>
         <p>Sacred Geometry Dashboard</p>
     </header>
+    
+    <div class="foundation-badge">
+        <img src="/assets/images/HC-favicon.png" title="HeadyConnection Foundation" />
+        <img src="/assets/images/HS-favicon.png" title="HeadySystems Core" />
+    </div>
 
     <div class="dashboard">
         <!-- Left Column -->
