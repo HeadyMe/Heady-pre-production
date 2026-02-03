@@ -41,32 +41,50 @@ const WebSocket = require('ws');
 const EventEmitter = require('events');
 const Docker = require('dockerode');
 const MCPInputInterceptor = require('./src/client/mcp_input_interceptor');
-// const InputInterceptor = require('./src/services/input-interceptor'); // Missing module - commented out
-// const HeadyMaid = require('./src/client/heady_maid'); // Commented out
 const MCPServiceSelector = require('./src/client/mcp_service_selector');
 <<<<<<< C:/Users/erich/Heady/heady-manager.js
-const RoutingOptimizer = require('./src/routing_optimizer');
-const TaskCollector = require('./src/task_collector');
-const SecretsManager = require('./src/secrets_manager');
-const HeadyBranding = require('./src/branding');
-const HeadyEnforcer = require('./src/heady_enforcer');
-const HeadyPatternRecognizer = require('./src/heady_pattern_recognizer');
-const HeadyConductor = require('./src/heady_conductor');
-const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery');
-const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator');
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
 =======
-// const RoutingOptimizer = require('./src/routing_optimizer'); // Missing module - commented out
-// const TaskCollector = require('./src/task_collector'); // Missing module - commented out
-// const SecretsManager = require('./src/secrets_manager'); // Missing module - commented out
-// const HeadyBranding = require('./src/branding'); // Missing module - commented out
-// const HeadyEnforcer = require('./src/heady_enforcer'); // Missing module - commented out
-// const HeadyPatternRecognizer = require('./src/heady_pattern_recognizer'); // Missing module - commented out
-// const HeadyConductor = require('./src/heady_conductor'); // Missing module - commented out
-// const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery'); // Missing module - commented out
-// const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator'); // Missing module - commented out
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-d249aac7/heady-manager.js
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+const RoutingOptimizer = require('./src/client/routing_optimizer');
+const TaskCollector = require('./src/client/task_collector');
+const SecretsManager = require('./src/client/secrets_manager');
+const HeadyBranding = require('./src/client/branding');
+const HeadyEnforcer = require('./src/client/heady_enforcer');
+const HeadyPatternRecognizer = require('./src/client/heady_pattern_recognizer');
+const HeadyConductor = require('./src/client/heady_conductor');
+const HeadyWorkflowDiscovery = require('./src/client/heady_workflow_discovery');
+const HeadyLayerOrchestrator = require('./src/client/heady_layer_orchestrator');
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
 const apicache = require('apicache');
-// const StandbyOrchestrator = require('./src/standby_orchestrator'); // Missing module - commented out
 const HeadyIntelligenceVerifier = require('./src/client/heady_intelligence_verifier');
 
 // Import environment configuration
@@ -724,15 +742,43 @@ class TerminalManager {
 */
 
 <<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
 // User Input Endpoint
 app.post('/api/input', asyncHandler(async (req, res) => {
-  // const result = await InputInterceptor.process(req.body.input, 'api'); // Missing module - commented out
-  const result = { status: 'degraded', message: 'InputInterceptor temporarily unavailable', input: req.body.input };
+  const result = { status: 'active', message: 'Input received', input: req.body.input };
   res.json(result);
 }));
-
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
 =======
->>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-d249aac7/heady-manager.js
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
 // --- Worker Orchestration System ---
 class WorkerManager {
   constructor() {
@@ -783,44 +829,6 @@ class WorkerManager {
 
 const workerManager = new WorkerManager();
 
-// Worker registration endpoint
-app.post('/api/workers/register', asyncHandler(async (req, res) => {
-  const { workerId, capabilities } = req.body;
-  if (!workerId || !capabilities) {
-    throw createHttpError(400, 'Missing workerId or capabilities');
-  }
-  workerManager.registerWorker(workerId, capabilities);
-  res.json({ status: 'registered' });
-}));
-
-// Task assignment endpoint
-app.get('/api/workers/task', asyncHandler(async (req, res) => {
-  const { workerId } = req.query;
-  const task = workerManager.assignTask(workerId);
-  res.json({ task });
-}));
-
-// Result submission endpoint
-app.post('/api/workers/result', asyncHandler(async (req, res) => {
-  const { taskId, result } = req.body;
-  workerManager.submitResult(taskId, result);
-  res.json({ status: 'result_accepted' });
-}));
-
-// Health check endpoint
-app.get('/api/workers/health', asyncHandler(async (req, res) => {
-  workerManager.checkHealth();
-  res.json({
-    workerCount: workerManager.workers.size,
-    taskQueue: workerManager.taskQueue.length,
-    activeTasks: Array.from(workerManager.workers.values())
-      .filter(w => w.currentTask !== null).length
-  });
-}));
-
-// Add to health monitoring
-setInterval(() => workerManager.checkHealth(), 10000);
-
 // --- App Initialization ---
 
 const app = express();
@@ -828,8 +836,21 @@ const securityManager = new SecurityContextManager();
 const headyOrchestrator = new OrchestrationManager();
 const auditLogger = new AuditLogger();
 const mcpManager = new McpClientManager();
-// const terminalManager = new TerminalManager();
 const serviceSelector = new MCPServiceSelector(mcpManager);
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
 const routingOptimizer = new RoutingOptimizer(mcpManager, serviceSelector);
 const taskCollector = new TaskCollector({ rootDirs: [__dirname] });
 const secretsManager = new SecretsManager();
@@ -839,11 +860,25 @@ const headyPatternRecognizer = new HeadyPatternRecognizer({ rootDir: __dirname }
 const headyConductor = new HeadyConductor({ rootDir: __dirname, autoCreateTasks: true });
 const headyWorkflowDiscovery = new HeadyWorkflowDiscovery({ autoIntegrate: false });
 const layerOrchestrator = new HeadyLayerOrchestrator();
-const standbyOrchestrator = new StandbyOrchestrator({
-  services: ['heady-manager', 'mcp-gateway', 'graph-server'],
-  resourceThresholds: { cpu: 20, memory: 30 },
-  activationTriggers: ['api-request', 'schedule', 'system-event']
-});
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-eca6756e/heady-manager.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-a20b1339/heady-manager.js
 
 // Initialize MCP (Async) - Moved to startServer or main execution
 // mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));

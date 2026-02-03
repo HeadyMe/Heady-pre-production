@@ -5,7 +5,7 @@
  * Command-line interface for generating checkpoint reports
  */
 
-const CheckpointReporter = require('../src/checkpoint_reporter');
+const CheckpointReporter = require('../src/client/checkpoint_reporter');
 const path = require('path');
 
 const args = process.argv.slice(2);

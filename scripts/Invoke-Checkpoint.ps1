@@ -108,23 +108,6 @@ function Show-Help {
     Write-Host "  .\Invoke-Checkpoint.ps1 -Action list"
     Write-Host ""
     Write-Host "REPORT CONTENTS:" -ForegroundColor Yellow
-    $reportContent = @(
-        '  - Executive Summary',
-        '  - Environment and Configuration',
-        '  - Docker Services Status',
-        '  - MCP Server Status',
-        '  - Health Checks',
-        '  - Git Repository Status',
-        '  - File System Structure',
-        '  - Running Processes',
-        '  - Operational Metrics',
-        '  - Memory Usage'
-    )
-    $reportContent | ForEach-Object { Write-Host $_ }
-    Write-Host ""
-    Write-Host 'Reports are saved to: audit_logs/checkpoint_{timestamp}.md' -ForegroundColor Cyan
-    Write-Host ""
-}
 
 # Main execution
 switch ($Action) {

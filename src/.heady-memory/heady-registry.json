@@ -1,0 +1,100 @@
+{
+  "version": "1.0.0",
+  "components": {
+    "HeadyAcademy": {
+      "id": "HeadyAcademy",
+      "type": "registry",
+      "status": "active",
+      "capabilities": ["documentation", "research", "learning"],
+      "agents": {
+        "ATLAS": { "role": "Documentation Engine", "status": "active" },
+        "MUSE": { "role": "Creative Documentation", "status": "active" },
+        "ORACLE": { "role": "Knowledge Base", "status": "active" },
+        "SCOUT": { "role": "Research Assistant", "status": "active" },
+        "SASHA": { "role": "Pattern Recognition", "status": "active" },
+        "NOVA": { "role": "Innovation Engine", "status": "active" }
+      }
+    },
+    "HeadyHive": {
+      "id": "HeadyHive",
+      "type": "registry",
+      "status": "active",
+      "capabilities": ["code_generation", "architecture", "building"],
+      "agents": {
+        "ARCHITECT": { "role": "System Design", "status": "active" },
+        "JULES": { "role": "Code Generation", "status": "active" },
+        "BUILDER": { "role": "Implementation", "status": "active" }
+      }
+    },
+    "HeadyChain": {
+      "id": "HeadyChain",
+      "type": "registry",
+      "status": "active",
+      "capabilities": ["security", "validation", "encryption"],
+      "agents": {
+        "SENTINEL": { "role": "Security Monitor", "status": "active" },
+        "MURPHY": { "role": "Chaos Testing", "status": "active" },
+        "CIPHER": { "role": "Encryption Services", "status": "active" }
+      }
+    },
+    "HeadyManager": {
+      "id": "HeadyManager",
+      "type": "service",
+      "status": "active",
+      "capabilities": ["mcp_orchestration", "data_processing", "api_gateway"],
+      "endpoints": {
+        "main": "http://localhost:3300",
+        "orchestrator": "http://localhost:3100"
+      }
+    },
+    "HeadyConductor": {
+      "id": "HeadyConductor",
+      "type": "service",
+      "status": "active",
+      "capabilities": ["temporal_sync", "harmonic_resonance", "phi_throttling"],
+      "config": {
+        "globalTempo": 1.618,
+        "harmonicIntervals": [1, 2, 3, 5, 8, 13],
+        "phiRatio": 1.61803398875
+      }
+    },
+    "HeadyNexus": {
+      "id": "HeadyNexus",
+      "type": "service",
+      "status": "active",
+      "capabilities": ["cognition", "planning", "decision_making"],
+      "role": "Brain - Central Intelligence"
+    },
+    "HeadyCheckAll": {
+      "id": "HeadyCheckAll",
+      "type": "service",
+      "status": "active",
+      "capabilities": ["verification", "monitoring", "alerting"],
+      "role": "Universal Verifier"
+    },
+    "StoryDriver": {
+      "id": "StoryDriver",
+      "type": "service",
+      "status": "active",
+      "capabilities": ["narrative_arc", "intent_management", "session_flow"],
+      "role": "Narrative Engine"
+    }
+  },
+  "routing": {
+    "documentation": "HeadyAcademy",
+    "code_generation": "HeadyHive",
+    "security": "HeadyChain",
+    "data_processing": "HeadyManager",
+    "temporal": "HeadyConductor",
+    "intelligence": "HeadyNexus",
+    "verification": "HeadyCheckAll",
+    "narrative": "StoryDriver"
+  },
+  "metadata": {
+    "lastUpdated": "2024-12-19T10:00:00Z",
+    "environment": "development",
+    "sacredGeometry": true,
+    "glassBox": true,
+    "deterministic": true
+  }
+}

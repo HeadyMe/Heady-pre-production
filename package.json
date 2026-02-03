@@ -6,9 +6,10 @@
   "scripts": {
     "start": "node heady-manager.js",
     "dev": "node heady-manager.js",
+    "build": "webpack --mode production",
     "lint": "echo 'Linting skipped - no ESLint config'",
     "test": "node --test tests/*.test.js",
-    "verify": "node src/heady_intelligence_verifier.js",
+    "verify": "node src/client/heady_intelligence_verifier.js",
     "cleanup": "powershell -ExecutionPolicy Bypass -File scripts/cleanup-unnecessary-files.ps1",
     "build:prod": "webpack --mode production"
   },
@@ -20,6 +21,13 @@
     "compression": "^1.8.1",
     "dockerode": "^4.0.9",
     "helmet": "^8.1.0",
+<<<<<<< C:/Users/erich/Heady/package.json
+=======
+    "node-cache": "^5.1.2",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "web-vitals": "^5.1.0",
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-fe7e9cf8/package.json
     "winston": "^3.19.0",
     "ws": "^8.19.0"
   },
