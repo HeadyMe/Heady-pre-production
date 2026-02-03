@@ -78,6 +78,37 @@
           "Auto-healing capabilities",
           "Governance enforcement"
         ]
+      },
+      "HeadyPatternRecognizer": {
+        "canonical": "HeadyPatternRecognizer",
+        "aliases": ["Heady Pattern Recognizer", "Pattern Recognizer"],
+        "description": "Monitors all process patterns and detects changes",
+        "type": "service",
+        "entrypoint": "src/heady_pattern_recognizer.js",
+        "responsibilities": [
+          "Monitor all process patterns",
+          "Detect pattern changes (new, modified, removed)",
+          "Analyze pattern impact",
+          "Notify HeadyConductor of changes",
+          "Maintain pattern history",
+          "Track pattern trends"
+        ]
+      },
+      "HeadyConductor": {
+        "canonical": "HeadyConductor",
+        "aliases": ["Heady Conductor", "Conductor"],
+        "description": "Receives pattern change notifications and creates tasks",
+        "type": "service",
+        "entrypoint": "src/heady_conductor.js",
+        "responsibilities": [
+          "Receive pattern change notifications",
+          "Analyze impact and decide on actions",
+          "Create tasks for necessary adaptations",
+          "Route tasks to RoutingOptimizer",
+          "Maintain pattern change history",
+          "Generate actionable recommendations",
+          "Coordinate system-wide pattern updates"
+        ]
       }
     },
     "ecosystem": {

@@ -48,6 +48,9 @@ const TaskCollector = require('./src/task_collector');
 const SecretsManager = require('./src/secrets_manager');
 const HeadyBranding = require('./src/branding');
 const HeadyEnforcer = require('./src/heady_enforcer');
+const HeadyPatternRecognizer = require('./src/heady_pattern_recognizer');
+const HeadyConductor = require('./src/heady_conductor');
+const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery');
 
 // --- Environment Configuration ---
 const PORT = Number(process.env.PORT || 3300);
@@ -714,6 +717,9 @@ const taskCollector = new TaskCollector({ rootDirs: [__dirname] });
 const secretsManager = new SecretsManager();
 const branding = new HeadyBranding();
 const headyEnforcer = new HeadyEnforcer({ rootDir: __dirname, autoFix: true });
+const headyPatternRecognizer = new HeadyPatternRecognizer({ rootDir: __dirname });
+const headyConductor = new HeadyConductor({ rootDir: __dirname, autoCreateTasks: true });
+const headyWorkflowDiscovery = new HeadyWorkflowDiscovery({ autoIntegrate: false });
 
 // Initialize MCP (Async) - Moved to startServer or main execution
 // mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));
@@ -1184,6 +1190,39 @@ app.post('/api/enforcer/enforce', authenticate, asyncHandler(async (req, res) =>
   res.json({ ok: true, result });
 }));
 
+// HeadyPatternRecognizer Endpoints
+app.get('/api/patterns/statistics', authenticate, asyncHandler(async (req, res) => {
+  const stats = headyPatternRecognizer.getStatistics();
+  res.json({ ok: true, stats });
+}));
+
+app.get('/api/patterns/report', authenticate, asyncHandler(async (req, res) => {
+  const report = headyPatternRecognizer.getReport();
+  res.json({ ok: true, report });
+}));
+
+// HeadyConductor Endpoints
+app.get('/api/conductor/status', authenticate, asyncHandler(async (req, res) => {
+  const status = headyConductor.getStatus();
+  res.json({ ok: true, status });
+}));
+
+app.get('/api/conductor/report', authenticate, asyncHandler(async (req, res) => {
+  const report = headyConductor.getReport();
+  res.json({ ok: true, report });
+}));
+
+// HeadyWorkflowDiscovery Endpoints
+app.get('/api/workflows/report', authenticate, asyncHandler(async (req, res) => {
+  const report = headyWorkflowDiscovery.getReport();
+  res.json({ ok: true, report });
+}));
+
+app.get('/api/workflows/recommendations', authenticate, asyncHandler(async (req, res) => {
+  const recommendations = headyWorkflowDiscovery.getTopRecommendations(10);
+  res.json({ ok: true, recommendations });
+}));
+
 // MCP Service Selection Endpoints
 app.get('/api/mcp/services', authenticate, asyncHandler(async (req, res) => {
   const services = serviceSelector.listServices();
@@ -1372,6 +1411,65 @@ if (require.main === module) {
     });
     
     console.log('[INTEGRATION] HeadyEnforcer active and monitoring');
+    
+    // Initialize HeadyPatternRecognizer
+    headyPatternRecognizer.start().catch(err => console.error('[PATTERN RECOGNIZER] Init failed:', err));
+    
+    // Connect PatternRecognizer to Conductor
+    headyPatternRecognizer.on('pattern-change', (notification) => {
+      headyConductor.handlePatternChange(notification);
+    });
+    
+    // Connect Conductor to RoutingOptimizer
+    headyConductor.on('task-created', (task) => {
+      console.log(`[CONDUCTOR] Created task: ${task.description}`);
+      routingOptimizer.queueTask(task);
+    });
+    
+    console.log('[INTEGRATION] HeadyPatternRecognizer → HeadyConductor → RoutingOptimizer connected');
+    
+    // Connect PatternRecognizer to optimization components
+    headyPatternRecognizer.connectToHeadyMaid(headyMaid);
+    headyPatternRecognizer.connectToRoutingOptimizer(routingOptimizer);
+    headyPatternRecognizer.connectToHeadyEnforcer(headyEnforcer);
+    
+    console.log('[INTEGRATION] HeadyPatternRecognizer connected to all optimization components');
+    
+    // Initialize HeadyWorkflowDiscovery
+    headyWorkflowDiscovery.start().catch(err => console.error('[WORKFLOW DISCOVERY] Init failed:', err));
+    
+    // Connect WorkflowDiscovery to Conductor
+    headyWorkflowDiscovery.on('workflow-discovered', (notification) => {
+      console.log(`[WORKFLOW DISCOVERY] Found: ${notification.workflow.name} (score: ${notification.workflow.score})`);
+      
+      // Create task for high-scoring workflows
+      if (notification.workflow.score >= 80) {
+        headyConductor.handlePatternChange({
+          change: {
+            type: 'NEW_WORKFLOW',
+            patternName: notification.workflow.name,
+            category: notification.workflow.category,
+            impact: 'HIGH',
+            recommendation: `Integrate ${notification.workflow.name}: ${notification.workflow.benefits.join(', ')}`
+          },
+          advice: {
+            actions: notification.recommendation.steps
+          },
+          taskRecommendation: {
+            shouldCreate: true,
+            task: {
+              type: 'workflow-integration',
+              priority: 'high',
+              description: `Integrate ${notification.workflow.name}`,
+              category: notification.workflow.category,
+              data: notification.workflow
+            }
+          }
+        });
+      }
+    });
+    
+    console.log('[INTEGRATION] HeadyWorkflowDiscovery → HeadyConductor connected');
   }).catch(err => console.error('[MCP] Init failed:', err));
 
   server = app.listen(PORT, '0.0.0.0', () => {
