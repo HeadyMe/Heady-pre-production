@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: heady-mcp-gateway
+    env: node
+    buildCommand: npm install
+    startCommand: node heady-manager.js
+    envVars:
+      - key: PORT
+        value: 3300
+      - key: HEADY_API_KEY
+        generateValue: true
+      - key: MCP_GATEWAY_JWT_SECRET
+        generateValue: true
