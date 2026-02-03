@@ -41,8 +41,10 @@ const WebSocket = require('ws');
 const EventEmitter = require('events');
 const Docker = require('dockerode');
 const MCPInputInterceptor = require('./src/client/mcp_input_interceptor');
+// const InputInterceptor = require('./src/services/input-interceptor'); // Missing module - commented out
 // const HeadyMaid = require('./src/client/heady_maid'); // Commented out
-const MCPServiceSelector = require('./src/mcp_service_selector');
+const MCPServiceSelector = require('./src/client/mcp_service_selector');
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
 const RoutingOptimizer = require('./src/routing_optimizer');
 const TaskCollector = require('./src/task_collector');
 const SecretsManager = require('./src/secrets_manager');
@@ -52,8 +54,19 @@ const HeadyPatternRecognizer = require('./src/heady_pattern_recognizer');
 const HeadyConductor = require('./src/heady_conductor');
 const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery');
 const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator');
+=======
+// const RoutingOptimizer = require('./src/routing_optimizer'); // Missing module - commented out
+// const TaskCollector = require('./src/task_collector'); // Missing module - commented out
+// const SecretsManager = require('./src/secrets_manager'); // Missing module - commented out
+// const HeadyBranding = require('./src/branding'); // Missing module - commented out
+// const HeadyEnforcer = require('./src/heady_enforcer'); // Missing module - commented out
+// const HeadyPatternRecognizer = require('./src/heady_pattern_recognizer'); // Missing module - commented out
+// const HeadyConductor = require('./src/heady_conductor'); // Missing module - commented out
+// const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery'); // Missing module - commented out
+// const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator'); // Missing module - commented out
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-d249aac7/heady-manager.js
 const apicache = require('apicache');
-const StandbyOrchestrator = require('./src/standby_orchestrator');
+// const StandbyOrchestrator = require('./src/standby_orchestrator'); // Missing module - commented out
 const HeadyIntelligenceVerifier = require('./src/client/heady_intelligence_verifier');
 
 // Import environment configuration
@@ -710,6 +723,16 @@ class TerminalManager {
 }
 */
 
+<<<<<<< C:/Users/erich/Heady/heady-manager.js
+// User Input Endpoint
+app.post('/api/input', asyncHandler(async (req, res) => {
+  // const result = await InputInterceptor.process(req.body.input, 'api'); // Missing module - commented out
+  const result = { status: 'degraded', message: 'InputInterceptor temporarily unavailable', input: req.body.input };
+  res.json(result);
+}));
+
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-d249aac7/heady-manager.js
 // --- Worker Orchestration System ---
 class WorkerManager {
   constructor() {
@@ -851,6 +874,23 @@ const generalLimiter = rateLimit({
   message: { error: 'Too many requests' }
 });
 app.use('/api/', generalLimiter);
+
+// JWT Authentication Middleware
+const jwtAuth = require('./src/security/jwt-auth');
+
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    
+    try {
+      req.user = jwtAuth.verify(token);
+    } catch (err) {
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+  }
+  next();
+});
 
 // Auth Middleware
 const authenticate = async (req, res, next) => {

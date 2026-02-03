@@ -1,0 +1,9 @@
+{
+  "name": "Branded MCP Server",
+  "description": "Heady's Branded MCP Server for Docker Desktop",
+  "icon": "icon.png",
+  "apiVersion": "0.1.0",
+  "version": "1.0.0",
+  "categories": ["Developer Tools", "AI/ML"],
+  "permissions": ["filesystem", "docker"]
+}

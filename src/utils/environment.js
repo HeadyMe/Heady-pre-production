@@ -8,8 +8,8 @@ const envConfig = {
       protocol: 'http'
     },
     remote: {
-      host: process.env.REMOTE_MANAGER_HOST || 'api.headysystems.com',
-      port: process.env.REMOTE_MANAGER_PORT || 443,
+      host: process.env.REMOTE_MANAGER_HOST || 'headymcp.com',
+      port: process.env.REMOTE_MANAGER_PORT || 3300,
       protocol: 'https'
     }
   },
@@ -23,8 +23,8 @@ const envConfig = {
     },
     remote: {
       enabled: true,
-      host: process.env.REMOTE_GPU_HOST || 'gpu.headysystems.com',
-      port: process.env.REMOTE_GPU_PORT || 443
+      host: process.env.REMOTE_GPU_HOST || 'gpu.headymcp.com',
+      port: process.env.REMOTE_GPU_PORT || 3400
     }
   },
   
@@ -34,6 +34,8 @@ const envConfig = {
       services: ['filesystem', 'git', 'memory']
     },
     remote: {
+      host: process.env.REMOTE_MCP_HOST || 'mcp.headymcp.com',
+      port: process.env.REMOTE_MCP_PORT || 3700,
       services: ['cloudflare', 'perplexity', 'google-maps', 'stripe']
     }
   },
@@ -46,8 +48,8 @@ const envConfig = {
       protocol: 'http'
     },
     remote: {
-      host: process.env.REMOTE_CMS_HOST || 'cms.headysystems.com',
-      port: process.env.REMOTE_CMS_PORT || 443,
+      host: process.env.REMOTE_CMS_HOST || 'cms.headymcp.com',
+      port: process.env.REMOTE_CMS_PORT || 8081,
       protocol: 'https'
     }
   },

@@ -249,9 +249,9 @@ class HeadyIntelligenceVerifier {
    */
   async verifyDataSchema() {
     const schemaFiles = [
-      path.join(this.rootDir, 'src/heady_squash_merge.js'),
-      path.join(this.rootDir, 'src/checkpoint_reporter.js'),
-      path.join(this.rootDir, 'src/heady_registry_router.js')
+      path.join(this.rootDir, 'src/client/heady_squash_merge.js'),
+      path.join(this.rootDir, 'src/client/checkpoint_reporter.js'),
+      path.join(this.rootDir, 'src/client/heady_registry_router.js')
     ];
 
     const missing = schemaFiles.filter(f => !fs.existsSync(f));

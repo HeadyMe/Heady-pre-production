@@ -110,7 +110,7 @@ async function verifyOrchestrator() {
  */
 async function verifySquashMergeReady() {
   const requiredFiles = [
-    'src/heady_squash_merge.js',
+    'src/client/heady_squash_merge.js',
     'scripts/heady-merge.ps1',
     'examples/merge-example-config.json'
   ];
@@ -138,8 +138,8 @@ async function verifySquashMergeReady() {
  */
 async function verifyRoutingSystem() {
   const requiredFiles = [
-    'src/heady_registry_router.js',
-    'src/heady_ai_bridge.js'
+    'src/client/heady_registry_router.js',
+    'src/client/heady_ai_bridge.js'
   ];
   
   const missing = requiredFiles.filter(f => !fs.existsSync(path.join(process.cwd(), f)));
@@ -181,7 +181,7 @@ async function verifyRoutingSystem() {
  * Verify Governance system
  */
 async function verifyGovernance() {
-  const governanceFile = path.join(process.cwd(), 'src/governance_checkpoint.js');
+  const governanceFile = path.join(process.cwd(), 'src/client/governance_checkpoint.js');
   
   if (!fs.existsSync(governanceFile)) {
     return {
