@@ -4,7 +4,7 @@ const request = require('supertest');
 process.env.HEADY_API_KEY = 'test-key';
 process.env.HEADY_ADMIN_ENABLE_GPU = 'true'; // Enable GPU for testing if needed
 
-const { app, mcpManager, orchestrator } = require('../heady-manager-unified');
+const { app, mcpManager, orchestrator } = require('../heady-manager');
 
 describe('Heady Unified Manager Integration', () => {
     // Wait for MCP initialization (mock or real)

@@ -51,6 +51,11 @@ class HeadyIntelligenceVerifier {
       { name: 'data_schema', fn: () => this.verifyDataSchema(), critical: true },
       { name: 'codemap_access', fn: () => this.verifyCodemapAccess(), critical: true },
       
+      // Reasoning Systems
+      { name: 'socratic_engine', fn: () => this.verifySocraticEngine(), critical: true },
+      { name: 'reasoning_integrator', fn: () => this.verifyReasoningIntegrator(), critical: true },
+      { name: 'ai_bridge', fn: () => this.verifyAIBridge(), critical: true },
+      
       // Live Service Connections
       { name: 'heady_manager', fn: () => this.verifyHeadyManager(), critical: false },
       { name: 'mcp_servers', fn: () => this.verifyMCPServers(), critical: false },
@@ -343,6 +348,144 @@ class HeadyIntelligenceVerifier {
    */
   async verifyGitOperations() {
     return await extendedVerifiers.verifyGitOperations();
+  }
+
+  /**
+   * Verify Socratic Engine is accessible
+   */
+  async verifySocraticEngine() {
+    const enginePath = path.join(this.rootDir, 'src/client/heady_socratic_engine.js');
+    
+    if (!fs.existsSync(enginePath)) {
+      return {
+        passed: false,
+        message: 'Socratic Engine not found',
+        action: 'Install Socratic Engine module'
+      };
+    }
+
+    try {
+      const HeadySocraticEngine = require('./heady_socratic_engine');
+      const engine = new HeadySocraticEngine();
+      
+      // Test basic functionality
+      const testTask = 'Test task for verification';
+      const reasoning = engine.reason(testTask);
+      
+      if (!reasoning.analysis || !reasoning.plan) {
+        return {
+          passed: false,
+          message: 'Socratic Engine not functioning correctly',
+          action: 'Check engine implementation'
+        };
+      }
+
+      return {
+        passed: true,
+        message: 'Socratic Engine operational',
+        data: {
+          techniques: Object.keys(engine.techniques).length,
+          testResult: {
+            primary: reasoning.analysis.primary.key,
+            phases: reasoning.plan.phases.length
+          }
+        }
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        message: `Socratic Engine error: ${error.message}`,
+        action: 'Fix engine implementation'
+      };
+    }
+  }
+
+  /**
+   * Verify Reasoning Integrator is accessible
+   */
+  async verifyReasoningIntegrator() {
+    const integratorPath = path.join(this.rootDir, 'src/client/heady_reasoning_integrator.js');
+    
+    if (!fs.existsSync(integratorPath)) {
+      return {
+        passed: false,
+        message: 'Reasoning Integrator not found',
+        action: 'Install Reasoning Integrator module'
+      };
+    }
+
+    try {
+      const HeadyReasoningIntegrator = require('./heady_reasoning_integrator');
+      const integrator = new HeadyReasoningIntegrator();
+      
+      // Verify components are initialized
+      if (!integrator.socraticEngine || !integrator.router || !integrator.verifier) {
+        return {
+          passed: false,
+          message: 'Reasoning Integrator components not initialized',
+          action: 'Check integrator dependencies'
+        };
+      }
+
+      return {
+        passed: true,
+        message: 'Reasoning Integrator operational',
+        data: {
+          components: ['socraticEngine', 'router', 'verifier'],
+          initialized: true
+        }
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        message: `Reasoning Integrator error: ${error.message}`,
+        action: 'Fix integrator implementation'
+      };
+    }
+  }
+
+  /**
+   * Verify AI Bridge with Socratic integration
+   */
+  async verifyAIBridge() {
+    const bridgePath = path.join(this.rootDir, 'src/client/heady_ai_bridge.js');
+    
+    if (!fs.existsSync(bridgePath)) {
+      return {
+        passed: false,
+        message: 'AI Bridge not found',
+        action: 'Install AI Bridge module'
+      };
+    }
+
+    try {
+      const HeadyAIBridge = require('./heady_ai_bridge');
+      const bridge = new HeadyAIBridge();
+      
+      // Verify Socratic integration
+      if (!bridge.reasoningIntegrator) {
+        return {
+          passed: false,
+          message: 'AI Bridge missing Socratic integration',
+          action: 'Update AI Bridge to include reasoning integrator'
+        };
+      }
+
+      return {
+        passed: true,
+        message: 'AI Bridge operational with Socratic reasoning',
+        data: {
+          components: ['router', 'reasoningIntegrator'],
+          socraticIntegration: true
+        }
+      };
+    } catch (error) {
+      return {
+        passed: false,
+        message: `AI Bridge error: ${error.message}`,
+        action: 'Fix AI Bridge implementation'
+      };
+    }
   }
 
   /**
