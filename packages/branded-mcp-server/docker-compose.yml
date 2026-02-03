@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  branded-mcp-server:
+    image: node:18
+    container_name: branded-mcp-server
+    working_dir: /app
+    volumes:
+      - ./:/app
+    ports:
+      - "3400:3400"
+    environment:
+      - NODE_ENV=production
+    command: npm start
+    labels:
+      - "com.docker.desktop.extension=true"
+      - "com.docker.desktop.extension.name=Branded MCP Server"
+      - "com.docker.desktop.extension.description=Heady Branded MCP Server"
+      - "com.docker.extension.categories=Heady"
+      - "com.docker.extension.screenshots=https://example.com/screenshot1.png"
+      - "com.docker.extension.icon=https://example.com/icon.png"
