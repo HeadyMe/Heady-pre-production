@@ -6,13 +6,15 @@
  */
 
 const HeadyRegistryRouter = require('./heady_registry_router');
+const HeadyReasoningIntegrator = require('./heady_reasoning_integrator');
 const fs = require('fs');
 const path = require('path');
 
 class HeadyAIBridge {
   constructor() {
     this.router = new HeadyRegistryRouter();
-    this.logPath = path.join(__dirname, '../audit_logs/ai_routing.jsonl');
+    this.reasoningIntegrator = new HeadyReasoningIntegrator();
+    this.logPath = path.join(__dirname, '../../audit_logs/ai_routing.jsonl');
     this.ensureLogDirectory();
   }
 
@@ -25,41 +27,61 @@ class HeadyAIBridge {
 
   /**
    * Main interception point for Windsurf requests
+   * Now enhanced with Socratic reasoning
    */
   async interceptRequest(request, context = {}) {
     const timestamp = new Date().toISOString();
-    const routing = this.router.route(request);
+    
+    // Apply Socratic reasoning and Heady integration
+    const reasoningResult = await this.reasoningIntegrator.processTask(request, context);
+    
+    if (!reasoningResult.success) {
+      return {
+        timestamp,
+        request,
+        success: false,
+        error: reasoningResult.error,
+        recommendation: reasoningResult.recommendation,
+        execute: async () => ({ success: false, error: reasoningResult.error }),
+        getGuidance: () => `Error: ${reasoningResult.error}\nRecommendation: ${reasoningResult.recommendation}`,
+        getReasoningSummary: () => `Processing failed: ${reasoningResult.error}`
+      };
+    }
 
-    // Log the routing decision
+    // Log the enhanced routing decision
     this.logRoutingDecision({
       timestamp,
       request,
       context,
+      reasoning: {
+        primary: reasoningResult.reasoning.analysis.primary.key,
+        techniques: reasoningResult.reasoning.analysis.selectedTechniques.length
+      },
       routing: {
-        shouldDelegate: routing.analysis.shouldDelegate,
-        route: routing.plan.route,
-        primary: routing.plan.primary,
-        capability: routing.plan.capability
+        shouldDelegate: reasoningResult.routing.analysis.shouldDelegate,
+        route: reasoningResult.routing.plan.route,
+        primary: reasoningResult.routing.plan.primary,
+        capability: reasoningResult.routing.plan.capability
+      },
+      strategy: {
+        approach: reasoningResult.strategy.approach,
+        steps: reasoningResult.strategy.steps.length
       }
     });
 
-    // Return routing decision with execution capability
+    // Return enhanced decision with reasoning and execution capability
     return {
       timestamp,
       request,
-      shouldDelegate: routing.analysis.shouldDelegate,
-      routing,
+      success: true,
+      shouldDelegate: reasoningResult.routing.analysis.shouldDelegate,
+      reasoning: reasoningResult.reasoning,
+      routing: reasoningResult.routing,
+      strategy: reasoningResult.strategy,
       
       // Provide execution method
       execute: async () => {
-        if (!routing.analysis.shouldDelegate) {
-          return {
-            delegated: false,
-            message: 'Request handled directly by AI assistant'
-          };
-        }
-
-        const result = await this.router.executeRoutingPlan(routing.plan);
+        const result = await reasoningResult.execute();
         
         // Log execution result
         this.logRoutingDecision({
@@ -68,19 +90,17 @@ class HeadyAIBridge {
           execution: result
         });
 
-        return {
-          delegated: true,
-          result
-        };
+        return result;
       },
 
-      // Provide guidance for manual execution
+      // Provide comprehensive guidance
       getGuidance: () => {
-        return {
-          recommendation: routing.recommendation,
-          plan: routing.plan,
-          manual_steps: this.generateManualSteps(routing.plan)
-        };
+        return reasoningResult.getGuidance();
+      },
+      
+      // Provide reasoning summary
+      getReasoningSummary: () => {
+        return reasoningResult.reasoning.summary;
       }
     };
   }
