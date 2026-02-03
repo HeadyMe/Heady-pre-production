@@ -51,6 +51,7 @@ const HeadyEnforcer = require('./src/heady_enforcer');
 const HeadyPatternRecognizer = require('./src/heady_pattern_recognizer');
 const HeadyConductor = require('./src/heady_conductor');
 const HeadyWorkflowDiscovery = require('./src/heady_workflow_discovery');
+const HeadyLayerOrchestrator = require('./src/heady_layer_orchestrator');
 
 // --- Environment Configuration ---
 const PORT = Number(process.env.PORT || 3300);
@@ -338,8 +339,8 @@ class McpClientManager {
     const servers = config.mcpServers || {};
         
     for (const [name, serverConfig] of Object.entries(servers)) {
-      // Connect to core MCP servers including heady-windsurf-router
-      if (['heady-windsurf-router', 'filesystem', 'memory', 'sequential-thinking', 'git'].includes(name)) {
+      // Connect to core MCP servers including heady-router, cleanup, and monorepo services
+      if (['heady-router', 'filesystem', 'memory', 'sequential-thinking', 'git', 'heady-cleanup', 'heady-monorepo', 'heady-brain'].includes(name)) {
         // Fix filesystem args for this environment if needed
         if (name === 'filesystem') {
           // Update args to point to current dir if generic /workspaces is used
@@ -720,6 +721,7 @@ const headyEnforcer = new HeadyEnforcer({ rootDir: __dirname, autoFix: true });
 const headyPatternRecognizer = new HeadyPatternRecognizer({ rootDir: __dirname });
 const headyConductor = new HeadyConductor({ rootDir: __dirname, autoCreateTasks: true });
 const headyWorkflowDiscovery = new HeadyWorkflowDiscovery({ autoIntegrate: false });
+const layerOrchestrator = new HeadyLayerOrchestrator();
 
 // Initialize MCP (Async) - Moved to startServer or main execution
 // mcpManager.initialize().catch(err => console.error('[MCP] Init failed:', err));
@@ -1223,6 +1225,30 @@ app.get('/api/workflows/recommendations', authenticate, asyncHandler(async (req,
   res.json({ ok: true, recommendations });
 }));
 
+// Layer Orchestrator Endpoints
+app.get('/api/ui/:uiName/layers', authenticate, asyncHandler(async (req, res) => {
+  const { uiName } = req.params;
+  const result = await layerOrchestrator.loadLayersForUI(uiName);
+  
+  res.json({
+    ok: true,
+    ui: uiName,
+    layers: result.loaded || result.layers,
+    loadTime: result.results ? result.results.reduce((sum, r) => sum + (r.loadTime || 0), 0) : 0,
+    alreadyLoaded: result.alreadyLoaded || false
+  });
+}));
+
+app.get('/api/layers/status', authenticate, asyncHandler(async (req, res) => {
+  const status = layerOrchestrator.getLayerStatus();
+  res.json({ ok: true, status });
+}));
+
+app.get('/api/layers/map', authenticate, asyncHandler(async (req, res) => {
+  const map = layerOrchestrator.getUILayerMap();
+  res.json({ ok: true, map });
+}));
+
 // MCP Service Selection Endpoints
 app.get('/api/mcp/services', authenticate, asyncHandler(async (req, res) => {
   const services = serviceSelector.listServices();
@@ -1403,10 +1429,73 @@ if (require.main === module) {
     // Initialize HeadyEnforcer
     headyEnforcer.start().catch(err => console.error('[ENFORCER] Init failed:', err));
     
-    // Listen to enforcement events
+    // Listen to enforcement events and create tasks
     headyEnforcer.on('enforcement-complete', (data) => {
-      if (data.violations.naming.length > 0 || data.violations.security.length > 0) {
-        console.log(`[ENFORCER] Found ${Object.values(data.violations).flat().length} violations`);
+      const totalViolations = Object.values(data.violations).flat().length;
+      
+      if (totalViolations > 0) {
+        console.log(`[ENFORCER] Found ${totalViolations} violations`);
+        
+        // Create tasks for violations via HeadyConductor
+        if (data.violations.naming.length > 0) {
+          headyConductor.handlePatternChange({
+            change: {
+              type: 'NAMING_VIOLATIONS',
+              patternName: 'Naming Conventions',
+              category: 'naming',
+              impact: 'HIGH',
+              recommendation: `Fix ${data.violations.naming.length} naming violations`
+            },
+            advice: {
+              actions: [
+                'Run HeadyEnforcer auto-heal',
+                'Review naming conventions',
+                'Update documentation',
+                'Commit fixes with hs'
+              ]
+            },
+            taskRecommendation: {
+              shouldCreate: true,
+              task: {
+                type: 'naming-fix',
+                priority: 'high',
+                description: `Fix ${data.violations.naming.length} naming convention violations`,
+                category: 'naming',
+                data: data.violations.naming.slice(0, 10) // First 10 violations
+              }
+            }
+          });
+        }
+        
+        if (data.violations.security.length > 0) {
+          headyConductor.handlePatternChange({
+            change: {
+              type: 'SECURITY_VIOLATIONS',
+              patternName: 'Security Standards',
+              category: 'security',
+              impact: 'CRITICAL',
+              recommendation: `Address ${data.violations.security.length} security violations`
+            },
+            advice: {
+              actions: [
+                'Review security violations immediately',
+                'Fix hardcoded secrets',
+                'Add authentication where missing',
+                'Update security documentation'
+              ]
+            },
+            taskRecommendation: {
+              shouldCreate: true,
+              task: {
+                type: 'security-fix',
+                priority: 'critical',
+                description: `URGENT: Fix ${data.violations.security.length} security violations`,
+                category: 'security',
+                data: data.violations.security
+              }
+            }
+          });
+        }
       }
     });
     

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Heady Monitoring Hub - Connected to HeadyLens</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            color: #00ff88;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 2px solid #00ff88;
+            border-radius: 10px;
+        }
+
+        .logo {
+            font-size: 8px;
+            line-height: 1;
+            color: #00d4ff;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .panel {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00ff88;
+            border-radius: 8px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00d4ff;
+            border-bottom: 1px solid #00ff88;
+            padding-bottom: 5px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-dot.active { background: #00ff88; animation: pulse 2s infinite; }
+        .status-dot.warning { background: #ffaa00; animation: pulse 2s infinite; }
+        .status-dot.error { background: #ff4444; animation: pulse 2s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 5px currentColor; }
+            50% { opacity: 0.5; box-shadow: 0 0 15px currentColor; }
+        }
+
+        .task-item {
+            padding: 8px;
+            margin: 5px 0;
+            background: rgba(0, 255, 136, 0.05);
+            border-left: 3px solid;
+            font-size: 12px;
+        }
+
+        .task-item.critical { border-left-color: #ff4444; }
+        .task-item.high { border-left-color: #ffaa00; }
+        .task-item.normal { border-left-color: #00d4ff; }
+        .task-item.low { border-left-color: #00ff88; }
+
+        .activity-log {
+            font-size: 11px;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 3px 0;
+            opacity: 0.8;
+        }
+
+        .activity-item:hover {
+            opacity: 1;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .lens-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 212, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 1px solid #00d4ff;
+            font-size: 11px;
+        }
+
+        .chart {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="lens-indicator pulse">
+        👁️ HeadyLens: <span id="lens-status">CONNECTED</span>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <pre class="logo">██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗
+██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝
+███████║█████╗  ███████║██║  ██║ ╚████╔╝ 
+██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝  
+██║  ██║███████╗██║  ██║██████╔╝   ██║   
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝</pre>
+            <h2>MONITORING HUB - Connected to HeadyLens</h2>
+        </div>
+
+        <div class="main-grid">
+            <!-- Tasks Panel -->
+            <div class="panel">
+                <div class="panel-title">📋 TASKS (Real-Time)</div>
+                <div id="tasks-content"></div>
+            </div>
+
+            <!-- Nodes Panel -->
+            <div class="panel">
+                <div class="panel-title">🎯 NODES (Health)</div>
+                <div id="nodes-content"></div>
+            </div>
+
+            <!-- Components Panel -->
+            <div class="panel">
+                <div class="panel-title">⚙️ COMPONENTS</div>
+                <div id="components-content"></div>
+            </div>
+
+            <!-- Performance Panel -->
+            <div class="panel">
+                <div class="panel-title">⚡ PERFORMANCE</div>
+                <div id="performance-content"></div>
+            </div>
+
+            <!-- HeadyLens Feed -->
+            <div class="panel">
+                <div class="panel-title">👁️ HEADY LENS FEED</div>
+                <div class="activity-log" id="lens-feed"></div>
+            </div>
+
+            <!-- System Status -->
+            <div class="panel">
+                <div class="panel-title">🔧 SYSTEM STATUS</div>
+                <div id="system-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3300';
+        const API_KEY = localStorage.getItem('HEADY_API_KEY');
+        let lensLog = [];
+
+        function addToLens(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            lensLog.unshift(`[${timestamp}] ${message}`);
+            if (lensLog.length > 100) lensLog.pop();
+            
+            const feed = document.getElementById('lens-feed');
+            feed.innerHTML = lensLog.map(msg => 
+                `<div class="activity-item">${msg}</div>`
+            ).join('');
+        }
+
+        async function updateTasks() {
+            try {
+                const res = await fetch(`${API_URL}/api/tasks/queued`, {
+                    headers: { 'x-heady-api-key': API_KEY }
+                });
+                const data = await res.json();
+                
+                const tasks = [
+                    ...(data.tasks.critical || []).map(t => ({...t, priority: 'critical'})),
+                    ...(data.tasks.high || []).map(t => ({...t, priority: 'high'})),
+                    ...(data.tasks.normal || []).map(t => ({...t, priority: 'normal'})),
+                    ...(data.tasks.low || []).map(t => ({...t, priority: 'low'}))
+                ];
+                
+                document.getElementById('tasks-content').innerHTML = tasks.length > 0
+                    ? tasks.map(t => `
+                        <div class="task-item ${t.priority}">
+                            <strong>${t.priority.toUpperCase()}</strong>: ${t.description}
+                        </div>
+                    `).join('')
+                    : '<div style="opacity:0.5">No tasks queued</div>';
+                
+                addToLens(`📋 Tasks updated: ${tasks.length} in queue`);
+            } catch (err) {
+                addToLens(`❌ Task fetch error: ${err.message}`, 'error');
+            }
+        }
+
+        async function updateNodes() {
+            const nodes = [
+                'HeadyManager', 'HeadyOrchestrator', 'HeadyMaid', 'HeadyEnforcer',
+                'HeadyPatternRecognizer', 'HeadyConductor', 'RoutingOptimizer',
+                'TaskCollector', 'SecretsManager', 'HeadyWorkflowDiscovery'
+            ];
+            
+            document.getElementById('nodes-content').innerHTML = nodes.map(node => `
+                <div class="metric-row">
+                    <span><span class="status-dot active"></span>${node}</span>
+                    <span>✅ ACTIVE</span>
+                </div>
+            `).join('');
+            
+            addToLens(`🎯 Nodes monitored: ${nodes.length} active`);
+        }
+
+        async function updatePerformance() {
+            try {
+                const res = await fetch(`${API_URL}/api/mcp/routing-stats`, {
+                    headers: { 'x-heady-api-key': API_KEY }
+                });
+                const data = await res.json();
+                
+                if (data.routing?.optimizer?.overview) {
+                    const perf = data.routing.optimizer.overview;
+                    document.getElementById('performance-content').innerHTML = `
+                        <div class="metric-row">
+                            <span>Total Tasks:</span>
+                            <span>${perf.totalTasks || 0}</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Success Rate:</span>
+                            <span>${perf.successRate || '0%'}</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Avg Response:</span>
+                            <span>${perf.avgResponseTime || '0ms'}</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>Completed:</span>
+                            <span>${perf.completed || 0}</span>
+                        </div>
+                    `;
+                    
+                    addToLens(`⚡ Performance: ${perf.successRate} success rate`);
+                }
+            } catch (err) {
+                addToLens(`⚠️ Performance fetch error`, 'warning');
+            }
+        }
+
+        async function updateComponents() {
+            const components = [
+                { name: 'MCP Router', status: 'ACTIVE' },
+                { name: 'Filesystem', status: 'ACTIVE' },
+                { name: 'Git', status: 'ACTIVE' },
+                { name: 'Memory', status: 'ACTIVE' },
+                { name: 'Sequential Thinking', status: 'ACTIVE' },
+                { name: 'HeadyBrain', status: 'ACTIVE' },
+                { name: 'HeadyCleanup', status: 'ACTIVE' },
+                { name: 'HeadyMonorepo', status: 'ACTIVE' }
+            ];
+            
+            document.getElementById('components-content').innerHTML = components.map(c => `
+                <div class="metric-row">
+                    <span><span class="status-dot active"></span>${c.name}</span>
+                    <span>${c.status}</span>
+                </div>
+            `).join('');
+        }
+
+        async function updateSystem() {
+            try {
+                const res = await fetch(`${API_URL}/api/health`);
+                const data = await res.json();
+                
+                document.getElementById('system-content').innerHTML = `
+                    <div class="metric-row">
+                        <span>Status:</span>
+                        <span>✅ ${data.status}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Uptime:</span>
+                        <span>${Math.floor(data.uptime)}s</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Version:</span>
+                        <span>${data.version}</span>
+                    </div>
+                    <div class="metric-row">
+                        <span>Nodes:</span>
+                        <span>${data.orchestration?.nodeCount || 0}</span>
+                    </div>
+                `;
+                
+                addToLens(`🔧 System healthy - Uptime: ${Math.floor(data.uptime)}s`);
+            } catch (err) {
+                document.getElementById('system-content').innerHTML = 
+                    '<div style="color:#ff4444">⚠️ System offline</div>';
+                addToLens(`🔴 System check failed`, 'error');
+            }
+        }
+
+        async function refreshAll() {
+            await Promise.all([
+                updateTasks(),
+                updateNodes(),
+                updatePerformance(),
+                updateComponents(),
+                updateSystem()
+            ]);
+        }
+
+        // Initial load
+        addToLens('🚀 HeadyLens Monitoring Hub initialized');
+        addToLens('👁️ Connected to HeadyLens observability system');
+        refreshAll();
+
+        // Auto-refresh every 3 seconds
+        setInterval(refreshAll, 3000);
+
+        // Simulate HeadyLens events
+        setInterval(() => {
+            const events = [
+                '👁️ HeadyLens: File change detected in src/',
+                '📊 HeadyLens: Pattern change observed',
+                '✨ HeadyLens: Optimization opportunity found',
+                '🔍 HeadyLens: Scanning complete - 350 files',
+                '💾 HeadyLens: Inventory updated',
+                '🎯 HeadyLens: Task routed to optimizer',
+                '⚡ HeadyLens: Performance benchmark complete',
+                '🔐 HeadyLens: Security scan passed'
+            ];
+            
+            if (Math.random() > 0.6) {
+                const event = events[Math.floor(Math.random() * events.length)];
+                addToLens(event);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

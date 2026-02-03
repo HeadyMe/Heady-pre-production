@@ -1,0 +1,31 @@
+```
+╔══════════════════════════════════════════════════════════════╗
+║              HEADYE - Desktop Icon                           ║
+║                                                              ║
+║     💖 Made with Love by HeadyConnection & HeadySystems     ║
+║                        Team 💖                               ║
+╚══════════════════════════════════════════════════════════════╝
+
+ASCII Icon Design for HeadyE (Desktop Companion):
+
+    ████████████████
+    ██╔══════════╗██
+    ██║    HE    ║██
+    ██║   🤖     ║██
+    ██║  ╔═══╗   ║██
+    ██║  ║ E ║   ║██
+    ██║  ╚═══╝   ║██
+    ██╚══════════╝██
+    ████████████████
+
+Colors:
+- Background: #ff6b9d (Pink/Magenta)
+- Border: #1a1a2e (Dark Blue)
+- Text: #ffffff (White)
+- Accent: #00d4ff (Cyan)
+- Robot emoji for AI companion
+
+Icon File Location:
+c:\Users\erich\Heady\public\icons\headye.ico
+c:\Users\erich\CascadeProjects\HeadyMonorepo\apps\heady-e\icon.ico
+```

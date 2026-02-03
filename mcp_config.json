@@ -90,6 +90,27 @@
         "CLOUDFLARE_API_TOKEN": "${COPILOT_MCP_CLOUDFLARE_API_TOKEN}",
         "CLOUDFLARE_ACCOUNT_ID": "${COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID}"
       }
+    },
+    "heady-cleanup": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-cleanup/server.js"
+      ],
+      "description": "Cleanup and storage organization service"
+    },
+    "heady-monorepo": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-monorepo/server.js"
+      ],
+      "description": "Monorepo merge and push service"
+    },
+    "heady-brain": {
+      "command": "node",
+      "args": [
+        "./mcp-servers/heady-brain/server.js"
+      ],
+      "description": "AI logic and workflow intelligence service"
     }
   },
   "gateway": {

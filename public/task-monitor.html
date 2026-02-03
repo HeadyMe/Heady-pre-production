@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyTask Monitor - Real-Time Task Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-family: monospace;
+            font-size: 10px;
+            line-height: 1.2;
+            color: #00d4ff;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #ff6b9d;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00d4ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .task {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .task.critical {
+            border-left-color: #ff4757;
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .task.high {
+            border-left-color: #ffa502;
+            background: rgba(255, 165, 2, 0.1);
+        }
+
+        .task.normal {
+            border-left-color: #00d4ff;
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .task.low {
+            border-left-color: #2ed573;
+            background: rgba(46, 213, 115, 0.1);
+        }
+
+        .task.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
+            border-left-color: #2ed573;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .task-priority {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .task-priority.critical {
+            background: #ff4757;
+        }
+
+        .task-priority.high {
+            background: #ffa502;
+        }
+
+        .task-priority.normal {
+            background: #00d4ff;
+            color: #000;
+        }
+
+        .task-priority.low {
+            background: #2ed573;
+            color: #000;
+        }
+
+        .task-description {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .task-meta {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+
+        .activity-feed {
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 12px;
+        }
+
+        .activity-item {
+            padding: 8px;
+            margin-bottom: 5px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 5px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .activity-time {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 10px;
+        }
+
+        .refresh-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 212, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #00d4ff;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="refresh-indicator pulse">
+        🔄 Auto-refresh: <span id="countdown">5</span>s
+    </div>
+
+    <div class="header">
+        <pre class="logo">
+    ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗
+    ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝
+    ███████║█████╗  ███████║██║  ██║ ╚████╔╝ 
+    ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝  
+    ██║  ██║███████╗██║  ██║██████╔╝   ██║   
+    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝   
+        </pre>
+        <h1>TASK MONITOR</h1>
+        <p class="subtitle">💖 Made with Love by HeadyConnection & HeadySystems Team 💖</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat">
+            <div class="stat-value" id="total-tasks">0</div>
+            <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="completed-tasks">0</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="queued-tasks">0</div>
+            <div class="stat-label">Queued</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value" id="success-rate">0%</div>
+            <div class="stat-label">Success Rate</div>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="panel">
+            <div class="panel-title">🔴 Critical Priority</div>
+            <div class="task-list" id="critical-tasks"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">🟠 High Priority</div>
+            <div class="task-list" id="high-tasks"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">🔵 Normal Priority</div>
+            <div class="task-list" id="normal-tasks"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">🟢 Low Priority</div>
+            <div class="task-list" id="low-tasks"></div>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">📊 Activity Feed</div>
+        <div class="activity-feed" id="activity-feed"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3300';
+        const API_KEY = localStorage.getItem('HEADY_API_KEY') || prompt('Enter HEADY_API_KEY:');
+        
+        if (API_KEY) {
+            localStorage.setItem('HEADY_API_KEY', API_KEY);
+        }
+
+        let activityLog = [];
+        let refreshInterval = 5;
+        let countdown = refreshInterval;
+
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleTimeString();
+        }
+
+        function addActivity(message, type = 'info') {
+            const activity = {
+                message,
+                type,
+                timestamp: new Date().toISOString()
+            };
+            
+            activityLog.unshift(activity);
+            if (activityLog.length > 50) activityLog.pop();
+            
+            updateActivityFeed();
+        }
+
+        function updateActivityFeed() {
+            const feed = document.getElementById('activity-feed');
+            feed.innerHTML = activityLog.map(a => `
+                <div class="activity-item">
+                    <span class="activity-time">${formatTime(a.timestamp)}</span>
+                    ${a.message}
+                </div>
+            `).join('');
+        }
+
+        function renderTask(task) {
+            const priority = task.priority || 'normal';
+            return `
+                <div class="task ${priority} ${task.completed ? 'completed' : ''}">
+                    <div class="task-header">
+                        <span class="task-priority ${priority}">${priority.toUpperCase()}</span>
+                        <span class="task-meta">${task.type || 'task'}</span>
+                    </div>
+                    <div class="task-description">${task.description}</div>
+                    <div class="task-meta">
+                        ${task.category ? `📁 ${task.category}` : ''}
+                        ${task.createdBy ? `👤 ${task.createdBy}` : ''}
+                        ${task.createdAt ? `🕐 ${formatTime(task.createdAt)}` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        async function fetchTasks() {
+            try {
+                const response = await fetch(`${API_URL}/api/tasks/queued`, {
+                    headers: { 'x-heady-api-key': API_KEY }
+                });
+                
+                if (!response.ok) throw new Error('Failed to fetch tasks');
+                
+                const data = await response.json();
+                
+                // Update task lists
+                document.getElementById('critical-tasks').innerHTML = 
+                    (data.tasks.critical || []).map(renderTask).join('') || '<p style="opacity:0.5">No critical tasks</p>';
+                
+                document.getElementById('high-tasks').innerHTML = 
+                    (data.tasks.high || []).map(renderTask).join('') || '<p style="opacity:0.5">No high priority tasks</p>';
+                
+                document.getElementById('normal-tasks').innerHTML = 
+                    (data.tasks.normal || []).map(renderTask).join('') || '<p style="opacity:0.5">No normal tasks</p>';
+                
+                document.getElementById('low-tasks').innerHTML = 
+                    (data.tasks.low || []).map(renderTask).join('') || '<p style="opacity:0.5">No low priority tasks</p>';
+                
+                // Update stats
+                const total = (data.tasks.critical?.length || 0) + 
+                             (data.tasks.high?.length || 0) + 
+                             (data.tasks.normal?.length || 0) + 
+                             (data.tasks.low?.length || 0);
+                
+                document.getElementById('queued-tasks').textContent = total;
+                
+                addActivity(`✅ Refreshed: ${total} tasks in queue`, 'success');
+                
+            } catch (error) {
+                addActivity(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function fetchStats() {
+            try {
+                const response = await fetch(`${API_URL}/api/mcp/routing-stats`, {
+                    headers: { 'x-heady-api-key': API_KEY }
+                });
+                
+                if (!response.ok) return;
+                
+                const data = await response.json();
+                
+                if (data.routing?.optimizer?.overview) {
+                    document.getElementById('total-tasks').textContent = 
+                        data.routing.optimizer.overview.totalTasks || 0;
+                    document.getElementById('completed-tasks').textContent = 
+                        data.routing.optimizer.overview.completed || 0;
+                    document.getElementById('success-rate').textContent = 
+                        data.routing.optimizer.overview.successRate || '0%';
+                }
+            } catch (error) {
+                console.error('Stats fetch error:', error);
+            }
+        }
+
+        async function refresh() {
+            await Promise.all([fetchTasks(), fetchStats()]);
+        }
+
+        // Initial load
+        refresh();
+        addActivity('🚀 Task Monitor started', 'info');
+
+        // Auto-refresh every 5 seconds
+        setInterval(refresh, refreshInterval * 1000);
+
+        // Countdown timer
+        setInterval(() => {
+            countdown--;
+            if (countdown <= 0) countdown = refreshInterval;
+            document.getElementById('countdown').textContent = countdown;
+        }, 1000);
+
+        // Simulate task completion (for demo)
+        setInterval(() => {
+            const events = [
+                '✅ Task completed: Fix naming violations',
+                '📥 New task added: Review security patterns',
+                '🔄 Task processing: Optimize HeadyMaid performance',
+                '✨ Task completed: Generate documentation',
+                '📋 New task from HeadyConductor: Integrate new workflow',
+                '🎯 Task routed: Deploy to production',
+                '💾 Task completed: Backup configuration',
+                '🔐 New task: Rotate API keys'
+            ];
+            
+            const randomEvent = events[Math.floor(Math.random() * events.length)];
+            if (Math.random() > 0.7) { // 30% chance every interval
+                addActivity(randomEvent, 'task');
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
