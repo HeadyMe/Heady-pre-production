@@ -11,7 +11,7 @@ const { spawn } = require('child_process');
 
 class HeadyRegistryRouter {
   constructor(registryPath = null) {
-    this.registryPath = registryPath || path.join(__dirname, '../.heady-memory/heady-registry.json');
+    this.registryPath = registryPath || path.join(__dirname, '../../.heady-memory/heady-registry.json');
     this.registry = this.loadRegistry();
     this.capabilities = this.buildCapabilityMap();
   }
