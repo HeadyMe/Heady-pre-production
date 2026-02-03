@@ -279,49 +279,6 @@ window.addEventListener('unhandledrejection', (event) => {
   window.__headyRejections = window.__headyRejections || [];
   window.__headyRejections.push(rejectionData);
 });
-// Capture detailed error context for debugging
-const captureErrorContext = (error) => {
-  return {
-    userAgent: navigator.userAgent,
-    url: window.location.href,
-    viewport: {
-      width: window.innerWidth,
-      height: window.innerHeight,
-      devicePixelRatio: window.devicePixelRatio || 1
-    },
-    memory: performance.memory ? {
-      usedJSHeapSize: performance.memory.usedJSHeapSize,
-      totalJSHeapSize: performance.memory.totalJSHeapSize,
-      jsHeapSizeLimit: performance.memory.jsHeapSizeLimit,
-      usedMB: (performance.memory.usedJSHeapSize / 1024 / 1024).toFixed(2),
-      usagePercent: ((performance.memory.usedJSHeapSize / performance.memory.jsHeapSizeLimit) * 100).toFixed(2)
-    } : null,
-    timing: performance.timing ? {
-      loadTime: performance.timing.loadEventEnd - performance.timing.navigationStart,
-      domReady: performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart,
-      ttfb: performance.timing.responseStart - performance.timing.requestStart
-    } : null,
-    errorType: error?.constructor?.name || typeof error,
-    localStorage: (() => {
-      try {
-        return {
-          itemCount: Object.keys(localStorage).length,
-          estimatedSize: new Blob(Object.values(localStorage)).size
-        };
-      } catch (e) {
-        return 'unavailable';
-      }
-    })(),
-    connection: navigator.connection ? {
-      effectiveType: navigator.connection.effectiveType,
-      downlink: navigator.connection.downlink,
-      rtt: navigator.connection.rtt,
-      saveData: navigator.connection.saveData
-    } : null,
-    online: navigator.onLine,
-    timestamp: new Date().toISOString()
-  };
-};
 
 // Monitor memory usage and trigger warnings with leak detection
 const monitorMemoryUsage = () => {
