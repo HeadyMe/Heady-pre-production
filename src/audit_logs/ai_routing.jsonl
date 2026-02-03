@@ -1,0 +1,3 @@
+{"timestamp":"2026-02-03T22:10:47.096Z","request":"Create user authentication API","context":{},"routing":{"shouldDelegate":false,"route":"direct"}}
+{"timestamp":"2026-02-03T22:10:47.097Z","request":"Implement rate limiting","context":{},"routing":{"shouldDelegate":true,"route":"heady_systems","primary":"HeadyHive","capability":"code_generation"}}
+{"timestamp":"2026-02-03T22:10:47.098Z","request":"Debug performance bottleneck","context":{},"routing":{"shouldDelegate":false,"route":"direct"}}
