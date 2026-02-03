@@ -1,0 +1,13 @@
+{
+  "name": "branded-mcp-server",
+  "version": "1.0.0",
+  "description": "A branded MCP server for Heady applications",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "body-parser": "^1.20.2"
+  }
+}
