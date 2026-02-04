@@ -4,6 +4,9 @@
 			"path": ".."
 		},
 		{
+			"path": "F:/"
+		},
+		{
 			"path": "../../.aws"
 		},
 		{
@@ -140,10 +143,9 @@
 		},
 		{
 			"path": "../../windsurf2"
-		},
-		{
-			"path": "F:/"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"powershell.cwd": "Heady"
+	}
 }

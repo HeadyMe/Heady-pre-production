@@ -88,3 +88,28 @@ nodes:
     role: "The Constructor"
     primary_tool: "hydrator"
     trigger_on: ["new_project"]
+
+  # CORE SYSTEM NODES - Central Intelligence & Awareness
+  - name: "LENS"
+    role: "The All-Seeing Eye"
+    primary_tool: "heady_lens"
+    behavior_profile: "real-time, comprehensive, monitoring"
+    trigger_on: ["monitor", "watch", "observe", "status", "health", "metrics", "performance"]
+
+  - name: "MEMORY"
+    role: "The Eternal Archive"
+    primary_tool: "heady_memory"
+    behavior_profile: "persistent, indexed, searchable"
+    trigger_on: ["remember", "store", "recall", "retrieve", "history", "knowledge", "learn"]
+
+  - name: "BRAIN"
+    role: "The Central Intelligence"
+    primary_tool: "heady_brain"
+    behavior_profile: "analytical, coordinating, decision-making"
+    trigger_on: ["think", "analyze", "decide", "process", "integrate", "reason", "understand"]
+
+  - name: "CONDUCTOR"
+    role: "The Orchestrator"
+    primary_tool: "heady_conductor"
+    behavior_profile: "orchestrating, routing, coordinating"
+    trigger_on: ["orchestrate", "coordinate", "route", "execute", "manage", "control"]

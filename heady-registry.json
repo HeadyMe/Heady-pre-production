@@ -1,0 +1,90 @@
+{
+  "registryVersion": "1.0.0",
+  "updatedAt": "2025-01-01T00:00:00.000Z",
+  "components": [
+    {
+      "id": "headymaid",
+      "name": "HeadyMaid",
+      "type": "observability",
+      "sourceOfTruth": "src/heady_maid.js",
+      "responsibilities": [
+        "scanRhythms",
+        "inventory",
+        "metadataExtraction",
+        "checksumCalculation",
+        "eventEmission"
+      ],
+      "artifacts": [".heady-memory/inventory/inventory.json"],
+      "ownership": "HeadyConductor",
+      "status": "active"
+    },
+    {
+      "id": "headyconductor",
+      "name": "HeadyConductor",
+      "type": "orchestration",
+      "responsibilities": [
+        "taskRouting",
+        "policyEnforcement",
+        "registryConsumption",
+        "systemOverview"
+      ],
+      "ownership": "core",
+      "status": "active"
+    },
+    {
+      "id": "headyregistry",
+      "name": "HeadyRegistry",
+      "type": "registry",
+      "responsibilities": [
+        "componentIndex",
+        "workflowIndex",
+        "capabilityIndex",
+        "persistentContext"
+      ],
+      "ownership": "core",
+      "status": "active"
+    },
+    {
+      "id": "headylens",
+      "name": "HeadyLens",
+      "type": "observability",
+      "responsibilities": [
+        "realTimeMonitoring",
+        "systemOverview",
+        "conductorComparison"
+      ],
+      "ownership": "core",
+      "status": "active"
+    },
+    {
+      "id": "heady-manager",
+      "name": "HeadyManager",
+      "type": "task-management",
+      "responsibilities": [
+        "delegation",
+        "workQueue",
+        "executionTracking",
+        "handoffs"
+      ],
+      "ownership": "core",
+      "status": "active"
+    }
+  ],
+  "workflows": [
+    {
+      "id": "observability-inventory",
+      "owner": "HeadyMaid",
+      "artifacts": [".heady-memory/inventory/inventory.json"],
+      "inputs": ["filesystem"],
+      "outputs": ["inventory", "events"],
+      "dependencies": ["headyregistry"]
+    },
+    {
+      "id": "task-routing",
+      "owner": "HeadyConductor",
+      "inputs": ["events", "registry"],
+      "outputs": ["tasks"],
+      "dependencies": ["heady-manager", "headylens"]
+    }
+  ]
+}

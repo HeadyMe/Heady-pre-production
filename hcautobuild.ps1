@@ -369,7 +369,7 @@ function New-Checkpoint {
         functionality_score = $FunctionalityScore.Percentage
         functionality_details = $FunctionalityScore
         git_commit = $null
-        build_status = if ($FunctionalityScore.Build.Success) { "passed" } else { "failed" }
+        build_status = (if ($FunctionalityScore.Build.Success) { "passed" } else { "failed" })
         health_status = $FunctionalityScore.Health.Status
         changes_since_last = @()
         metadata = @{
@@ -379,24 +379,24 @@ function New-Checkpoint {
             user = $env:USERNAME
         }
     }
-    
+
     # Get current git commit
     try {
         Set-Location $WorkspacePath
-        $checkpoint.git_commit = git rev-parse HEAD 2>$null
-        $checkpoint.branch = git rev-parse --abbrev-ref HEAD 2>$null
+        $checkpoint.git_commit = (git rev-parse HEAD 2>$null)
+        $checkpoint.branch = (git rev-parse --abbrev-ref HEAD 2>$null)
         
         # Get changes since last checkpoint
-        $lastCheckpointFile = Get-ChildItem $checkpointPath -Filter "*.json" | 
-            Sort-Object LastWriteTime -Descending | Select-Object -Skip 1 -First 1
+        $lastCheckpointFile = (Get-ChildItem $checkpointPath -Filter "*.json" | 
+            Sort-Object LastWriteTime -Descending | Select-Object -Skip 1 -First 1)
         
         if ($lastCheckpointFile) {
             try {
-                $lastCheckpoint = Get-Content $lastCheckpointFile.FullName | ConvertFrom-Json
+                $lastCheckpoint = (Get-Content $lastCheckpointFile.FullName | ConvertFrom-Json)
                 if ($lastCheckpoint.git_commit) {
-                    $changes = git diff --name-only $lastCheckpoint.git_commit HEAD 2>$null
+                    $changes = (git diff --name-only $lastCheckpoint.git_commit HEAD 2>$null)
                     if ($changes) {
-                        $checkpoint.changes_since_last = $changes -split "`n"
+                        $checkpoint.changes_since_last = ($changes -split "`n")
                     }
                 }
             } catch {
@@ -409,7 +409,8 @@ function New-Checkpoint {
     
     # Save checkpoint
     try {
-        $checkpoint | ConvertTo-Json -Depth 10 | Set-Content $checkpointFile
+        $checkpointJson = ($checkpoint | ConvertTo-Json -Depth 10)
+        $checkpointJson | Set-Content $checkpointFile
         Write-Log "Checkpoint saved: $checkpointFile" -Level "INFO"
         Write-Host "✓ Checkpoint created: $checkpointId" -ForegroundColor $Colors.Success
         Write-Host "  Functionality: $($FunctionalityScore.Percentage)%" -ForegroundColor $Colors.Info
@@ -434,13 +435,13 @@ function Invoke-CommitAndPush {
         git add .
         
         # Check if there are changes to commit
-        $status = git status --porcelain
+        $status = (git status --porcelain)
         if ($status) {
             git commit -m $Message
             Write-Log "Changes committed" -Level "INFO"
             
             # Push to all remotes
-            $remotes = git remote
+            $remotes = (git remote)
             foreach ($remote in $remotes) {
                 try {
                     git push $remote --all
@@ -489,7 +490,7 @@ function Get-StatusReport {
             path = $workspacePath
             functionality_score = $functionality.Percentage
             health_status = $health.Status
-            build_status = if ($functionality.Build.Success) { "Success" } else { "Failed" }
+            build_status = (if ($functionality.Build.Success) { "Success" } else { "Failed" })
             issues = $health.Issues
             last_checkpoint = $null
         }
@@ -497,11 +498,10 @@ function Get-StatusReport {
         # Get last checkpoint info
         $checkpointPath = Join-Path $workspacePath $CONFIG.CheckpointDir
         if (Test-Path $checkpointPath) {
-            $lastCheckpoint = Get-ChildItem $checkpointPath -Filter "*.json" | 
-                Sort-Object LastWriteTime -Descending | Select-Object -First 1
+            $lastCheckpoint = (Get-ChildItem $checkpointPath -Filter "*.json" | Sort-Object LastWriteTime -Descending | Select-Object -First 1)
             if ($lastCheckpoint) {
                 try {
-                    $checkpointData = Get-Content $lastCheckpoint.FullName | ConvertFrom-Json
+                    $checkpointData = (Get-Content $lastCheckpoint.FullName | ConvertFrom-Json)
                     $workspaceReport.last_checkpoint = @{
                         id = $checkpointData.checkpoint_id
                         timestamp = $checkpointData.timestamp
@@ -518,11 +518,13 @@ function Get-StatusReport {
         
         # Add recommendations
         if ($functionality.Percentage -lt $CONFIG.FunctionalityThreshold) {
-            $report.recommendations += "Workspace '$workspaceName' needs attention (" + $functionality.Percentage + "% functionality)"
+            $msg = "Workspace $workspaceName needs attention"
+            $report.recommendations += $msg
         }
         
         if ($health.Issues.Count -gt 0) {
-            $report.recommendations += "Workspace '$workspaceName' has $($health.Issues.Count) health issues"
+            $msg = "Workspace $workspaceName has health issues"
+            $report.recommendations += $msg
         }
     }
     
@@ -691,22 +693,7 @@ function Invoke-HCAutoBuild {
                 $overallSuccess = $false
             }
         } else {
-            Write-Host "Warning: Functionality below threshold (100% required for checkpoint)" -ForegroundColor $Colors.Warning
-            
-            # Show issues
-            if ($functionality.Health.Issues.Count -gt 0) {
-                Write-Host "Issues found:" -ForegroundColor $Colors.Warning
-                foreach ($issue in $functionality.Health.Issues) {
-                    Write-Host "  • $issue" -ForegroundColor $Colors.Warning
-                }
-            }
-            
-            if ($functionality.Build.Issues.Count -gt 0) {
-                Write-Host "Build issues:" -ForegroundColor $Colors.Warning
-                foreach ($issue in $functionality.Build.Issues) {
-                    Write-Host "  • $issue" -ForegroundColor $Colors.Warning
-                }
-            }
+            Write-Host "Warning: Functionality below threshold (100 required for checkpoint)" -ForegroundColor $Colors.Warning
         }
     }
     
