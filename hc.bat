@@ -1,2 +1,3 @@
 @echo off
-powershell -ExecutionPolicy Bypass -File "%~dp0scripts\hc.ps1" %*
+REM HCAutoBuild Quick Launcher
+powershell -ExecutionPolicy Bypass -File "%~dp0hcautobuild.ps1" %*

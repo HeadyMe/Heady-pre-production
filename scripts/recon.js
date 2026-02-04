@@ -41,13 +41,44 @@ class HeadyRecon {
             'security': /security|auth|encrypt|protect/i,
             'performance': /performance|optimize|speed|cache/i
         };
+
+        this.taskTypes = {
+            fix: 'Bug Fix',
+            build: 'Build',
+            test: 'Test',
+            create: 'Create',
+            update: 'Update',
+            remove: 'Remove',
+            sync: 'Sync',
+            analyze: 'Analyze',
+            document: 'Document',
+            pattern: 'Pattern',
+            concept: 'Concept',
+            security: 'Security',
+            performance: 'Performance'
+        };
+
+        this.taskPriorities = {
+            fix: 'HIGH',
+            build: 'HIGH',
+            test: 'MEDIUM',
+            create: 'MEDIUM',
+            update: 'MEDIUM',
+            remove: 'LOW',
+            sync: 'HIGH',
+            analyze: 'LOW',
+            document: 'LOW',
+            pattern: 'MEDIUM',
+            concept: 'HIGH',
+            security: 'CRITICAL',
+            performance: 'HIGH'
+        };
         
         this.functionalIndicators = {
-            // Signs that system is in a functional state
+            // Signs that system is in a functional state (filesystem based)
             buildComplete: ['dist', 'build', 'out'],
             depsInstalled: ['node_modules', 'package-lock.json'],
             testsPassing: ['test-results', 'coverage', 'test-report'],
-            gitClean: ['no uncommitted changes', 'working tree clean'],
             patternsValid: ['pattern-registry.ts', 'checkpoint-validation.ps1'],
             docsComplete: ['README.md', 'USER_MANUAL.md'],
             brandingComplete: ['brand_headers.js', '.windsurfrules']
@@ -110,13 +141,13 @@ class HeadyRecon {
         };
 
         // Detect task patterns in input
-        for (const [pattern, description] of Object.entries(this.patterns)) {
-            if (pattern.test(input)) {
+        for (const [taskKey, regex] of Object.entries(this.patterns)) {
+            if (regex.test(input)) {
                 analysis.detectedTasks.push({
-                    type: this.getTaskType(pattern, description),
-                    description: description,
-                    priority: this.getTaskPriority(pattern),
-                    confidence: this.getConfidence(pattern, input)
+                    type: this.getTaskType(taskKey),
+                    description: taskKey,
+                    priority: this.getTaskPriority(taskKey),
+                    confidence: this.getConfidence(regex, input)
                 });
             }
         }
@@ -127,6 +158,9 @@ class HeadyRecon {
         // Recommend actions
         analysis.recommendedActions = this.recommendActions(analysis.detectedTasks);
 
+        // Deterministic stage plan
+        analysis.deterministicPlan = this.buildDeterministicPlan(analysis);
+
         return analysis;
     }
 
@@ -135,65 +169,105 @@ class HeadyRecon {
      */
     checkSystemState() {
         const state = {};
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
         for (const [indicator, files] of Object.entries(this.functionalIndicators)) {
             state[indicator] = files.some(file => 
                 fs.existsSync(path.join('C:\\Users\\erich\\Heady', file)) ||
                 fs.existsSync(path.join('C:\\Users\\erich\\CascadeProjects\\HeadyMonorepo', file))
+=======
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+
+        const repoRoot = this.resolveRepoRoot(process.cwd());
+        const candidateRoots = [repoRoot];
+
+        for (const [indicator, files] of Object.entries(this.functionalIndicators)) {
+            state[indicator] = candidateRoots.some(basePath =>
+                files.some(file => fs.existsSync(path.join(basePath, file)))
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
             );
         }
+
+        state.gitClean = this.isGitClean(repoRoot);
         return state;
+    }
+
+    isGitClean(repoRoot) {
+        try {
+            const out = execSync('git status --porcelain', {
+                cwd: repoRoot,
+                stdio: ['ignore', 'pipe', 'ignore'],
+                shell: true
+            }).toString();
+            return out.trim().length === 0;
+        } catch {
+            return false;
+        }
+    }
+
+    buildDeterministicPlan(analysis) {
+        const stages = [
+            { id: 'recon', name: 'Recon', output: 'recon-analysis.json + JSON to stdout' },
+            { id: 'prep', name: 'Prep', output: 'prereqs verified' },
+            { id: 'autobuild', name: 'HCAutoBuild', output: 'build results summary' },
+            { id: 'commit', name: 'Commit', output: 'git commit created (if changes)' },
+            { id: 'push', name: 'Push', output: 'remotes updated (if enabled)' },
+            { id: 'report', name: 'Status Report', output: 'workflow report JSON saved' }
+        ];
+
+        const hasBuild = analysis.detectedTasks.some(t => t.description === 'build');
+        const hasSync = analysis.detectedTasks.some(t => t.description === 'sync');
+
+        let nextStage = 'prep';
+        if (!hasBuild) nextStage = 'prep';
+        if (analysis.systemState && analysis.systemState.depsInstalled && !analysis.systemState.buildComplete) nextStage = 'autobuild';
+        if (hasSync) nextStage = 'commit';
+
+        return {
+            stage: 'recon',
+            nextStage,
+            stages
+        };
+    }
+
+    resolveRepoRoot(startDir) {
+        let dir = startDir;
+        for (let i = 0; i < 10; i++) {
+            if (
+                fs.existsSync(path.join(dir, '.git')) ||
+                fs.existsSync(path.join(dir, 'package.json'))
+            ) {
+                return dir;
+            }
+            const parent = path.dirname(dir);
+            if (parent === dir) break;
+            dir = parent;
+        }
+        return startDir;
     }
 
     /**
      * Calculate task priority based on pattern
      */
     getTaskPriority(pattern) {
-        const priorities = {
-            'fix': 'HIGH',
-            'build': 'HIGH',
-            'test': 'MEDIUM',
-            'create': 'MEDIUM',
-            'update': 'MEDIUM',
-            'remove': 'LOW',
-            'sync': 'HIGH',
-            'analyze': 'LOW',
-            'document': 'LOW',
-            'pattern': 'MEDIUM',
-            'concept': 'HIGH',
-            'security': 'CRITICAL',
-            'performance': 'HIGH'
-        };
-        
-        for (const [pattern, priority] of Object.entries(priorities)) {
-            if (pattern.test('')) return priority;
-        }
-        return 'MEDIUM';
+        return this.taskPriorities[pattern] || 'MEDIUM';
     }
 
     /**
      * Get task type from pattern
      */
     getTaskType(pattern, description) {
-        const types = {
-            'fix': 'Bug Fix',
-            'build': 'Build',
-            'test': 'Test',
-            'create': 'Create',
-            'update': 'Update',
-            'remove': 'Remove',
-            'sync': 'Sync',
-            'analyze': 'Analyze',
-            'document': 'Document',
-            'pattern': 'Pattern',
-            'concept': 'Concept',
-            'security': 'Security',
-            'performance': 'Performance'
-        };
-        
-        for (const [pattern, type] of Object.entries(types)) {
-            if (pattern.test(description)) return type;
-        }
-        return 'Task';
+        return this.taskTypes[pattern] || 'Task';
     }
 
     /**
@@ -202,12 +276,11 @@ class HeadyRecon {
     getConfidence(pattern, input) {
         const matches = input.match(pattern);
         if (!matches) return 0;
-        
-        // Higher confidence for exact matches
-        if (matches[0] === input.toLowerCase()) return 100;
-        
-        // Lower confidence for partial matches
-        return Math.max(50, 100 - (input.length / input.length * 50));
+
+        const first = matches[0] || '';
+        if (first.length >= 6) return 90;
+        if (matches.length > 1) return 85;
+        return 75;
     }
 
     /**
@@ -260,15 +333,15 @@ class HeadyRecon {
             actions.push('⚠️ HIGH: Address high priority tasks');
         }
         
-        if (tasks.some(t => t.type === 'build')) {
+        if (tasks.some(t => t.description === 'build')) {
             actions.push('🔨 Run HCAutoBuild');
         }
         
-        if (tasks.some(t => t.type === 'sync')) {
+        if (tasks.some(t => t.description === 'sync')) {
             actions.push('🔄 Run HeadySync (hc -a hs)');
         }
         
-        if (tasks.some(t => t.type === 'test')) {
+        if (tasks.some(t => t.description === 'test')) {
             actions.push('🧪 Run tests');
         }
         
@@ -338,7 +411,22 @@ class HeadyRecon {
      */
     saveReport(analysis) {
         const report = this.generateReport(analysis);
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
         const reportPath = path.join('C:\\Users\\erich\\Heady\\logs\\recon-analysis.json');
+=======
+        const repoRoot = this.resolveRepoRoot(process.cwd());
+        const reportPath = path.join(repoRoot, 'logs', 'recon-analysis.json');
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+=======
+        const repoRoot = this.resolveRepoRoot(process.cwd());
+        const reportPath = path.join(repoRoot, 'logs', 'recon-analysis.json');
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+=======
+        const repoRoot = this.resolveRepoRoot(process.cwd());
+        const reportPath = path.join(repoRoot, 'logs', 'recon-analysis.json');
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
         
         // Ensure directory exists
         const logDir = path.dirname(reportPath);
@@ -347,14 +435,31 @@ class HeadyRecon {
         }
         
         fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-        console.log(`📊 Recon analysis saved to: ${reportPath}`);
+        if (!process.env.HEADY_RECON_SILENT) {
+            console.log(`📊 Recon analysis saved to: ${reportPath}`);
+        }
     }
 
     /**
      * Load previous analysis
      */
     loadReport() {
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
+<<<<<<< C:/Users/erich/Heady/scripts/recon.js
         const reportPath = path.join('C:\\Users\\erich\\Heady\\logs\\recon-analysis.json');
+=======
+        const repoRoot = this.resolveRepoRoot(process.cwd());
+        const reportPath = path.join(repoRoot, 'logs', 'recon-analysis.json');
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+=======
+        const repoRoot = this.resolveRepoRoot(process.cwd());
+        const reportPath = path.join(repoRoot, 'logs', 'recon-analysis.json');
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
+=======
+        const repoRoot = this.resolveRepoRoot(process.cwd());
+        const reportPath = path.join(repoRoot, 'logs', 'recon-analysis.json');
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-316a4fbf/scripts/recon.js
         if (fs.existsSync(reportPath)) {
             const data = fs.readFileSync(reportPath, 'utf8');
             return JSON.parse(data);
@@ -364,3 +469,12 @@ class HeadyRecon {
 }
 
 module.exports = HeadyRecon;
+
+if (require.main === module) {
+    process.env.HEADY_RECON_SILENT = '1';
+    const input = process.argv.slice(2).join(' ').trim();
+    const recon = new HeadyRecon();
+    const analysis = recon.analyzeInput(input);
+    recon.saveReport(analysis);
+    process.stdout.write(JSON.stringify(analysis));
+}

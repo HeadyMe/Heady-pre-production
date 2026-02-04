@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "workspaces": [
+    "Heady",
+    "CascadeProjects"
+  ],
+  "base_path": "C:\\Users\\erich\\.windsurf\\worktrees",
+  "checkpoint_directory": ".heady\\checkpoints",
+  "log_file": ".heady\\hcautobuild.log",
+  "settings": {
+    "monitor_interval_seconds": 300,
+    "functionality_threshold": 95,
+    "max_retries": 3,
+    "auto_commit": true,
+    "auto_push": true,
+    "create_backup": true
+  },
+  "build_commands": {
+    "node": {
+      "install": "npm install",
+      "build": "npm run build",
+      "test": "npm test"
+    },
+    "python": {
+      "install": "pip install -r requirements.txt",
+      "test": "python -m pytest",
+      "lint": "flake8 ."
+    }
+  },
+  "services": {
+    "heady_manager": {
+      "port": 3300,
+      "health_endpoint": "/health",
+      "timeout_seconds": 10
+    },
+    "frontend": {
+      "port": 3000,
+      "health_endpoint": "/",
+      "timeout_seconds": 5
+    }
+  },
+  "notifications": {
+    "enabled": true,
+    "methods": ["console", "log"],
+    "levels": ["ERROR", "WARNING", "INFO"]
+  },
+  "automation": {
+    "auto_fix_dependencies": true,
+    "auto_update_packages": false,
+    "auto_resolve_conflicts": false,
+    "auto_create_checkpoint": true
+  },
+  "security": {
+    "sanitize_secrets": true,
+    "scan_for_secrets": true,
+    "validate_permissions": true
+  },
+  "performance": {
+    "parallel_execution": true,
+    "cache_results": true,
+    "skip_unchanged": true
+  }
+}

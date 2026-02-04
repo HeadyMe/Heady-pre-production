@@ -17,6 +17,8 @@
 
 param(
     [string]$InputFile,
+    [string]$InputText,
+    [switch]$NonInteractive,
     [switch]$Force
 )
 
@@ -44,7 +46,13 @@ function Step-AnalyzeInput {
     Write-Host "🔍 STEP 1: Analyzing Input with recon.js..." -ForegroundColor Yellow
     
     if (Test-Path "$ScriptDir\recon.js") {
-        $analysis = node "$ScriptDir\recon.js" "$Input"
+        try {
+            $analysisJson = node "$ScriptDir\recon.js" "$Input"
+            $analysis = $analysisJson | ConvertFrom-Json -Depth 20
+        } catch {
+            Write-Warning "recon.js produced invalid JSON, proceeding with basic analysis"
+            return @{ detectedTasks = @(); predictedCheckpoint = $null }
+        }
         Write-Host "✅ Analysis complete" -ForegroundColor Green
         return $analysis
     } else {
@@ -76,6 +84,10 @@ function Step-CompleteTasks {
 function Step-Pause {
     Write-Host "⏸️ STEP 3: Pausing for review..." -ForegroundColor Yellow
     Write-Host "   Press any key to continue or Ctrl+C to abort..." -ForegroundColor Gray
+    if ($NonInteractive) {
+        Write-Host "✅ NonInteractive mode enabled, skipping pause." -ForegroundColor Green
+        return
+    }
     $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
     Write-Host "✅ Resuming..." -ForegroundColor Green
 }
@@ -157,17 +169,23 @@ Write-Host "   Timestamp: $(Get-Date)" -ForegroundColor Gray
 Write-Host ""
 
 # Get input
-$workflowInput = if ($InputFile -and (Test-Path $InputFile)) {
+$workflowInput = if ($InputText) {
+    $InputText
+} elseif ($InputFile -and (Test-Path $InputFile)) {
     Get-Content $InputFile -Raw
 } else {
-    Read-Host "Enter your workflow input"
+    if ($NonInteractive) {
+        ""
+    } else {
+        Read-Host "Enter your workflow input"
+    }
 }
 
 # STEP 1: Analyze
 $analysis = Step-AnalyzeInput -Input $workflowInput
 
 # STEP 2: Complete Tasks
-Step-CompleteTasks -Tasks $analysis.detectedTasks
+Step-CompleteTasks -Tasks @($analysis.detectedTasks)
 
 # STEP 3: Pause
 Step-Pause

@@ -12,54 +12,16 @@
 #    Sacred Geometry :: Organic Systems :: Breathing Interfaces
 # HEADY_BRAND:END
 
-<<<<<<< HEAD
-name: copilot-setup-steps
-
-on:
-  workflow_dispatch:
-=======
 name: Copilot Setup Steps
 
 on:
   workflow_dispatch:
   push:
     branches: [main]
->>>>>>> 5f1e865 (feat: intelligent squash merge - HeadySystems architecture with Docker MCP integration)
 
 jobs:
   copilot-setup-steps:
     runs-on: ubuntu-latest
-<<<<<<< HEAD
-    timeout-minutes: 10
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      - name: Verify environment and Run Tests
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          OTHER_API_KEY: ${{ secrets.OTHER_API_KEY }}
-        run: |
-          echo "Environment variables set."
-          # Optionally run pytest
-          if [ -d "tests" ] || [ -f "pytest.ini" ]; then
-             if command -v pytest &> /dev/null; then
-                pytest
-             else
-                echo "pytest not found in path."
-             fi
-          else
-             echo "No tests directory found, skipping pytest."
-          fi
-=======
     permissions:
       contents: read
       actions: read
@@ -117,4 +79,3 @@ jobs:
           echo "Node: $(node --version)"
           echo "Python: $(python --version)"
           echo "Setup complete!"
->>>>>>> 5f1e865 (feat: intelligent squash merge - HeadySystems architecture with Docker MCP integration)

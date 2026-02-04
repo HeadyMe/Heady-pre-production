@@ -104,6 +104,45 @@
 		},
 		{
 			"path": "../../windsurf2"
+		},
+		{
+			"path": "../../AppData"
+		},
+		{
+			"path": "../../Contacts"
+		},
+		{
+			"path": "../../Desktop"
+		},
+		{
+			"path": "../../OneDrive/Desktop"
+		},
+		{
+			"path": "../../OneDrive/Documents"
+		},
+		{
+			"path": "../../Links"
+		},
+		{
+			"path": "../../Music"
+		},
+		{
+			"path": "../../OneDrive"
+		},
+		{
+			"path": "../../OneDrive/Pictures"
+		},
+		{
+			"path": "../../Projects"
+		},
+		{
+			"path": "../../Saved Games"
+		},
+		{
+			"path": "../../Searches"
+		},
+		{
+			"path": "../../Videos"
 		}
 	],
 	"settings": {}

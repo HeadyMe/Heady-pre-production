@@ -16,6 +16,10 @@
 HEADY NEXUS DEPLOY - Multi-remote distribution protocol
 #>
 
+param(
+    [switch]$Force
+)
+
 $ROOT = $PSScriptRoot
 Set-Location $ROOT
 
@@ -61,9 +65,17 @@ $script:currentBranch = git branch --show-current
 function Push-To-Remote ($remoteName) {
     Write-Host "Pushing to $remoteName..." -NoNewline
     if ($remoteName -eq "origin") {
-        $output = git push -u $remoteName "$($script:currentBranch):main" --force 2>&1
+        if ($Force) {
+            $output = git push -u $remoteName "$($script:currentBranch):main" --force 2>&1
+        } else {
+            $output = git push -u $remoteName "$($script:currentBranch):main" 2>&1
+        }
     } else {
-        $output = git push $remoteName "$($script:currentBranch):main" --force 2>&1
+        if ($Force) {
+            $output = git push $remoteName "$($script:currentBranch):main" --force 2>&1
+        } else {
+            $output = git push $remoteName "$($script:currentBranch):main" 2>&1
+        }
     }
     
     if ($LASTEXITCODE -eq 0) {

@@ -1,91 +1,72 @@
 {
   "mcpServers": {
     "filesystem": {
-<<<<<<< HEAD
-      "type": "local",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/workspaces", "/shared"],
-      "tools": ["*"],
-      "_comment": "Local filesystem access."
-    },
-    "git": {
-      "type": "local",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-git"],
-      "tools": ["*"],
-      "_comment": "Git operations."
-    },
-    "postgres": {
-      "type": "local",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "DATABASE_URL": "${DATABASE_URL}"
-      },
-      "tools": ["*"],
-      "_comment": "Database access via env var."
-    },
-    "cloudflare": {
-      "type": "local",
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-cloudflare"],
-      "env": {
-        "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}",
-        "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}"
-      },
-      "tools": ["*"],
-      "_comment": "Cloudflare access via env vars."
-=======
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-filesystem",
         "/workspaces",
         "/shared"
-      ]
+      ],
+      "tools": ["*"],
+      "type": "local"
     },
     "sequential-thinking": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
-      ]
+      ],
+      "tools": ["*"],
+      "type": "local"
     },
     "memory": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-memory"
-      ]
+      ],
+      "tools": ["*"],
+      "type": "local"
     },
     "fetch": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-fetch"
-      ]
+      ],
+      "tools": ["*"],
+      "type": "local"
     },
     "postgres": {
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-postgres",
-        "${DATABASE_URL}"
-      ]
+        "@modelcontextprotocol/server-postgres"
+      ],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      },
+      "tools": ["*"],
+      "type": "local"
     },
     "git": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-git"
-      ]
+      ],
+      "tools": ["*"],
+      "type": "local"
     },
     "puppeteer": {
       "command": "npx",
       "args": [
         "-y",
         "@modelcontextprotocol/server-puppeteer"
-      ]
+      ],
+      "tools": ["*"],
+      "type": "local"
     },
     "cloudflare": {
       "command": "npx",
@@ -94,10 +75,11 @@
         "@cloudflare/mcp-server-cloudflare"
       ],
       "env": {
-        "CLOUDFLARE_API_TOKEN": "${COPILOT_MCP_CLOUDFLARE_API_TOKEN}",
-        "CLOUDFLARE_ACCOUNT_ID": "${COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID}"
-      }
->>>>>>> 5f1e865 (feat: intelligent squash merge - HeadySystems architecture with Docker MCP integration)
+        "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}",
+        "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}"
+      },
+      "tools": ["*"],
+      "type": "local"
     }
   }
 }

@@ -12,21 +12,35 @@
 #    Sacred Geometry :: Organic Systems :: Breathing Interfaces
 # HEADY_BRAND:END
 
-<<<<<<< HEAD
 __pycache__/
 *.pyc
+<<<<<<< C:/Users/erich/Heady/.gitignore
+=======
 venv/
+.venv/
+<<<<<<< C:/Users/erich/Heady/.gitignore
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b7f06678/.gitignore
+=======
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b7f06678/.gitignore
 node_modules/
 dist/
 build/
 .env
 .pytest_cache/
 heady-manifest.json
-=======
-node_modules/
-.env
 .heady_secrets
-__pycache__/
-*.log
+<<<<<<< C:/Users/erich/Heady/.gitignore
+<<<<<<< C:/Users/erich/Heady/.gitignore
+venv/
 .venv/
->>>>>>> 5f1e865 (feat: intelligent squash merge - HeadySystems architecture with Docker MCP integration)
+*.log
+=======
+*.log
+logs/
+HeadyAcademy/Content_Forge/Visualizations/
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b7f06678/.gitignore
+=======
+*.log
+logs/
+HeadyAcademy/Content_Forge/Visualizations/
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-b7f06678/.gitignore

@@ -14,29 +14,6 @@
 
 name: CI
 
-<<<<<<< HEAD
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pylint
-      - name: Lint
-        run: pylint src/heady_project || true
-      - name: Run Tests
-        env:
-          PYTHONPATH: .
-        run: pytest
-=======
 on:
   push:
     branches: [main]
@@ -74,4 +51,3 @@ jobs:
 
       - name: Python syntax check
         run: python -m compileall src
->>>>>>> 5f1e865 (feat: intelligent squash merge - HeadySystems architecture with Docker MCP integration)

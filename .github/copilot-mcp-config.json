@@ -1,6 +1,12 @@
 {
   "mcpServers": {
-<<<<<<< HEAD
+    "heady-manager": {
+      "type": "local",
+      "command": "node",
+      "args": ["heady-manager.js"],
+      "tools": ["*"],
+      "description": "HeadySystems MCP Manager - Node.js server providing system pulse and Docker integration"
+    },
     "filesystem": {
       "type": "local",
       "command": "npx",
@@ -35,14 +41,6 @@
       },
       "tools": ["*"],
       "_comment": "Cloudflare server using API token and Account ID from secrets."
-=======
-    "heady-manager": {
-      "type": "local",
-      "command": "node",
-      "args": ["heady-manager.js"],
-      "tools": ["*"],
-      "description": "HeadySystems MCP Manager - Node.js server providing system pulse and Docker integration"
->>>>>>> 5f1e865 (feat: intelligent squash merge - HeadySystems architecture with Docker MCP integration)
     }
   }
 }
