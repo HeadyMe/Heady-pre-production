@@ -22,7 +22,7 @@
 ║     ██║  ██║███████╗██║  ██║██████╔╝   ██║                                   ║
 ║     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                                   ║
 ║                                                                               ║
-║     ∞ LENS - THE ALL-SEEING EYE ∞                                             ║
+║      LENS - THE ALL-SEEING EYE                                              ║
 ║     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                            ║
 ║     Real-time comprehensive system awareness                                  ║
 ║     Registered in HeadyRegistry for orchestrated monitoring                   ║
@@ -47,7 +47,7 @@ try:
     MONITORING_AVAILABLE = True
 except ImportError:
     MONITORING_AVAILABLE = False
-    print("⚠ HeadyLens: psutil/requests not available, limited monitoring mode")
+    print("[WARN] HeadyLens: psutil/requests not available, limited monitoring mode")
 
 
 @dataclass
@@ -87,7 +87,7 @@ class HeadyLens:
         self.check_interval = 5
         self.start_time = datetime.now()
         
-        print("∞ LENS: Initialized - The All-Seeing Eye is ready")
+        print("LENS: Initialized - The All-Seeing Eye is ready")
     
     def start_monitoring(self):
         """Start real-time monitoring."""
@@ -275,7 +275,7 @@ if __name__ == "__main__":
     lens.start_monitoring()
     
     print("\n" + "="*80)
-    print("∞ LENS - THE ALL-SEEING EYE ∞")
+    print(" LENS - THE ALL-SEEING EYE ")
     print("="*80)
     
     time.sleep(2)

@@ -1,0 +1,8 @@
+{
+  "asset": "heady-governance-policy-pack-v1.2.0.tar.gz",
+  "install_dir": ".heady/governance/policy-pack",
+  "mode": "release",
+  "ref": "v1.2.0",
+  "repo": "HeadyConnection-Org/governance",
+  "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

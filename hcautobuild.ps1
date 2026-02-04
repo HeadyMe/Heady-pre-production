@@ -1,6 +1,6 @@
 # HEADY_BRAND:BEGIN
 # HEADY SYSTEMS :: SACRED GEOMETRY
-# FILE: hcautobuild.ps1
+# FILE: hcautobuild_enhanced.ps1
 # LAYER: root
 # 
 #         _   _  _____    _    ____   __   __
@@ -22,11 +22,11 @@
 ║     ██║  ██║███████╗██║  ██║██████╔╝   ██║                                   ║
 ║     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                                   ║
 ║                                                                               ║
-║     ∞ HCAutoBuild - Autonomous Checkpoint System ∞                           ║
+║     ∞ HCAutoBuild Enhanced - Codemap-Powered Intelligence ∞                    ║
 ║     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                         ║
-║     Maintains 100% functionality through automated checkpoints                 ║
+║     Advanced autonomous system with AI node integration                         ║
 ║                                                                               ║
-╚═══════════════════════════════════════════════════════════════════════════════╝
+╚══════════════════════════════════════════════════════════════════════════════╝
 #>
 
 param(
@@ -37,6 +37,8 @@ param(
     [switch]$verbose,
     [switch]$force,
     [switch]$skipValidation,
+    [switch]$optimize,
+    [switch]$codemap,
     [string]$workspace,
     [switch]$help
 )
@@ -44,562 +46,203 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-# Configuration
-$CONFIG = @{
-    Workspaces = @("Heady", "CascadeProjects")
-    BasePath = "C:\Users\erich\.windsurf\worktrees"
-    CheckpointDir = ".heady\checkpoints"
-    LogFile = ".heady\hcautobuild.log"
-    ConfigFile = ".heady\hcautobuild_config.json"
-    MonitorInterval = 300  # 5 minutes
-    FunctionalityThreshold = 95
-    MaxRetries = 3
+# Import base HCAutoBuild functionality
+. (Join-Path $PSScriptRoot "hcautobuild.ps1")
+
+# Enhanced Configuration with Codemap Integration
+$ENHANCED_CONFIG = @{
+    BaseConfig = $CONFIG
+    CodemapNodes = @("JULES", "OBSERVER", "BUILDER", "ATLAS")
+    OptimizationInterval = 3600  # 1 hour
+    AutoOptimize = $true
+    NodeTimeout = 300  # 5 minutes
+    ParallelExecution = $true
 }
 
-# Colors for output
-$Colors = @{
-    Success = "Green"
-    Warning = "Yellow"
-    Error = "Red"
-    Info = "Cyan"
-    Debug = "Magenta"
-}
-
-# Utility Functions
-function Write-Log {
-    param([string]$Message, [string]$Level = "INFO")
+function Write-EnhancedLog {
+    param([string]$Message, [string]$Node = "ENHANCED", [string]$Level = "INFO")
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $logEntry = "[$timestamp] [$Level] $Message"
+    $logEntry = "[$timestamp] [ENHANCED-$Node] $Message"
     
-    if ($verbose -or $debug -or $Level -in @("ERROR", "WARNING")) {
-        $color = if ($Colors.ContainsKey($Level)) { $Colors[$Level] } else { "White" }
-        Write-Host $logEntry -ForegroundColor $color
+    $color = switch ($Level) {
+        "ERROR" { "Red" }
+        "WARNING" { "Yellow" }
+        "SUCCESS" { "Green" }
+        "INFO" { "Cyan" }
+        "DEBUG" { "Magenta" }
+        default { "White" }
     }
     
-    # Ensure log directory exists
-    $logDir = Split-Path $CONFIG.LogFile -Parent
-    if (-not (Test-Path $logDir)) {
-        New-Item -ItemType Directory -Force -Path $logDir | Out-Null
+    Write-Host $logEntry -ForegroundColor $color
+    
+    # Enhanced logging
+    $logDir = ".heady\logs\enhanced"
+    if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Force -Path $logDir | Out-Null }
+    Add-Content -Path "$logDir\hcautobuild_enhanced.log" -Value $logEntry
+}
+
+function Invoke-CodemapOptimization {
+    param([string]$WorkspacePath)
+    
+    Write-EnhancedLog "Initiating codemap optimization..." -Node "COORDINATOR"
+    
+    $optimizerScript = Join-Path $PSScriptRoot "hcautobuild_optimizer.ps1"
+    
+    if (-not (Test-Path $optimizerScript)) {
+        Write-EnhancedLog "Optimizer script not found" -Node "COORDINATOR" -Level "ERROR"
+        return $false
     }
     
-    Add-Content -Path $CONFIG.LogFile -Value $logEntry
-}
-
-function Write-Section {
-    param([string]$Title)
-    Write-Host "`n∞ $Title ∞" -ForegroundColor $Colors.Info
-    Write-Host $("═" * ($Title.Length + 4)) -ForegroundColor $Colors.Info
-}
-
-function Test-Command {
-    param([string]$Command)
     try {
-        $null = Get-Command $Command -ErrorAction Stop
-        return $true
+        # Run optimization with all nodes
+        $args = @("-optimize")
+        if ($verbose) { $args += "-verbose" }
+        $args += "-workspace", "`"$WorkspacePath`""
+        
+        Write-EnhancedLog "Executing: .\hcautobuild_optimizer.ps1 $($args -join ' ')" -Node "COORDINATOR"
+        
+        $result = & powershell -ExecutionPolicy Bypass -File $optimizerScript @args
+        
+        if ($LASTEXITCODE -eq 0) {
+            Write-EnhancedLog "Codemap optimization completed successfully" -Node "COORDINATOR" -Level "SUCCESS"
+            return $true
+        } else {
+            Write-EnhancedLog "Codemap optimization failed" -Node "COORDINATOR" -Level "WARNING"
+            return $false
+        }
     } catch {
+        Write-EnhancedLog "Codemap optimization error: $($_.Exception.Message)" -Node "COORDINATOR" -Level "ERROR"
         return $false
     }
 }
 
-function Get-WorkspacePath {
-    param([string]$WorkspaceName)
-    return Join-Path $CONFIG.BasePath "$WorkspaceName-$WorkspaceName"
-}
-
-function Test-WorkspaceHealth {
+function Get-EnhancedFunctionalityScore {
     param([string]$WorkspacePath)
     
-    Write-Log "Testing workspace health: $WorkspacePath" -Level "DEBUG"
+    Write-EnhancedLog "Calculating enhanced functionality score..." -Node "ANALYZER"
     
-    $health = @{
-        Status = "Unknown"
-        Issues = @()
-        Score = 0
-        Details = @{}
+    # Get base functionality score
+    $baseScore = Get-FunctionalityScore $WorkspacePath
+    
+    # Apply codemap optimizations
+    $enhancements = @{
+        code_quality = 0
+        documentation = 0
+        performance = 0
+        security = 0
     }
     
-    try {
-        Set-Location $WorkspacePath
-        
-        # Git repository check
-        if (Test-Path ".git") {
-            $health.Details.GitStatus = git status --porcelain
-            if ($LASTEXITCODE -eq 0) {
-                $health.Score += 20
-                Write-Log "Git repository healthy" -Level "DEBUG"
-            } else {
-                $health.Issues += "Git repository corrupted"
-            }
-        } else {
-            $health.Issues += "Not a git repository"
-        }
-        
-        # Package.json check (Node.js projects)
-        if (Test-Path "package.json") {
+    # Check for optimization reports
+    $optReportDir = ".heady\optimization_reports"
+    if (Test-Path $optReportDir) {
+        $latestReport = Get-ChildItem $optReportDir -Filter "*.json" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if ($latestReport) {
             try {
-                $packageJson = Get-Content "package.json" | ConvertFrom-Json
-                $health.Details.NodeVersion = $packageJson.version
-                $health.Score += 20
-                
-                # Check if node_modules exists and is recent
-                if (Test-Path "node_modules") {
-                    $modulesAge = (Get-Date) - (Get-Item "node_modules").LastWriteTime
-                    if ($modulesAge.Days -lt 7) {
-                        $health.Score += 10
-                    } else {
-                        $health.Issues += "Node modules are old ($( $modulesAge.Days ) days)"
-                    }
-                } else {
-                    $health.Issues += "Node modules not installed"
-                }
+                $report = Get-Content $latestReport.FullName | ConvertFrom-Json
+                $enhancements.code_quality += [math]::Min($report.optimizations_found * 2, 10)
+                Write-EnhancedLog "Found $($report.optimizations_found) optimizations from codemap analysis" -Node "ANALYZER"
             } catch {
-                $health.Issues += "Invalid package.json"
+                Write-EnhancedLog "Could not read optimization report" -Node "ANALYZER" -Level "DEBUG"
             }
         }
-        
-        # Requirements.txt check (Python projects)
-        if (Test-Path "requirements.txt") {
-            $health.Details.PythonDeps = (Get-Content "requirements.txt").Count
-            $health.Score += 20
-            
-            # Check for virtual environment
-            if (Test-Path ".venv" -or Test-Path "venv") {
-                $health.Score += 10
-            } else {
-                $health.Issues += "No virtual environment found"
-            }
-        }
-        
-        # Build artifacts check
-        $buildDirs = @("dist", "build", ".next", "out")
-        foreach ($dir in $buildDirs) {
-            if (Test-Path $dir) {
-                $health.Details.HasBuildArtifacts = $true
-                $health.Score += 10
-                break
-            }
-        }
-        
-        # Determine overall status
-        if ($health.Score -ge 90) {
-            $health.Status = "Excellent"
-        } elseif ($health.Score -ge 70) {
-            $health.Status = "Good"
-        } elseif ($health.Score -ge 50) {
-            $health.Status = "Fair"
-        } else {
-            $health.Status = "Poor"
-        }
-        
-    } catch {
-        $health.Status = "Error"
-        $health.Issues += "Error during health check: $($_.Exception.Message)"
     }
     
-    return $health
-}
-
-function Test-BuildStatus {
-    param([string]$WorkspacePath)
-    
-    Write-Log "Testing build status: $WorkspacePath" -Level "DEBUG"
-    
-    $buildStatus = @{
-        Success = $false
-        Issues = @()
-        Duration = 0
-        Output = ""
-    }
-    
-    try {
-        Set-Location $WorkspacePath
-        $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-        
-        # Node.js build
-        if (Test-Path "package.json") {
+    # Check for observer reports
+    $observerReportDir = ".heady\observer_reports"
+    if (Test-Path $observerReportDir) {
+        $latestReport = Get-ChildItem $observerReportDir -Filter "*.json" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if ($latestReport) {
             try {
-                if (Test-Command "npm") {
-                    $output = npm run build 2>&1
-                    if ($LASTEXITCODE -eq 0) {
-                        $buildStatus.Success = $true
-                        Write-Log "Node.js build successful" -Level "DEBUG"
-                    } else {
-                        $buildStatus.Issues += "Node.js build failed"
-                        $buildStatus.Output = $output
-                    }
-                } else {
-                    $buildStatus.Issues += "npm not available"
-                }
+                $report = Get-Content $latestReport.FullName | ConvertFrom-Json
+                $enhancements.performance += [math]::Min(10 - $report.optimization_opportunities.Count, 10)
+                Write-EnhancedLog "Observer analysis: $($report.optimization_opportunities.Count) opportunities found" -Node "ANALYZER"
             } catch {
-                $buildStatus.Issues += "Node.js build error: $($_.Exception.Message)"
+                Write-EnhancedLog "Could not read observer report" -Node "ANALYZER" -Level "DEBUG"
             }
         }
-        
-        # Python build/tests
-        if (Test-Path "requirements.txt") {
+    }
+    
+    # Check for atlas reports
+    $atlasReportDir = ".heady\atlas_reports"
+    if (Test-Path $atlasReportDir) {
+        $latestReport = Get-ChildItem $atlasReportDir -Filter "*.json" | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+        if ($latestReport) {
             try {
-                if (Test-Command "python") {
-                    $output = python -m pytest --tb=short 2>&1
-                    if ($LASTEXITCODE -eq 0) {
-                        Write-Log "Python tests passed" -Level "DEBUG"
-                        if (-not $buildStatus.Success) {
-                            $buildStatus.Success = $true
-                        }
-                    } else {
-                        $buildStatus.Issues += "Python tests failed"
-                        if (-not $buildStatus.Output) {
-                            $buildStatus.Output = $output
-                        }
-                    }
-                } else {
-                    $buildStatus.Issues += "Python not available"
-                }
+                $report = Get-Content $latestReport.FullName | ConvertFrom-Json
+                $enhancements.documentation += [math]::Min($report.documentation_files.Count, 10)
+                Write-EnhancedLog "Atlas documentation: $($report.documentation_files.Count) files found" -Node "ANALYZER"
             } catch {
-                $buildStatus.Issues += "Python test error: $($_.Exception.Message)"
+                Write-EnhancedLog "Could not read atlas report" -Node "ANALYZER" -Level "DEBUG"
             }
         }
-        
-        # If no build system found, consider it successful
-        if (-not (Test-Path "package.json") -and -not (Test-Path "requirements.txt")) {
-            $buildStatus.Success = $true
-            Write-Log "No build system detected, assuming success" -Level "DEBUG"
-        }
-        
-    } catch {
-        $buildStatus.Issues += "Build test error: $($_.Exception.Message)"
-    } finally {
-        $stopwatch.Stop()
-        $buildStatus.Duration = $stopwatch.Elapsed.TotalSeconds
     }
     
-    return $buildStatus
-}
-
-function Get-FunctionalityScore {
-    param([string]$WorkspacePath)
+    # Calculate enhanced score
+    $totalEnhancements = $enhancements.Values | Measure-Object -Sum | Select-Object -ExpandProperty Sum
+    $enhancedScore = $baseScore.Score + $totalEnhancements
+    $maxEnhancedScore = $baseScore.MaxScore + 40  # Add 40 points for enhancements
     
-    Write-Log "Calculating functionality score: $WorkspacePath" -Level "DEBUG"
+    $enhancedPercentage = [math]::Round(($enhancedScore / $maxEnhancedScore) * 100, 1)
     
-    $score = 0
-    $maxScore = 100
-    $factors = @()
-    
-    # Health check (40% of score)
-    $health = Test-WorkspaceHealth $WorkspacePath
-    $healthScore = [math]::Min($health.Score, 40)
-    $score += $healthScore
-    $factors += "Health: $healthScore/40"
-    
-    # Build status (30% of score)
-    $build = Test-BuildStatus $WorkspacePath
-    $buildScore = if ($build.Success) { 30 } else { 0 }
-    $score += $buildScore
-    $factors += "Build: $buildScore/30"
-    
-    # Git cleanliness (15% of score)
-    try {
-        Set-Location $WorkspacePath
-        $gitStatus = git status --porcelain
-        if ($gitStatus) {
-            $gitScore = 5  # Some changes
-        } else {
-            $gitScore = 15  # Clean working directory
-        }
-        $score += $gitScore
-        $factors += "Git: $gitScore/15"
-    } catch {
-        $factors += "Git: 0/15 (error)"
-    }
-    
-    # Recent activity (15% of score)
-    try {
-        Set-Location $WorkspacePath
-        $lastCommit = git log -1 --format="%ct" 2>$null
-        if ($lastCommit) {
-            $commitTime = [UnixEpoch]::Parse($lastCommit)
-            $daysSinceCommit = (Get-Date) - $commitTime
-            if ($daysSinceCommit.Days -le 7) {
-                $activityScore = 15
-            } elseif ($daysSinceCommit.Days -le 30) {
-                $activityScore = 10
-            } else {
-                $activityScore = 5
-            }
-        } else {
-            $activityScore = 0
-        }
-        $score += $activityScore
-        $factors += "Activity: $activityScore/15"
-    } catch {
-        $factors += "Activity: 0/15 (error)"
-    }
-    
-    Write-Log "Functionality score: $score/$maxScore ($($factors -join ', '))" -Level "DEBUG"
+    Write-EnhancedLog "Enhanced score: $enhancedScore/$maxEnhancedScore ($enhancedPercentage%)" -Node "ANALYZER"
+    Write-EnhancedLog "Base score: $($baseScore.Score)/$($baseScore.MaxScore) ($($baseScore.Percentage)%)" -Node "ANALYZER"
+    Write-EnhancedLog "Enhancements: +$totalEnhancements points" -Node "ANALYZER"
     
     return @{
-        Score = $score
-        MaxScore = $maxScore
-        Percentage = [math]::Round(($score / $maxScore) * 100, 1)
-        Factors = $factors
-        Health = $health
-        Build = $build
+        Score = $enhancedScore
+        MaxScore = $maxEnhancedScore
+        Percentage = $enhancedPercentage
+        BaseScore = $baseScore
+        Enhancements = $enhancements
+        Factors = $baseScore.Factors + @("Codemap: +$totalEnhancements")
     }
 }
 
-function New-Checkpoint {
+function New-EnhancedCheckpoint {
     param([string]$WorkspacePath, [hashtable]$FunctionalityScore)
     
-    Write-Section "CREATING CHECKPOINT"
+    Write-EnhancedLog "Creating enhanced checkpoint..." -Node "CHECKPOINT"
     
-    $checkpointId = "auto_$(Get-Date -Format 'yyyyMMdd_HHmmss')"
-    $checkpointPath = Join-Path $WorkspacePath $CONFIG.CheckpointDir
-    $checkpointFile = Join-Path $checkpointPath "$checkpointId.json"
+    # Create base checkpoint
+    $checkpoint = New-Checkpoint $WorkspacePath $FunctionalityScore.BaseScore
     
-    # Ensure checkpoint directory exists
-    if (-not (Test-Path $checkpointPath)) {
-        New-Item -ItemType Directory -Force -Path $checkpointPath | Out-Null
-    }
-    
-    $workspaceName = Split-Path $WorkspacePath -Leaf
-    
-    $checkpoint = @{
-        checkpoint_id = $checkpointId
-        timestamp = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ssZ")
-        workspace = $workspaceName
-        functionality_score = $FunctionalityScore.Percentage
-        functionality_details = $FunctionalityScore
-        git_commit = $null
-        build_status = (if ($FunctionalityScore.Build.Success) { "passed" } else { "failed" })
-        health_status = $FunctionalityScore.Health.Status
-        changes_since_last = @()
-        metadata = @{
-            created_by = "HCAutoBuild"
-            version = "1.0.0"
-            hostname = $env:COMPUTERNAME
-            user = $env:USERNAME
-        }
-    }
-
-    # Get current git commit
-    try {
-        Set-Location $WorkspacePath
-        $checkpoint.git_commit = (git rev-parse HEAD 2>$null)
-        $checkpoint.branch = (git rev-parse --abbrev-ref HEAD 2>$null)
+    if ($checkpoint) {
+        # Add enhanced metadata
+        $checkpoint.enhanced_score = $FunctionalityScore.Percentage
+        $checkpoint.base_score = $FunctionalityScore.BaseScore.Percentage
+        $checkpoint.enhancements = $FunctionalityScore.Enhancements
+        $checkpoint.codemap_nodes = $ENHANCED_CONFIG.CodemapNodes
+        $checkpoint.optimization_applied = $optimize
         
-        # Get changes since last checkpoint
-        $lastCheckpointFile = (Get-ChildItem $checkpointPath -Filter "*.json" | 
-            Sort-Object LastWriteTime -Descending | Select-Object -Skip 1 -First 1)
+        # Save enhanced checkpoint
+        $checkpointPath = Join-Path $WorkspacePath $CONFIG.CheckpointDir
+        $checkpointFile = Join-Path $checkpointPath "$($checkpoint.checkpoint_id)_enhanced.json"
         
-        if ($lastCheckpointFile) {
-            try {
-                $lastCheckpoint = (Get-Content $lastCheckpointFile.FullName | ConvertFrom-Json)
-                if ($lastCheckpoint.git_commit) {
-                    $changes = (git diff --name-only $lastCheckpoint.git_commit HEAD 2>$null)
-                    if ($changes) {
-                        $checkpoint.changes_since_last = ($changes -split "`n")
-                    }
-                }
-            } catch {
-                Write-Log "Could not determine changes since last checkpoint" -Level "WARNING"
-            }
-        }
-    } catch {
-        Write-Log "Git information unavailable" -Level "WARNING"
-    }
-    
-    # Save checkpoint
-    try {
-        $checkpointJson = ($checkpoint | ConvertTo-Json -Depth 10)
-        $checkpointJson | Set-Content $checkpointFile
-        Write-Log "Checkpoint saved: $checkpointFile" -Level "INFO"
-        Write-Host "✓ Checkpoint created: $checkpointId" -ForegroundColor $Colors.Success
-        Write-Host "  Functionality: $($FunctionalityScore.Percentage)%" -ForegroundColor $Colors.Info
-        Write-Host "  Location: $checkpointFile" -ForegroundColor $Colors.Info
+        $checkpoint | ConvertTo-Json -Depth 10 | Set-Content $checkpointFile
+        
+        Write-EnhancedLog "Enhanced checkpoint created: $($checkpoint.checkpoint_id)" -Node "CHECKPOINT" -Level "SUCCESS"
+        Write-EnhancedLog "Enhanced functionality: $($FunctionalityScore.Percentage)%" -Node "CHECKPOINT"
+        Write-EnhancedLog "Base functionality: $($FunctionalityScore.BaseScore.Percentage)%" -Node "CHECKPOINT"
         
         return $checkpoint
-    } catch {
-        Write-Log "Failed to save checkpoint: $($_.Exception.Message)" -Level "ERROR"
-        return $null
     }
+    
+    return $null
 }
 
-function Invoke-CommitAndPush {
-    param([string]$WorkspacePath, [string]$Message)
+function Invoke-EnhancedMonitoring {
+    param([string]$WorkspacePath)
     
-    Write-Log "Committing and pushing changes: $WorkspacePath" -Level "INFO"
-    
-    try {
-        Set-Location $WorkspacePath
-        
-        # Stage all changes
-        git add .
-        
-        # Check if there are changes to commit
-        $status = (git status --porcelain)
-        if ($status) {
-            git commit -m $Message
-            Write-Log "Changes committed" -Level "INFO"
-            
-            # Push to all remotes
-            $remotes = (git remote)
-            foreach ($remote in $remotes) {
-                try {
-                    git push $remote --all
-                    Write-Log "Pushed to $remote" -Level "INFO"
-                } catch {
-                    Write-Log "Failed to push to $remote`: $($_.Exception.Message)" -Level "WARNING"
-                }
-            }
-        } else {
-            Write-Log "No changes to commit" -Level "INFO"
-        }
-        
-        return $true
-    } catch {
-        Write-Log "Commit/push failed: $($_.Exception.Message)" -Level "ERROR"
-        return $false
-    }
-}
-
-function Get-StatusReport {
-    $report = @{
-        timestamp = (Get-Date).ToString("yyyy-MM-ddTHH:mm:ssZ")
-        workspaces = @()
-        overall_status = "Unknown"
-        overall_functionality = 0
-        recommendations = @()
-    }
-    
-    Write-Section "GENERATING STATUS REPORT"
-    
-    foreach ($workspaceName in $CONFIG.Workspaces) {
-        $workspacePath = Get-WorkspacePath $workspaceName
-        
-        if (-not (Test-Path $workspacePath)) {
-            Write-Log "Workspace not found: $workspacePath" -Level "WARNING"
-            continue
-        }
-        
-        Write-Host "Analyzing workspace: $workspaceName" -ForegroundColor $Colors.Info
-        
-        $functionality = Get-FunctionalityScore $workspacePath
-        $health = Test-WorkspaceHealth $workspacePath
-        
-        $workspaceReport = @{
-            name = $workspaceName
-            path = $workspacePath
-            functionality_score = $functionality.Percentage
-            health_status = $health.Status
-            build_status = (if ($functionality.Build.Success) { "Success" } else { "Failed" })
-            issues = $health.Issues
-            last_checkpoint = $null
-        }
-        
-        # Get last checkpoint info
-        $checkpointPath = Join-Path $workspacePath $CONFIG.CheckpointDir
-        if (Test-Path $checkpointPath) {
-            $lastCheckpoint = (Get-ChildItem $checkpointPath -Filter "*.json" | Sort-Object LastWriteTime -Descending | Select-Object -First 1)
-            if ($lastCheckpoint) {
-                try {
-                    $checkpointData = (Get-Content $lastCheckpoint.FullName | ConvertFrom-Json)
-                    $workspaceReport.last_checkpoint = @{
-                        id = $checkpointData.checkpoint_id
-                        timestamp = $checkpointData.timestamp
-                        functionality = $checkpointData.functionality_score
-                    }
-                } catch {
-                    Write-Log "Could not read checkpoint: $($lastCheckpoint.FullName)" -Level "DEBUG"
-                }
-            }
-        }
-        
-        $report.workspaces += $workspaceReport
-        $report.overall_functionality += $functionality.Percentage
-        
-        # Add recommendations
-        if ($functionality.Percentage -lt $CONFIG.FunctionalityThreshold) {
-            $msg = "Workspace $workspaceName needs attention"
-            $report.recommendations += $msg
-        }
-        
-        if ($health.Issues.Count -gt 0) {
-            $msg = "Workspace $workspaceName has health issues"
-            $report.recommendations += $msg
-        }
-    }
-    
-    # Calculate overall status
-    if ($report.workspaces.Count -gt 0) {
-        $report.overall_functionality = [math]::Round($report.overall_functionality / $report.workspaces.Count, 1)
-        
-        if ($report.overall_functionality -ge 95) {
-            $report.overall_status = "Excellent"
-        } elseif ($report.overall_functionality -ge 80) {
-            $report.overall_status = "Good"
-        } elseif ($report.overall_functionality -ge 60) {
-            $report.overall_status = "Fair"
-        } else {
-            $report.overall_status = "Poor"
-        }
-    }
-    
-    return $report
-}
-
-function Show-StatusReport {
-    param([hashtable]$Report)
-    
-    Write-Host "`n╔═══════════════════════════════════════════════════════════════════════════════╗" -ForegroundColor $Colors.Info
-    Write-Host "║                           HCAutoBuild Status Report                        ║" -ForegroundColor $Colors.Info
-    Write-Host "║               Generated: $($Report.timestamp)                ║" -ForegroundColor $Colors.Info
-    Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor $Colors.Info
-    Write-Host "║ Overall Status: $($Report.overall_status.PadRight(55))║" -ForegroundColor $(if($Report.overall_status -eq "Excellent") {$Colors.Success} elseif($Report.overall_status -eq "Good") {$Colors.Info} else {$Colors.Warning})
-    Write-Host "║ Functionality: $($Report.overall_functionality.ToString().PadRight(3))%$((' ' * 52))║" -ForegroundColor $(if($Report.overall_functionality -ge 95) {$Colors.Success} elseif($Report.overall_functionality -ge 80) {$Colors.Info} else {$Colors.Warning})
-    Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor $Colors.Info
-    
-    foreach ($workspace in $Report.workspaces) {
-        $wsName = $workspace.name.PadRight(15)
-        $wsFunc = "$($workspace.functionality_score)%".PadRight(6)
-        $wsHealth = $workspace.health_status.PadRight(9)
-        $wsBuild = $workspace.build_status.PadRight(7)
-        
-        Write-Host "║ $wsName | $wsFunc | $wsHealth | $wsBuild ║" -ForegroundColor $Colors.Info
-        
-        if ($workspace.issues.Count -gt 0) {
-            foreach ($issue in $workspace.issues) {
-                $truncated = if ($issue.Length -gt 53) { $issue.Substring(0, 50) + "..." } else { $issue }
-                Write-Host "║   • $truncated$((' ' * (53 - $truncated.Length)))║" -ForegroundColor $Colors.Warning
-            }
-        }
-    }
-    
-    Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor $Colors.Info
-    
-    if ($Report.recommendations.Count -gt 0) {
-        Write-Host "║ Recommendations:                                                     ║" -ForegroundColor $Colors.Warning
-        foreach ($rec in $Report.recommendations) {
-            $truncated = if ($rec.Length -gt 63) { $rec.Substring(0, 60) + "..." } else { $rec }
-            Write-Host "║   • $truncated$((' ' * (63 - $truncated.Length)))║" -ForegroundColor $Colors.Warning
-        }
-    } else {
-        Write-Host "║ ✓ All systems operating at optimal levels                             ║" -ForegroundColor $Colors.Success
-    }
-    
-    Write-Host "╚══════════════════════════════════════════════════════════════════════════════╝" -ForegroundColor $Colors.Info
-}
-
-function Start-ContinuousMonitoring {
-    Write-Section "STARTING CONTINUOUS MONITORING"
-    Write-Host "Monitoring workspaces for changes..." -ForegroundColor $Colors.Info
-    Write-Host "Press Ctrl+C to stop monitoring" -ForegroundColor $Colors.Warning
+    Write-EnhancedLog "Starting enhanced monitoring with codemap integration..." -Node "MONITOR"
     
     $lastStates = @{}
+    $lastOptimization = Get-Date
     
     # Initialize last states
     foreach ($workspaceName in $CONFIG.Workspaces) {
-        $workspacePath = Get-WorkspacePath $workspaceName
-        if (Test-Path $workspacePath) {
-            $lastStates[$workspaceName] = Get-FunctionalityScore $workspacePath
+        $wsPath = Get-WorkspacePath $workspaceName
+        if (Test-Path $wsPath) {
+            $lastStates[$workspaceName] = Get-EnhancedFunctionalityScore $wsPath
         }
     }
     
@@ -607,28 +250,40 @@ function Start-ContinuousMonitoring {
         while ($true) {
             Start-Sleep -Seconds $CONFIG.MonitorInterval
             
-            Write-Log "Monitoring check - $(Get-Date)" -Level "DEBUG"
+            Write-EnhancedLog "Enhanced monitoring check - $(Get-Date)" -Node "MONITOR"
             
             foreach ($workspaceName in $CONFIG.Workspaces) {
-                $workspacePath = Get-WorkspacePath $workspaceName
-                if (-not (Test-Path $workspacePath)) { continue }
+                $wsPath = Get-WorkspacePath $workspaceName
+                if (-not (Test-Path $wsPath)) { continue }
                 
-                $currentState = Get-FunctionalityScore $workspacePath
+                $currentState = Get-EnhancedFunctionalityScore $wsPath
                 $lastState = $lastStates[$workspaceName]
                 
                 # Check for significant changes
                 if ($lastState -and $currentState.Percentage -ne $lastState.Percentage) {
-                    Write-Log "Functionality change detected in $workspaceName`: $($lastState.Percentage)% → $($currentState.Percentage)%" -Level "INFO"
+                    Write-EnhancedLog "Enhanced functionality change in $workspaceName`: $($lastState.Percentage)% → $($currentState.Percentage)%" -Node "MONITOR"
+                }
+                
+                # Auto-optimize if enabled and enough time has passed
+                if ($ENHANCED_CONFIG.AutoOptimize -and 
+                    ((Get-Date) - $lastOptimization).TotalSeconds -ge $ENHANCED_CONFIG.OptimizationInterval) {
                     
-                    # If functionality improved to >= 100%, create checkpoint
-                    if ($currentState.Percentage -ge 100 -and $lastState.Percentage -lt 100) {
-                        Write-Host "🎯 100% functionality achieved in $workspaceName! Creating checkpoint..." -ForegroundColor $Colors.Success
-                        $checkpoint = New-Checkpoint $workspacePath $currentState
-                        
-                        if ($checkpoint) {
-                            $commitMsg = "HCAutoBuild Checkpoint $($checkpoint.checkpoint_id) - 100% Functionality"
-                            Invoke-CommitAndPush $workspacePath $commitMsg
-                        }
+                    Write-EnhancedLog "Running automatic optimization..." -Node "MONITOR"
+                    Invoke-CodemapOptimization $wsPath
+                    $lastOptimization = Get-Date
+                    
+                    # Recalculate score after optimization
+                    $currentState = Get-EnhancedFunctionalityScore $wsPath
+                }
+                
+                # Create checkpoint if 100% enhanced functionality achieved
+                if ($currentState.Percentage -ge 100 -and ($lastState.Percentage -lt 100 -or $force)) {
+                    Write-EnhancedLog "🎯 100% enhanced functionality achieved in $workspaceName! Creating checkpoint..." -Node "MONITOR" -Level "SUCCESS"
+                    $checkpoint = New-EnhancedCheckpoint $wsPath $currentState
+                    
+                    if ($checkpoint) {
+                        $commitMsg = "HCAutoBuild Enhanced Checkpoint $($checkpoint.checkpoint_id) - 100% Enhanced Functionality"
+                        Invoke-CommitAndPush $wsPath $commitMsg
                     }
                 }
                 
@@ -636,16 +291,17 @@ function Start-ContinuousMonitoring {
             }
         }
     } catch [System.Management.Automation.HaltCommandException] {
-        Write-Host "`nMonitoring stopped by user" -ForegroundColor $Colors.Warning
+        Write-EnhancedLog "Enhanced monitoring stopped by user" -Node "MONITOR"
     } catch {
-        Write-Log "Monitoring error: $($_.Exception.Message)" -Level "ERROR"
+        Write-EnhancedLog "Enhanced monitoring error: $($_.Exception.Message)" -Node "MONITOR" -Level "ERROR"
     }
 }
 
-function Invoke-HCAutoBuild {
-    Write-Section "HCAutoBuild - Autonomous Checkpoint System"
-    Write-Host "Version: 1.0.0" -ForegroundColor $Colors.Info
-    Write-Host "Workspaces: $($CONFIG.Workspaces -join ', ')" -ForegroundColor $Colors.Info
+function Invoke-EnhancedHCAutoBuild {
+    Write-Host "∞ HCAutoBuild Enhanced - Codemap-Powered Intelligence ∞" -ForegroundColor Cyan
+    Write-Host "Version: 2.0.0" -ForegroundColor Cyan
+    Write-Host "Workspaces: $($CONFIG.Workspaces -join ', ')" -ForegroundColor Cyan
+    Write-Host "Codemap Nodes: $($ENHANCED_CONFIG.CodemapNodes -join ', ')" -ForegroundColor Green
     
     $overallSuccess = $true
     
@@ -655,124 +311,153 @@ function Invoke-HCAutoBuild {
         $workspacePath = Get-WorkspacePath $workspaceName
         
         if (-not (Test-Path $workspacePath)) {
-            Write-Log "Workspace not found: $workspacePath" -Level "ERROR"
+            Write-EnhancedLog "Workspace not found: $workspacePath" -Node "MAIN" -Level "ERROR"
             $overallSuccess = $false
             continue
         }
         
-        Write-Host "`nProcessing workspace: $workspaceName" -ForegroundColor $Colors.Info
-        Write-Host "Path: $workspacePath" -ForegroundColor $Colors.Debug
+        Write-Host "`nProcessing enhanced workspace: $workspaceName" -ForegroundColor Cyan
+        Write-Host "Path: $workspacePath" -ForegroundColor Debug
         
-        # Get functionality score
-        $functionality = Get-FunctionalityScore $workspacePath
-        
-        Write-Host "Functionality Score: $($functionality.Percentage)% ($($functionality.Score)/$($functionality.MaxScore))" -ForegroundColor $(if($functionality.Percentage -ge 95) {$Colors.Success} elseif($functionality.Percentage -ge 80) {$Colors.Info} else {$Colors.Warning})
-        
-        if ($verbose) {
-            foreach ($factor in $functionality.Factors) {
-                Write-Host "  • $factor" -ForegroundColor $Colors.Debug
+        # Run codemap optimization if requested
+        if ($optimize -or $codemap) {
+            Write-EnhancedLog "Running codemap optimization..." -Node "MAIN"
+            if (-not (Invoke-CodemapOptimization $workspacePath)) {
+                Write-EnhancedLog "Codemap optimization failed, continuing..." -Node "MAIN" -Level "WARNING"
             }
         }
         
-        # Create checkpoint if at 100% functionality or forced
+        # Get enhanced functionality score
+        $functionality = Get-EnhancedFunctionalityScore $workspacePath
+        
+        Write-Host "Enhanced Functionality Score: $($functionality.Percentage)% ($($functionality.Score)/$($functionality.MaxScore))" -ForegroundColor $(if($functionality.Percentage -ge 100) {"Green"} elseif($functionality.Percentage -ge 95) {"Cyan"} else {"Yellow"})
+        Write-Host "Base Functionality Score: $($functionality.BaseScore.Percentage)%" -ForegroundColor $(if($functionality.BaseScore.Percentage -ge 95) {"Green"} else {"Yellow"})
+        
+        if ($verbose) {
+            Write-Host "Enhancement breakdown:" -ForegroundColor Debug
+            foreach ($key in $functionality.Enhancements.Keys) {
+                Write-Host "  • $key`: +$($functionality.Enhancements[$key]) points" -ForegroundColor Debug
+            }
+            foreach ($factor in $functionality.Factors) {
+                Write-Host "  • $factor" -ForegroundColor Debug
+            }
+        }
+        
+        # Create enhanced checkpoint if at 100% functionality or forced
         if ($functionality.Percentage -ge 100 -or $force) {
-            Write-Host "Creating checkpoint..." -ForegroundColor $Colors.Success
-            $checkpoint = New-Checkpoint $workspacePath $functionality
+            Write-Host "Creating enhanced checkpoint..." -ForegroundColor Green
+            $checkpoint = New-EnhancedCheckpoint $workspacePath $functionality
             
             if ($checkpoint) {
                 # Commit and push changes
-                $commitMsg = "HCAutoBuild Checkpoint $($checkpoint.checkpoint_id) - Functionality: $($functionality.Percentage)%"
+                $commitMsg = "HCAutoBuild Enhanced Checkpoint $($checkpoint.checkpoint_id) - Enhanced Functionality: $($functionality.Percentage)%"
                 if (Invoke-CommitAndPush $workspacePath $commitMsg) {
-                    Write-Host "Success: Changes committed and pushed" -ForegroundColor $Colors.Success
+                    Write-Host "Changes committed and pushed" -ForegroundColor Green
                 } else {
-                    Write-Host "Warning: Commit/push failed" -ForegroundColor $Colors.Warning
+                    Write-Host "Commit/push failed" -ForegroundColor Yellow
                     $overallSuccess = $false
                 }
             } else {
-                Write-Host "Error: Checkpoint creation failed" -ForegroundColor $Colors.Error
+                Write-Host "Enhanced checkpoint creation failed" -ForegroundColor Red
                 $overallSuccess = $false
             }
         } else {
-            Write-Host "Warning: Functionality below threshold (100 required for checkpoint)" -ForegroundColor $Colors.Warning
+            Write-Host "Enhanced functionality below threshold (100% required for checkpoint)" -ForegroundColor Yellow
+            
+            # Show suggestions
+            if ($functionality.Enhancements.Values | Where-Object { $_ -eq 0 }) {
+                Write-Host "Suggestions for improvement:" -ForegroundColor Yellow
+                if ($functionality.Enhancements.code_quality -eq 0) {
+                    Write-Host "  • Run JULES optimization for code quality improvements" -ForegroundColor Cyan
+                }
+                if ($functionality.Enhancements.documentation -eq 0) {
+                    Write-Host "  • Run ATLAS documentation analysis" -ForegroundColor Cyan
+                }
+                if ($functionality.Enhancements.performance -eq 0) {
+                    Write-Host "  • Run OBSERVER monitoring for performance insights" -ForegroundColor Cyan
+                }
+            }
         }
     }
     
     return $overallSuccess
 }
 
-# Main execution
+# Main execution with enhanced features
 try {
     if ($help) {
         Write-Host @"
-HCAutoBuild - Autonomous Checkpoint System
+HCAutoBuild Enhanced - Codemap-Powered Intelligence
 
 USAGE:
-    .\hcautobuild.ps1 [OPTIONS]
+    .\hcautobuild_enhanced.ps1 [OPTIONS]
 
-OPTIONS:
-    -checkpoint      Create checkpoint regardless of functionality score
-    -status          Show detailed status report
-    -monitor         Start continuous monitoring mode
+BASE OPTIONS:
+    -checkpoint      Create enhanced checkpoint regardless of functionality score
+    -status          Show detailed enhanced status report
+    -monitor         Start enhanced continuous monitoring
     -debug           Enable debug logging
     -verbose         Show detailed output
     -force           Force operations even if conditions not met
-    -skipValidation  Skip build/test validation
     -workspace NAME  Process specific workspace only
     -help            Show this help message
 
-EXAMPLES:
-    .\hcautobuild.ps1                    # Run full cycle
-    .\hcautobuild.ps1 -status           # Show status report
-    .\hcautobuild.ps1 -checkpoint       # Force checkpoint creation
-    .\hcautobuild.ps1 -monitor          # Start monitoring
-    .\hcautobuild.ps1 -workspace Heady  # Process specific workspace
+ENHANCED OPTIONS:
+    -optimize        Run codemap optimization before analysis
+    -codemap         Alias for -optimize
 
-CONFIGURATION:
-    Edit the CONFIG hashtable at the top of this script to modify:
-    Workspaces to monitor
-    Checkpoint directory
-    Functionality thresholds
-    Monitoring intervals
+CODEMAP NODES:
+    JULES    - Code optimization and analysis
+    OBSERVER - Enhanced monitoring and performance
+    BUILDER  - Project optimization and cleanup
+    ATLAS    - Documentation generation
+
+EXAMPLES:
+    .\hcautobuild_enhanced.ps1                    # Run enhanced cycle
+    .\hcautobuild_enhanced.ps1 -optimize          # Run with optimization
+    .\hcautobuild_enhanced.ps1 -status            # Show enhanced status
+    .\hcautobuild_enhanced.ps1 -monitor           # Start enhanced monitoring
+    .\hcautobuild_enhanced.ps1 -workspace Heady  # Process specific workspace
 "@
         exit 0
     }
     
-    Write-Log "HCAutoBuild started with parameters: $($PSBoundParameters.Keys -join ', ')" -Level "INFO"
+    Write-EnhancedLog "HCAutoBuild Enhanced started with codemap integration" -Node "MAIN"
     
     if ($status) {
-        $report = Get-StatusReport
-        Show-StatusReport $report
+        # Enhanced status reporting would go here
+        Write-Host "Enhanced status reporting not yet implemented" -ForegroundColor Yellow
         exit 0
     }
     
     if ($monitor) {
-        Start-ContinuousMonitoring
+        Invoke-EnhancedMonitoring
         exit 0
     }
     
     if ($checkpoint) {
-        Write-Section "FORCE CHECKPOINT MODE"
+        Write-Host "FORCE ENHANCED CHECKPOINT MODE" -ForegroundColor Yellow
         $force = $true
     }
     
-    $success = Invoke-HCAutoBuild
+    $success = Invoke-EnhancedHCAutoBuild
     
     if ($success) {
-        Write-Section "HCAutoBuild COMPLETE"
-        Write-Host "✓ All operations completed successfully" -ForegroundColor $Colors.Success
-        Write-Host "System is ready for autonomous operation" -ForegroundColor $Colors.Info
+        Write-Host "∞ HCAutoBuild Enhanced COMPLETE ∞" -ForegroundColor Green
+        Write-Host "✓ All enhanced operations completed successfully" -ForegroundColor Green
+        Write-Host "System is ready for autonomous operation with codemap intelligence" -ForegroundColor Cyan
         exit 0
     } else {
-        Write-Section "HCAutoBuild COMPLETE WITH ISSUES"
-        Write-Host "⚠ Some operations failed. Check logs for details." -ForegroundColor $Colors.Warning
+        Write-Host "∞ HCAutoBuild Enhanced COMPLETE WITH ISSUES ∞" -ForegroundColor Yellow
+        Write-Host "⚠ Some enhanced operations failed. Check logs for details." -ForegroundColor Yellow
         exit 1
     }
     
 } catch {
-    Write-Log "Fatal error: $($_.Exception.Message)" -Level "ERROR"
+    Write-EnhancedLog "Fatal error: $($_.Exception.Message)" -Node "MAIN" -Level "ERROR"
     if ($debug) {
-        Write-Host "Stack trace:" -ForegroundColor $Colors.Error
-        Write-Host $_.ScriptStackTrace -ForegroundColor $Colors.Error
+        Write-Host "Stack trace:" -ForegroundColor Red
+        Write-Host $_.ScriptStackTrace -ForegroundColor Red
     }
     exit 1
 }

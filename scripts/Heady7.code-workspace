@@ -1,0 +1,152 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../.aws"
+		},
+		{
+			"path": "../../.cache"
+		},
+		{
+			"path": "../../.cagent"
+		},
+		{
+			"path": "../../.claude"
+		},
+		{
+			"path": "../../.codeium"
+		},
+		{
+			"path": "../../.config"
+		},
+		{
+			"path": "../../.docker"
+		},
+		{
+			"path": "../../.gitlab"
+		},
+		{
+			"path": "../../.ipython"
+		},
+		{
+			"path": "../../.jules"
+		},
+		{
+			"path": "../../.localstack"
+		},
+		{
+			"path": "../../.pm2"
+		},
+		{
+			"path": "../../.redhat"
+		},
+		{
+			"path": "../../.robocorp-code"
+		},
+		{
+			"path": "../../.sema4ai"
+		},
+		{
+			"path": "../../.ssh"
+		},
+		{
+			"path": "../../.windsurf"
+		},
+		{
+			"path": "../../.windsurf-next"
+		},
+		{
+			"path": "../../AppData"
+		},
+		{
+			"path": "../../apps"
+		},
+		{
+			"path": "../../CascadeProjects"
+		},
+		{
+			"path": "../../Contacts"
+		},
+		{
+			"path": "../../CrossDevice"
+		},
+		{
+			"path": "../../OneDrive/Desktop"
+		},
+		{
+			"path": "../../Desktop"
+		},
+		{
+			"path": "../../OneDrive/Documents"
+		},
+		{
+			"path": "../../Documents"
+		},
+		{
+			"path": "../../Downloads"
+		},
+		{
+			"path": "../../Favorites"
+		},
+		{
+			"path": "../../generated-apps"
+		},
+		{
+			"path": "../../Git"
+		},
+		{
+			"path": "../../HeadyE"
+		},
+		{
+			"path": "../../HeadyIDE"
+		},
+		{
+			"path": "../../HeadyMonorepo"
+		},
+		{
+			"path": "../../Links"
+		},
+		{
+			"path": "../../Music"
+		},
+		{
+			"path": "../../node_modules"
+		},
+		{
+			"path": "../../npm-cache"
+		},
+		{
+			"path": "../../OneDrive"
+		},
+		{
+			"path": "../../OneDrive/Pictures"
+		},
+		{
+			"path": "../../Projects"
+		},
+		{
+			"path": "../../Saved Games"
+		},
+		{
+			"path": "../../scripts"
+		},
+		{
+			"path": "../../Searches"
+		},
+		{
+			"path": "../../Videos"
+		},
+		{
+			"path": "../../windsurf"
+		},
+		{
+			"path": "../../windsurf2"
+		},
+		{
+			"path": "F:/"
+		}
+	],
+	"settings": {}
+}

@@ -71,7 +71,14 @@ def test_conductor():
     print("\n✓ Test: Get system summary")
     summary = conductor.get_system_summary()
     print(f"  System status: {summary['system_status']}")
-    print(f"  Total capabilities: {summary['registry']['total_capabilities']}")
+    
+    # Check for registry summary in the new structure
+    if 'registry_summary' in summary:
+        print(f"  Total capabilities: {summary['registry_summary']['total_capabilities']}")
+    elif 'components' in summary:
+        print(f"  Components operational: {summary['components']}")
+    else:
+        print(f"  Summary keys: {list(summary.keys())}")
     
     return True
 

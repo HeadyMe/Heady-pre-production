@@ -15,6 +15,38 @@
 version: '3.8'
 
 services:
+  # HeadyMCP Manager Service
+  heady-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: heady-mcp:latest
+    container_name: heady-mcp-manager
+    ports:
+      - "3300:3300"
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./mcp-data:/app/mcp-data
+      - ./.heady-memory:/app/.heady-memory
+    environment:
+      - NODE_ENV=production
+      - PORT=3300
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/heady
+      - HEADY_PYTHON_BIN=python3
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3300/api/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
   # MCP Filesystem Server
   mcp-filesystem:
     image: node:18-alpine

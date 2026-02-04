@@ -1,0 +1,80 @@
+# HEADY_BRAND:BEGIN
+# HEADY SYSTEMS :: SACRED GEOMETRY
+# FILE: .dockerignore
+# LAYER: root
+# HEADY_BRAND:END
+
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+.githooks/
+
+# IDE
+.vscode/
+.windsurf/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+frontend/build/
+frontend/node_modules/
+desktop-overlay/node_modules/
+backend/node_modules/
+
+# Logs
+*.log
+logs/
+audit_logs.jsonl
+.heady_deploy_log.jsonl
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Cache
+.heady_cache/
+.cache/
+
+# Temporary files
+*.tmp
+*.temp
+server.pid
+
+# Documentation (not needed in container)
+*.md
+!README.md
+docs/
+
+# Test files
+test_*.py
+test_*.ps1
+*.test.js
+
+# Scripts (use container-specific ones)
+*.ps1
+*.bat
+*.cmd
+!scripts/
+
+# OS files
+.DS_Store
+Thumbs.db

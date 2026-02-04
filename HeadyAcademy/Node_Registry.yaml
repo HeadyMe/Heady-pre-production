@@ -89,6 +89,19 @@ nodes:
     primary_tool: "hydrator"
     trigger_on: ["new_project"]
 
+  - name: "PYTHIA"
+    role: "The Oracle"
+<<<<<<< C:/Users/erich/Heady/HeadyAcademy/Node_Registry.yaml
+<<<<<<< C:/Users/erich/Heady/HeadyAcademy/Node_Registry.yaml
+    primary_tool: "hugging_face_tool"
+=======
+    primary_tool: "HuggingFace_Tool"
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-3392f815/HeadyAcademy/Node_Registry.yaml
+=======
+    primary_tool: "HuggingFace_Tool"
+>>>>>>> C:/Users/erich/.windsurf/worktrees/Heady/Heady-3392f815/HeadyAcademy/Node_Registry.yaml
+    trigger_on: ["huggingface", "predict", "infer", "model", "ask_oracle"]
+
   # CORE SYSTEM NODES - Central Intelligence & Awareness
   - name: "LENS"
     role: "The All-Seeing Eye"

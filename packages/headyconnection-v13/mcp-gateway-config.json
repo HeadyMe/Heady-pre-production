@@ -1,0 +1,45 @@
+{
+  "allowHosts": [
+    "127.0.0.1",
+    "localhost"
+  ],
+  "allowOrigins": [
+    "http://127.0.0.1",
+    "http://localhost"
+  ],
+  "bind": "127.0.0.1",
+  "jwt": {
+    "audience": "app.headysystems.com",
+    "issuer": "headysystems.com",
+    "mode": "hs256",
+    "secretEnv": "MCP_GATEWAY_JWT_SECRET"
+  },
+  "rateLimitPerMin": 60,
+  "requireConfirmationFor": [
+    "write",
+    "delete",
+    "rm",
+    "exec",
+    "shell",
+    "edit_file"
+  ],
+  "servers": [
+    {
+      "allowedTools": [
+        "read_file",
+        "list_directory",
+        "write_file",
+        "search_files"
+      ],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "--root",
+        "./src"
+      ],
+      "command": "npx",
+      "name": "filesystem",
+      "transport": "stdio"
+    }
+  ]
+}

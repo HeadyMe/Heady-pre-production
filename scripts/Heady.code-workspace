@@ -103,6 +103,9 @@
 			"path": "../../HeadyIDE"
 		},
 		{
+			"path": "../../HeadyMonorepo"
+		},
+		{
 			"path": "../../Links"
 		},
 		{
@@ -145,5 +148,7 @@
 			"path": "F:/"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"powershell.cwd": "Heady"
+	}
 }

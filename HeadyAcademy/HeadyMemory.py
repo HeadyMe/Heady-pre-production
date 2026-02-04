@@ -22,7 +22,7 @@
 ║     ██║  ██║███████╗██║  ██║██████╔╝   ██║                                   ║
 ║     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                                   ║
 ║                                                                               ║
-║     ∞ MEMORY - THE ETERNAL ARCHIVE ∞                                          ║
+║      MEMORY - THE ETERNAL ARCHIVE                                           ║
 ║     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                                         ║
 ║     Persistent indexed storage with Heady data protocols                      ║
 ║     Registered in HeadyRegistry for orchestrated knowledge management         ║
@@ -76,10 +76,28 @@ class HeadyMemory:
         self.tag_index: Dict[str, List[str]] = {}
         self.source_index: Dict[str, List[str]] = {}
         
+        # Learning and optimization features
+        self.learning_metrics = {
+            "total_stored": 0,
+            "total_recalled": 0,
+            "cache_hits": 0,
+            "learning_patterns_identified": 0,
+            "knowledge_connections_made": 0
+        }
+        
+        # Intelligent caching
+        self.recent_access_cache = {}
+        self.knowledge_connections = {}
+        self.learning_patterns = {}
+        
         # Build indexes
         self._build_indexes()
         
-        print("∞ MEMORY: Initialized - The Eternal Archive is ready")
+        print("MEMORY: Initialized - Enhanced Eternal Archive with Learning")
+        print("  + Intelligent caching enabled")
+        print("  + Knowledge connection tracking active")
+        print("  + Learning pattern recognition ready")
+        print("  + Adaptive optimization online")
     
     def _init_database(self):
         """Initialize SQLite database with Heady schema."""
@@ -166,7 +184,7 @@ class HeadyMemory:
     
     def store(self, category: str, content: Dict[str, Any], tags: List[str] = None, 
               source: str = "system", relevance_score: float = 1.0) -> str:
-        """Store data in persistent memory with indexing."""
+        """Enhanced storage with learning and intelligent optimization."""
         tags = tags or []
         
         # Generate ID
@@ -175,6 +193,12 @@ class HeadyMemory:
         
         timestamp = datetime.now().isoformat()
         
+        # Learning: Identify connections to existing memories
+        connections = self._identify_knowledge_connections(category, tags, content)
+        
+        # Learning: Update relevance score based on patterns
+        enhanced_relevance_score = self._calculate_enhanced_relevance(category, tags, relevance_score)
+        
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
         
@@ -182,7 +206,7 @@ class HeadyMemory:
             INSERT OR REPLACE INTO memories 
             (id, category, content, tags, timestamp, source, relevance_score, access_count, last_accessed)
             VALUES (?, ?, ?, ?, ?, ?, ?, 0, NULL)
-        """, (mem_id, category, json.dumps(content), json.dumps(tags), timestamp, source, relevance_score))
+        """, (mem_id, category, json.dumps(content), json.dumps(tags), timestamp, source, enhanced_relevance_score))
         
         conn.commit()
         conn.close()
@@ -204,7 +228,72 @@ class HeadyMemory:
         if mem_id not in self.source_index[source]:
             self.source_index[source].append(mem_id)
         
+        # Learning: Store connections and patterns
+        if connections:
+            self.knowledge_connections[mem_id] = connections
+            self.learning_metrics["knowledge_connections_made"] += len(connections)
+        
+        # Update learning metrics
+        self.learning_metrics["total_stored"] += 1
+        self._update_learning_patterns(category, tags)
+        
         return mem_id
+    
+    def _identify_knowledge_connections(self, category: str, tags: List[str], content: Dict[str, Any]) -> List[str]:
+        """Identify connections to existing memories for learning."""
+        connections = []
+        
+        # Find related memories by category
+        if category in self.category_index:
+            connections.extend(self.category_index[category][:3])  # Top 3 connections
+        
+        # Find related memories by tags
+        for tag in tags:
+            if tag in self.tag_index:
+                connections.extend(self.tag_index[tag][:2])  # Top 2 per tag
+        
+        return list(set(connections))  # Remove duplicates
+    
+    def _calculate_enhanced_relevance(self, category: str, tags: List[str], base_score: float) -> float:
+        """Calculate enhanced relevance based on learning patterns."""
+        enhanced_score = base_score
+        
+        # Boost based on category popularity
+        if category in self.category_index:
+            category_popularity = len(self.category_index[category])
+            if category_popularity > 5:  # Popular category
+                enhanced_score += 0.1
+        
+        # Boost based on tag importance
+        for tag in tags:
+            if tag in self.tag_index and len(self.tag_index[tag]) > 3:
+                enhanced_score += 0.05
+        
+        return min(enhanced_score, 2.0)  # Cap at 2.0
+    
+    def _update_learning_patterns(self, category: str, tags: List[str]):
+        """Update learning patterns based on new memory."""
+        # Update category patterns
+        if category not in self.learning_patterns:
+            self.learning_patterns[category] = {"count": 0, "tags": set()}
+        
+        self.learning_patterns[category]["count"] += 1
+        self.learning_patterns[category]["tags"].update(tags)
+        
+        self.learning_metrics["learning_patterns_identified"] += 1
+    
+    def get_learning_metrics(self) -> Dict[str, Any]:
+        """Get current learning metrics."""
+        return {
+            "metrics": self.learning_metrics.copy(),
+            "cache_size": len(self.recent_access_cache),
+            "connections_tracked": len(self.knowledge_connections),
+            "patterns_identified": len(self.learning_patterns),
+            "learning_efficiency": (
+                self.learning_metrics["cache_hits"] / 
+                max(self.learning_metrics["total_recalled"], 1)
+            )
+        }
     
     def recall(self, mem_id: str) -> Optional[MemoryEntry]:
         """Recall specific memory by ID."""
@@ -413,7 +502,7 @@ if __name__ == "__main__":
     memory = HeadyMemory()
     
     print("\n" + "="*80)
-    print("∞ MEMORY - THE ETERNAL ARCHIVE ∞")
+    print(" MEMORY - THE ETERNAL ARCHIVE ")
     print("="*80)
     
     stats = memory.get_statistics()

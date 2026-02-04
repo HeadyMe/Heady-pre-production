@@ -34,6 +34,9 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const { spawn } = require("child_process");
+const rateLimit = require("express-rate-limit");
+const compression = require("compression");
+const helmet = require("helmet");
 
 const { HEADY_MAID_CONFIG } = require(path.join(__dirname, "src", "heady_maid"));
 
@@ -42,8 +45,62 @@ const HEADY_ADMIN_SCRIPT = process.env.HEADY_ADMIN_SCRIPT || path.join(__dirname
 const HEADY_PYTHON_BIN = process.env.HEADY_PYTHON_BIN || "python";
 
 const app = express();
+
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false
+}));
+
+// Performance middleware
+app.use(compression());
 app.use(express.json({ limit: "50mb" }));
-app.use(cors());
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : '*',
+  credentials: true
+}));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 1000, // Limit each IP to 1000 requests per windowMs
+  message: { error: "Too many requests from this IP" },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use('/api/', limiter);
+
+// Enhanced caching middleware
+const cache = new Map();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+function getCachedData(key) {
+  const item = cache.get(key);
+  if (item && Date.now() - item.timestamp < CACHE_TTL) {
+    return item.data;
+  }
+  cache.delete(key);
+  return null;
+}
+
+function setCachedData(key, data) {
+  cache.set(key, { data, timestamp: Date.now() });
+  // Limit cache size
+  if (cache.size > 100) {
+    const oldestKey = cache.keys().next().value;
+    cache.delete(oldestKey);
+  }
+}
+
+function readJsonFileSafe(filePath) {
+  try {
+    const raw = fs.readFileSync(filePath, "utf8");
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error(`Error reading file ${filePath}:`, error.message);
+    return null;
+  }
+}
 
 function readJsonFileSafe(filePath) {
   try {
@@ -62,16 +119,60 @@ if (fs.existsSync(frontendBuildPath)) {
 app.use(express.static("public"));
 
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true, service: "heady-manager", ts: new Date().toISOString() });
+  res.json({ 
+    ok: true, 
+    service: "heady-manager", 
+    ts: new Date().toISOString(),
+    version: "2.0.0",
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    cache: {
+      size: cache.size,
+      maxSize: 100
+    }
+  });
 });
 
 app.get("/api/registry", (req, res) => {
+  const cacheKey = 'registry';
+  const cachedData = getCachedData(cacheKey);
+  
+  if (cachedData) {
+    return res.json(cachedData);
+  }
+  
   const registryPath = path.join(__dirname, "heady-registry.json");
   const registry = readJsonFileSafe(registryPath);
+  
   if (!registry) {
     return res.status(404).json({ error: "Registry not found or invalid" });
   }
+  
+  setCachedData(cacheKey, registry);
   res.json(registry);
+});
+
+app.get("/api/maid/config", (req, res) => {
+  res.json(HEADY_MAID_CONFIG);
+});
+
+app.get("/api/maid/inventory", (req, res) => {
+  const cacheKey = 'inventory';
+  const cachedData = getCachedData(cacheKey);
+  
+  if (cachedData) {
+    return res.json(cachedData);
+  }
+  
+  const inventoryPath = path.join(__dirname, ".heady-memory", "inventory", "inventory.json");
+  const inventory = readJsonFileSafe(inventoryPath);
+  
+  if (!inventory) {
+    return res.status(404).json({ error: "Inventory not found or invalid" });
+  }
+  
+  setCachedData(cacheKey, inventory);
+  res.json(inventory);
 });
 
 app.get("/api/maid/config", (req, res) => {
@@ -162,15 +263,29 @@ app.post("/api/conductor/node", async (req, res) => {
   }
 });
 
-// Helper function to run Python HeadyConductor
-function runPythonConductor(args) {
+// Enhanced Python conductor execution with timeout and error handling
+function runPythonConductor(args, timeoutMs = 30000) {
   return new Promise((resolve, reject) => {
     const conductorPath = path.join(__dirname, "HeadyAcademy", "HeadyConductor.py");
     const pythonBin = process.env.HEADY_PYTHON_BIN || "python";
     
-    const proc = spawn(pythonBin, [conductorPath, ...args]);
+    // Verify conductor script exists
+    if (!fs.existsSync(conductorPath)) {
+      return reject(new Error(`HeadyConductor script not found at ${conductorPath}`));
+    }
+    
+    const proc = spawn(pythonBin, [conductorPath, ...args], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: { ...process.env, PYTHONUNBUFFERED: '1' }
+    });
+    
     let stdout = "";
     let stderr = "";
+
+    const timeout = setTimeout(() => {
+      proc.kill('SIGTERM');
+      reject(new Error(`HeadyConductor execution timeout after ${timeoutMs}ms`));
+    }, timeoutMs);
 
     proc.stdout.on("data", (data) => {
       stdout += data.toString();
@@ -181,6 +296,8 @@ function runPythonConductor(args) {
     });
 
     proc.on("close", (code) => {
+      clearTimeout(timeout);
+      
       if (code !== 0) {
         reject(new Error(`HeadyConductor exited with code ${code}: ${stderr}`));
       } else {
@@ -193,11 +310,55 @@ function runPythonConductor(args) {
             resolve({ output: stdout, stderr });
           }
         } catch (e) {
-          resolve({ output: stdout, stderr });
+          resolve({ output: stdout, stderr, parseError: e.message });
         }
       }
+    });
+    
+    proc.on('error', (error) => {
+      clearTimeout(timeout);
+      reject(new Error(`Failed to start HeadyConductor: ${error.message}`));
     });
   });
 }
 
-app.listen(PORT, () => console.log(`∞ Heady System Active on Port ${PORT} ∞`));
+// Error handling middleware
+app.use((error, req, res, next) => {
+  console.error('HeadyManager Error:', error);
+  res.status(500).json({
+    error: "Internal server error",
+    message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: "Endpoint not found",
+    path: req.originalUrl,
+    method: req.method,
+    timestamp: new Date().toISOString()
+  });
+});
+
+const server = app.listen(PORT, () => {
+  console.log(`∞ Heady System Active on Port ${PORT} ∞`);
+  console.log(`∞ Enhanced with security, caching, and performance optimizations ∞`);
+  console.log(`∞ Environment: ${process.env.NODE_ENV || 'development'} ∞`);
+});
+
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully');
+  server.close(() => {
+    console.log('Process terminated');
+  });
+});

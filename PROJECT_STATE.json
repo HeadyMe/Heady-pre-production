@@ -1,0 +1,97 @@
+{
+  "project": "HeadySystems",
+  "version": "1.0.0",
+  "last_updated": "2026-02-04T18:18:00Z",
+  "node_profile": {
+    "type": "laptop",
+    "compute_tier": "mobile_efficiency",
+    "specs": {
+      "cpu_cores": 10,
+      "ram_gb": 23.57,
+      "has_battery": true,
+      "platform": "Windows",
+      "machine": "AMD64"
+    },
+    "recommendations": {
+      "parallel_tasks": 2,
+      "cache_size_mb": 512,
+      "enable_ml_optimization": false,
+      "worker_processes": 1
+    },
+    "last_detected": "2026-02-04T20:36:29.703895Z"
+  },
+  "patents": {
+    "total_count": 50,
+    "categories": {
+      "sacred_geometry_ui": {
+        "count": 12,
+        "status": "provisional",
+        "owner": "HeadySystems Inc."
+      },
+      "distributed_orchestration": {
+        "count": 15,
+        "status": "provisional",
+        "owner": "HeadySystems Inc."
+      },
+      "ai_optimization": {
+        "count": 10,
+        "status": "provisional",
+        "owner": "HeadySystems Inc."
+      },
+      "nonprofit_connector": {
+        "count": 13,
+        "status": "provisional",
+        "owner": "HeadyConnection Inc."
+      }
+    },
+    "ip_headers_required": true,
+    "verification_enabled": true
+  },
+  "architecture": {
+    "golden_ratio": 1.618033988749895,
+    "design_tokens_path": "packages/ui",
+    "phi_scales": {
+      "space-1": "0.618rem",
+      "space-2": "1rem",
+      "space-3": "1.618rem",
+      "space-4": "2.618rem",
+      "space-5": "4.236rem"
+    }
+  },
+  "orchestration": {
+    "primary_engine": "hb",
+    "manager_port": 3300,
+    "manager_health": "http://localhost:3300/api/health",
+    "locking_enabled": true,
+    "conflict_prevention": true
+  },
+  "security": {
+    "air_gap_enabled": true,
+    "secret_scanning": true,
+    "allowed_key_patterns": [],
+    "blocked_key_patterns": [
+      "GEMINI_API_KEY",
+      "AWS_SECRET_ACCESS_KEY",
+      "OPENAI_API_KEY"
+    ]
+  },
+  "handoff_notes": {
+    "last_context": "",
+    "timestamp": null,
+    "active_tasks": [],
+    "pending_decisions": []
+  },
+  "compliance": {
+    "c_corp_files": {
+      "owner": "HeadySystems Inc.",
+      "restricted_imports": true,
+      "telemetry_isolation": true
+    },
+    "nonprofit_files": {
+      "owner": "HeadyConnection Inc.",
+      "no_c_corp_telemetry": true,
+      "open_source_only": true
+    }
+  },
+  "novel_ip_detected": []
+}

@@ -22,7 +22,7 @@
 ║     ██║  ██║███████╗██║  ██║██████╔╝   ██║                                   ║
 ║     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                                   ║
 ║                                                                               ║
-║     ∞ HEADY REGISTRY - CAPABILITY TRACKING SYSTEM ∞                           ║
+║      HEADY REGISTRY - CAPABILITY TRACKING SYSTEM                            ║
 ║     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━                            ║
 ║     Centralized registry for all Heady capabilities:                          ║
 ║     - Nodes (BRIDGE, MUSE, SENTINEL, etc.)                                    ║
@@ -127,20 +127,20 @@ class HeadyRegistry:
     
     def discover_all(self):
         """Auto-discover all system capabilities."""
-        print("∞ HeadyRegistry: Discovering system capabilities...")
+        print(" HeadyRegistry: Discovering system capabilities...")
         self.discover_nodes()
         self.discover_workflows()
         self.discover_skills()
         self.discover_services()
         self.discover_tools()
-        print(f"∞ HeadyRegistry: Discovery complete. Found {self.get_total_count()} capabilities.")
+        print(f" HeadyRegistry: Discovery complete. Found {self.get_total_count()} capabilities.")
     
     def discover_nodes(self):
         """Discover nodes from Node_Registry.yaml."""
         node_registry_path = self.root_path / "HeadyAcademy" / "Node_Registry.yaml"
         
         if not node_registry_path.exists():
-            print(f"⚠ Node registry not found at {node_registry_path}")
+            print(f"[WARN] Node registry not found at {node_registry_path}")
             return
         
         with open(node_registry_path, 'r') as f:
@@ -157,14 +157,14 @@ class HeadyRegistry:
                 )
                 self.nodes[node.name] = node
         
-        print(f"  ✓ Discovered {len(self.nodes)} nodes")
+        print(f"  * Discovered {len(self.nodes)} nodes")
     
     def discover_workflows(self):
         """Discover workflows from .windsurf/workflows/*.md."""
         workflows_dir = self.root_path / ".windsurf" / "workflows"
         
         if not workflows_dir.exists():
-            print(f"⚠ Workflows directory not found at {workflows_dir}")
+            print(f"[WARN] Workflows directory not found at {workflows_dir}")
             return
         
         for workflow_file in workflows_dir.glob("*.md"):
@@ -196,9 +196,9 @@ class HeadyRegistry:
                 self.workflows[workflow.name] = workflow
             
             except Exception as e:
-                print(f"  ⚠ Error parsing workflow {workflow_file.name}: {e}")
+                print(f"  [WARN] Error parsing workflow {workflow_file.name}: {e}")
         
-        print(f"  ✓ Discovered {len(self.workflows)} workflows")
+        print(f"  * Discovered {len(self.workflows)} workflows")
     
     def discover_skills(self):
         """Discover Cascade AI skills."""
@@ -210,7 +210,7 @@ class HeadyRegistry:
             skill = Skill(**skill_data)
             self.skills[skill.name] = skill
         
-        print(f"  ✓ Discovered {len(self.skills)} skills")
+        print(f"  * Discovered {len(self.skills)} skills")
     
     def discover_services(self):
         """Discover running services."""
@@ -227,14 +227,14 @@ class HeadyRegistry:
             service = Service(**service_data)
             self.services[service.name] = service
         
-        print(f"  ✓ Discovered {len(self.services)} services")
+        print(f"  * Discovered {len(self.services)} services")
     
     def discover_tools(self):
         """Discover tools from HeadyAcademy/Tools/."""
         tools_dir = self.root_path / "HeadyAcademy" / "Tools"
         
         if not tools_dir.exists():
-            print(f"⚠ Tools directory not found at {tools_dir}")
+            print(f"[WARN] Tools directory not found at {tools_dir}")
             return
         
         for tool_file in tools_dir.rglob("*.py"):
@@ -251,7 +251,7 @@ class HeadyRegistry:
             )
             self.tools[tool.name] = tool
         
-        print(f"  ✓ Discovered {len(self.tools)} tools")
+        print(f"  * Discovered {len(self.tools)} tools")
     
     def save(self):
         """Save registry to JSON file."""
@@ -270,7 +270,7 @@ class HeadyRegistry:
         with open(self.registry_file, 'w') as f:
             json.dump(data, f, indent=2)
         
-        print(f"∞ HeadyRegistry: Saved to {self.registry_file}")
+        print(f" HeadyRegistry: Saved to {self.registry_file}")
     
     def load(self):
         """Load registry from JSON file."""
@@ -283,7 +283,7 @@ class HeadyRegistry:
         self.services = {k: Service(**v) for k, v in data.get('services', {}).items()}
         self.tools = {k: Tool(**v) for k, v in data.get('tools', {}).items()}
         
-        print(f"∞ HeadyRegistry: Loaded {self.get_total_count()} capabilities from {self.registry_file}")
+        print(f"HeadyRegistry: Loaded {self.get_total_count()} capabilities from {self.registry_file}")
     
     def get_total_count(self) -> int:
         """Get total count of all capabilities."""
@@ -368,17 +368,17 @@ if __name__ == "__main__":
     summary = registry.get_summary()
     
     print("\n" + "="*80)
-    print("∞ HEADY REGISTRY SUMMARY ∞")
+    print(" HEADY REGISTRY SUMMARY ")
     print("="*80)
     print(f"\nTotal Capabilities: {summary['total_capabilities']}")
     print(f"\n📦 Nodes: {summary['nodes']}")
     print(f"   {', '.join(summary['node_list'])}")
     print(f"\n⚡ Workflows: {summary['workflows']}")
     print(f"   {', '.join(summary['workflow_list'])}")
-    print(f"\n🎯 Skills: {summary['skills']}")
+    print(f"\n[TARGET] Skills: {summary['skills']}")
     print(f"   {', '.join(summary['skill_list'])}")
     print(f"\n🔧 Services: {summary['services']}")
     print(f"   {', '.join(summary['service_list'])}")
-    print(f"\n🛠️  Tools: {len(registry.tools)}")
+    print(f"\n[TOOL]  Tools: {len(registry.tools)}")
     print(f"   Categories: {', '.join(summary['tool_categories'])}")
     print("\n" + "="*80)

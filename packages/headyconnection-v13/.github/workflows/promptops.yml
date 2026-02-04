@@ -1,0 +1,7 @@
+name: PromptOps Governance
+on:
+  workflow_dispatch:
+jobs:
+  promptops:
+    uses: heady-connection/governance/.github/workflows/promptops.yml@main
+    secrets: inherit

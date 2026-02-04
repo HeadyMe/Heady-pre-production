@@ -17,20 +17,32 @@ services:
     name: heady-manager
     runtime: node
     buildCommand: npm install && npm run build --prefix frontend
-    startCommand: node backend/index.js
+    startCommand: node heady-manager.js
     envVars:
       - key: PORT
         value: "3300"
       - key: NODE_ENV
         value: "production"
+      - key: HEADY_TARGET
+        value: "${HEADY_TARGET}"
+      - key: HEADY_VERSION
+        value: "2.0.0-unified"
+      - key: ENABLE_CODEMAP
+        value: "true"
+      - key: JULES_ENABLED
+        value: "true"
+      - key: OBSERVER_ENABLED
+        value: "true"
+      - key: BUILDER_ENABLED
+        value: "true"
+      - key: ATLAS_ENABLED
+        value: "true"
       - key: DATABASE_URL
         fromSecret: DATABASE_URL
       - key: HEADY_API_KEY
         fromSecret: HEADY_API_KEY
       - key: PYTHON_WORKER_PATH
         value: "backend/python_worker"
-      - key: HEADY_VERSION
-        value: "v1.0.0-optimized"
       - key: ADMIN_TOKEN
         fromSecret: ADMIN_TOKEN
       - key: REMOTE_GPU_HOST
