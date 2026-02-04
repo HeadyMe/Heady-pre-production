@@ -6,7 +6,10 @@
     "start": "node backend/index.js",
     "backend": "npm start --prefix backend",
     "frontend": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "brand:check": "node scripts/brand_headers.js --check",
+    "brand:fix": "node scripts/brand_headers.js --fix",
+    "hooks:install": "node scripts/install_git_hooks.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

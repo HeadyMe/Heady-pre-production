@@ -1,0 +1,110 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "F:/"
+		},
+		{
+			"path": "../../CascadeProjects"
+		},
+		{
+			"path": "../../Git"
+		},
+		{
+			"path": "../../HeadyE"
+		},
+		{
+			"path": "../../HeadyIDE"
+		},
+		{
+			"path": "../../.aws"
+		},
+		{
+			"path": "../../.cache"
+		},
+		{
+			"path": "../../.cagent"
+		},
+		{
+			"path": "../../.claude"
+		},
+		{
+			"path": "../../.codeium"
+		},
+		{
+			"path": "../../.config"
+		},
+		{
+			"path": "../../.docker"
+		},
+		{
+			"path": "../../.gitlab"
+		},
+		{
+			"path": "../../.ipython"
+		},
+		{
+			"path": "../../.jules"
+		},
+		{
+			"path": "../../.localstack"
+		},
+		{
+			"path": "../../.pm2"
+		},
+		{
+			"path": "../../.redhat"
+		},
+		{
+			"path": "../../.robocorp-code"
+		},
+		{
+			"path": "../../.sema4ai"
+		},
+		{
+			"path": "../../.ssh"
+		},
+		{
+			"path": "../../.windsurf"
+		},
+		{
+			"path": "../../.windsurf-next"
+		},
+		{
+			"path": "../../apps"
+		},
+		{
+			"path": "../../CrossDevice"
+		},
+		{
+			"path": "../../Documents"
+		},
+		{
+			"path": "../../Downloads"
+		},
+		{
+			"path": "../../Favorites"
+		},
+		{
+			"path": "../../generated-apps"
+		},
+		{
+			"path": "../../node_modules"
+		},
+		{
+			"path": "../../npm-cache"
+		},
+		{
+			"path": "../../scripts"
+		},
+		{
+			"path": "../../windsurf"
+		},
+		{
+			"path": "../../windsurf2"
+		}
+	],
+	"settings": {}
+}

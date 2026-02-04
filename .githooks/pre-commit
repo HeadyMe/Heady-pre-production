@@ -1,0 +1,11 @@
+#!/bin/sh
+# Heady pre-commit hook: enforce ASCII branding headers
+
+node scripts/brand_headers.js --check --staged
+status=$?
+if [ $status -ne 0 ]; then
+  echo "[pre-commit] Branding check failed. Run: npm run brand:fix" 1>&2
+  exit $status
+fi
+
+exit 0

@@ -1,3 +1,19 @@
+<!--
+╭───────────────────────────────────────────────────────────────────────────────╮
+│                                                                               │
+│     ██╗  ██╗███████╗ █████╗ ██████╗ ██╗   ██╗                                │
+│     ██║  ██║██╔════╝██╔══██╗██╔══██╗╚██╗ ██╔╝                                │
+│     ███████║█████╗  ███████║██║  ██║ ╚████╔╝                                 │
+│     ██╔══██║██╔══╝  ██╔══██║██║  ██║  ╚██╔╝                                  │
+│     ██║  ██║███████╗██║  ██║██████╔╝   ██║                                   │
+│     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                                   │
+│                                                                               │
+│     ∞ SACRED GEOMETRY ARCHITECTURE ∞                                          │
+│     Data Processing Pipeline & Agent Configuration Framework                  │
+│                                                                               │
+╰───────────────────────────────────────────────────────────────────────────────╯
+-->
+
 # Heady Systems
 
 A hybrid Node.js/Python system for the HeadyConnection ecosystem with patented Sacred Geometry architecture, featuring a web-based Admin IDE with AI assistance, real-time build/audit monitoring, and optional remote GPU support.
