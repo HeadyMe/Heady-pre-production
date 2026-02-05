@@ -332,6 +332,18 @@ app.use((error, req, res, next) => {
   });
 });
 
+// System pulse endpoint
+app.get("/api/pulse", (req, res) => {
+  res.json({
+    ok: true,
+    service: "heady-manager",
+    ts: new Date().toISOString(),
+    version: "2.0.0",
+    status: "active",
+    endpoints: ["/api/health", "/api/registry", "/api/maid/*", "/api/conductor/*"]
+  });
+});
+
 // 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({
