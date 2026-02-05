@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyBuddy</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Sacred Geometry Background -->
+    <div class="sacred-bg">
+        <div class="flower-of-life"></div>
+        <div class="gradient-orb"></div>
+    </div>
+
+    <!-- Header / Drag Handle -->
+    <div class="header" id="header">
+        <div class="buddy-avatar">
+            <div class="avatar-circle">
+                <span class="avatar-icon">🧠</span>
+            </div>
+            <div class="status-indicator" id="status-indicator"></div>
+        </div>
+        <div class="header-title">
+            <h1>HeadyBuddy</h1>
+            <span class="subtitle">Your AI Companion</span>
+        </div>
+        <div class="header-controls">
+            <button class="control-btn" id="minimize-btn" title="Minimize">−</button>
+            <button class="control-btn" id="close-btn" title="Hide to Tray">×</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+        <!-- Task Section -->
+        <div class="section tasks-section">
+            <div class="section-header">
+                <span class="section-icon">📋</span>
+                <h2>Current Task</h2>
+                <span class="task-count" id="task-count">0</span>
+            </div>
+            
+            <div class="task-display" id="current-task">
+                <div class="task-placeholder">
+                    <span class="placeholder-icon">✨</span>
+                    <p>No active task</p>
+                    <span class="placeholder-hint">What are we working on?</span>
+                </div>
+            </div>
+
+            <div class="task-input-container">
+                <input type="text" 
+                       id="task-input" 
+                       placeholder="Enter your task..."
+                       autocomplete="off">
+                <button class="add-task-btn" id="add-task-btn">➕</button>
+            </div>
+        </div>
+
+        <!-- AI Companion Chat -->
+        <div class="section chat-section">
+            <div class="section-header">
+                <span class="section-icon">💬</span>
+                <h2>Buddy Chat</h2>
+            </div>
+            
+            <div class="chat-messages" id="chat-messages">
+                <div class="message buddy-message">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-content">
+                        <p>Hello! I'm HeadyBuddy, your AI companion. I'm here to help you stay focused and complete your tasks! 🚀</p>
+                        <span class="message-time">Just now</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" 
+                       id="chat-input" 
+                       placeholder="Ask me anything..."
+                       autocomplete="off">
+                <button class="send-btn" id="send-btn">➤</button>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section actions-section">
+            <div class="section-header">
+                <span class="section-icon">⚡</span>
+                <h2>Quick Actions</h2>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="action-btn" id="sync-btn">
+                    <span class="action-icon">🔄</span>
+                    <span class="action-label">Sync</span>
+                </button>
+                <button class="action-btn" id="build-btn">
+                    <span class="action-icon">🔨</span>
+                    <span class="action-label">Build</span>
+                </button>
+                <button class="action-btn" id="deploy-btn">
+                    <span class="action-icon">🚀</span>
+                    <span class="action-label">Deploy</span>
+                </button>
+                <button class="action-btn" id="checkpoint-btn">
+                    <span class="action-icon">📍</span>
+                    <span class="action-label">Checkpoint</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- System Status -->
+        <div class="section status-section">
+            <div class="section-header">
+                <span class="section-icon">📊</span>
+                <h2>System Status</h2>
+            </div>
+            
+            <div class="status-grid">
+                <div class="status-item" id="heady-manager-status">
+                    <span class="status-dot offline"></span>
+                    <span class="status-label">HeadyManager</span>
+                </div>
+                <div class="status-item" id="mcp-status">
+                    <span class="status-dot offline"></span>
+                    <span class="status-label">MCP Services</span>
+                </div>
+                <div class="status-item" id="git-status">
+                    <span class="status-dot offline"></span>
+                    <span class="status-label">Git Sync</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resize Handle -->
+    <div class="resize-handle" id="resize-handle"></div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
