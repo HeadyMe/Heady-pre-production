@@ -1,7 +1,7 @@
 # HEADY_BRAND:BEGIN
 # HEADY SYSTEMS :: SACRED GEOMETRY
-# FILE: start-docker-mcp.ps1
-# LAYER: scripts
+# FILE: scripts/start-docker-mcp.ps1
+# LAYER: root
 # 
 #         _   _  _____    _    ____   __   __
 #        | | | || ____|  / \  |  _ \ \ \ / /

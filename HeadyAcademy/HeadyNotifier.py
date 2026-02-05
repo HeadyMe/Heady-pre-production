@@ -1,7 +1,7 @@
 # HEADY_BRAND:BEGIN
 # HEADY SYSTEMS :: SACRED GEOMETRY
 # FILE: HeadyAcademy/HeadyNotifier.py
-# LAYER: core
+# LAYER: root
 # 
 #         _   _  _____    _    ____   __   __
 #        | | | || ____|  / \  |  _ \ \ \ / /

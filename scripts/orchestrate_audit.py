@@ -1,13 +1,7 @@
 # HEADY_BRAND:BEGIN
 # HEADY SYSTEMS :: SACRED GEOMETRY
 # FILE: scripts/orchestrate_audit.py
-# LAYER: scripts
-# PURPOSE: Comprehensive audit orchestration - integrates system health monitoring,
-#          security vulnerability scanning, and audit trail management into a unified
-#          reporting system with actionable insights and historical tracking
-# DEPENDENCIES: heady_project.audit, HeadyAcademy.Tools.Security_Audit
-# OUTPUT: JSON reports in HeadyAcademy/Logs/Comprehensive_Audits/
-# EXIT_CODES: 0=SUCCESS, 1=WARNING, 2=ERROR
+# LAYER: root
 # 
 #         _   _  _____    _    ____   __   __
 #        | | | || ____|  / \  |  _ \ \ \ / /

@@ -1,7 +1,7 @@
 // HEADY_BRAND:BEGIN
 // HEADY SYSTEMS :: SACRED GEOMETRY
 // FILE: backend/src/middleware/auth.js
-// LAYER: backend/middleware
+// LAYER: backend
 // 
 //         _   _  _____    _    ____   __   __
 //        | | | || ____|  / \  |  _ \ \ \ / /

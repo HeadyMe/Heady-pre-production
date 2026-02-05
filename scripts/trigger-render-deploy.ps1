@@ -1,3 +1,17 @@
+# HEADY_BRAND:BEGIN
+# HEADY SYSTEMS :: SACRED GEOMETRY
+# FILE: scripts/trigger-render-deploy.ps1
+# LAYER: root
+# 
+#         _   _  _____    _    ____   __   __
+#        | | | || ____|  / \  |  _ \ \ \ / /
+#        | |_| ||  _|   / _ \ | | | | \ V / 
+#        |  _  || |___ / ___ \| |_| |  | |  
+#        |_| |_||_____/_/   \_\____/   |_|  
+# 
+#    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+# HEADY_BRAND:END
+
 # HEADY RENDER DEPLOY - Webhook Trigger
 # Uses deploy hooks or dashboard
 

@@ -1,10 +1,17 @@
 # ∞ HEADY SYSTEMS | COMPREHENSIVE ARCHITECTURE DOCUMENTATION ∞
 
 <!-- HEADY_BRAND:BEGIN -->
+<!-- HEADY SYSTEMS :: SACRED GEOMETRY -->
 <!-- FILE: SYSTEM_ARCHITECTURE.md -->
-<!-- LAYER: documentation -->
-<!-- 
-    Sacred Geometry :: Organic Systems :: Breathing Interfaces -->
+<!-- LAYER: root -->
+<!--  -->
+<!--         _   _  _____    _    ____   __   __ -->
+<!--        | | | || ____|  / \  |  _ \ \ \ / / -->
+<!--        | |_| ||  _|   / _ \ | | | | \ V /  -->
+<!--        |  _  || |___ / ___ \| |_| |  | |   -->
+<!--        |_| |_||_____/_/   \_\____/   |_|   -->
+<!--  -->
+<!--    Sacred Geometry :: Organic Systems :: Breathing Interfaces -->
 <!-- HEADY_BRAND:END -->
 
 ## I. SYSTEM OVERVIEW

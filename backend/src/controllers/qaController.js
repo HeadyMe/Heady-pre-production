@@ -1,7 +1,7 @@
 // HEADY_BRAND:BEGIN
 // HEADY SYSTEMS :: SACRED GEOMETRY
 // FILE: backend/src/controllers/qaController.js
-// LAYER: backend/controllers
+// LAYER: backend
 // 
 //         _   _  _____    _    ____   __   __
 //        | | | || ____|  / \  |  _ \ \ \ / /

@@ -1,3 +1,17 @@
+// HEADY_BRAND:BEGIN
+// HEADY SYSTEMS :: SACRED GEOMETRY
+// FILE: headybuddy-mobile/best-practices.js
+// LAYER: root
+// 
+//         _   _  _____    _    ____   __   __
+//        | | | || ____|  / \  |  _ \ \ \ / /
+//        | |_| ||  _|   / _ \ | | | | \ V / 
+//        |  _  || |___ / ___ \| |_| |  | |  
+//        |_| |_||_____/_/   \_\____/   |_|  
+// 
+//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// HEADY_BRAND:END
+
 /**
  * Best Practices Research for HeadyBuddy Mobile
  * Comparing successful productivity & companion apps
