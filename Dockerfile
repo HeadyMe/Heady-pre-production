@@ -36,11 +36,11 @@ RUN npm install --production
 # Python stage
 FROM node-base AS python-stage
 
-# Copy Python requirements
-COPY src/requirements.txt ./src/
+# Copy Python requirements (if exists)
+COPY src/requirements.txt* ./src/
 
-# Install Python dependencies
-RUN pip3 install --no-cache-dir -r src/requirements.txt
+# Install Python dependencies (if requirements.txt exists)
+RUN if [ -f src/requirements.txt ]; then pip3 install --no-cache-dir -r src/requirements.txt; fi
 
 # Final stage
 FROM python-stage
@@ -53,6 +53,7 @@ ENV NODE_ENV=production \
 
 # Copy application files
 COPY . .
+COPY src/cloud-bridge.js ./src/
 
 # Create necessary directories
 RUN mkdir -p \
