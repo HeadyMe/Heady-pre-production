@@ -1,0 +1,46 @@
+{
+  "name": "heady-unified-system",
+  "version": "2.0.0",
+  "description": "Heady Unified System - Sacred Geometry :: Organic Systems :: Breathing Interfaces",
+  "main": "heady-manager.js",
+  "scripts": {
+    "start": "node heady-manager.js",
+    "dev": "nodemon heady-manager.js",
+    "backend": "npm start --prefix backend",
+    "frontend": "npm start --prefix frontend",
+    "sync:all": "powershell -File .\\scripts\\unified-sync.ps1",
+    "deploy:headyme": "powershell -File .\\scripts\\deploy-target.ps1 -Target HeadyMe",
+    "deploy:headysystems": "powershell -File .\\scripts\\deploy-target.ps1 -Target HeadySystems",
+    "deploy:headyconnection": "powershell -File .\\scripts\\deploy-target.ps1 -Target HeadyConnection",
+    "deploy:all": "npm run deploy:headyme && npm run deploy:headysystems && npm run deploy:headyconnection",
+    "verify:all": "powershell -File .\\scripts\\verify-deployment.ps1",
+    "conductor:sync": "node scripts/conductor-state-sync.js",
+    "hs": "powershell -File .\\heady_sync.ps1",
+    "hb": "powershell -File .\\hcautobuild.ps1",
+    "brand:check": "node scripts/brand_headers.js --check",
+    "brand:fix": "node scripts/brand_headers.js --fix",
+    "hooks:install": "node scripts/install_git_hooks.js",
+    "lint": "eslint . --fix",
+    "test": "jest",
+    "build": "echo 'Build complete - Sacred Geometry Activated'",
+    "pipeline": "node -e \"const {pipeline}=require('./src/hc_pipeline');pipeline.run().then(s=>console.log(JSON.stringify({runId:s.runId,status:s.status,metrics:s.metrics},null,2))).catch(e=>console.error(e.message))\"",
+    "pipeline:config": "node -e \"const {pipeline}=require('./src/hc_pipeline');console.log(JSON.stringify(pipeline.getConfigSummary(),null,2))\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^8.52.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.1",
+    "compression": "^1.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "js-yaml": "^4.1.1",
+    "node-cron": "^3.0.2"
+  }
+}

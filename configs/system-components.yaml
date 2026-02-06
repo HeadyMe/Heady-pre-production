@@ -1,0 +1,248 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/system-components.yaml                             ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# System Components Map - Canonical registry of ALL system components.
+# Orchestrator and System Brain use this as the definitive source of truth.
+
+version: "2.0.0"
+
+# ─── SERVICES ─────────────────────────────────────────────────────────────
+services:
+  - name: heady-manager
+    type: web-server
+    role: Central API Gateway & MCP Server
+    location: heady-manager.js
+    port: 3300
+    criticality: critical
+    healthCheck: { method: http, path: /api/health }
+    operationalReadiness:
+      - process-running
+      - health-endpoint-200
+      - api-key-configured
+
+  - name: python-conductor
+    type: worker
+    role: Python Orchestration & Audit Worker
+    location: src/heady_project/heady_conductor.py
+    criticality: critical
+    healthCheck: { method: process-alive }
+    operationalReadiness:
+      - python-binary-available
+      - conductor-script-exists
+      - database-url-configured
+
+  - name: hc-supervisor
+    type: internal-module
+    role: Multi-Agent Direct-Routing Supervisor
+    location: packages/hc-supervisor/
+    criticality: critical
+    healthCheck: { method: module-loaded }
+    operationalReadiness:
+      - agents-registered
+      - networking-client-ready
+
+  - name: hc-brain
+    type: internal-module
+    role: System Brain Meta-Controller
+    location: packages/hc-brain/
+    criticality: critical
+    healthCheck: { method: module-loaded }
+    operationalReadiness:
+      - configs-loaded
+      - concept-index-valid
+      - readiness-evaluator-ready
+
+  - name: hc-checkpoint
+    type: internal-module
+    role: Checkpoint Protocol Analyzer
+    location: packages/hc-checkpoint/
+    criticality: critical
+    healthCheck: { method: module-loaded }
+    operationalReadiness:
+      - config-hashes-computed
+      - checkpoint-store-accessible
+
+  - name: hc-readiness
+    type: internal-module
+    role: Operational Readiness Evaluator
+    location: packages/hc-readiness/
+    criticality: critical
+    healthCheck: { method: module-loaded }
+    operationalReadiness:
+      - health-sources-configured
+      - slo-thresholds-defined
+
+  - name: hc-health
+    type: internal-module
+    role: Node Health Check Runner & Cron
+    location: packages/hc-health/
+    criticality: high
+    healthCheck: { method: module-loaded }
+    operationalReadiness:
+      - cron-schedules-active
+      - health-scripts-available
+
+  - name: networking-client
+    type: internal-module
+    role: Direct No-Proxy HTTP Client for Heady Internal
+    location: packages/networking/
+    criticality: critical
+    healthCheck: { method: module-loaded }
+    operationalReadiness:
+      - internal-domains-configured
+      - proxy-bypass-active
+
+# ─── APPS ─────────────────────────────────────────────────────────────────
+apps:
+  - name: heady-frontend
+    type: web-app
+    role: Sacred Geometry React UI
+    location: frontend/
+    buildCommand: npm run build --prefix frontend
+    servedBy: heady-manager
+    servePath: /
+    criticality: high
+    healthCheck: { method: http, path: / }
+    operationalReadiness:
+      - build-artifact-exists
+      - static-serving-configured
+
+  - name: heady-admin
+    type: web-app
+    role: Admin IDE Dashboard
+    location: public/admin.html
+    servedBy: heady-manager
+    servePath: /admin.html
+    criticality: medium
+    healthCheck: { method: http, path: /admin.html }
+
+  - name: heady-academy
+    type: web-app
+    role: Learning & Documentation Platform
+    location: HeadyAcademy/
+    criticality: medium
+
+  - name: headybuddy
+    type: mobile-app
+    role: Mobile Companion App
+    location: headybuddy/
+    criticality: medium
+
+  - name: headybuddy-mobile
+    type: mobile-app
+    role: HeadyBuddy Mobile Native
+    location: headybuddy-mobile/
+    criticality: medium
+
+  - name: desktop-overlay
+    type: desktop-app
+    role: Desktop Overlay Widget
+    location: desktop-overlay/
+    criticality: low
+
+# ─── WEBSITES ─────────────────────────────────────────────────────────────
+websites:
+  - name: heady-systems-site
+    role: Primary marketing & docs website
+    domain: headysystems.com
+    deployment: render-com
+    criticality: high
+    healthCheck: { method: http, url: https://headysystems.com }
+    operationalReadiness:
+      - dns-resolves
+      - tls-valid
+      - homepage-200
+
+  - name: heady-dashboard
+    role: Operations dashboard
+    endpoint: http://localhost:3300
+    deployment: local + render
+    criticality: high
+
+# ─── DATA STORES ──────────────────────────────────────────────────────────
+dataStores:
+  - name: postgres-primary
+    type: relational-db
+    engine: postgresql
+    connectionVar: DATABASE_URL
+    role: OLTP - pipeline runs, concepts, health, audit
+    criticality: critical
+    healthCheck: { method: connection-test }
+    operationalReadiness:
+      - connection-string-valid
+      - migrations-applied
+      - backup-configured
+
+  - name: in-memory-cache
+    type: cache
+    engine: node-map
+    role: API response cache, dedup windows, rate counters
+    criticality: medium
+    healthCheck: { method: always-ok }
+
+  - name: file-system-store
+    type: file-storage
+    role: Pipeline artifacts, config files, logs
+    location: /tmp/heady/, audit_logs.jsonl
+    criticality: high
+
+# ─── EXTERNAL INTEGRATIONS ────────────────────────────────────────────────
+external:
+  - name: render-com
+    role: Deployment platform
+    type: paas
+    criticality: high
+  - name: github
+    role: Source code management
+    type: scm
+    criticality: critical
+  - name: algolia-hn
+    role: News ingestion source
+    type: api
+    criticality: medium
+  - name: huggingface
+    role: ML model hosting
+    type: ml-platform
+    criticality: medium
+  - name: cloudflare
+    role: CDN, DNS, security
+    type: cdn
+    criticality: high
+
+# ─── SCRIPTS & TOOLS ─────────────────────────────────────────────────────
+scripts:
+  - name: commit_and_build.ps1
+    role: Local build cycle
+    criticality: high
+  - name: nexus_deploy.ps1
+    role: Push to all remotes
+    criticality: high
+  - name: heady_sync.ps1
+    role: Multi-remote sync
+    criticality: high
+  - name: hcautobuild.ps1
+    role: Automated build pipeline
+    criticality: high
+  - name: heady_protocol.ps1
+    role: Protocol enforcement
+    criticality: high
+  - name: auto-checkpoint.ps1
+    role: Automated checkpoint saves
+    criticality: high
+  - name: hc.ps1
+    role: HC CLI tool
+    criticality: medium

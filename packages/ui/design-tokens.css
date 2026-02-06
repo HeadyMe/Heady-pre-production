@@ -1,0 +1,132 @@
+/**
+ * HeadySystems Design Tokens
+ * Sacred Geometry - Golden Ratio (φ ≈ 1.618)
+ * 
+ * IP Header: HeadySystems Inc. - Provisional Patent Pending
+ * Category: Sacred Geometry UI Architecture
+ */
+
+:root {
+  /* Golden Ratio Base */
+  --phi: 1.618033988749895;
+  --phi-inverse: 0.618033988749895; /* 1/φ */
+  
+  /* Spacing Scale (based on φ) */
+  --space-0: 0.382rem;     /* φ^-2 */
+  --space-1: 0.618rem;     /* φ^-1 */
+  --space-2: 1rem;         /* base */
+  --space-3: 1.618rem;     /* φ */
+  --space-4: 2.618rem;     /* φ^2 */
+  --space-5: 4.236rem;     /* φ^3 */
+  --space-6: 6.854rem;     /* φ^4 */
+  --space-7: 11.090rem;    /* φ^5 */
+  
+  /* Font Size Scale (based on φ) */
+  --font-xs: 0.618rem;     /* φ^-1 */
+  --font-sm: 0.854rem;     /* intermediate */
+  --font-base: 1rem;       /* base */
+  --font-md: 1.272rem;     /* intermediate */
+  --font-lg: 1.618rem;     /* φ */
+  --font-xl: 2.058rem;     /* intermediate */
+  --font-2xl: 2.618rem;    /* φ^2 */
+  --font-3xl: 4.236rem;    /* φ^3 */
+  
+  /* Layout Proportions */
+  --width-narrow: 38.2%;   /* φ^-1 × 100 */
+  --width-medium: 61.8%;   /* 1/φ × 100 */
+  --width-wide: 100%;
+  
+  /* Border Radius (organic, breathing) */
+  --radius-sm: 0.382rem;   /* φ^-2 */
+  --radius-md: 0.618rem;   /* φ^-1 */
+  --radius-lg: 1rem;       /* base */
+  --radius-xl: 1.618rem;   /* φ */
+  --radius-full: 9999px;   /* circular */
+  
+  /* Timing Functions (harmonic) */
+  --duration-fast: 236ms;  /* φ^-1 × 382ms */
+  --duration-base: 382ms;  /* φ^-2 × 1000ms */
+  --duration-slow: 618ms;  /* φ^-1 × 1000ms */
+  
+  /* Sacred Geometry Colors */
+  --color-primary: #00d4ff;      /* Cyan - Flow */
+  --color-secondary: #7b2cbf;    /* Purple - Depth */
+  --color-accent: #ff6b6b;       /* Red - Energy */
+  --color-success: #4ecdc4;      /* Teal - Growth */
+  --color-warning: #ffe66d;      /* Yellow - Caution */
+  --color-error: #ff4757;        /* Red - Alert */
+  --color-background: #1a1a2e;   /* Deep Geometry */
+  --color-background-alt: #16213e; /* Deeper Layer */
+  --color-surface: rgba(255, 255, 255, 0.04); /* Translucent Surface */
+  --color-border: rgba(0, 212, 255, 0.12);    /* Cyan Edge */
+  --color-text: #e8e8e8;         /* Soft Light */
+  --color-text-muted: #8892a4;   /* Dim Light */
+  --color-glow: rgba(0, 212, 255, 0.15); /* Cyan Glow */
+  
+  /* Elevation Shadows (layered depth) */
+  --shadow-sm: 0 0.236rem 0.618rem rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 0.382rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 0.618rem 1.618rem rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 1rem 2.618rem rgba(0, 0, 0, 0.25);
+  
+  /* Grid System (φ-based) */
+  --grid-gap: var(--space-3);
+  --grid-columns: 12;
+  --container-max: 1618px; /* φ × 1000 */
+}
+
+/* Utility Classes */
+.phi-container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+.phi-grid {
+  display: grid;
+  gap: var(--grid-gap);
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+}
+
+.phi-flex {
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Sacred Geometry Breathing Animation */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.0618); } /* 1 + φ^-1 */
+}
+
+.breathe {
+  animation: breathe var(--duration-slow) ease-in-out infinite;
+}
+
+/* Golden Ratio Layout Helpers */
+.golden-section-major {
+  flex: 1.618;
+}
+
+.golden-section-minor {
+  flex: 1;
+}
+
+/* Responsive Breakpoints (φ-based) */
+@media (min-width: 618px) {  /* φ × 382 */
+  :root {
+    --font-base: 1.125rem;
+  }
+}
+
+@media (min-width: 1000px) {
+  :root {
+    --font-base: 1.25rem;
+  }
+}
+
+@media (min-width: 1618px) { /* φ × 1000 */
+  :root {
+    --font-base: 1.375rem;
+  }
+}

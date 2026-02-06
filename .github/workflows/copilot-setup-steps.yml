@@ -1,0 +1,122 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: .github/workflows/copilot-setup-steps.yml                  ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install Node Dependencies
+        run: npm install
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Export environment variables
+        run: |
+          echo "HEADY_API_KEY=${{ secrets.HEADY_API_KEY }}" >> $GITHUB_ENV
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "HF_TOKEN=${{ secrets.HF_TOKEN }}" >> $GITHUB_ENV
+          echo "COPILOT_MCP_CLOUDFLARE_API_TOKEN=${{ secrets.COPILOT_MCP_CLOUDFLARE_API_TOKEN }}" >> $GITHUB_ENV
+          echo "COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID=${{ secrets.COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID }}" >> $GITHUB_ENV
+
+      - name: Verify MCP configuration
+        run: |
+          echo "Checking MCP configuration..."
+          if command -v jq &> /dev/null; then
+            cat mcp_config.json | jq .
+          else
+            cat mcp_config.json
+          fi
+
+      - name: Test Node.js syntax
+        run: node --check heady-manager.js
+
+      - name: Test Python syntax
+        run: python -m compileall src
+
+      - name: Verify Setup
+        run: |
+          echo "Node: $(node --version)"
+          echo "Python: $(python --version)"
+          echo "Setup complete!"
+
+      - name: Notify on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: emails } = await github.rest.users.listEmailsForAuthenticatedUser();
+            const primaryEmail = emails.find(e => e.primary && e.verified)?.email || emails[0]?.email;
+            
+            await github.rest.repos.createCommitComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+              body: `⚠️ **Workflow Failed**: Copilot Setup Steps\n\nCommit: ${context.sha}\nBranch: ${context.ref}\nActor: ${context.actor}\n\nCheck logs: ${context.payload.repository.html_url}/actions/runs/${context.runId}`
+            });
+            
+            console.log(`Notification sent for workflow failure`);
+
+      - name: Send Email Notification on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚨 Heady Systems Workflow Failed"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: "Heady Systems <alerts@heady.systems>"
+          html_body: |
+            <h2>🚨 Workflow Failure Alert</h2>
+            <p><strong>Repository:</strong> ${{ github.repository }}</p>
+            <p><strong>Workflow:</strong> ${{ github.workflow }}</p>
+            <p><strong>Branch:</strong> ${{ github.ref }}</p>
+            <p><strong>Commit:</strong> ${{ github.sha }}</p>
+            <p><strong>Actor:</strong> ${{ github.actor }}</p>
+            <p><strong>Time:</strong> ${{ github.event.head_commit.timestamp }}</p>
+            <p><a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Logs</a></p>
+          convert_markdown: true

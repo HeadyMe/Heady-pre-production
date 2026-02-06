@@ -1,0 +1,122 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: HeadyAcademy/Node_Registry.yaml                            ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+nodes:
+  - name: "BRIDGE"
+    role: "The Connector"
+    primary_tool: "mcp_server"
+    behavior_profile: "interoperable, networked, secure"
+    trigger_on: ["mcp", "connect", "warp", "network", "tunnel"]
+
+  - name: "MUSE"
+    role: "The Brand Architect"
+    primary_tool: "content_generator"
+    trigger_on: ["generate_content", "whitepaper", "marketing", "mock_data"]
+
+  - name: "SENTINEL"
+    role: "The Guardian"
+    primary_tool: "heady_chain"
+    trigger_on: ["grant_auth", "verify_auth", "audit_ledger"]
+
+  - name: "NOVA"
+    role: "The Expander"
+    primary_tool: "gap_scanner"
+    trigger_on: ["scan_gaps"]
+
+  - name: "OBSERVER"
+    role: "The Natural Observer"
+    primary_tool: "observer_daemon"
+    trigger_on: ["monitor"]
+
+  - name: "JANITOR"
+    role: "The Custodian"
+    primary_tool: "clean_sweep"
+    trigger_on: ["clean"]
+
+  - name: "JULES"
+    role: "The Hyper-Surgeon"
+    primary_tool: "goose"
+    trigger_on: ["optimization"]
+
+  - name: "SOPHIA"
+    role: "The Matriarch"
+    primary_tool: "hardware_sentience"
+    trigger_on: ["learn_tool"]
+
+  - name: "CIPHER"
+    role: "The Cryptolinguist"
+    primary_tool: "heady_crypt"
+    trigger_on: ["obfuscate"]
+
+  - name: "ATLAS"
+    role: "The Auto-Archivist"
+    primary_tool: "auto_doc"
+    trigger_on: ["documentation"]
+
+  - name: "MURPHY"
+    role: "The Inspector"
+    primary_tool: "semgrep"
+    trigger_on: ["security_audit"]
+
+  - name: "SASHA"
+    role: "The Dreamer"
+    primary_tool: "yandex_gpt"
+    trigger_on: ["brainstorming"]
+
+  - name: "SCOUT"
+    role: "The Hunter"
+    primary_tool: "pygithub"
+    trigger_on: ["scan_github"]
+
+  - name: "OCULUS"
+    role: "The Visualizer"
+    primary_tool: "gource"
+    trigger_on: ["visualize"]
+
+  - name: "BUILDER"
+    role: "The Constructor"
+    primary_tool: "hydrator"
+    trigger_on: ["new_project"]
+
+  - name: "PYTHIA"
+    role: "The Oracle"
+    primary_tool: "HuggingFace_Tool"
+    trigger_on: ["huggingface", "predict", "infer", "model", "ask_oracle"]
+
+  # CORE SYSTEM NODES - Central Intelligence & Awareness
+  - name: "LENS"
+    role: "The All-Seeing Eye"
+    primary_tool: "heady_lens"
+    behavior_profile: "real-time, comprehensive, monitoring"
+    trigger_on: ["monitor", "watch", "observe", "status", "health", "metrics", "performance"]
+
+  - name: "MEMORY"
+    role: "The Eternal Archive"
+    primary_tool: "heady_memory"
+    behavior_profile: "persistent, indexed, searchable"
+    trigger_on: ["remember", "store", "recall", "retrieve", "history", "knowledge", "learn"]
+
+  - name: "BRAIN"
+    role: "The Central Intelligence"
+    primary_tool: "heady_brain"
+    behavior_profile: "analytical, coordinating, decision-making"
+    trigger_on: ["think", "analyze", "decide", "process", "integrate", "reason", "understand"]
+
+  - name: "CONDUCTOR"
+    role: "The Orchestrator"
+    primary_tool: "heady_conductor"
+    behavior_profile: "orchestrating, routing, coordinating"
+    trigger_on: ["orchestrate", "coordinate", "route", "execute", "manage", "control"]

@@ -1,0 +1,21 @@
+{
+  "files": [
+    {
+      "path": "REGISTRY.json",
+      "sha256": "985727ea89c8c1c4627160245b2088202504181003ca13a0f17455be49176b37"
+    },
+    {
+      "path": "governance.lock",
+      "sha256": "24115abeaf56659fb268550f095114731377d60bf753583278d575621c870066"
+    },
+    {
+      "path": "mcp-gateway-config.json",
+      "sha256": "b3da7101b56992118336320421db08ec8cf0fbf77139799473ed7a4472e67af0"
+    },
+    {
+      "path": "CONTEXT.md",
+      "sha256": "864a3e8a487b85c3b32896cf26f6e74758c033f32bc67ee28b2f3d0782814cb5"
+    }
+  ],
+  "generated_at": "2026-01-25T16:55:02.014142+00:00"
+}

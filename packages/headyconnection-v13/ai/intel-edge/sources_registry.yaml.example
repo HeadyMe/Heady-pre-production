@@ -1,0 +1,6 @@
+sources:
+  - name: "trusted-intel-feed"
+    url: "https://example.com/feed"
+    allowlist:
+      - "alerts"
+      - "status"

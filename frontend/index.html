@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heady Codex | Sacred Geometry</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00d4ff;
+            --secondary: #7b2cbf;
+            --accent: #ff6b6b;
+            --success: #4ecdc4;
+            --bg-dark: #1a1a2e;
+            --bg-deeper: #16213e;
+            --glow-cyan: rgba(0, 212, 255, 0.3);
+            --glow-purple: rgba(123, 44, 191, 0.3);
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-deeper) 50%, #0f0c29 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .sacred-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            transform: translate(-50%, -50%);
+            background:
+                radial-gradient(circle at 50% 50%, transparent 48%, rgba(0,212,255,0.04) 50%, transparent 52%),
+                radial-gradient(circle at 25% 50%, transparent 48%, rgba(123,44,191,0.04) 50%, transparent 52%),
+                radial-gradient(circle at 75% 50%, transparent 48%, rgba(123,44,191,0.04) 50%, transparent 52%),
+                radial-gradient(circle at 50% 25%, transparent 48%, rgba(0,212,255,0.04) 50%, transparent 52%),
+                radial-gradient(circle at 50% 75%, transparent 48%, rgba(0,212,255,0.04) 50%, transparent 52%);
+            border-radius: 50%;
+            animation: sacredRotate 90s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes sacredRotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+            animation: orbPulse 6s ease-in-out infinite alternate;
+        }
+        .orb-1 { top: -120px; right: -80px; width: 400px; height: 400px; background: var(--glow-cyan); }
+        .orb-2 { bottom: -100px; left: -60px; width: 350px; height: 350px; background: var(--glow-purple); animation-delay: 3s; }
+        @keyframes orbPulse {
+            0% { opacity: 0.3; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(1.15); }
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        .logo-text {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 4s ease-in-out infinite;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 30px;
+            font-size: 0.95rem;
+            color: var(--primary);
+            animation: breathe 3s ease-in-out infinite;
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 20px rgba(0,212,255,0.1); }
+            50% { box-shadow: 0 0 40px rgba(0,212,255,0.2); }
+        }
+        .divider {
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+        .mantra {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 2px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="sacred-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="container">
+        <div class="logo-text">∞ HEADY CODEX ∞</div>
+        <div class="subtitle">Sacred Geometry Architecture</div>
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            System Active
+        </div>
+        <div class="divider"></div>
+        <div class="mantra">Sacred Geometry :: Organic Systems :: Breathing Interfaces</div>
+    </div>
+</body>
+</html>

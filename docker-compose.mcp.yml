@@ -1,0 +1,149 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: docker-compose.mcp.yml                                     ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+version: '3.8'
+
+services:
+  # HeadyMCP Manager Service
+  heady-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: heady-mcp:latest
+    container_name: heady-mcp-manager
+    ports:
+      - "3300:3300"
+    volumes:
+      - .:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./mcp-data:/app/mcp-data
+      - ./.heady-memory:/app/.heady-memory
+    environment:
+      - NODE_ENV=production
+      - PORT=3300
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/heady
+      - HEADY_PYTHON_BIN=python3
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - mcp-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3300/api/health', (r) => { process.exit(r.statusCode === 200 ? 0 : 1); })"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # MCP Filesystem Server
+  mcp-filesystem:
+    image: node:18-alpine
+    container_name: heady-mcp-filesystem
+    volumes:
+      - /Users/erich/Heady:/workspace
+      - ./node_modules:/app/node_modules
+    working_dir: /app
+    command: npx -y @modelcontextprotocol/server-filesystem /workspace
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # MCP PostgreSQL Server
+  mcp-postgres:
+    image: node:18-alpine
+    container_name: heady-mcp-postgres
+    depends_on:
+      - postgres
+    volumes:
+      - ./node_modules:/app/node_modules
+    working_dir: /app
+    command: npx -y @modelcontextprotocol/server-postgres
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/heady
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # MCP Memory Server
+  mcp-memory:
+    image: node:18-alpine
+    container_name: heady-mcp-memory
+    volumes:
+      - ./mcp-data:/data
+      - ./node_modules:/app/node_modules
+    working_dir: /app
+    command: npx -y @modelcontextprotocol/server-memory
+    environment:
+      - NODE_ENV=production
+      - MEMORY_STORAGE_PATH=/data
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # MCP Fetch Server
+  mcp-fetch:
+    image: node:18-alpine
+    container_name: heady-mcp-fetch
+    volumes:
+      - ./node_modules:/app/node_modules
+    working_dir: /app
+    command: npx -y @modelcontextprotocol/server-fetch
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # PostgreSQL Database for MCP
+  postgres:
+    image: postgres:15-alpine
+    container_name: heady-postgres
+    environment:
+      - POSTGRES_DB=heady
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+  # Redis for MCP caching
+  redis:
+    image: redis:7-alpine
+    container_name: heady-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  mcp-network:
+    driver: bridge

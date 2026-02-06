@@ -1,0 +1,91 @@
+.ide-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  background-color: var(--heady-bg-dark, #1a1a2e);
+  color: var(--heady-text, #e8e8e8);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+.ide-header {
+  height: 44px;
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(123, 44, 191, 0.08));
+  border-bottom: 1px solid var(--heady-border, rgba(0, 212, 255, 0.12));
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(8px);
+}
+
+.ide-header-brand {
+  background: linear-gradient(135deg, var(--heady-primary, #00d4ff), var(--heady-secondary, #7b2cbf));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+}
+
+.ide-header-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--heady-success, #4ecdc4);
+  box-shadow: 0 0 6px var(--heady-success, #4ecdc4);
+  margin-left: 10px;
+  animation: headerBreathe 3s ease-in-out infinite;
+}
+
+@keyframes headerBreathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.ide-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.ide-sidebar {
+  width: 250px;
+  background: linear-gradient(180deg, rgba(22, 33, 62, 0.95), rgba(26, 26, 46, 0.95));
+  border-right: 1px solid var(--heady-border, rgba(0, 212, 255, 0.12));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.ide-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ide-editor-area {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  background: rgba(15, 12, 41, 0.5);
+}
+
+.ide-bottom-panel {
+  height: 200px;
+  background: rgba(22, 33, 62, 0.6);
+  border-top: 1px solid var(--heady-border, rgba(0, 212, 255, 0.12));
+  overflow: hidden;
+}
+
+.ide-cascade {
+  width: 350px;
+  background: linear-gradient(180deg, rgba(22, 33, 62, 0.95), rgba(26, 26, 46, 0.95));
+  border-left: 1px solid var(--heady-border, rgba(0, 212, 255, 0.12));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}

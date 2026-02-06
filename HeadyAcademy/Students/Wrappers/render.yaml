@@ -1,0 +1,82 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: HeadyAcademy/Students/Wrappers/render.yaml                 ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+# Render Blueprint for Data Processing
+
+# This Render blueprint configures a worker service that runs a Python data‑processing
+# task. The worker builds your project using the `pip install -r requirements.txt`
+# command and executes a custom script (`python src/process_data.py`) to perform
+# whatever transformations or analytics your application requires.  A small
+# persistent disk is attached to retain intermediate files between runs.  A
+# Postgres database is defined to store input or output data.  Environment
+# variables are grouped into an `envVarGroup` so secrets and configuration can
+# be managed centrally.
+
+# Services define individual compute instances.  A worker service runs
+# continuously or on demand without exposing a public HTTP endpoint.  Adjust
+# the `buildCommand` and `startCommand` as needed for your project.
+services:
+  # Background worker for data processing
+  - type: worker
+    name: data-processor
+    # Runtime to use.  Supported values include "python", "node", "ruby", etc.
+    runtime: python
+    # Branch to deploy from.  Replace with your default branch if different.
+    branch: main
+    # Geographic region for the service.  Options include oregon, frankfurt, singapore.
+    region: oregon
+    # Command to build dependencies.  This example installs Python packages
+    # specified in a requirements file.  If your project uses Poetry or another
+    # tool, adjust accordingly.
+    buildCommand: pip install -r requirements.txt
+    # Command to start the worker.  Replace "src/process_data.py" with the
+    # entry point for your data‑processing logic.
+    startCommand: python src/process_data.py
+    # Attach a persistent disk for intermediate data or caches.  The disk name
+    # must be unique within the account.  Change the size if your task
+    # requires more storage.
+    disk:
+      name: data-processor-disk
+      mountPath: /data
+      sizeGB: 10
+    # Reference environment variables from the group defined below.  Render
+    # automatically injects these values at runtime.
+    envVars:
+      - fromGroup: data-processing-env
+
+# Define a Postgres database.  Render provisions and manages the instance.
+databases:
+  - name: data-processing-db
+    databaseName: data_processing
+    userName: data_processor
+    plan: free
+    # IP allow lists restrict which services can connect.  An empty list
+    # defaults to Render's internal network, which is sufficient for connecting
+    # from your services.
+    ipAllowList: []
+
+# Group environment variables so you can manage secrets in one place and
+# reference them from multiple services.  Replace the example values with
+# real connection strings, API keys, or other configuration parameters.  For
+# sensitive secrets, Render encrypts these values at rest.
+envVarGroups:
+  - name: data-processing-env
+    envVars:
+      - key: DATABASE_URL
+        # Example: postgres://data_processor:<password>@data-processing-db:5432/data_processing
+        value: ''
+      - key: OTHER_API_KEY
+        value: ''

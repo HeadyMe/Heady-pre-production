@@ -1,0 +1,31 @@
+{
+  "appName": "HeadyBuddy",
+  "shortDescription": "AI Companion Task Assistant",
+  "fullDescription": "HeadyBuddy is your intelligent desktop companion that stays always-on-top to help you stay focused and complete tasks. Powered by Heady Systems' Sacred Geometry architecture.",
+  "features": [
+    "Always-on-top floating companion window",
+    "Task tracking with visual progress",
+    "AI chat companion with encouragement",
+    "One-click sync, build, deploy actions",
+    "Real-time system status monitoring",
+    "Sacred Geometry calming design",
+    "System tray integration",
+    "Integration with HeadyManager"
+  ],
+  "keywords": [
+    "task assistant",
+    "productivity",
+    "ai companion",
+    "overlay",
+    "focus",
+    "desktop widget"
+  ],
+  "categories": [
+    "Productivity",
+    "Developer Tools"
+  ],
+  "pricing": "Free",
+  "privacyPolicy": "https://heady.systems/privacy",
+  "supportContact": "support@heady.systems",
+  "website": "https://heady.systems"
+}

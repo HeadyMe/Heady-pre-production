@@ -1,0 +1,134 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: docker-compose.yml                                         ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+# HEADY HYBRID CONTAINER ORCHESTRATION
+# Local containers connecting to cloud live system
+
+version: '3.8'
+
+services:
+  # Primary Heady Manager (Local)
+  heady-manager-local:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: heady-manager-local
+    ports:
+      - "3301:3300"
+    environment:
+      - NODE_ENV=production
+      - PORT=3300
+      - HEADY_TARGET=LocalHybrid
+      - HEADY_VERSION=2.0.0
+      - ENABLE_CODEMAP=true
+      - JULES_ENABLED=true
+      - OBSERVER_ENABLED=true
+      - BUILDER_ENABLED=true
+      - ATLAS_ENABLED=true
+      # Cloud connectivity
+      - CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
+      - CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
+      - HYBRID_MODE=true
+    volumes:
+      - heady-memory:/app/.heady-memory
+      - heady-logs:/app/logs
+    networks:
+      - heady-hybrid
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3300/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Heady Conductor (Python Worker)
+  heady-conductor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: heady-conductor-local
+    environment:
+      - PYTHONUNBUFFERED=1
+      - HEADY_MODE=worker
+      - HEADY_MANAGER_URL=http://heady-manager-local:3300
+      - CLOUD_SYNC_ENABLED=true
+    depends_on:
+      heady-manager-local:
+        condition: service_healthy
+    networks:
+      - heady-hybrid
+    restart: unless-stopped
+
+  # Redis for caching and state
+  heady-redis:
+    image: redis:7-alpine
+    container_name: heady-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - heady-redis:/data
+    networks:
+      - heady-hybrid
+    restart: unless-stopped
+
+  # PostgreSQL for persistent storage
+  heady-postgres:
+    image: postgres:15-alpine
+    container_name: heady-postgres
+    environment:
+      - POSTGRES_DB=heady
+      - POSTGRES_USER=heady
+      - POSTGRES_PASSWORD=heady_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - heady-postgres:/var/lib/postgresql/data
+    networks:
+      - heady-hybrid
+    restart: unless-stopped
+
+  # Cloud Sync Bridge
+  heady-cloud-bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: heady-cloud-bridge
+    environment:
+      - NODE_ENV=production
+      - BRIDGE_MODE=true
+      - LOCAL_MANAGER_URL=http://heady-manager-local:3300
+      - CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
+      - CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
+      - SYNC_INTERVAL=30
+    depends_on:
+      - heady-manager-local
+    networks:
+      - heady-hybrid
+    restart: unless-stopped
+
+volumes:
+  heady-memory:
+  heady-logs:
+  heady-redis:
+  heady-postgres:
+
+networks:
+  heady-hybrid:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

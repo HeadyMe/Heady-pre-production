@@ -1,0 +1,19 @@
+[
+  {
+    "name": "Project Alpha",
+    "id": "prj_001",
+    "type": "data-pipeline",
+    "config": {
+      "source": "s3://bucket/alpha",
+      "destination": "db://warehouse/alpha"
+    }
+  },
+  {
+    "name": "Project Beta",
+    "id": "prj_002",
+    "type": "web-service",
+    "config": {
+      "port": 8080
+    }
+  }
+]

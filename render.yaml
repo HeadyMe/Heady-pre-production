@@ -1,0 +1,59 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: render.yaml                                                ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+services:
+  - type: web
+    name: heady-manager
+    runtime: node
+    buildCommand: npm install && npm run build --prefix frontend
+    startCommand: node heady-manager.js
+    envVars:
+      - key: PORT
+        value: "3300"
+      - key: NODE_ENV
+        value: "production"
+      - key: HEADY_TARGET
+        value: "${HEADY_TARGET}"
+      - key: HEADY_VERSION
+        value: "2.0.0-unified"
+      - key: ENABLE_CODEMAP
+        value: "true"
+      - key: JULES_ENABLED
+        value: "true"
+      - key: OBSERVER_ENABLED
+        value: "true"
+      - key: BUILDER_ENABLED
+        value: "true"
+      - key: ATLAS_ENABLED
+        value: "true"
+      - key: DATABASE_URL
+        fromSecret: DATABASE_URL
+      - key: HEADY_API_KEY
+        fromSecret: HEADY_API_KEY
+      - key: PYTHON_WORKER_PATH
+        value: "backend/python_worker"
+      - key: ADMIN_TOKEN
+        fromSecret: ADMIN_TOKEN
+      - key: REMOTE_GPU_HOST
+        value: "${REMOTE_GPU_HOST}"
+      - key: REMOTE_GPU_PORT
+        value: "${REMOTE_GPU_PORT}"
+      - key: GPU_MEMORY_LIMIT
+        value: "${GPU_MEMORY_LIMIT}"
+      - key: ENABLE_GPUDIRECT
+        value: "${ENABLE_GPUDIRECT}"
+      - key: HF_TOKEN
+        value: "${HF_TOKEN}"

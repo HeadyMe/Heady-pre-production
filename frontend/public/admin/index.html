@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heady Admin IDE</title>
+  <script src="https://unpkg.com/monaco-editor@0.45.0/min/vs/loader.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    :root {
+      --heady-primary: #00d4ff;
+      --heady-secondary: #7b2cbf;
+      --heady-accent: #ff6b6b;
+      --heady-success: #4ecdc4;
+      --heady-warning: #ffe66d;
+      --heady-error: #ff4757;
+      --heady-bg-dark: #1a1a2e;
+      --heady-bg-deeper: #16213e;
+      --heady-bg-surface: rgba(22, 33, 62, 0.8);
+      --heady-border: rgba(0, 212, 255, 0.12);
+      --heady-text: #c8d0dc;
+      --heady-text-dim: #8892a4;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: linear-gradient(160deg, var(--heady-bg-dark), var(--heady-bg-deeper), #0f0c29); color: var(--heady-text); }
+    .app { display: flex; height: 100vh; }
+    .sidebar { width: 240px; background: linear-gradient(180deg, rgba(22,33,62,0.95), rgba(26,26,46,0.95)); border-right: 1px solid var(--heady-border); overflow-y: auto; }
+    .sidebar h3 { margin: 0; padding: 12px 16px; background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(123,44,191,0.08)); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: 2px; border-bottom: 1px solid var(--heady-border); }
+    .file-tree { padding: 8px 0; }
+    .file-item { padding: 6px 16px; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; border-left: 2px solid transparent; transition: all 0.2s ease; }
+    .file-item:hover { background: rgba(0,212,255,0.06); border-left: 2px solid var(--heady-primary); }
+    .file-item.selected { background: rgba(0,212,255,0.1); border-left: 2px solid var(--heady-primary); }
+    .main { flex: 1; display: flex; flex-direction: column; }
+    .tabs { display: flex; background: rgba(22,33,62,0.6); border-bottom: 1px solid var(--heady-border); }
+    .tab { padding: 8px 16px; cursor: pointer; font-size: 13px; border-right: 1px solid var(--heady-border); transition: all 0.2s ease; }
+    .tab:hover { background: rgba(0,212,255,0.06); }
+    .tab.active { background: rgba(0,212,255,0.1); border-bottom: 2px solid var(--heady-primary); }
+    .editor-container { flex: 1; position: relative; background: rgba(15,12,41,0.5); }
+    .panel-right { width: 360px; background: linear-gradient(180deg, rgba(22,33,62,0.95), rgba(26,26,46,0.95)); border-left: 1px solid var(--heady-border); display: flex; flex-direction: column; }
+    .panel-header { padding: 12px 16px; background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(123,44,191,0.08)); font-size: 12px; font-weight: 700; letter-spacing: 1px; color: var(--heady-primary); border-bottom: 1px solid var(--heady-border); }
+    .panel-body { flex: 1; overflow-y: auto; padding: 12px; font-size: 13px; }
+    .logs { background: rgba(15,12,41,0.6); font-family: 'Consolas', 'Monaco', monospace; font-size: 11px; white-space: pre-wrap; padding: 10px; border: 1px solid var(--heady-border); border-radius: 8px; max-height: 240px; overflow-y: auto; }
+    .log-line { margin: 0; }
+    .log-line.error { color: var(--heady-error); }
+    .log-line.success { color: var(--heady-success); }
+    .log-line.warn { color: var(--heady-warning); }
+    .log-line.info { color: var(--heady-primary); }
+    .status-bar { display: flex; justify-content: space-between; padding: 4px 12px; background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(123,44,191,0.05)); border-top: 1px solid var(--heady-border); font-size: 11px; color: var(--heady-text-dim); }
+    .btn { padding: 6px 14px; background: rgba(0,212,255,0.1); color: var(--heady-primary); border: 1px solid rgba(0,212,255,0.25); border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 500; transition: all 0.2s ease; }
+    .btn:hover { background: rgba(0,212,255,0.18); box-shadow: 0 0 12px rgba(0,212,255,0.15); transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .input { padding: 6px 10px; background: rgba(15,12,41,0.6); color: #e8e8e8; border: 1px solid var(--heady-border); border-radius: 8px; font-size: 12px; outline: none; transition: border-color 0.2s; }
+    .input:focus { border-color: var(--heady-primary); box-shadow: 0 0 0 2px rgba(0,212,255,0.1); }
+    .settings-group { margin-bottom: 16px; }
+    .settings-group label { display: block; margin-bottom: 4px; font-size: 12px; color: var(--heady-text-dim); }
+    .settings-group input, .settings-group select { width: 100%; padding: 8px 10px; background: rgba(15,12,41,0.6); color: #e8e8e8; border: 1px solid var(--heady-border); border-radius: 8px; font-size: 12px; outline: none; }
+    .settings-group input:focus, .settings-group select:focus { border-color: var(--heady-primary); }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(0,212,255,0.2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0,212,255,0.35); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    const API_BASE = '/api/admin';
+    const PIPELINE_BASE = '/api/pipeline';
+    const HEADY_API_KEY = localStorage.getItem('headyApiKey') || prompt('Enter HEADY_API_KEY:');
+    if (HEADY_API_KEY) localStorage.setItem('headyApiKey', HEADY_API_KEY);
+
+    function apiCall(path, options = {}) {
+      const url = `${API_BASE}${path}`;
+      const opts = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-heady-api-key': HEADY_API_KEY,
+          ...options.headers,
+        },
+        ...options,
+      };
+      return fetch(url, opts).then(r => {
+        if (!r.ok) throw new Error(`API error: ${r.status}`);
+        return r.json();
+      });
+    }
+
+    function pipelineApi(path, options = {}) {
+      const url = `${PIPELINE_BASE}${path}`;
+      const opts = {
+        headers: {
+          'Content-Type': 'application/json',
+          'x-heady-api-key': HEADY_API_KEY,
+          ...options.headers,
+        },
+        ...options,
+      };
+      return fetch(url, opts).then(r => {
+        if (!r.ok) throw new Error(`Pipeline API error: ${r.status}`);
+        return r.json();
+      });
+    }
+
+    function useSSE(url, onMessage) {
+      const [active, setActive] = useState(false);
+      useEffect(() => {
+        if (!url || !active) return;
+        const es = new EventSource(url);
+        es.onmessage = e => {
+          const data = JSON.parse(e.data);
+          onMessage(data);
+        };
+        es.onerror = () => {
+          es.close();
+          setActive(false);
+        };
+        return () => es.close();
+      }, [url, active]);
+      return { setActive };
+    }
+
+    function FileTree({ onSelect, selectedPath }) {
+      const [roots, setRoots] = useState([]);
+      const [tree, setTree] = useState({});
+      const [expanded, setExpanded] = useState({});
+
+      useEffect(() => {
+        apiCall('/roots').then(r => setRoots(r.roots));
+      }, []);
+
+      const loadDir = useCallback(async (root, path) => {
+        const res = await apiCall(`/files?root=${root.id}&path=${encodeURIComponent(path)}`);
+        setTree(prev => ({ ...prev, [`${root.id}:${path}`]: res.entries }));
+      }, []);
+
+      const toggle = useCallback((root, path) => {
+        const key = `${root.id}:${path}`;
+        setExpanded(prev => ({ ...prev, [key]: !prev[key] }));
+        if (!expanded[key]) loadDir(root, path);
+      }, [expanded, loadDir]);
+
+      const renderTree = (root, path = '', depth = 0) => {
+        const key = `${root.id}:${path}`;
+        const entries = tree[key] || [];
+        return entries.map(item => {
+          const fullPath = path ? `${path}/${item.path}` : item.path;
+          const isSelected = selectedPath === fullPath;
+          if (item.type === 'directory') {
+            return (
+              <div key={fullPath}>
+                <div className="file-item" style={{ paddingLeft: 8 + depth * 16 }} onClick={() => toggle(root, fullPath)}>
+                  <span>{expanded[key] ? '📂' : '📁'}</span> {item.name}
+                </div>
+                {expanded[key] && renderTree(root, fullPath, depth + 1)}
+              </div>
+            );
+          }
+          return (
+            <div key={fullPath} className={`file-item ${isSelected ? 'selected' : ''}`} style={{ paddingLeft: 8 + depth * 16 }} onClick={() => onSelect(root, fullPath, item)}>
+              <span>📄</span> {item.name}
+            </div>
+          );
+        });
+      };
+
+      return (
+        <div>
+          <h3>∞ EXPLORER</h3>
+          <div className="file-tree">
+            {roots.map(root => (
+              <div key={root.id}>
+                <div className="file-item" onClick={() => toggle(root, '')}>
+                  <span>{expanded[`${root.id}:`] ? '📂' : '📁'}</span> {root.label}
+                </div>
+                {expanded[`${root.id}:`] && renderTree(root, '', 0)}
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function Editor({ file, onSave }) {
+      const editorRef = useRef();
+      const [editor, setEditor] = useState(null);
+
+      useEffect(() => {
+        if (!editorRef.current) return;
+        require.config({ paths: { vs: 'https://unpkg.com/monaco-editor@0.45.0/min/vs' } });
+        require(['vs/editor/editor.main'], () => {
+          const monaco = window.monaco;
+          const ed = monaco.editor.create(editorRef.current, {
+            theme: 'vs-dark',
+            automaticLayout: true,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+          });
+          setEditor(ed);
+          return () => ed.dispose();
+        });
+      }, []);
+
+      useEffect(() => {
+        if (!editor || !file) return;
+        const model = editor.getModel();
+        if (model) model.dispose();
+        const uri = new window.monaco.Uri.parse(`file:///${file.path}`);
+        const lang = file.path.endsWith('.py') ? 'python' : file.path.endsWith('.json') ? 'json' : file.path.endsWith('.yaml') || file.path.endsWith('.yml') ? 'yaml' : 'plaintext';
+        const newModel = window.monaco.editor.createModel(file.content, lang, uri);
+        editor.setModel(newModel);
+      }, [editor, file]);
+
+      const handleSave = useCallback(() => {
+        if (!editor || !file) return;
+        const content = editor.getValue();
+        onSave(file.root, file.path, content, file.sha);
+      }, [editor, file]);
+
+      useEffect(() => {
+        const handleKey = e => {
+          if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            handleSave();
+          }
+        };
+        window.addEventListener('keydown', handleKey);
+        return () => window.removeEventListener('keydown', handleKey);
+      }, [handleSave]);
+
+      return (
+        <div className="editor-container">
+          <div ref={editorRef} style={{ width: '100%', height: '100%' }} />
+        </div>
+      );
+    }
+
+    function Tabs({ tabs, active, onSelect, onClose }) {
+      return (
+        <div className="tabs">
+          {tabs.map(tab => (
+            <div key={tab.path} className={`tab ${active === tab.path ? 'active' : ''}`} onClick={() => onSelect(tab)}>
+              {tab.name}
+              <span style={{ marginLeft: 8, cursor: 'pointer' }} onClick={e => { e.stopPropagation(); onClose(tab); }}>✕</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    function Logs() {
+      const [logs, setLogs] = useState([]);
+      const [ops, setOps] = useState([]);
+      const [selectedOp, setSelectedOp] = useState(null);
+      const [streamUrl, setStreamUrl] = useState(null);
+      const { setActive } = useSSE(streamUrl, data => {
+        if (data.event === 'log') setLogs(prev => [...prev.slice(-200), data.data]);
+        if (data.event === 'status') console.log('Status:', data.data);
+        if (data.event === 'end') console.log('Stream ended');
+      });
+
+      useEffect(() => {
+        apiCall('/ops').then(r => setOps(r.ops));
+      }, []);
+
+      const startBuild = useCallback(async () => {
+        const res = await apiCall('/build', { method: 'POST', body: JSON.stringify({}) });
+        setSelectedOp(res.op);
+        setStreamUrl(res.streamUrl);
+        setActive(true);
+      }, []);
+
+      const startAudit = useCallback(async () => {
+        const res = await apiCall('/audit', { method: 'POST', body: JSON.stringify({}) });
+        setSelectedOp(res.op);
+        setStreamUrl(res.streamUrl);
+        setActive(true);
+      }, []);
+
+      return (
+        <div>
+          <div className="panel-header">Operations</div>
+          <div className="panel-body">
+            <div style={{ marginBottom: 12 }}>
+              <button className="btn" onClick={startBuild}>Run Build</button>
+              <button className="btn" onClick={startAudit} style={{ marginLeft: 8 }}>Run Audit</button>
+            </div>
+            {selectedOp && (
+              <div style={{ marginBottom: 12 }}>
+                <strong>Operation:</strong> {selectedOp.type} ({selectedOp.status})
+              </div>
+            )}
+            <div className="logs">
+              {logs.map((log, i) => (
+                <div key={i} className={`log-line ${log.level}`}>{log.line}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function PipelinePanel() {
+      const [config, setConfig] = useState(null);
+      const [dag, setDag] = useState([]);
+      const [state, setState] = useState(null);
+      const [history, setHistory] = useState([]);
+      const [breakers, setBreakers] = useState({});
+      const [logs, setLogs] = useState([]);
+      const [running, setRunning] = useState(false);
+      const [pollId, setPollId] = useState(null);
+
+      const refresh = useCallback(async () => {
+        try {
+          const [cfg, d, s, h, cb, lg] = await Promise.all([
+            pipelineApi('/config'),
+            pipelineApi('/dag'),
+            pipelineApi('/state'),
+            pipelineApi('/history'),
+            pipelineApi('/circuit-breakers'),
+            pipelineApi('/log?n=30'),
+          ]);
+          setConfig(cfg);
+          setDag(d.stages || []);
+          setState(s);
+          setHistory((h.runs || []).slice(-10));
+          setBreakers(cb);
+          setLogs(lg.entries || []);
+          setRunning(s.status === 'running');
+        } catch (e) {
+          console.error('Pipeline refresh error:', e);
+        }
+      }, []);
+
+      useEffect(() => { refresh(); }, []);
+
+      useEffect(() => {
+        if (!running) { if (pollId) clearInterval(pollId); return; }
+        const id = setInterval(refresh, 2000);
+        setPollId(id);
+        return () => clearInterval(id);
+      }, [running]);
+
+      const triggerRun = useCallback(async () => {
+        try {
+          setRunning(true);
+          await pipelineApi('/run', { method: 'POST', body: JSON.stringify({}) });
+          setTimeout(refresh, 500);
+        } catch (e) {
+          alert('Run failed: ' + e.message);
+          setRunning(false);
+        }
+      }, [refresh]);
+
+      const m = state && state.metrics ? state.metrics : {};
+      const cacheHitRate = m.totalTasks > 0 ? ((m.cachedTasks || 0) / m.totalTasks * 100).toFixed(0) : '–';
+
+      return (
+        <div>
+          <div className="panel-header">PIPELINE PERFORMANCE</div>
+          <div className="panel-body">
+            {/* Config Summary */}
+            {config && (
+              <div style={{ marginBottom: 14, padding: '8px 10px', background: 'rgba(0,212,255,0.04)', borderRadius: 8, border: '1px solid var(--heady-border)' }}>
+                <div style={{ fontWeight: 700, color: '#fff', marginBottom: 4 }}>{config.name} <span style={{ color: 'var(--heady-text-dim)', fontWeight: 400 }}>v{config.version}</span></div>
+                <div style={{ display: 'flex', gap: 12, fontSize: 11, color: 'var(--heady-text-dim)' }}>
+                  <span>Stages: <b style={{ color: 'var(--heady-primary)' }}>{config.stages}</b></span>
+                  <span>Tasks: <b style={{ color: 'var(--heady-primary)' }}>{config.totalTasks}</b></span>
+                  <span>Agents: <b style={{ color: 'var(--heady-primary)' }}>{config.agents}</b></span>
+                </div>
+              </div>
+            )}
+
+            {/* Run button */}
+            <div style={{ marginBottom: 14, display: 'flex', gap: 8 }}>
+              <button className="btn" onClick={triggerRun} disabled={running}>
+                {running ? 'Running...' : 'Run Pipeline'}
+              </button>
+              <button className="btn" onClick={refresh}>Refresh</button>
+            </div>
+
+            {/* Metrics Cards */}
+            {state && state.status !== 'idle' && (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 14 }}>
+                {[
+                  { label: 'Status', value: state.status, color: state.status === 'completed' ? 'var(--heady-success)' : state.status === 'running' ? 'var(--heady-warning)' : 'var(--heady-error)' },
+                  { label: 'Elapsed', value: (m.elapsedMs || 0) + 'ms', color: 'var(--heady-primary)' },
+                  { label: 'Tasks', value: `${m.completedTasks || 0}/${m.totalTasks || 0}`, color: 'var(--heady-success)' },
+                  { label: 'Failed', value: m.failedTasks || 0, color: m.failedTasks > 0 ? 'var(--heady-error)' : 'var(--heady-success)' },
+                  { label: 'Cached', value: `${m.cachedTasks || 0} (${cacheHitRate}%)`, color: (m.cachedTasks || 0) > 0 ? '#a78bfa' : 'var(--heady-text-dim)' },
+                  { label: 'Readiness', value: m.readinessScore != null ? m.readinessScore : '–', color: (m.readinessScore || 0) >= 80 ? 'var(--heady-success)' : 'var(--heady-warning)' },
+                  { label: 'Error Rate', value: m.errorRate != null ? (m.errorRate * 100).toFixed(1) + '%' : '–', color: (m.errorRate || 0) > 0.05 ? 'var(--heady-error)' : 'var(--heady-success)' },
+                  { label: 'Checkpoints', value: state.checkpoints ? state.checkpoints.length : 0, color: 'var(--heady-primary)' },
+                ].map(({ label, value, color }) => (
+                  <div key={label} style={{ padding: '6px 8px', background: 'rgba(15,12,41,0.5)', borderRadius: 6, border: '1px solid var(--heady-border)' }}>
+                    <div style={{ fontSize: 10, color: 'var(--heady-text-dim)', textTransform: 'uppercase', letterSpacing: 1 }}>{label}</div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color }}>{value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Stage DAG */}
+            {dag.length > 0 && (
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--heady-text-dim)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>Stage DAG</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  {dag.map((s, i) => {
+                    const stageState = state && state.stages ? state.stages[s.id] : null;
+                    const tasksDone = stageState ? Object.values(stageState.tasks || {}).filter(t => t.status === 'completed' || t.status === 'cached').length : 0;
+                    const cachedCount = stageState ? Object.values(stageState.tasks || {}).filter(t => t.status === 'cached').length : 0;
+                    const stColor = !stageState ? 'var(--heady-text-dim)' : stageState.status === 'completed' ? 'var(--heady-success)' : stageState.status === 'running' ? 'var(--heady-warning)' : 'var(--heady-error)';
+                    return (
+                      <div key={s.id} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: '50%', background: stColor, display: 'inline-block', flexShrink: 0 }} />
+                        <span style={{ color: '#fff', fontWeight: 600, minWidth: 120 }}>{s.name}</span>
+                        <span style={{ color: 'var(--heady-text-dim)' }}>{s.tasks.length}t{s.parallel ? ' ||' : ''}</span>
+                        {stageState && <span style={{ color: 'var(--heady-text-dim)' }}>{tasksDone}/{s.tasks.length}{cachedCount > 0 ? ` (${cachedCount} cached)` : ''}</span>}
+                        {i < dag.length - 1 && <span style={{ color: 'var(--heady-border)' }}>→</span>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Circuit Breakers */}
+            {Object.keys(breakers).length > 0 && (
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--heady-text-dim)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>Circuit Breakers</div>
+                {Object.entries(breakers).map(([name, cb]) => (
+                  <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, marginBottom: 2 }}>
+                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: cb.state === 'closed' ? 'var(--heady-success)' : cb.state === 'open' ? 'var(--heady-error)' : 'var(--heady-warning)', display: 'inline-block' }} />
+                    <span style={{ color: '#fff' }}>{name}</span>
+                    <span style={{ color: 'var(--heady-text-dim)' }}>{cb.state} ({cb.failures}/{cb.threshold})</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Run History */}
+            {history.length > 0 && (
+              <div style={{ marginBottom: 14 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--heady-text-dim)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>Recent Runs</div>
+                <div style={{ fontSize: 10 }}>
+                  {history.map(run => (
+                    <div key={run.runId} style={{ display: 'flex', gap: 8, padding: '2px 0', borderBottom: '1px solid var(--heady-border)' }}>
+                      <span style={{ color: run.status === 'completed' ? 'var(--heady-success)' : 'var(--heady-error)', fontWeight: 600, minWidth: 65 }}>{run.status}</span>
+                      <span style={{ color: 'var(--heady-text-dim)' }}>{run.metrics.elapsedMs}ms</span>
+                      <span style={{ color: (run.metrics.cachedTasks || 0) > 0 ? '#a78bfa' : 'var(--heady-text-dim)' }}>{run.metrics.cachedTasks || 0} cached</span>
+                      <span style={{ color: 'var(--heady-text-dim)', flex: 1, textAlign: 'right' }}>{run.runId.slice(4, 20)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Pipeline Logs */}
+            {logs.length > 0 && (
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--heady-text-dim)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: 1 }}>Pipeline Log</div>
+                <div className="logs" style={{ maxHeight: 160, fontSize: 10 }}>
+                  {logs.map((entry, i) => (
+                    <div key={i} className={`log-line ${entry.level}`}>[{entry.stage}] {entry.message}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function Settings() {
+      const [gpuHost, setGpuHost] = useState('');
+      const [gpuPort, setGpuPort] = useState('');
+      const [gpuMemLimit, setGpuMemLimit] = useState('');
+      const [gpuEnabled, setGpuEnabled] = useState(false);
+
+      const save = useCallback(() => {
+        localStorage.setItem('gpuHost', gpuHost);
+        localStorage.setItem('gpuPort', gpuPort);
+        localStorage.setItem('gpuMemLimit', gpuMemLimit);
+        localStorage.setItem('gpuEnabled', gpuEnabled);
+        alert('Settings saved (local only for now)');
+      }, [gpuHost, gpuPort, gpuMemLimit, gpuEnabled]);
+
+      useEffect(() => {
+        setGpuHost(localStorage.getItem('gpuHost') || '');
+        setGpuPort(localStorage.getItem('gpuPort') || '');
+        setGpuMemLimit(localStorage.getItem('gpuMemLimit') || '');
+        setGpuEnabled(localStorage.getItem('gpuEnabled') === 'true');
+      }, []);
+
+      return (
+        <div>
+          <div className="panel-header">Settings</div>
+          <div className="panel-body">
+            <div className="settings-group">
+              <label>Remote GPU Host</label>
+              <input className="input" value={gpuHost} onChange={e => setGpuHost(e.target.value)} placeholder="e.g. gpu.example.com" />
+            </div>
+            <div className="settings-group">
+              <label>Remote GPU Port</label>
+              <input className="input" value={gpuPort} onChange={e => setGpuPort(e.target.value)} placeholder="e.g. 4000" />
+            </div>
+            <div className="settings-group">
+              <label>GPU Memory Limit (MB)</label>
+              <input className="input" value={gpuMemLimit} onChange={e => setGpuMemLimit(e.target.value)} placeholder="e.g. 8192" />
+            </div>
+            <div className="settings-group">
+              <label>
+                <input type="checkbox" checked={gpuEnabled} onChange={e => setGpuEnabled(e.target.checked)} /> Enable Remote GPU (GPUDirect RDMA)
+              </label>
+            </div>
+            <button className="btn" onClick={save}>Save Settings</button>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [tabs, setTabs] = useState([]);
+      const [activeTab, setActiveTab] = useState(null);
+      const [selectedFile, setSelectedFile] = useState(null);
+      const [activePanel, setActivePanel] = useState('logs');
+
+      const openFile = useCallback(async (root, path, meta) => {
+        const existing = tabs.find(t => t.path === path);
+        if (existing) {
+          setActiveTab(path);
+          setSelectedFile(existing);
+          return;
+        }
+        const res = await apiCall(`/file?root=${root.id}&path=${encodeURIComponent(path)}`);
+        const tab = { root, path, name: meta.name, ...res };
+        setTabs(prev => [...prev, tab]);
+        setActiveTab(path);
+        setSelectedFile(tab);
+      }, [tabs]);
+
+      const closeTab = useCallback(tab => {
+        setTabs(prev => prev.filter(t => t.path !== tab.path));
+        if (activeTab === tab.path) {
+          const idx = tabs.findIndex(t => t.path === tab.path);
+          const next = tabs[idx + 1] || tabs[idx - 1];
+          if (next) {
+            setActiveTab(next.path);
+            setSelectedFile(next);
+          } else {
+            setActiveTab(null);
+            setSelectedFile(null);
+          }
+        }
+      }, [tabs, activeTab]);
+
+      const saveFile = useCallback(async (root, path, content, expectedSha) => {
+        await apiCall('/file', {
+          method: 'POST',
+          body: JSON.stringify({ root: root.id, path, content, expectedSha }),
+        });
+        // Update tab sha
+        setTabs(prev => prev.map(t => t.path === path ? { ...t, sha: 'updated', content } : t));
+        if (selectedFile && selectedFile.path === path) {
+          setSelectedFile(prev => ({ ...prev, sha: 'updated', content }));
+        }
+      }, [selectedFile]);
+
+      return (
+        <div className="app">
+          <div className="sidebar">
+            <FileTree onSelect={openFile} selectedPath={selectedFile?.path || ''} />
+          </div>
+          <div className="main">
+            <Tabs tabs={tabs} active={activeTab} onSelect={setSelectedFile} onClose={closeTab} />
+            {selectedFile ? <Editor file={selectedFile} onSave={saveFile} /> : <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--heady-text-dim)' }}><div style={{ fontSize: 32, marginBottom: 12, opacity: 0.5 }}>∞</div><div style={{ fontSize: 14, fontWeight: 500 }}>Open a file to start editing</div><div style={{ fontSize: 11, marginTop: 6, color: '#5a6476', letterSpacing: 1 }}>Sacred Geometry :: Organic Systems</div></div>}
+            <div className="status-bar">
+              <span>{selectedFile ? `${selectedFile.path} (${selectedFile.bytes} bytes)` : 'No file'}</span>
+              <span style={{ color: 'var(--heady-primary)', fontWeight: 600 }}>∞ Heady Admin IDE</span>
+            </div>
+          </div>
+          <div className="panel-right">
+            {activePanel === 'logs' && <Logs />}
+            {activePanel === 'pipeline' && <PipelinePanel />}
+            {activePanel === 'settings' && <Settings />}
+            <div style={{ display: 'flex', borderTop: '1px solid #333' }}>
+              <button className="btn" style={{ flex: 1, borderRadius: 0, background: activePanel === 'logs' ? 'rgba(0,212,255,0.12)' : undefined }} onClick={() => setActivePanel('logs')}>Logs</button>
+              <button className="btn" style={{ flex: 1, borderRadius: 0, background: activePanel === 'pipeline' ? 'rgba(123,44,191,0.15)' : undefined }} onClick={() => setActivePanel('pipeline')}>Pipeline</button>
+              <button className="btn" style={{ flex: 1, borderRadius: 0, background: activePanel === 'settings' ? 'rgba(0,212,255,0.12)' : undefined }} onClick={() => setActivePanel('settings')}>Settings</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

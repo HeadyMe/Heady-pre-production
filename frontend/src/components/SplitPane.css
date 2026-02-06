@@ -1,0 +1,17 @@
+.split-pane {
+  display: flex;
+  height: 100vh;
+}
+.split-pane-left {
+  width: 35%;
+  border-right: 1px solid var(--heady-border, rgba(0, 212, 255, 0.12));
+  background: linear-gradient(180deg, rgba(22, 33, 62, 0.9), rgba(26, 26, 46, 0.9));
+  color: var(--heady-text, #e8e8e8);
+  overflow-y: auto;
+}
+.split-pane-right {
+  flex: 1;
+  background: rgba(15, 12, 41, 0.6);
+  color: var(--heady-text, #e8e8e8);
+  overflow-y: auto;
+}

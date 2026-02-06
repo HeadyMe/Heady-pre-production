@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+set -euo pipefail
+echo "[governance] Pre-commit hook delegator - plug in governance policy pack." >&2

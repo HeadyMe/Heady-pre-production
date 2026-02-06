@@ -1,0 +1,10 @@
+{
+  "name": "@heady/hc-supervisor",
+  "version": "1.0.0",
+  "description": "Heady Supervisor - Multi-agent direct routing with parallel fan-out and aggregation",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,576 @@
+{
+  "metadata": {
+    "last_updated": "2026-02-05T22:00:13.432031",
+    "version": "2.0.0-production",
+    "environment": "production",
+    "all_nodes_active": true
+  },
+  "nodes": {
+    "BRIDGE": {
+      "name": "BRIDGE",
+      "role": "The Connector",
+      "primary_tool": "mcp_server",
+      "behavior_profile": "interoperable, networked, secure",
+      "trigger_on": [
+        "mcp",
+        "connect",
+        "warp",
+        "network",
+        "tunnel"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "MUSE": {
+      "name": "MUSE",
+      "role": "The Brand Architect",
+      "primary_tool": "content_generator",
+      "behavior_profile": null,
+      "trigger_on": [
+        "generate_content",
+        "whitepaper",
+        "marketing",
+        "mock_data"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "SENTINEL": {
+      "name": "SENTINEL",
+      "role": "The Guardian",
+      "primary_tool": "heady_chain",
+      "behavior_profile": null,
+      "trigger_on": [
+        "grant_auth",
+        "verify_auth",
+        "audit_ledger"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "NOVA": {
+      "name": "NOVA",
+      "role": "The Expander",
+      "primary_tool": "gap_scanner",
+      "behavior_profile": null,
+      "trigger_on": [
+        "scan_gaps"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "OBSERVER": {
+      "name": "OBSERVER",
+      "role": "The Natural Observer",
+      "primary_tool": "observer_daemon",
+      "behavior_profile": null,
+      "trigger_on": [
+        "monitor"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "JANITOR": {
+      "name": "JANITOR",
+      "role": "The Custodian",
+      "primary_tool": "clean_sweep",
+      "behavior_profile": null,
+      "trigger_on": [
+        "clean"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "JULES": {
+      "name": "JULES",
+      "role": "The Hyper-Surgeon",
+      "primary_tool": "goose",
+      "behavior_profile": null,
+      "trigger_on": [
+        "optimization"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "SOPHIA": {
+      "name": "SOPHIA",
+      "role": "The Matriarch",
+      "primary_tool": "hardware_sentience",
+      "behavior_profile": null,
+      "trigger_on": [
+        "learn_tool"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "CIPHER": {
+      "name": "CIPHER",
+      "role": "The Cryptolinguist",
+      "primary_tool": "heady_crypt",
+      "behavior_profile": null,
+      "trigger_on": [
+        "obfuscate"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "ATLAS": {
+      "name": "ATLAS",
+      "role": "The Auto-Archivist",
+      "primary_tool": "auto_doc",
+      "behavior_profile": null,
+      "trigger_on": [
+        "documentation"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "MURPHY": {
+      "name": "MURPHY",
+      "role": "The Inspector",
+      "primary_tool": "semgrep",
+      "behavior_profile": null,
+      "trigger_on": [
+        "security_audit"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "SASHA": {
+      "name": "SASHA",
+      "role": "The Dreamer",
+      "primary_tool": "yandex_gpt",
+      "behavior_profile": null,
+      "trigger_on": [
+        "brainstorming"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "SCOUT": {
+      "name": "SCOUT",
+      "role": "The Hunter",
+      "primary_tool": "pygithub",
+      "behavior_profile": null,
+      "trigger_on": [
+        "scan_github"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "OCULUS": {
+      "name": "OCULUS",
+      "role": "The Visualizer",
+      "primary_tool": "gource",
+      "behavior_profile": null,
+      "trigger_on": [
+        "visualize"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "BUILDER": {
+      "name": "BUILDER",
+      "role": "The Constructor",
+      "primary_tool": "hydrator",
+      "behavior_profile": null,
+      "trigger_on": [
+        "new_project"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "PYTHIA": {
+      "name": "PYTHIA",
+      "role": "The Oracle",
+      "primary_tool": "HuggingFace_Tool",
+      "behavior_profile": null,
+      "trigger_on": [
+        "huggingface",
+        "predict",
+        "infer",
+        "model",
+        "ask_oracle"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "LENS": {
+      "name": "LENS",
+      "role": "The All-Seeing Eye",
+      "primary_tool": "heady_lens",
+      "behavior_profile": "real-time, comprehensive, monitoring",
+      "trigger_on": [
+        "monitor",
+        "watch",
+        "observe",
+        "status",
+        "health",
+        "metrics",
+        "performance"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "MEMORY": {
+      "name": "MEMORY",
+      "role": "The Eternal Archive",
+      "primary_tool": "heady_memory",
+      "behavior_profile": "persistent, indexed, searchable",
+      "trigger_on": [
+        "remember",
+        "store",
+        "recall",
+        "retrieve",
+        "history",
+        "knowledge",
+        "learn"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "BRAIN": {
+      "name": "BRAIN",
+      "role": "The Central Intelligence",
+      "primary_tool": "heady_brain",
+      "behavior_profile": "analytical, coordinating, decision-making",
+      "trigger_on": [
+        "think",
+        "analyze",
+        "decide",
+        "process",
+        "integrate",
+        "reason",
+        "understand"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    },
+    "CONDUCTOR": {
+      "name": "CONDUCTOR",
+      "role": "The Orchestrator",
+      "primary_tool": "heady_conductor",
+      "behavior_profile": "orchestrating, routing, coordinating",
+      "trigger_on": [
+        "orchestrate",
+        "coordinate",
+        "route",
+        "execute",
+        "manage",
+        "control"
+      ],
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
+    }
+  },
+  "workflows": {
+    "autobuild": {
+      "name": "autobuild",
+      "description": "No description",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\autobuild.md",
+      "slash_command": "/autobuild",
+      "turbo_enabled": false,
+      "status": "active"
+    },
+    "branding-protocol": {
+      "name": "branding-protocol",
+      "description": "No description",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\branding-protocol.md",
+      "slash_command": "/branding-protocol",
+      "turbo_enabled": false,
+      "status": "active"
+    },
+    "codemap-optimization": {
+      "name": "codemap-optimization",
+      "description": "Codemap Optimization - AI Node Integration for Enhanced Performance",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\codemap-optimization.md",
+      "slash_command": "/codemap-optimization",
+      "turbo_enabled": false,
+      "status": "active"
+    },
+    "docker-mcp-setup": {
+      "name": "docker-mcp-setup",
+      "description": "Docker Desktop MCP Setup - Configure and start HeadyMCP services",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\docker-mcp-setup.md",
+      "slash_command": "/docker-mcp-setup",
+      "turbo_enabled": true,
+      "status": "active"
+    },
+    "hc-autobuild": {
+      "name": "hc-autobuild",
+      "description": "No description",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\hc-autobuild.md",
+      "slash_command": "/hc-autobuild",
+      "turbo_enabled": true,
+      "status": "active"
+    },
+    "hcautobuild": {
+      "name": "hcautobuild",
+      "description": "HCAutoBuild - Automated Checkpoint System for 100% Functionality",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\hcautobuild.md",
+      "slash_command": "/hcautobuild",
+      "turbo_enabled": false,
+      "status": "active"
+    },
+    "heady-sync": {
+      "name": "heady-sync",
+      "description": "HeadySync - Comprehensive sync workflow with full system awareness",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\heady-sync.md",
+      "slash_command": "/heady-sync",
+      "turbo_enabled": true,
+      "status": "active"
+    },
+    "headysync-prep": {
+      "name": "headysync-prep",
+      "description": "No description",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\headysync-prep.md",
+      "slash_command": "/headysync-prep",
+      "turbo_enabled": false,
+      "status": "active"
+    },
+    "workspace-integration": {
+      "name": "workspace-integration",
+      "description": "No description",
+      "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\workspace-integration.md",
+      "slash_command": "/workspace-integration",
+      "turbo_enabled": true,
+      "status": "active"
+    }
+  },
+  "skills": {
+    "hc": {
+      "name": "hc",
+      "description": "Heady Conductor orchestration",
+      "category": "orchestration",
+      "status": "active"
+    }
+  },
+  "services": {
+    "heady-manager": {
+      "name": "heady-manager",
+      "type": "api",
+      "endpoint": "http://localhost:3300",
+      "port": 3300,
+      "status": "healthy",
+      "health_check_url": "http://localhost:3300/api/health"
+    },
+    "heady-frontend": {
+      "name": "heady-frontend",
+      "type": "web",
+      "endpoint": "http://localhost:3000",
+      "port": 3000,
+      "status": "unknown",
+      "health_check_url": null
+    },
+    "python-worker": {
+      "name": "python-worker",
+      "type": "worker",
+      "endpoint": "http://localhost:5000",
+      "port": 5000,
+      "status": "unknown",
+      "health_check_url": null
+    },
+    "mcp-server": {
+      "name": "mcp-server",
+      "type": "mcp",
+      "endpoint": "stdio",
+      "port": null,
+      "status": "active",
+      "health_check_url": null
+    },
+    "postgres": {
+      "name": "postgres",
+      "type": "database",
+      "endpoint": null,
+      "port": 5432,
+      "status": "unknown",
+      "health_check_url": null
+    },
+    "redis": {
+      "name": "redis",
+      "type": "cache",
+      "endpoint": null,
+      "port": 6379,
+      "status": "unknown",
+      "health_check_url": null
+    }
+  },
+  "tools": {
+    "Auto_Doc": {
+      "name": "Auto_Doc",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Auto_Doc.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Brainstorm": {
+      "name": "Brainstorm",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Brainstorm.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Clean_Sweep": {
+      "name": "Clean_Sweep",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Clean_Sweep.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "consolidator": {
+      "name": "consolidator",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\consolidator.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Content_Generator": {
+      "name": "Content_Generator",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Content_Generator.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Gap_Scanner": {
+      "name": "Gap_Scanner",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Gap_Scanner.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Github_Scanner": {
+      "name": "Github_Scanner",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Github_Scanner.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Heady_Chain": {
+      "name": "Heady_Chain",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Heady_Chain.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Heady_Crypt": {
+      "name": "Heady_Crypt",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Heady_Crypt.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "HuggingFace_Tool": {
+      "name": "HuggingFace_Tool",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\HuggingFace_Tool.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Hydrator": {
+      "name": "Hydrator",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Hydrator.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Optimizer": {
+      "name": "Optimizer",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Optimizer.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Security_Audit": {
+      "name": "Security_Audit",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Security_Audit.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Tool_Learner": {
+      "name": "Tool_Learner",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Tool_Learner.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Visualizer": {
+      "name": "Visualizer",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Visualizer.py",
+      "category": "general",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Natural_Observer": {
+      "name": "Natural_Observer",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Daemons\\Natural_Observer.py",
+      "category": "Daemons",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Client": {
+      "name": "Client",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\MCP\\Client.py",
+      "category": "MCP",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Server": {
+      "name": "Server",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\MCP\\Server.py",
+      "category": "MCP",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Warp_Manager": {
+      "name": "Warp_Manager",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Network\\Warp_Manager.py",
+      "category": "Network",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Auth_Protocol": {
+      "name": "Auth_Protocol",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Security\\Auth_Protocol.py",
+      "category": "Security",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "Key_Manager": {
+      "name": "Key_Manager",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Security\\Key_Manager.py",
+      "category": "Security",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    },
+    "MCP_Auth": {
+      "name": "MCP_Auth",
+      "file_path": "C:\\Users\\erich\\Heady\\HeadyAcademy\\Tools\\Security\\MCP_Auth.py",
+      "category": "Security",
+      "description": null,
+      "dependencies": null,
+      "status": "active"
+    }
+  }
+}

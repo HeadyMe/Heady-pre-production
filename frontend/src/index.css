@@ -1,0 +1,51 @@
+:root {
+  --heady-primary: #00d4ff;
+  --heady-secondary: #7b2cbf;
+  --heady-accent: #ff6b6b;
+  --heady-success: #4ecdc4;
+  --heady-warning: #ffe66d;
+  --heady-error: #ff4757;
+  --heady-bg-dark: #1a1a2e;
+  --heady-bg-deeper: #16213e;
+  --heady-bg-card: rgba(255, 255, 255, 0.04);
+  --heady-text: #e8e8e8;
+  --heady-text-dim: #8892a4;
+  --heady-border: rgba(0, 212, 255, 0.12);
+  --heady-glow: 0 0 20px rgba(0, 212, 255, 0.15);
+  --heady-radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(160deg, var(--heady-bg-dark) 0%, var(--heady-bg-deeper) 100%);
+  color: var(--heady-text);
+}
+
+#root {
+  height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 212, 255, 0.35);
+}
+
+::selection {
+  background: rgba(0, 212, 255, 0.3);
+  color: #fff;
+}

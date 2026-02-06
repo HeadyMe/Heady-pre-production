@@ -1,0 +1,104 @@
+{
+  "version": "1.0",
+  "description": "HeadyMCP Docker Configuration",
+  "services": {
+    "filesystem": {
+      "type": "mcp",
+      "image": "node:18-alpine",
+      "container_name": "heady-mcp-filesystem",
+      "command": "npx -y @modelcontextprotocol/server-filesystem /workspace",
+      "volumes": [
+        "/workspace",
+        "/app/node_modules"
+      ],
+      "environment": {
+        "NODE_ENV": "production"
+      },
+      "restart": "unless-stopped",
+      "network": "mcp-network"
+    },
+    "postgres": {
+      "type": "mcp",
+      "image": "node:18-alpine",
+      "container_name": "heady-mcp-postgres",
+      "command": "npx -y @modelcontextprotocol/server-postgres",
+      "depends_on": [
+        "postgres"
+      ],
+      "environment": {
+        "DATABASE_URL": "postgresql://postgres:password@postgres:5432/heady",
+        "NODE_ENV": "production"
+      },
+      "restart": "unless-stopped",
+      "network": "mcp-network"
+    },
+    "memory": {
+      "type": "mcp",
+      "image": "node:18-alpine",
+      "container_name": "heady-mcp-memory",
+      "command": "npx -y @modelcontextprotocol/server-memory",
+      "volumes": [
+        "/data",
+        "/app/node_modules"
+      ],
+      "environment": {
+        "NODE_ENV": "production",
+        "MEMORY_STORAGE_PATH": "/data"
+      },
+      "restart": "unless-stopped",
+      "network": "mcp-network"
+    },
+    "fetch": {
+      "type": "mcp",
+      "image": "node:18-alpine",
+      "container_name": "heady-mcp-fetch",
+      "command": "npx -y @modelcontextprotocol/server-fetch",
+      "environment": {
+        "NODE_ENV": "production"
+      },
+      "restart": "unless-stopped",
+      "network": "mcp-network"
+    }
+  },
+  "databases": {
+    "postgres": {
+      "image": "postgres:15-alpine",
+      "container_name": "heady-postgres",
+      "environment": {
+        "POSTGRES_DB": "heady",
+        "POSTGRES_USER": "postgres",
+        "POSTGRES_PASSWORD": "password"
+      },
+      "ports": [
+        "5432:5432"
+      ],
+      "volumes": [
+        "postgres_data:/var/lib/postgresql/data",
+        "./init.sql:/docker-entrypoint-initdb.d/init.sql"
+      ],
+      "restart": "unless-stopped",
+      "network": "mcp-network"
+    },
+    "redis": {
+      "image": "redis:7-alpine",
+      "container_name": "heady-redis",
+      "ports": [
+        "6379:6379"
+      ],
+      "volumes": [
+        "redis_data:/data"
+      ],
+      "restart": "unless-stopped",
+      "network": "mcp-network"
+    }
+  },
+  "volumes": {
+    "postgres_data": {},
+    "redis_data": {}
+  },
+  "networks": {
+    "mcp-network": {
+      "driver": "bridge"
+    }
+  }
+}

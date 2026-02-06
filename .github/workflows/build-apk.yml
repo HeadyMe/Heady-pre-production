@@ -1,0 +1,55 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: .github/workflows/build-apk.yml                            ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: softprops/action-gh-release@v1
+        with:
+          body: |
+            ## HeadyBuddy Mobile
+
+            **Build Required**
+
+            GitHub Actions cannot build APKs directly. Choose a method:
+
+            **1. Expo EAS (Easiest)**
+            ```
+            cd headybuddy-mobile
+            npx eas-cli@latest build -p android
+            ```
+
+            **2. Local Build**
+            ```
+            cd headybuddy-mobile
+            npm install
+            npx expo prebuild
+            cd android && ./gradlew assembleRelease
+            ```
+
+            **3. Android Studio**
+            Open headybuddy-mobile folder and Build → Generate APK
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

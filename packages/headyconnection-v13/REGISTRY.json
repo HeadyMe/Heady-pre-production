@@ -1,0 +1,14 @@
+{
+  "as_of_date": "2026-01-25",
+  "compliance": {
+    "audit_enabled": true,
+    "governance_locked": true
+  },
+  "identity": {
+    "app_domain": "app.headysystems.com",
+    "assignee": "HeadySystems Inc.",
+    "inventor": "Eric Haywood",
+    "trust_domain": "headysystems.com"
+  },
+  "schema_version": "1.0.0"
+}

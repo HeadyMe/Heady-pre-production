@@ -1,0 +1,209 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/data-schema.yaml                                   ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# Data Processing Schema - Layered data model with persistent/non-persistent rules.
+
+version: "2.0.0"
+
+# ─── DATA LAYERS ──────────────────────────────────────────────────────────
+dataLayers:
+  L0_raw:
+    name: Raw Ingestion
+    description: Unprocessed data from all sources
+    sources: [logs, scraped-news, external-apis, repo-events, health-probes]
+    format: json-lines
+    storage: ephemeral + persistent-archive
+    retention: 30d
+    transforms: []
+
+  L1_cleaned:
+    name: Cleaned & Normalized
+    description: Unified schemas, de-duplicated, validated
+    sources: [L0_raw]
+    format: structured-json
+    storage: persistent
+    retention: 90d
+    transforms:
+      - normalize_timestamps_utc
+      - deduplicate_by_content_hash
+      - validate_schema
+      - tag_source_and_run_id
+
+  L2_features:
+    name: Feature / Concept Layer
+    description: LLM-extracted concepts, patterns, entity graphs, embeddings
+    sources: [L1_cleaned]
+    format: structured-json + vector-embeddings
+    storage: persistent
+    retention: 365d
+    transforms:
+      - extract_concepts_llm
+      - generate_embeddings
+      - build_entity_graph
+      - classify_patterns
+
+  L3_views:
+    name: Application Views
+    description: Aggregates for dashboards, search indices, per-app projections
+    sources: [L1_cleaned, L2_features]
+    format: materialized-views
+    storage: persistent + cache
+    retention: as-needed
+    transforms:
+      - aggregate_dashboard_metrics
+      - build_search_index
+      - project_per_app_views
+
+# ─── PERSISTENT STORAGE SCHEMA ───────────────────────────────────────────
+persistentStorage:
+  relational:
+    engine: postgres
+    connectionVar: DATABASE_URL
+    schemas:
+      - name: pipeline_runs
+        description: HCFullPipeline execution history
+        fields:
+          - { name: id, type: uuid, primary: true }
+          - { name: run_config_hash, type: varchar(64), indexed: true }
+          - { name: pipeline_version, type: varchar(20) }
+          - { name: stage, type: varchar(50) }
+          - { name: status, type: enum(running,success,failed,recovered) }
+          - { name: started_at, type: timestamptz }
+          - { name: finished_at, type: timestamptz, nullable: true }
+          - { name: task_graph_json, type: jsonb }
+          - { name: results_json, type: jsonb, nullable: true }
+          - { name: error_json, type: jsonb, nullable: true }
+          - { name: readiness_score, type: integer, nullable: true }
+          - { name: cost_usd, type: decimal(10,4), default: 0 }
+
+      - name: concepts
+        description: Extracted concepts and patterns
+        fields:
+          - { name: id, type: uuid, primary: true }
+          - { name: name, type: varchar(255), indexed: true }
+          - { name: category, type: varchar(100) }
+          - { name: source, type: varchar(255) }
+          - { name: description, type: text }
+          - { name: metadata_json, type: jsonb }
+          - { name: embedding, type: vector(1536), nullable: true }
+          - { name: created_at, type: timestamptz }
+          - { name: updated_at, type: timestamptz }
+
+      - name: health_checks
+        description: Node and service health check results
+        fields:
+          - { name: id, type: uuid, primary: true }
+          - { name: node_name, type: varchar(100), indexed: true }
+          - { name: check_type, type: varchar(50) }
+          - { name: status, type: enum(ok,degraded,down) }
+          - { name: details_json, type: jsonb }
+          - { name: checked_at, type: timestamptz, indexed: true }
+
+      - name: checkpoint_records
+        description: Checkpoint analysis results
+        fields:
+          - { name: id, type: uuid, primary: true }
+          - { name: run_id, type: uuid, fk: pipeline_runs.id }
+          - { name: stage, type: varchar(50) }
+          - { name: config_hash, type: varchar(64) }
+          - { name: readiness_score, type: integer }
+          - { name: active_patterns, type: jsonb }
+          - { name: recommendations, type: jsonb }
+          - { name: health_snapshot, type: jsonb }
+          - { name: created_at, type: timestamptz }
+
+      - name: audit_events
+        description: Immutable audit trail
+        fields:
+          - { name: id, type: uuid, primary: true }
+          - { name: event_type, type: varchar(100), indexed: true }
+          - { name: actor, type: varchar(100) }
+          - { name: target, type: varchar(255) }
+          - { name: action, type: varchar(50) }
+          - { name: details_json, type: jsonb }
+          - { name: created_at, type: timestamptz, indexed: true }
+
+      - name: cost_tracking
+        description: Per-run and per-agent cost records
+        fields:
+          - { name: id, type: uuid, primary: true }
+          - { name: run_id, type: uuid, fk: pipeline_runs.id }
+          - { name: agent, type: varchar(100) }
+          - { name: cost_usd, type: decimal(10,4) }
+          - { name: token_count, type: integer, nullable: true }
+          - { name: api_calls, type: integer }
+          - { name: recorded_at, type: timestamptz }
+
+    indexes:
+      - { table: pipeline_runs, columns: [started_at, status] }
+      - { table: concepts, columns: [category, name] }
+      - { table: health_checks, columns: [node_name, checked_at] }
+      - { table: audit_events, columns: [event_type, created_at] }
+
+    backupPolicy:
+      frequency: daily
+      retention: 90d
+      method: pg_dump
+
+  objectStorage:
+    description: Large artifacts, model weights, media
+    provider: render-disk  # or S3-compatible
+    buckets:
+      - name: pipeline-artifacts
+        retention: 90d
+      - name: model-cache
+        retention: 365d
+      - name: media-assets
+        retention: indefinite
+
+# ─── NON-PERSISTENT (EPHEMERAL) STORAGE ──────────────────────────────────
+ephemeralStorage:
+  inMemoryCache:
+    engine: node-map  # Map() in heady-manager.js
+    ttlMs: 300000  # 5 minutes
+    maxEntries: 10000
+    usage:
+      - api-response-cache
+      - deduplication-windows
+      - rate-limit-counters
+
+  taskQueues:
+    engine: in-process  # upgrade to Redis when scale demands
+    usage:
+      - pending-tasks
+      - agent-result-buffers
+      - batch-aggregation-windows
+    rule: >
+      Nothing critical may only live in ephemeral stores.
+      Pipelines must persist key checkpoints and results.
+
+  tempFiles:
+    location: /tmp/heady/
+    ttl: 3600  # 1 hour
+    usage:
+      - intermediate-transform-results
+      - download-buffers
+
+# ─── DATA FLOW PROTOCOL ──────────────────────────────────────────────────
+dataFlowProtocol:
+  rules:
+    - All data flows are defined as pipelines with clear stages and idempotent transforms.
+    - HCFullPipeline orchestrator only uses declared flows; ad-hoc writes are forbidden.
+    - Every write is tagged with source_role, run_id, stage, and transform_version.
+    - Transformations from ephemeral to persistent are explicit and versioned.
+    - At each checkpoint, orchestrator confirms no critical data stuck in ephemeral stores.
+    - Persistence guarantees are met for stages that require them.

@@ -1,0 +1,18 @@
+{
+  "hooks": {
+    "pre_user_prompt": [
+      {
+        "command": "python C:/Users/erich/Heady/.windsurf/cascade-heady-proxy.py",
+        "show_output": true,
+        "working_directory": "C:/Users/erich/Heady"
+      }
+    ],
+    "post_cascade_response": [
+      {
+        "command": "python C:/Users/erich/Heady/.windsurf/cascade-response-logger.py",
+        "show_output": false,
+        "working_directory": "C:/Users/erich/Heady"
+      }
+    ]
+  }
+}

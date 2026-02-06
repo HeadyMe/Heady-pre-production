@@ -1,0 +1,27 @@
+{
+  "files": {
+    "f1": {
+      "path": "file1.py",
+      "patternId": "python_logic",
+      "similarityHash": "8411fce23871211b2edd7b2389b28a9ed2acb5b69b61b98fc2d7e4474c53a7d0"
+    },
+    "f2": {
+      "path": "file2.py",
+      "patternId": "python_logic",
+      "similarityHash": "8411fce23871211b2edd7b2389b28a9ed2acb5b69b61b98fc2d7e4474c53a7d0"
+    }
+  },
+  "patterns": {},
+  "tasks": [
+    {
+      "id": "merge_task_1",
+      "type": "merge_suggestion",
+      "files": [
+        "file1.py",
+        "file2.py"
+      ],
+      "reason": "High similarity detected in file patterns",
+      "status": "pending"
+    }
+  ]
+}

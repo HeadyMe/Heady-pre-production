@@ -1,0 +1,107 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: .github/workflows/deploy-render.yml                        ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+name: Deploy (Render)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target GitHub Environment
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - staging
+
+jobs:
+  deploy-production:
+    if: ${{ github.event.inputs.environment == 'production' || github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret is not set. Configure it in GitHub Actions secrets."
+            exit 1
+          fi
+
+          echo "::add-mask::$RENDER_DEPLOY_HOOK_URL"
+          curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL" >/dev/null
+
+      - name: Email Notification on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚨 Heady Production Deploy Failed"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: "Heady Deploy <deploy@heady.systems>"
+          html_body: |
+            <h2>🚨 Production Deploy Failure</h2>
+            <p><strong>Environment:</strong> production</p>
+            <p><strong>Repo:</strong> ${{ github.repository }}</p>
+            <p><strong>Commit:</strong> ${{ github.sha }}</p>
+            <p><a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Logs</a></p>
+
+  deploy-staging:
+    if: ${{ github.event.inputs.environment == 'staging' }}
+    runs-on: ubuntu-latest
+    environment: staging
+    permissions:
+      contents: read
+    steps:
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+            echo "RENDER_DEPLOY_HOOK_URL secret is not set. Configure it in GitHub Actions secrets."
+            exit 1
+          fi
+
+          echo "::add-mask::$RENDER_DEPLOY_HOOK_URL"
+          curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL" >/dev/null
+
+      - name: Email Notification on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "🚨 Heady Staging Deploy Failed"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: "Heady Deploy <deploy@heady.systems>"
+          html_body: |
+            <h2>🚨 Staging Deploy Failure</h2>
+            <p><strong>Environment:</strong> staging</p>
+            <p><strong>Repo:</strong> ${{ github.repository }}</p>
+            <p><strong>Commit:</strong> ${{ github.sha }}</p>
+            <p><a href="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}">View Logs</a></p>

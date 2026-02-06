@@ -1,0 +1,56 @@
+{
+  "mcpServers": {
+    "heady-manager": {
+      "type": "local",
+      "command": "node",
+      "args": ["heady-manager.js"],
+      "tools": ["*"],
+      "description": "HeadySystems MCP Manager - Node.js server providing system pulse and Docker integration"
+    },
+    "filesystem": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/workspaces", "/shared"],
+      "tools": ["*"],
+      "_comment": "Local filesystem server for accessing workspace files."
+    },
+    "git": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"],
+      "tools": ["*"],
+      "_comment": "Local git server for repository operations."
+    },
+    "postgres": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${{ secrets.COPILOT_MCP_DATABASE_URL }}"
+      },
+      "tools": ["*"],
+      "_comment": "Postgres server using DATABASE_URL from secrets."
+    },
+    "cloudflare": {
+      "type": "local",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-cloudflare"],
+      "env": {
+        "CLOUDFLARE_API_TOKEN": "${{ secrets.COPILOT_MCP_CLOUDFLARE_API_TOKEN }}",
+        "CLOUDFLARE_ACCOUNT_ID": "${{ secrets.COPILOT_MCP_CLOUDFLARE_ACCOUNT_ID }}"
+      },
+      "tools": ["*"],
+      "_comment": "Cloudflare server using API token and Account ID from secrets."
+    },
+    "render": {
+      "type": "local",
+      "command": "node",
+      "args": ["mcp-servers/render-mcp-server.js"],
+      "env": {
+        "RENDER_API_KEY": "${{ secrets.RENDER_API_KEY }}"
+      },
+      "tools": ["*"],
+      "description": "Render MCP Server - Deploy and manage Render services via API"
+    }
+  }
+}
