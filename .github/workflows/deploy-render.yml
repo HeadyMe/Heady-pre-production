@@ -15,6 +15,9 @@
 name: Deploy (Render)
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       environment:
@@ -28,7 +31,7 @@ on:
 
 jobs:
   deploy-production:
-    if: ${{ github.event.inputs.environment == 'production' }}
+    if: ${{ github.event.inputs.environment == 'production' || github.event_name == 'push' }}
     runs-on: ubuntu-latest
     environment: production
     permissions:
