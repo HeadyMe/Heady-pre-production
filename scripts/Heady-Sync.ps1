@@ -156,20 +156,39 @@ if (Test-Path "$ScriptDir\checkpoint-validation.ps1") {
 
 # 5. FINAL SYNC (Squash & Push)
 Show-Step "Finalizing Synchronization..."
-if (Test-Path "$ScriptDir\Heady-Sync.ps1") {
-    $currentBranch = git rev-parse --abbrev-ref HEAD
-    if ($LASTEXITCODE -eq 0 -and !([string]::IsNullOrWhiteSpace($currentBranch))) {
-        Write-Host "Detected active branch: $currentBranch" -ForegroundColor DarkGray
-    } else {
-        $currentBranch = "main"
-        Write-Warning "Could not detect branch, defaulting to 'main'."
-    }
 
-    # Call Heady-Sync with proper parameters
+$currentBranch = git rev-parse --abbrev-ref HEAD
+if ($LASTEXITCODE -eq 0 -and !([string]::IsNullOrWhiteSpace($currentBranch))) {
+    Write-Host "Detected active branch: $currentBranch" -ForegroundColor DarkGray
+} else {
+    $currentBranch = "main"
+    Write-Warning "Could not detect branch, defaulting to 'main'."
+}
+
+# Get status and commit if needed
+$status = git status --short
+if ($status) {
+    Write-Host "Changes detected. Staging and committing..." -ForegroundColor Gray
+    git add -A
+    git commit -m "HCAutoBuild: Automated sync on $currentBranch [skip ci]" --no-verify
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Nothing to commit or commit failed."
+        $LASTEXITCODE = 0
+    }
+}
+
+# Push to all remotes
+$remotes = git remote
+foreach ($remote in $remotes) {
+    Write-Host "Pushing to $remote..." -ForegroundColor Cyan
     if ($Force) {
-        & "$ScriptDir\Heady-Sync.ps1" -Branch $currentBranch -Force
+        git push $remote $currentBranch --force-with-lease 2>&1
     } else {
-        & "$ScriptDir\Heady-Sync.ps1" -Branch $currentBranch
+        git push $remote $currentBranch 2>&1
+    }
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "Push to $remote failed."
+        $LASTEXITCODE = 0
     }
 }
 

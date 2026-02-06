@@ -46,9 +46,6 @@ param(
 $ErrorActionPreference = "Stop"
 $ProgressPreference = "SilentlyContinue"
 
-# Import base HCAutoBuild functionality
-. (Join-Path $PSScriptRoot "hcautobuild.ps1")
-
 # Enhanced Configuration with Codemap Integration
 $ENHANCED_CONFIG = @{
     BaseConfig = $CONFIG

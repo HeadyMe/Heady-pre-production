@@ -380,16 +380,19 @@ function Invoke-CodemapOptimization {
     Write-Host "║                    Codemap Optimization Summary                           ║" -ForegroundColor Cyan
     Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Cyan
     Write-Host "║ Workspace: $WorkspacePath $((' ' * (50 - $WorkspacePath.Length)))║" -ForegroundColor White
-    Write-Host "║ Nodes Executed: $($results.nodes_executed.Count) $((' ' * (44 - $($results.nodes_executed.Count.ToString().Length)))║" -ForegroundColor White
-    Write-Host "║ Optimizations Found: $($results.optimizations_found) $((' ' * (39 - $($results.optimizations_found.ToString().Length)))║" -ForegroundColor White
-    Write-Host "║ Status: $(if ($results.success) { 'SUCCESS' } else { 'PARTIAL' }) $((' ' * (47 - (if ($results.success) { 7 } else { 7 })))║" -ForegroundColor $(if ($results.success) { "Green" } else { "Yellow" })
+    Write-Host "║ Nodes Executed: $($results.nodes_executed.Count) $((' ' * (44 - $($results.nodes_executed.Count.ToString().Length))))║" -ForegroundColor White
+    Write-Host "║ Optimizations Found: $($results.optimizations_found) $((' ' * (39 - $($results.optimizations_found.ToString().Length))))║" -ForegroundColor White
+    $statusText = if ($results.success) { 'SUCCESS' } else { 'PARTIAL' }
+    $statusColor = if ($results.success) { "Green" } else { "Yellow" }
+    $statusPadding = ' ' * (56 - $statusText.Length)
+    Write-Host "║ Status: $statusText$statusPadding║" -ForegroundColor $statusColor
     Write-Host "╠══════════════════════════════════════════════════════════════════════════════╣" -ForegroundColor Cyan
     
     if ($results.nodes_executed.Count -gt 0) {
         Write-Host "║ Nodes Activated:                                                      ║" -ForegroundColor Cyan
         foreach ($node in $results.nodes_executed) {
             $nodeInfo = $NODE_REGISTRY[$node]
-            Write-Host "║   • $($nodeInfo.name) - $($nodeInfo.role) $((' ' * (35 - ($nodeInfo.name.Length + $nodeInfo.role.Length)))║" -ForegroundColor Green
+            Write-Host "║   • $($nodeInfo.name) - $($nodeInfo.role) $((' ' * (35 - ($nodeInfo.name.Length + $nodeInfo.role.Length))))║" -ForegroundColor Green
         }
     }
     
