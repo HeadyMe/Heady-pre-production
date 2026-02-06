@@ -1,15 +1,17 @@
 # HEADY_BRAND:BEGIN
-# HEADY SYSTEMS :: SACRED GEOMETRY
-# FILE: .gitignore
-# LAYER: root
-# 
-#         _   _  _____    _    ____   __   __
-#        | | | || ____|  / \  |  _ \ \ \ / /
-#        | |_| ||  _|   / _ \ | | | | \ V / 
-#        |  _  || |___ / ___ \| |_| |  | |  
-#        |_| |_||_____/_/   \_\____/   |_|  
-# 
-#    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: .gitignore                                                 ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
 __pycache__/
@@ -29,6 +31,8 @@ build/
 .pytest_cache/
 heady-manifest.json
 .heady_secrets
+.heady/memory.db
+.heady_cache/
 <<<<<<< C:/Users/erich/Heady/.gitignore
 <<<<<<< C:/Users/erich/Heady/.gitignore
 venv/

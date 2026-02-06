@@ -1,15 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: frontend/src/components/SettingsModal.js
-// LAYER: ui/frontend
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+// ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+// ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+// ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+// ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: frontend/src/components/SettingsModal.js                   ║
+// ║  LAYER: ui/frontend                                               ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 import React, { useState, useEffect } from 'react';
@@ -57,13 +59,30 @@ const SettingsModal = ({ onClose }) => {
   return (
     <div style={{
       position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-      backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
+      backgroundColor: 'rgba(15, 12, 41, 0.85)', backdropFilter: 'blur(8px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
     }}>
-      <div style={{ backgroundColor: '#252526', padding: '20px', borderRadius: '5px', width: '400px', color: '#ccc' }}>
-        <h3 style={{ marginTop: 0 }}>Settings</h3>
+      <div style={{
+        background: 'linear-gradient(160deg, #1a1a2e, #16213e)',
+        padding: '24px',
+        borderRadius: '16px',
+        width: '420px',
+        color: '#c8d0dc',
+        border: '1px solid rgba(0, 212, 255, 0.15)',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 212, 255, 0.08)'
+      }}>
+        <h3 style={{
+          marginTop: 0,
+          marginBottom: '16px',
+          background: 'linear-gradient(135deg, #00d4ff, #7b2cbf)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontSize: '18px',
+          fontWeight: '800',
+          letterSpacing: '1px'
+        }}>Settings</h3>
 
         <div style={{ marginBottom: '15px' }}>
-            <h4 style={{ marginBottom: '10px' }}>Remote GPU</h4>
+            <h4 style={{ marginBottom: '10px', color: '#00d4ff', fontWeight: '600' }}>Remote GPU</h4>
             <label style={{ display: 'block', marginBottom: '5px' }}>
                 <input
                     type="checkbox"
@@ -78,7 +97,15 @@ const SettingsModal = ({ onClose }) => {
                         type="text"
                         value={settings?.remote_gpu?.host || ''}
                         onChange={e => handleChange('host', e.target.value)}
-                        style={{ width: '100%', backgroundColor: '#333', color: '#fff', border: '1px solid #555' }}
+                        style={{
+                          width: '100%',
+                          backgroundColor: 'rgba(15, 12, 41, 0.6)',
+                          color: '#e8e8e8',
+                          border: '1px solid rgba(0, 212, 255, 0.15)',
+                          borderRadius: '8px',
+                          padding: '8px 10px',
+                          outline: 'none'
+                        }}
                     />
                 </label>
                 <label>
@@ -87,7 +114,15 @@ const SettingsModal = ({ onClose }) => {
                         type="number"
                         value={settings?.remote_gpu?.port || 8000}
                         onChange={e => handleChange('port', parseInt(e.target.value))}
-                        style={{ width: '100%', backgroundColor: '#333', color: '#fff', border: '1px solid #555' }}
+                        style={{
+                          width: '100%',
+                          backgroundColor: 'rgba(15, 12, 41, 0.6)',
+                          color: '#e8e8e8',
+                          border: '1px solid rgba(0, 212, 255, 0.15)',
+                          borderRadius: '8px',
+                          padding: '8px 10px',
+                          outline: 'none'
+                        }}
                     />
                 </label>
             </div>
@@ -97,7 +132,15 @@ const SettingsModal = ({ onClose }) => {
                     type="text"
                     value={settings?.remote_gpu?.memory_limit || ''}
                     onChange={e => handleChange('memory_limit', e.target.value)}
-                    style={{ width: '100%', backgroundColor: '#333', color: '#fff', border: '1px solid #555' }}
+                    style={{
+                      width: '100%',
+                      backgroundColor: 'rgba(15, 12, 41, 0.6)',
+                      color: '#e8e8e8',
+                      border: '1px solid rgba(0, 212, 255, 0.15)',
+                      borderRadius: '8px',
+                      padding: '8px 10px',
+                      outline: 'none'
+                    }}
                 />
             </label>
              <label style={{ display: 'block', marginTop: '5px' }}>
@@ -110,8 +153,28 @@ const SettingsModal = ({ onClose }) => {
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-            <button onClick={onClose} style={{ padding: '5px 10px', backgroundColor: '#555', color: '#fff', border: 'none', cursor: 'pointer' }}>Cancel</button>
-            <button onClick={handleSave} style={{ padding: '5px 10px', backgroundColor: '#007acc', color: '#fff', border: 'none', cursor: 'pointer' }}>Save</button>
+            <button onClick={onClose} style={{
+              padding: '8px 18px',
+              background: 'rgba(255,255,255,0.08)',
+              color: '#c8d0dc',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '13px',
+              transition: 'all 0.2s ease'
+            }}>Cancel</button>
+            <button onClick={handleSave} style={{
+              padding: '8px 18px',
+              background: 'linear-gradient(135deg, #00d4ff, #7b2cbf)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: '600',
+              fontSize: '13px',
+              boxShadow: '0 0 12px rgba(0, 212, 255, 0.2)',
+              transition: 'all 0.2s ease'
+            }}>Save</button>
         </div>
       </div>
     </div>

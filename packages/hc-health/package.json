@@ -1,0 +1,12 @@
+{
+  "name": "@heady/hc-health",
+  "version": "1.0.0",
+  "description": "Heady Node Health Check Runner - Cron-scheduled health checks with NHC-style scripts",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.2"
+  }
+}

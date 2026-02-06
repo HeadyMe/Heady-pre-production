@@ -1,0 +1,104 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/resource-policies.yaml                             ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# Resource Policies - Controls parallelism, budgets, and dynamic scaling.
+
+version: "2.0.0"
+
+# ─── CONCURRENCY ──────────────────────────────────────────────────────────
+concurrency:
+  maxConcurrentTasks: 8
+  maxTasksPerUser: 4
+  maxParallelAgents: 6
+  queueOverflowAction: throttle  # throttle | reject | buffer
+  dynamicScaling:
+    enabled: true
+    scaleUpThreshold: 0.85   # queue utilization
+    scaleDownThreshold: 0.30
+    cooldownSeconds: 60
+
+# ─── RATE LIMITS ──────────────────────────────────────────────────────────
+rateLimits:
+  apiGateway:
+    requestsPerMinute: 120
+    burstAllowance: 20
+  llmProviders:
+    requestsPerMinute: 60
+    dailyTokenBudget: 500000
+  externalApis:
+    requestsPerMinute: 30
+    dailyCallBudget: 5000
+
+# ─── COST BUDGETS ─────────────────────────────────────────────────────────
+costBudgets:
+  dailyTotal: 50.00
+  weeklyTotal: 300.00
+  perSubsystem:
+    llm: 30.00
+    externalApis: 10.00
+    compute: 10.00
+  alertThresholds:
+    warningPercent: 75
+    criticalPercent: 90
+
+# ─── RETRY & BACKOFF ─────────────────────────────────────────────────────
+retry:
+  maxRetries: 3
+  backoffStrategy: exponential  # exponential | linear | fixed
+  baseDelayMs: 500
+  maxDelayMs: 30000
+  jitterEnabled: true
+  jitterMaxMs: 1000
+
+# ─── TIMEOUTS ─────────────────────────────────────────────────────────────
+timeouts:
+  httpRequestMs: 30000
+  agentExecutionMs: 120000
+  pipelineStageMs: 600000
+  healthCheckMs: 5000
+
+# ─── NODE POOLS ───────────────────────────────────────────────────────────
+nodePools:
+  hot:
+    description: User-facing tasks, core pipelines
+    priority: critical
+    reservedConcurrency: 4
+    maxLatencyMs: 2000
+  warm:
+    description: Important background tasks
+    priority: high
+    reservedConcurrency: 2
+    maxLatencyMs: 10000
+  cold:
+    description: Async news ingestion, concept extraction, analytics
+    priority: low
+    reservedConcurrency: 2
+    maxLatencyMs: 60000
+
+# ─── CIRCUIT BREAKER ─────────────────────────────────────────────────────
+circuitBreaker:
+  enabled: true
+  failureThreshold: 5
+  resetTimeoutMs: 30000
+  halfOpenMaxRequests: 2
+  monitoredEndpoints:
+    - name: llm-provider
+      failureThreshold: 3
+    - name: external-news-api
+      failureThreshold: 5
+    - name: render-deploy
+      failureThreshold: 2

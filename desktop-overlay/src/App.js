@@ -1,15 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: desktop-overlay/src/App.js
-// LAYER: root
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+// ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+// ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+// ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+// ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: desktop-overlay/src/App.js                                 ║
+// ║  LAYER: root                                                      ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 import React from 'react'
@@ -20,8 +22,37 @@ const App = () => {
   return (
     <div className="overlay">
       <div className="companion-ui">
-        <h1>HeadyE Companion</h1>
-        {/* AI Task Assistant will be integrated here */}
+        <div className="sacred-orb"></div>
+        <div className="companion-header">
+          <div className="companion-avatar">🧠</div>
+          <div>
+            <div className="companion-title">HeadyBuddy</div>
+            <div className="companion-subtitle">SACRED GEOMETRY COMPANION</div>
+          </div>
+        </div>
+        <div className="companion-body">
+          <div className="companion-status">
+            <span className="companion-status-dot"></span>
+            System Active — Ready to assist
+          </div>
+          <div className="companion-actions">
+            <button className="companion-action-btn">
+              <span className="companion-action-icon">🔄</span>
+              Sync
+            </button>
+            <button className="companion-action-btn">
+              <span className="companion-action-icon">🔨</span>
+              Build
+            </button>
+            <button className="companion-action-btn">
+              <span className="companion-action-icon">🚀</span>
+              Deploy
+            </button>
+          </div>
+        </div>
+        <div className="companion-footer">
+          Sacred Geometry :: Organic Systems :: Breathing Interfaces
+        </div>
       </div>
     </div>
   )

@@ -49,13 +49,19 @@
   --duration-slow: 618ms;  /* φ^-1 × 1000ms */
   
   /* Sacred Geometry Colors */
-  --color-primary: #FFD700;      /* Golden */
-  --color-secondary: #C0C0C0;    /* Silver */
-  --color-accent: #B87333;       /* Bronze */
-  --color-background: #0A0A0A;   /* Deep Space */
-  --color-surface: #1A1A1A;      /* Surface */
-  --color-text: #FFFFFF;         /* Pure Light */
-  --color-text-muted: #A0A0A0;   /* Muted Light */
+  --color-primary: #00d4ff;      /* Cyan - Flow */
+  --color-secondary: #7b2cbf;    /* Purple - Depth */
+  --color-accent: #ff6b6b;       /* Red - Energy */
+  --color-success: #4ecdc4;      /* Teal - Growth */
+  --color-warning: #ffe66d;      /* Yellow - Caution */
+  --color-error: #ff4757;        /* Red - Alert */
+  --color-background: #1a1a2e;   /* Deep Geometry */
+  --color-background-alt: #16213e; /* Deeper Layer */
+  --color-surface: rgba(255, 255, 255, 0.04); /* Translucent Surface */
+  --color-border: rgba(0, 212, 255, 0.12);    /* Cyan Edge */
+  --color-text: #e8e8e8;         /* Soft Light */
+  --color-text-muted: #8892a4;   /* Dim Light */
+  --color-glow: rgba(0, 212, 255, 0.15); /* Cyan Glow */
   
   /* Elevation Shadows (layered depth) */
   --shadow-sm: 0 0.236rem 0.618rem rgba(0, 0, 0, 0.1);

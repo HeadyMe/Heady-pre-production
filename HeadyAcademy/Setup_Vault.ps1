@@ -1,15 +1,17 @@
 # HEADY_BRAND:BEGIN
-# HEADY SYSTEMS :: SACRED GEOMETRY
-# FILE: HeadyAcademy/Setup_Vault.ps1
-# LAYER: root
-# 
-#         _   _  _____    _    ____   __   __
-#        | | | || ____|  / \  |  _ \ \ \ / /
-#        | |_| ||  _|   / _ \ | | | | \ V / 
-#        |  _  || |___ / ___ \| |_| |  | |  
-#        |_| |_||_____/_/   \_\____/   |_|  
-# 
-#    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: HeadyAcademy/Setup_Vault.ps1                               ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
 # HEADY ACADEMY VAULT SETUP (PowerShell Version)

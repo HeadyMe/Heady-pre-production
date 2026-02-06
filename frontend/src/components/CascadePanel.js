@@ -1,15 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: frontend/src/components/CascadePanel.js
-// LAYER: ui/frontend
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+// ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+// ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+// ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+// ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: frontend/src/components/CascadePanel.js                    ║
+// ║  LAYER: ui/frontend                                               ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -76,17 +78,52 @@ const CascadePanel = ({ contextFile, onCodeApply }) => {
   };
 
   return (
-    <div className="cascade-panel" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '10px', backgroundColor: '#252526', color: '#ccc' }}>
-       <div style={{ fontWeight: 'bold', marginBottom: '10px', color: '#007acc', borderBottom: '1px solid #333', paddingBottom: '5px' }}>CASCADE AI</div>
+    <div className="cascade-panel" style={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '12px', background: 'transparent', color: '#c8d0dc' }}>
+       <div style={{
+         fontWeight: '800',
+         marginBottom: '12px',
+         fontSize: '12px',
+         letterSpacing: '2px',
+         background: 'linear-gradient(135deg, #00d4ff, #7b2cbf)',
+         WebkitBackgroundClip: 'text',
+         WebkitTextFillColor: 'transparent',
+         borderBottom: '1px solid rgba(0, 212, 255, 0.15)',
+         paddingBottom: '8px',
+         display: 'flex',
+         alignItems: 'center',
+         gap: '8px'
+       }}>
+         <span style={{ fontSize: '14px', WebkitTextFillColor: 'initial' }}>🧠</span>
+         CASCADE AI
+       </div>
 
        <div className="messages" style={{ flex: 1, overflowY: 'auto', marginBottom: '10px', paddingRight: '5px' }}>
           {messages.map((m, i) => (
-             <div key={i} style={{ marginBottom: '10px', backgroundColor: m.role === 'user' ? '#333' : 'transparent', padding: '5px', borderRadius: '4px' }}>
-                <strong style={{ color: m.role === 'user' ? '#4ec9b0' : '#ce9178' }}>{m.role === 'user' ? 'You' : 'Cascade'}:</strong>
-                <div style={{ whiteSpace: 'pre-wrap', marginTop: '2px', fontSize: '13px' }}>{m.content}</div>
+             <div key={i} style={{
+               marginBottom: '10px',
+               background: m.role === 'user' ? 'rgba(123, 44, 191, 0.12)' : 'rgba(0, 212, 255, 0.06)',
+               padding: '8px 10px',
+               borderRadius: '10px',
+               borderLeft: m.role === 'user' ? '3px solid #7b2cbf' : '3px solid #00d4ff',
+               transition: 'all 0.2s ease'
+             }}>
+                <strong style={{
+                  color: m.role === 'user' ? '#7b2cbf' : '#00d4ff',
+                  fontSize: '11px',
+                  letterSpacing: '0.5px',
+                  textTransform: 'uppercase'
+                }}>{m.role === 'user' ? 'You' : 'Cascade'}</strong>
+                <div style={{ whiteSpace: 'pre-wrap', marginTop: '4px', fontSize: '13px', lineHeight: '1.5' }}>{m.content}</div>
              </div>
           ))}
-          {loading && <div style={{ fontStyle: 'italic', color: '#888' }}>Thinking...</div>}
+          {loading && <div style={{
+            fontStyle: 'italic',
+            color: '#00d4ff',
+            padding: '8px',
+            background: 'rgba(0, 212, 255, 0.06)',
+            borderRadius: '8px',
+            animation: 'pulse 1.5s ease-in-out infinite'
+          }}>Thinking...</div>}
           <div ref={messagesEndRef} />
        </div>
 
@@ -94,7 +131,16 @@ const CascadePanel = ({ contextFile, onCodeApply }) => {
           {servers.includes('git') && (
              <button
                 onClick={() => executeTool('git', 'git_status')}
-                style={{ background: '#333', border: '1px solid #555', color: '#ccc', cursor: 'pointer', fontSize: '12px', padding: '2px 5px' }}
+                style={{
+                  background: 'rgba(0, 212, 255, 0.1)',
+                  border: '1px solid rgba(0, 212, 255, 0.25)',
+                  color: '#00d4ff',
+                  cursor: 'pointer',
+                  fontSize: '11px',
+                  padding: '4px 10px',
+                  borderRadius: '6px',
+                  transition: 'all 0.2s ease'
+                }}
              >
                 Git Status
              </button>
@@ -104,7 +150,19 @@ const CascadePanel = ({ contextFile, onCodeApply }) => {
 
        <div className="input-area" style={{ display: 'flex', borderTop: '1px solid #333', paddingTop: '10px' }}>
           <textarea
-             style={{ flex: 1, backgroundColor: '#1e1e1e', color: '#ccc', border: '1px solid #333', padding: '5px', borderRadius: '3px', resize: 'none', height: '60px', fontFamily: 'inherit' }}
+             style={{
+               flex: 1,
+               backgroundColor: 'rgba(15, 12, 41, 0.6)',
+               color: '#c8d0dc',
+               border: '1px solid rgba(0, 212, 255, 0.15)',
+               padding: '8px 12px',
+               borderRadius: '10px',
+               resize: 'none',
+               height: '60px',
+               fontFamily: 'inherit',
+               outline: 'none',
+               transition: 'border-color 0.2s ease'
+             }}
              value={input}
              onChange={e => setInput(e.target.value)}
              onKeyDown={e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
@@ -112,7 +170,20 @@ const CascadePanel = ({ contextFile, onCodeApply }) => {
           />
           <button
             onClick={sendMessage}
-            style={{ marginLeft: '5px', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '3px', cursor: 'pointer', padding: '0 10px' }}
+            style={{
+              marginLeft: '8px',
+              background: 'linear-gradient(135deg, #00d4ff, #7b2cbf)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              padding: '0 14px',
+              fontWeight: '600',
+              fontSize: '12px',
+              letterSpacing: '0.5px',
+              boxShadow: '0 0 12px rgba(0, 212, 255, 0.2)',
+              transition: 'all 0.2s ease'
+            }}
           >
             Send
           </button>

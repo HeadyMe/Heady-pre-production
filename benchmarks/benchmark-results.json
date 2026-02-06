@@ -1,0 +1,397 @@
+{
+  "runId": "bench_1770382280784_628a5f",
+  "timestamp": "2026-02-06T12:51:20.787Z",
+  "totalTests": 36,
+  "passed": 36,
+  "failed": 0,
+  "overallScore": 100,
+  "avgDurationMs": 3,
+  "categories": {
+    "code-generation": {
+      "passed": 3,
+      "total": 3,
+      "score": 100
+    },
+    "code-editing": {
+      "passed": 2,
+      "total": 2,
+      "score": 100
+    },
+    "debugging": {
+      "passed": 3,
+      "total": 3,
+      "score": 100
+    },
+    "multi-file": {
+      "passed": 2,
+      "total": 2,
+      "score": 100
+    },
+    "architecture": {
+      "passed": 2,
+      "total": 2,
+      "score": 100
+    },
+    "config": {
+      "passed": 2,
+      "total": 2,
+      "score": 100
+    },
+    "orchestration": {
+      "passed": 3,
+      "total": 3,
+      "score": 100
+    },
+    "security": {
+      "passed": 2,
+      "total": 2,
+      "score": 100
+    },
+    "concept-extraction": {
+      "passed": 2,
+      "total": 2,
+      "score": 100
+    },
+    "monte-carlo": {
+      "passed": 6,
+      "total": 6,
+      "score": 100
+    },
+    "agentic": {
+      "passed": 7,
+      "total": 7,
+      "score": 100
+    },
+    "end-to-end": {
+      "passed": 2,
+      "total": 2,
+      "score": 100
+    }
+  },
+  "results": [
+    {
+      "id": "gen-fibonacci",
+      "category": "code-generation",
+      "name": "Fibonacci with memoization",
+      "pass": true,
+      "detail": "10/10 cases",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "gen-binary-search",
+      "category": "code-generation",
+      "name": "Binary search correctness",
+      "pass": true,
+      "detail": "5/5 search cases",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "gen-linked-list-reverse",
+      "category": "code-generation",
+      "name": "LinkedList reverse",
+      "pass": true,
+      "detail": "reversed=[1,2,3,4,5]",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "edit-extract-function",
+      "category": "code-editing",
+      "name": "Extract inline computation to function",
+      "pass": true,
+      "detail": "avg=3",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "edit-callback-to-async",
+      "category": "code-editing",
+      "name": "Callback → async/await conversion",
+      "pass": true,
+      "detail": "async ok=true",
+      "ms": 9,
+      "error": null
+    },
+    {
+      "id": "debug-off-by-one",
+      "category": "debugging",
+      "name": "Detect off-by-one in range",
+      "pass": true,
+      "detail": "bug=[0..4] fix=[0..5]",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "debug-null-ref",
+      "category": "debugging",
+      "name": "Null reference detection + safe access",
+      "pass": true,
+      "detail": "throws=true, safe=true",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "debug-race-condition",
+      "category": "debugging",
+      "name": "Detect shared-state race condition pattern",
+      "pass": true,
+      "detail": "sync=100, race=1(lost update)",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "multi-import-graph",
+      "category": "multi-file",
+      "name": "Trace import dependency graph",
+      "pass": true,
+      "detail": "index→2, sched→0",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "multi-heady-require-chain",
+      "category": "multi-file",
+      "name": "Verify Heady src/ require chain resolves",
+      "pass": true,
+      "detail": "10 resolved, 0 failed",
+      "ms": 2,
+      "error": null
+    },
+    {
+      "id": "arch-circuit-breaker",
+      "category": "architecture",
+      "name": "Circuit breaker state machine lifecycle",
+      "pass": true,
+      "detail": "open→halfOpen→closed lifecycle OK",
+      "ms": 20,
+      "error": null
+    },
+    {
+      "id": "arch-topo-sort",
+      "category": "architecture",
+      "name": "DAG topological sort correctness",
+      "pass": true,
+      "detail": "order=[ingest,plan,execute,recover,finalize]",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "config-yaml-parse",
+      "category": "config",
+      "name": "All YAML configs parse without error",
+      "pass": true,
+      "detail": "9/9 valid",
+      "ms": 11,
+      "error": null
+    },
+    {
+      "id": "config-pipeline-stages",
+      "category": "config",
+      "name": "Pipeline config has all 5 required stages",
+      "pass": true,
+      "detail": "stages=[ingest,plan,execute-major-phase,recover,finalize]",
+      "ms": 1,
+      "error": null
+    },
+    {
+      "id": "orch-parallel-batch",
+      "category": "orchestration",
+      "name": "Parallel batching respects concurrency limit",
+      "pass": true,
+      "detail": "3 batches of 4",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "orch-stop-rule",
+      "category": "orchestration",
+      "name": "Stop rule triggers on error rate threshold",
+      "pass": true,
+      "detail": "triggered=true",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "orch-pipeline-load",
+      "category": "orchestration",
+      "name": "Pipeline loads config and produces summary",
+      "pass": true,
+      "detail": "HCFullPipeline: 5 stages, 20 tasks",
+      "ms": 9,
+      "error": null
+    },
+    {
+      "id": "sec-no-hardcoded-keys",
+      "category": "security",
+      "name": "No hardcoded API keys in src/",
+      "pass": true,
+      "detail": "0 hardcoded secrets",
+      "ms": 3,
+      "error": null
+    },
+    {
+      "id": "sec-env-vars",
+      "category": "security",
+      "name": "Sensitive config uses environment variables",
+      "pass": true,
+      "detail": "3/3 env vars used",
+      "ms": 1,
+      "error": null
+    },
+    {
+      "id": "concept-index-populated",
+      "category": "concept-extraction",
+      "name": "Concepts index has implemented patterns",
+      "pass": true,
+      "detail": "13 implemented concepts",
+      "ms": 1,
+      "error": null
+    },
+    {
+      "id": "concept-governance-rules",
+      "category": "concept-extraction",
+      "name": "Governance policies file exists and parses",
+      "pass": true,
+      "detail": "parsed, 7 top-level keys",
+      "ms": 1,
+      "error": null
+    },
+    {
+      "id": "mc-pipeline-reliability",
+      "category": "monte-carlo",
+      "name": "Pipeline reliability simulation produces valid confidence interval",
+      "pass": true,
+      "detail": "successRate=97.1% CI=[96.1%,98.1%]",
+      "ms": 5,
+      "error": null
+    },
+    {
+      "id": "mc-deployment-risk",
+      "category": "monte-carlo",
+      "name": "Deployment risk scoring grades correctly",
+      "pass": true,
+      "detail": "low=LOW(0.9) high=HIGH(57.4)",
+      "ms": 4,
+      "error": null
+    },
+    {
+      "id": "mc-readiness-confidence",
+      "category": "monte-carlo",
+      "name": "Readiness confidence produces scored grade",
+      "pass": true,
+      "detail": "healthy=PRODUCTION_READY(86.8) degraded=NOT_READY(41.2)",
+      "ms": 6,
+      "error": null
+    },
+    {
+      "id": "mc-node-bottleneck",
+      "category": "monte-carlo",
+      "name": "Node performance detects bottlenecks under burst load",
+      "pass": true,
+      "detail": "bottlenecks=[SLOW] dropRate=95.2%",
+      "ms": 7,
+      "error": null
+    },
+    {
+      "id": "mc-full-system",
+      "category": "monte-carlo",
+      "name": "Full system composite simulation returns grade",
+      "pass": true,
+      "detail": "grade=EXCELLENT composite=89.8",
+      "ms": 3,
+      "error": null
+    },
+    {
+      "id": "mc-statistical-validity",
+      "category": "monte-carlo",
+      "name": "Distributions produce statistically valid samples",
+      "pass": true,
+      "detail": "U(0,1)μ=0.498 N(0,1)μ=0.009σ=0.998 Bern(.3)μ=0.308",
+      "ms": 6,
+      "error": null
+    },
+    {
+      "id": "agent-tool-routing",
+      "category": "agentic",
+      "name": "Supervisor routes task to correct agent by skill match",
+      "pass": true,
+      "detail": "opt→jules doc→atlas pred→pythia mon→observer",
+      "ms": 1,
+      "error": null
+    },
+    {
+      "id": "agent-multi-step-plan",
+      "category": "agentic",
+      "name": "Agent decomposes complex task into ordered subtasks",
+      "pass": true,
+      "detail": "deploy=5 refactor=5 debug=5 steps, all ordered",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "agent-self-correction",
+      "category": "agentic",
+      "name": "Agent detects and self-corrects invalid output",
+      "pass": true,
+      "detail": "corrected after 3 attempts",
+      "ms": 1,
+      "error": null
+    },
+    {
+      "id": "agent-context-window",
+      "category": "agentic",
+      "name": "Context management prioritizes relevant information",
+      "pass": true,
+      "detail": "selected=3 items, 1900 tokens, all relevance>=0.85",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "agent-error-recovery",
+      "category": "agentic",
+      "name": "Agent recovers from tool failure with fallback strategy",
+      "pass": true,
+      "detail": "recovered via fallback after 3 attempts",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "agent-output-format",
+      "category": "agentic",
+      "name": "Agent produces structured output matching schema",
+      "pass": true,
+      "detail": "schema validation passed",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "agent-iterative-refinement",
+      "category": "agentic",
+      "name": "Iterative refinement converges to quality threshold",
+      "pass": true,
+      "detail": "converged to 85.4 in 11 iterations",
+      "ms": 0,
+      "error": null
+    },
+    {
+      "id": "e2e-api-health",
+      "category": "end-to-end",
+      "name": "API /api/health responds 200",
+      "pass": true,
+      "detail": "status=200",
+      "ms": 21,
+      "error": null
+    },
+    {
+      "id": "e2e-api-subsystems",
+      "category": "end-to-end",
+      "name": "API /api/subsystems returns all subsystem data",
+      "pass": true,
+      "detail": "agents=6, brain=true, health=true",
+      "ms": 2,
+      "error": null
+    }
+  ]
+}

@@ -4,14 +4,14 @@
 }
 .split-pane-left {
   width: 35%;
-  border-right: 1px solid #222;
-  background: #181818;
-  color: #fff;
+  border-right: 1px solid var(--heady-border, rgba(0, 212, 255, 0.12));
+  background: linear-gradient(180deg, rgba(22, 33, 62, 0.9), rgba(26, 26, 46, 0.9));
+  color: var(--heady-text, #e8e8e8);
   overflow-y: auto;
 }
 .split-pane-right {
   flex: 1;
-  background: #232323;
-  color: #fff;
+  background: rgba(15, 12, 41, 0.6);
+  color: var(--heady-text, #e8e8e8);
   overflow-y: auto;
 }

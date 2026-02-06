@@ -1,0 +1,145 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/hcfullpipeline.yaml                                ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# HCFullPipeline - Master Pipeline Definition
+# All stages, ordering, checkpoint rules, and stop conditions.
+
+version: "2.0.0"
+pipeline:
+  name: HCFullPipeline
+  description: >
+    Intelligent, parallel, dynamically distributed, optimized, deterministic,
+    and secure execution pipeline for all Heady workloads (local and remote).
+
+  # ─── GLOBAL RULES ───────────────────────────────────────────────────────
+  global:
+    deterministic: true
+    seed: "heady-sacred-geometry-seed"
+    maxConcurrentTasks: 8
+    maxRetries: 3
+    retryBackoffMs: [500, 2000, 8000]
+    jitterEnabled: true
+    costBudgetDaily: 50.00
+    rateLimitPerMinute: 120
+    proxyPolicy: direct-for-internal  # See networking module
+
+  # ─── STOP RULE ──────────────────────────────────────────────────────────
+  stopRule:
+    description: >
+      Build aggressively when healthy; repair first when not.
+      Do NOT keep building when significant errors exist in core infra,
+      data integrity, or security.
+    conditions:
+      - type: error_rate
+        threshold: 0.15
+        action: enter_recovery
+      - type: readiness_score
+        threshold: 60
+        action: enter_recovery
+      - type: critical_alarm
+        count: 1
+        action: pause_and_escalate
+      - type: data_integrity_failure
+        action: halt_immediately
+
+  # ─── STAGES ─────────────────────────────────────────────────────────────
+  stages:
+    - id: ingest
+      name: Ingest
+      description: Raw data ingestion from all sources (logs, news, APIs, repos)
+      checkpoint: true
+      parallel: true
+      tasks:
+        - ingest_news_feeds
+        - ingest_repo_changes
+        - ingest_external_apis
+        - ingest_health_metrics
+
+    - id: plan
+      name: Plan
+      description: Decompose work into task graph with priorities and dependencies
+      checkpoint: true
+      parallel: false
+      dependsOn: [ingest]
+      tasks:
+        - generate_task_graph
+        - assign_priorities
+        - estimate_costs
+        - validate_governance
+
+    - id: execute-major-phase
+      name: Execute Major Phase
+      description: Fan out to agents/services via Supervisor pattern (direct routing)
+      checkpoint: true
+      parallel: true
+      dependsOn: [plan]
+      tasks:
+        - route_to_agents
+        - monitor_agent_execution
+        - collect_agent_results
+      supervisorConfig:
+        directRouting: true
+        noProxy: true
+        maxParallelAgents: 6
+
+    - id: recover
+      name: Recover
+      description: Handle partial failures, apply saga compensation, circuit breakers
+      checkpoint: true
+      parallel: false
+      dependsOn: [execute-major-phase]
+      tasks:
+        - evaluate_failures
+        - apply_compensation
+        - retry_recoverable
+        - escalate_unrecoverable
+
+    - id: finalize
+      name: Finalize
+      description: Persist results, update concept registry, send status report
+      checkpoint: true
+      parallel: false
+      dependsOn: [recover]
+      tasks:
+        - persist_results
+        - update_concept_index
+        - compute_readiness_score
+        - send_checkpoint_email
+        - log_run_config_hash
+
+  # ─── CHECKPOINT PROTOCOL ────────────────────────────────────────────────
+  checkpointProtocol:
+    description: >
+      At each checkpoint, the system deeply re-analyzes state, configs,
+      and patterns. This is the primary upgrade and self-correction moment.
+    responsibilities:
+      - validate_run_state
+      - compare_config_hashes
+      - reevaluate_plan_and_health
+      - check_concept_alignment
+      - update_logs_and_owner
+      - apply_approved_patterns
+    configHashSources:
+      - configs/hcfullpipeline.yaml
+      - configs/resource-policies.yaml
+      - configs/service-catalog.yaml
+      - configs/governance-policies.yaml
+      - configs/concepts-index.yaml
+    escalationThreshold:
+      readinessBelow: 70
+      errorRateAbove: 0.10
+      costOverBudget: true

@@ -1,0 +1,143 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/ip-registry.yaml                                   ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# IP / Patent Registry - Tracks owned, licensed, and restricted intellectual property.
+# Consulted at checkpoints for alignment and compliance.
+
+version: "2.0.0"
+
+# ─── OWNED IP ─────────────────────────────────────────────────────────────
+ownedIP:
+  - id: sacred-geometry-architecture
+    name: Sacred Geometry Architecture
+    type: patent-pending
+    description: >
+      Deterministic AI orchestration with Sacred Geometry principles:
+      rounded, organic, breathing interface patterns combined with
+      multi-agent coordination.
+    components:
+      - heady-manager.js
+      - public/ (Sacred UI)
+      - frontend/
+    status: active
+    protectionLevel: trade-secret + patent-pending
+
+  - id: orchestrator-conductor-protocol
+    name: Orchestrator-Conductor Protocol
+    type: proprietary
+    description: >
+      Heady's specific implementation of orchestrator-conductor pattern
+      with checkpoint-based recovery, deterministic builds, and
+      multi-worktree architecture.
+    components:
+      - heady-manager.js
+      - src/heady_project/heady_conductor.py
+      - hcautobuild.ps1
+    status: active
+    protectionLevel: proprietary
+
+  - id: hcfullpipeline
+    name: HCFullPipeline System
+    type: proprietary
+    description: >
+      Complete pipeline system with ingest-plan-execute-recover-finalize
+      stages, supervisor pattern, System Brain, and checkpoint protocol.
+    components:
+      - configs/hcfullpipeline.yaml
+      - packages/hc-supervisor/
+      - packages/hc-brain/
+      - packages/hc-checkpoint/
+    status: active
+    protectionLevel: proprietary
+
+# ─── LICENSED / OPEN-SOURCE USED ─────────────────────────────────────────
+licensedComponents:
+  - id: express-framework
+    name: Express.js
+    license: MIT
+    usage: API server framework
+    compliance: OK
+
+  - id: react-framework
+    name: React
+    license: MIT
+    usage: Frontend UI
+    compliance: OK
+
+  - id: mcp-sdk
+    name: "@modelcontextprotocol/sdk"
+    license: MIT
+    usage: MCP protocol integration
+    compliance: OK
+
+  - id: helmet-security
+    name: Helmet.js
+    license: MIT
+    usage: Security headers
+    compliance: OK
+
+  - id: axios-http
+    name: Axios
+    license: MIT
+    usage: HTTP client
+    compliance: OK
+
+# ─── PUBLIC DOMAIN PATTERNS IN USE ───────────────────────────────────────
+publicDomainInUse:
+  - id: circuit-breaker-pattern
+    name: Circuit Breaker Pattern
+    origin: "Originally popularized by Michael Nygard (Release It!)"
+    license: public-domain-concept
+    implementation: packages/networking/src/circuit-breaker.js
+    compliance: OK
+
+  - id: supervisor-agent-pattern
+    name: Supervisor / Multi-Agent Pattern
+    origin: "Erlang OTP, adapted by LangGraph/Bedrock"
+    license: public-domain-concept
+    implementation: packages/hc-supervisor/
+    compliance: OK
+
+  - id: saga-pattern
+    name: Saga / Compensation Pattern
+    origin: "Garcia-Molina & Salem (1987)"
+    license: public-domain-concept
+    implementation: planned
+    compliance: OK
+
+  - id: exponential-backoff
+    name: Exponential Backoff with Jitter
+    origin: "AWS Architecture Blog"
+    license: public-domain-concept
+    implementation: packages/networking/src/client.js
+    compliance: OK
+
+# ─── RESTRICTED IP (do not implement) ────────────────────────────────────
+restrictedIP:
+  - id: example-restricted
+    name: "[Reserved for any third-party IP that must not be directly implemented]"
+    reason: "Placeholder - add specific restricted patents/IP here as discovered"
+    alternative: "Use public-domain alternatives"
+    status: not-applicable
+
+# ─── CHECKPOINT ALIGNMENT RULES ──────────────────────────────────────────
+checkpointRules:
+  - At each checkpoint, confirm all owned IP is properly implemented and documented.
+  - Verify no restricted IP has been inadvertently implemented.
+  - Check that all licensed components comply with their license terms.
+  - Log which public-domain patterns are active vs planned.
+  - Flag any newly discovered patterns for IP review before adoption.

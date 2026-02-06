@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 # HEADY_BRAND:BEGIN
-# HEADY SYSTEMS :: SACRED GEOMETRY
-# FILE: .windsurf/cascade-heady-proxy.py
-# LAYER: integration
-# 
-#         _   _  _____    _    ____   __   __
-#        | | | || ____|  / \  |  _ \ \ \ / /
-#        | |_| ||  _|   / _ \ | | | | \ V / 
-#        |  _  || |___ / ___ \| |_| |  | |  
-#        |_| |_||_____/_/   \_\____/   |_|  
-# 
-#    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: .windsurf/cascade-heady-proxy.py                           ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
 """
@@ -42,14 +44,66 @@ def main():
         # Read hook input from stdin
         hook_input = json.loads(sys.stdin.read())
         
-        log_to_file(f"Hook triggered: {hook_input.get('agent_action_name')}")
+        log_to_file(f"Hook triggered: {hook_input.get('agent_action_name', hook_input.get('action', 'unknown'))}")
+        log_to_file(f"Hook input keys: {list(hook_input.keys())}")
         
-        # Extract user prompt
-        tool_info = hook_input.get("tool_info", {})
-        user_prompt = tool_info.get("prompt", "")
+        # Log tool_info structure for debugging
+        tool_info = hook_input.get("tool_info") or {}
+        log_to_file(f"tool_info keys: {list(tool_info.keys()) if isinstance(tool_info, dict) else type(tool_info).__name__}")
+        log_to_file(f"tool_info content: {json.dumps(tool_info, default=str)[:500]}")
+        
+        # Extract user prompt - search multiple possible field paths
+        user_prompt = None
+        
+        # UUID pattern to exclude
+        import re
+        uuid_pattern = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$', re.I)
+        
+        # Try top-level fields first
+        top_level_prompt_keys = ["prompt", "user_prompt", "message", "content", "input", "text", "query"]
+        for key in top_level_prompt_keys:
+            val = hook_input.get(key)
+            if val and isinstance(val, str) and len(val.strip()) > 0 and not uuid_pattern.match(val.strip()):
+                user_prompt = val.strip()
+                log_to_file(f"Found prompt in top-level field '{key}'")
+                break
+        
+        # Try inside tool_info
+        if not user_prompt and isinstance(tool_info, dict):
+            for key in top_level_prompt_keys + ["description", "args", "command"]:
+                val = tool_info.get(key)
+                if val and isinstance(val, str) and len(val.strip()) > 0 and not uuid_pattern.match(val.strip()):
+                    user_prompt = val.strip()
+                    log_to_file(f"Found prompt in tool_info.{key}")
+                    break
+            # Check nested dicts inside tool_info
+            if not user_prompt:
+                for key, val in tool_info.items():
+                    if isinstance(val, dict):
+                        for subkey in top_level_prompt_keys:
+                            subval = val.get(subkey)
+                            if subval and isinstance(subval, str) and len(subval.strip()) > 0 and not uuid_pattern.match(subval.strip()):
+                                user_prompt = subval.strip()
+                                log_to_file(f"Found prompt in tool_info.{key}.{subkey}")
+                                break
+                    if user_prompt:
+                        break
+        
+        # Try inside data/payload/params
+        for container_key in ["data", "payload", "params", "args"]:
+            if user_prompt:
+                break
+            container = hook_input.get(container_key)
+            if isinstance(container, dict):
+                for key in top_level_prompt_keys:
+                    val = container.get(key)
+                    if val and isinstance(val, str) and len(val.strip()) > 0 and not uuid_pattern.match(val.strip()):
+                        user_prompt = val.strip()
+                        log_to_file(f"Found prompt in {container_key}.{key}")
+                        break
         
         if not user_prompt:
-            log_to_file("No prompt found, skipping orchestration")
+            log_to_file(f"No prompt found. Full input: {json.dumps(hook_input, default=str)[:800]}")
             sys.exit(0)
         
         log_to_file(f"User prompt: {user_prompt[:100]}...")
@@ -82,12 +136,15 @@ def main():
             
             # Output orchestration context for Cascade to use
             print("\n" + "="*80)
-            print("∞ HEADY ORCHESTRATION COMPLETE ∞")
+            print("[HEADY] ORCHESTRATION COMPLETE")
             print("="*80)
-            print(f"\nConfidence: {result.get('execution_plan', {}).get('confidence', 0):.0%}")
-            print(f"Nodes Invoked: {len(result.get('results', {}).get('nodes', []))}")
-            print(f"Workflows Executed: {len(result.get('results', {}).get('workflows', []))}")
-            print(f"Services Managed: {len(result.get('results', {}).get('services', []))}")
+            exec_plan = result.get('execution_plan', result.get('context', {}).get('execution_plan', {}))
+            results_data = result.get('results', {})
+            print(f"\nConfidence: {exec_plan.get('confidence', 'N/A')}")
+            if isinstance(results_data, dict):
+                print(f"Nodes Invoked: {len(results_data.get('nodes', []))}")
+                print(f"Workflows Executed: {len(results_data.get('workflows', []))}")
+                print(f"Services Managed: {len(results_data.get('services', []))}")
             print("\nHeadyConductor has processed your request with optimal execution.")
             print("="*80 + "\n")
             

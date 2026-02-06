@@ -1,15 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: frontend/src/App.js
-// LAYER: ui/frontend
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+// ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+// ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+// ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+// ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: frontend/src/App.js                                        ║
+// ║  LAYER: ui/frontend                                               ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 import React, { useState, useEffect } from 'react';
@@ -80,7 +82,15 @@ function App() {
                     filename={currentFile.path}
                 />
             ) : (
-                <div style={{ padding: '20px', color: '#555' }}>Select a file to edit</div>
+                <div style={{
+                  padding: '40px 20px',
+                  textAlign: 'center',
+                  color: '#8892a4'
+                }}>
+                  <div style={{ fontSize: '32px', marginBottom: '12px', opacity: 0.5 }}>∞</div>
+                  <div style={{ fontSize: '14px', fontWeight: '500' }}>Select a file to edit</div>
+                  <div style={{ fontSize: '11px', marginTop: '6px', color: '#5a6476', letterSpacing: '1px' }}>Sacred Geometry :: Organic Systems</div>
+                </div>
             )
         }
         cascade={<CascadePanel contextFile={currentFile} />}
@@ -91,9 +101,20 @@ function App() {
       <div style={{ position: 'absolute', top: '5px', right: '10px', zIndex: 100 }}>
          <button
             onClick={() => setShowSettings(true)}
-            style={{ background: 'transparent', border: 'none', color: '#888', cursor: 'pointer', fontSize: '14px' }}
+            style={{
+              background: 'rgba(0, 212, 255, 0.08)',
+              border: '1px solid rgba(0, 212, 255, 0.15)',
+              color: '#00d4ff',
+              cursor: 'pointer',
+              fontSize: '12px',
+              padding: '4px 12px',
+              borderRadius: '8px',
+              fontWeight: '500',
+              letterSpacing: '0.5px',
+              transition: 'all 0.2s ease'
+            }}
          >
-            ⚙️ Settings
+            ⚙ Settings
          </button>
       </div>
 

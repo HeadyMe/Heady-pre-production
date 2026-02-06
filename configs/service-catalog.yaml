@@ -1,0 +1,177 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/service-catalog.yaml                               ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# Service Catalog - Canonical registry of all Heady services, agents, and tools.
+# Orchestrator and System Brain use this as source of truth for routing and governance.
+
+version: "2.0.0"
+
+# ─── SERVICES ─────────────────────────────────────────────────────────────
+services:
+  - name: heady-manager
+    role: API Gateway & MCP Server
+    type: web
+    skills: [api-gateway, mcp-protocol, static-serving, rate-limiting, auth]
+    tools: [express, helmet, compression, ws]
+    endpoint: http://localhost:3300
+    healthCheck: /api/health
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.9
+      latencyP99Ms: 500
+
+  - name: heady-conductor
+    role: Python Orchestration Worker
+    type: worker
+    skills: [audit, build, lint, test, concept-extraction]
+    tools: [python, conductor-protocol]
+    endpoint: internal://python-worker
+    healthCheck: process-alive
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.0
+      latencyP99Ms: 5000
+
+  - name: heady-brain
+    role: System Brain Meta-Controller
+    type: internal
+    skills: [meta-control, readiness-eval, concept-alignment, auto-tuning, governance]
+    tools: [hc-brain, hc-readiness, concepts-index]
+    endpoint: internal://hc-brain
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.9
+      latencyP99Ms: 1000
+
+  - name: hc-supervisor
+    role: Multi-Agent Supervisor
+    type: internal
+    skills: [agent-routing, parallel-fanout, result-aggregation, direct-routing]
+    tools: [hc-supervisor, networking-client]
+    endpoint: internal://hc-supervisor
+    healthCheck: module-loaded
+    criticality: critical
+    owner: system
+    slos:
+      availability: 99.9
+      latencyP99Ms: 200
+
+  - name: heady-sync
+    role: Multi-Remote Git Synchronization
+    type: script
+    skills: [git-sync, worktree-management, multi-remote-push]
+    tools: [git, powershell]
+    endpoint: script://heady_sync.ps1
+    healthCheck: script-runnable
+    criticality: high
+    owner: system
+
+  - name: hcautobuild
+    role: Automated Build Pipeline
+    type: script
+    skills: [auto-build, worktree-discovery, checkpoint-save, deploy-trigger]
+    tools: [powershell, git, npm]
+    endpoint: script://hcautobuild.ps1
+    healthCheck: script-runnable
+    criticality: high
+    owner: system
+
+# ─── AGENTS ───────────────────────────────────────────────────────────────
+agents:
+  - name: builder
+    role: Build & Deploy Agent
+    skills: [build, deploy, test, lint]
+    tools: [npm, git, render-api, powershell]
+    routing: direct
+    fallback: null
+    criticality: high
+
+  - name: researcher
+    role: Knowledge & News Ingestion Agent
+    skills: [news-ingestion, concept-extraction, trend-analysis]
+    tools: [algolia-hn, perplexity, llm-provider]
+    routing: direct
+    fallback: null
+    criticality: medium
+
+  - name: deployer
+    role: Infrastructure Deployment Agent
+    skills: [render-deploy, docker-build, cloud-bridge, env-sync]
+    tools: [render-api, docker, cloud-bridge]
+    routing: direct
+    fallback: null
+    criticality: high
+
+  - name: auditor
+    role: Audit & Compliance Agent
+    skills: [code-audit, security-scan, brand-check, dependency-audit]
+    tools: [eslint, snyk, brand-headers]
+    routing: direct
+    fallback: null
+    criticality: medium
+
+  - name: observer
+    role: Monitoring & Health Agent
+    skills: [health-check, metrics-collection, alert-evaluation, readiness-probe]
+    tools: [node-cron, health-scripts, cloudwatch-api]
+    routing: direct
+    fallback: null
+    criticality: critical
+
+  - name: claude-code
+    role: AI Code Agent (Claude Code CLI)
+    skills: [code-analysis, security-audit, documentation, concept-alignment, task-planning, governance-check, readiness-eval]
+    tools: [claude-cli, read, grep, glob, bash]
+    routing: direct
+    fallback: null
+    criticality: high
+
+# ─── EXTERNAL INTEGRATIONS ────────────────────────────────────────────────
+externalIntegrations:
+  - name: render-com
+    type: deployment-platform
+    domain: api.render.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 30/min
+
+  - name: algolia-hn
+    type: news-api
+    domain: hn.algolia.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 60/min
+
+  - name: huggingface
+    type: ml-platform
+    domain: huggingface.co
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 30/min
+
+  - name: github
+    type: scm
+    domain: api.github.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 60/min
+
+  - name: cloudflare
+    type: cdn-dns
+    domain: api.cloudflare.com
+    proxyPolicy: external-proxy-allowed
+    rateLimit: 30/min

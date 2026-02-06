@@ -1,15 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: scripts/brand_headers.js
-// LAYER: root
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+// ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+// ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+// ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+// ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: scripts/brand_headers.js                                   ║
+// ║  LAYER: root                                                      ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 const fs = require("fs");
@@ -124,24 +126,38 @@ function toPosixRelative(filePath) {
   return path.relative(REPO_ROOT, filePath).split(path.sep).join("/");
 }
 
-function bannerLines(meta) {
-  const art = [
-    "        _   _  _____    _    ____   __   __",
-    "       | | | || ____|  / \\  |  _ \\ \\ \\ / /",
-    "       | |_| ||  _|   / _ \\ | | | | \\ V / ",
-    "       |  _  || |___ / ___ \\| |_| |  | |  ",
-    "       |_| |_||_____/_/   \\_\\____/   |_|  ",
-    "",
-    "   Sacred Geometry :: Organic Systems :: Breathing Interfaces",
-  ];
+// ─── ANSI Color Helpers ───────────────────────────────────────────────────
+const C = {
+  reset: "\x1b[0m",
+  bold: "\x1b[1m",
+  dim: "\x1b[2m",
+  cyan: "\x1b[36m",
+  green: "\x1b[32m",
+  yellow: "\x1b[33m",
+  magenta: "\x1b[35m",
+  red: "\x1b[31m",
+  white: "\x1b[37m",
+  gray: "\x1b[90m",
+  bgCyan: "\x1b[46m",
+  bgMagenta: "\x1b[45m",
+};
 
+function bannerLines(meta) {
   return [
     "HEADY_BRAND:BEGIN",
-    "HEADY SYSTEMS :: SACRED GEOMETRY",
-    `FILE: ${meta.rel}`,
-    `LAYER: ${meta.layer}`,
-    "",
-    ...art,
+    "\u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557",
+    "\u2551  \u2588\u2557  \u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2557   \u2588\u2557                     \u2551",
+    "\u2551  \u2588\u2551  \u2588\u2551\u2588\u2554\u2550\u2550\u2550\u2550\u255d\u2588\u2554\u2550\u2550\u2588\u2557\u2588\u2554\u2550\u2550\u2588\u2557\u255a\u2588\u2557 \u2588\u2554\u255d                     \u2551",
+    "\u2551  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2557  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2551  \u2588\u2551 \u255a\u2588\u2588\u2588\u2588\u2554\u255d                      \u2551",
+    "\u2551  \u2588\u2554\u2550\u2550\u2588\u2551\u2588\u2554\u2550\u2550\u255d  \u2588\u2554\u2550\u2550\u2588\u2551\u2588\u2551  \u2588\u2551  \u255a\u2588\u2554\u255d                       \u2551",
+    "\u2551  \u2588\u2551  \u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2551  \u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2554\u255d   \u2588\u2551                        \u2551",
+    "\u2551  \u255a\u2550\u255d  \u255a\u2550\u255d\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d\u255a\u2550\u255d  \u255a\u2550\u255d\u255a\u2550\u2550\u2550\u2550\u2550\u255d    \u255a\u2550\u255d                        \u2551",
+    "\u2551                                                                  \u2551",
+    "\u2551  \u221e SACRED GEOMETRY \u221e  Organic Systems \u00b7 Breathing Interfaces    \u2551",
+    "\u2551  \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501  \u2551",
+    `\u2551  FILE: ${meta.rel.padEnd(59)}\u2551`,
+    `\u2551  LAYER: ${meta.layer.padEnd(58)}\u2551`,
+    "\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d",
     "HEADY_BRAND:END",
   ];
 }
@@ -265,16 +281,33 @@ function brandFile(filePath, mode) {
   return { changed: true, eligible: true };
 }
 
+function printBanner() {
+  const w = C.white, c = C.cyan, m = C.magenta, g = C.green, y = C.yellow, r = C.reset, b = C.bold, d = C.dim;
+  process.stdout.write(`\n`);
+  process.stdout.write(`${c}${b}  \u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557${r}\n`);
+  process.stdout.write(`${c}${b}  \u2551${r}${m}  \u2588\u2557  \u2588\u2557\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2557   \u2588\u2557  ${r}${c}${b}                   \u2551${r}\n`);
+  process.stdout.write(`${c}${b}  \u2551${r}${m}  \u2588\u2551  \u2588\u2551\u2588\u2554\u2550\u2550\u2550\u2550\u255d\u2588\u2554\u2550\u2550\u2588\u2557\u2588\u2554\u2550\u2550\u2588\u2557\u255a\u2588\u2557 \u2588\u2554\u255d  ${r}${c}${b}                   \u2551${r}\n`);
+  process.stdout.write(`${c}${b}  \u2551${r}${m}  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2557  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551\u2588\u2551  \u2588\u2551 \u255a\u2588\u2588\u2588\u2588\u2554\u255d   ${r}${c}${b}                   \u2551${r}\n`);
+  process.stdout.write(`${c}${b}  \u2551${r}${m}  \u2588\u2554\u2550\u2550\u2588\u2551\u2588\u2554\u2550\u2550\u255d  \u2588\u2554\u2550\u2550\u2588\u2551\u2588\u2551  \u2588\u2551  \u255a\u2588\u2554\u255d    ${r}${c}${b}                   \u2551${r}\n`);
+  process.stdout.write(`${c}${b}  \u2551${r}${m}  \u2588\u2551  \u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2551  \u2588\u2551\u2588\u2588\u2588\u2588\u2588\u2588\u2554\u255d   \u2588\u2551     ${r}${c}${b}                   \u2551${r}\n`);
+  process.stdout.write(`${c}${b}  \u2551${r}${m}  \u255a\u2550\u255d  \u255a\u2550\u255d\u255a\u2550\u2550\u2550\u2550\u2550\u2550\u255d\u255a\u2550\u255d  \u255a\u2550\u255d\u255a\u2550\u2550\u2550\u2550\u2550\u255d    \u255a\u2550\u255d     ${r}${c}${b}                   \u2551${r}\n`);
+  process.stdout.write(`${c}${b}  \u2551${r}${y}  \u221e SACRED GEOMETRY \u221e  ${d}Branding Protocol${r}${c}${b}                       \u2551${r}\n`);
+  process.stdout.write(`${c}${b}  \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d${r}\n`);
+  process.stdout.write(`\n`);
+}
+
 function main() {
   const args = parseArgs(process.argv);
   const mode = args.fix ? "fix" : "check";
+
+  printBanner();
 
   const files = [];
   if (args.staged) {
     try {
       files.push(...getStagedFiles());
     } catch {
-      process.stderr.write("[brand_headers] Failed to read staged files; falling back to full scan.\n");
+      process.stderr.write(`${C.yellow}  \u25c6 Staged file read failed; falling back to full scan.${C.reset}\n`);
       walk(REPO_ROOT, files);
     }
   } else {
@@ -291,6 +324,8 @@ function main() {
     eligible.push(f);
   }
 
+  process.stdout.write(`${C.dim}  Scanning ${eligible.length} eligible files...${C.reset}\n\n`);
+
   let changedCount = 0;
   let checkedCount = 0;
   const changedFiles = [];
@@ -301,25 +336,36 @@ function main() {
     checkedCount += 1;
     if (res.changed) {
       changedCount += 1;
-      changedFiles.push(toPosixRelative(f));
+      const rel = toPosixRelative(f);
+      changedFiles.push(rel);
+      if (mode === "fix") {
+        process.stdout.write(`  ${C.green}\u2713${C.reset} ${C.white}${rel}${C.reset}\n`);
+      } else {
+        process.stdout.write(`  ${C.yellow}\u25c6${C.reset} ${C.white}${rel}${C.reset} ${C.yellow}(needs branding)${C.reset}\n`);
+      }
+    } else if (args.verbose) {
+      process.stdout.write(`  ${C.gray}\u25cb ${toPosixRelative(f)}${C.reset}\n`);
     }
   }
 
-  if (args.verbose) {
-    for (const f of changedFiles) process.stdout.write(`${f}\n`);
-  }
+  process.stdout.write(`\n`);
+  process.stdout.write(`${C.cyan}  \u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501${C.reset}\n`);
 
   if (mode === "check") {
     if (changedCount > 0) {
-      process.stderr.write(`\n[brand_headers] Missing or outdated branding headers in ${changedCount} file(s).\n`);
-      process.stderr.write("[brand_headers] Run: npm run brand:fix\n\n");
+      process.stdout.write(`  ${C.red}${C.bold}\u2717 BRAND CHECK FAILED${C.reset}  ${C.yellow}${changedCount}${C.reset} file(s) missing/outdated branding\n`);
+      process.stdout.write(`  ${C.dim}Run: ${C.cyan}npm run brand:fix${C.reset}\n\n`);
       process.exit(1);
     }
-    process.stdout.write(`[brand_headers] OK. Checked ${checkedCount} file(s).\n`);
+    process.stdout.write(`  ${C.green}${C.bold}\u2713 ALL BRANDED${C.reset}  ${C.white}${checkedCount}${C.reset} files verified ${C.green}\u221e${C.reset}\n\n`);
     return;
   }
 
-  process.stdout.write(`[brand_headers] Updated ${changedCount} file(s) (checked ${checkedCount}).\n`);
+  if (changedCount > 0) {
+    process.stdout.write(`  ${C.green}${C.bold}\u2713 BRANDED${C.reset}  ${C.magenta}${changedCount}${C.reset} file(s) updated ${C.dim}(${checkedCount} checked)${C.reset} ${C.green}\u221e${C.reset}\n\n`);
+  } else {
+    process.stdout.write(`  ${C.green}${C.bold}\u2713 ALL CURRENT${C.reset}  ${C.white}${checkedCount}${C.reset} files already branded ${C.green}\u221e${C.reset}\n\n`);
+  }
 }
 
 main();

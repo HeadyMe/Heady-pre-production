@@ -1,15 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: frontend/src/components/Terminal.js
-// LAYER: ui/frontend
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+// ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+// ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+// ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+// ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: frontend/src/components/Terminal.js                        ║
+// ║  LAYER: ui/frontend                                               ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 import React, { useEffect, useRef } from 'react';
@@ -23,7 +25,13 @@ const TerminalComponent = () => {
 
   useEffect(() => {
     const term = new Terminal({
-        theme: { background: '#1e1e1e' },
+        theme: {
+            background: '#12101e',
+            foreground: '#c8d0dc',
+            cursor: '#00d4ff',
+            cursorAccent: '#1a1a2e',
+            selectionBackground: 'rgba(0, 212, 255, 0.2)',
+        },
         fontSize: 12,
         fontFamily: 'Consolas, "Courier New", monospace',
         convertEol: true,
@@ -36,8 +44,12 @@ const TerminalComponent = () => {
 
     xtermRef.current = term;
 
-    term.writeln('Welcome to Heady Admin Console');
-    term.writeln('Initializing log stream...');
+    term.writeln('\x1b[36m╔══════════════════════════════════════════╗\x1b[0m');
+    term.writeln('\x1b[36m║\x1b[0m  \x1b[1;36m∞ HEADY ADMIN CONSOLE\x1b[0m                    \x1b[36m║\x1b[0m');
+    term.writeln('\x1b[36m║\x1b[0m  \x1b[35mSacred Geometry :: Organic Systems\x1b[0m      \x1b[36m║\x1b[0m');
+    term.writeln('\x1b[36m╚══════════════════════════════════════════╝\x1b[0m');
+    term.writeln('');
+    term.writeln('\x1b[90mInitializing log stream...\x1b[0m');
 
     const token = localStorage.getItem('admin_token') || 'default_insecure_token';
 

@@ -1,0 +1,9 @@
+{
+  "name": "@heady/hc-brain",
+  "version": "1.0.0",
+  "description": "Heady System Brain - Meta-controller owning catalogs, health, policies, concepts, and auto-tuning",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  }
+}

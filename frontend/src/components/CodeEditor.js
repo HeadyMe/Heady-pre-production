@@ -1,15 +1,17 @@
 // HEADY_BRAND:BEGIN
-// HEADY SYSTEMS :: SACRED GEOMETRY
-// FILE: frontend/src/components/CodeEditor.js
-// LAYER: ui/frontend
-// 
-//         _   _  _____    _    ____   __   __
-//        | | | || ____|  / \  |  _ \ \ \ / /
-//        | |_| ||  _|   / _ \ | | | | \ V / 
-//        |  _  || |___ / ___ \| |_| |  | |  
-//        |_| |_||_____/_/   \_\____/   |_|  
-// 
-//    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+// ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+// ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+// ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+// ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+// ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+// ║                                                                  ║
+// ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+// ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+// ║  FILE: frontend/src/components/CodeEditor.js                      ║
+// ║  LAYER: ui/frontend                                               ║
+// ╚══════════════════════════════════════════════════════════════════╝
 // HEADY_BRAND:END
 
 import React, { useRef } from 'react';
@@ -31,12 +33,18 @@ const CodeEditor = ({ code, language, onChange, onSave, filename }) => {
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         {filename && (
             <div style={{
-                padding: '5px 10px',
-                backgroundColor: '#1e1e1e',
-                color: '#fff',
+                padding: '8px 14px',
+                background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(123, 44, 191, 0.04))',
+                color: '#c8d0dc',
                 fontSize: '12px',
-                borderBottom: '1px solid #333'
+                fontWeight: '500',
+                letterSpacing: '0.3px',
+                borderBottom: '1px solid rgba(0, 212, 255, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
             }}>
+                <span style={{ color: '#00d4ff', fontSize: '10px' }}>●</span>
                 {filename}
             </div>
         )}

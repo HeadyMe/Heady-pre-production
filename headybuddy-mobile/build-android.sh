@@ -1,16 +1,18 @@
 #!/bin/bash
 # HEADY_BRAND:BEGIN
-# HEADY SYSTEMS :: SACRED GEOMETRY
-# FILE: headybuddy-mobile/build-android.sh
-# LAYER: root
-# 
-#         _   _  _____    _    ____   __   __
-#        | | | || ____|  / \  |  _ \ \ \ / /
-#        | |_| ||  _|   / _ \ | | | | \ V / 
-#        |  _  || |___ / ___ \| |_| |  | |  
-#        |_| |_||_____/_/   \_\____/   |_|  
-# 
-#    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: headybuddy-mobile/build-android.sh                         ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
 # Build HeadyBuddy Mobile for Android

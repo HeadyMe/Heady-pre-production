@@ -1,15 +1,17 @@
 # HEADY_BRAND:BEGIN
-# HEADY SYSTEMS :: SACRED GEOMETRY
-# FILE: scripts/create-desktop-shortcuts.ps1
-# LAYER: root
-# 
-#         _   _  _____    _    ____   __   __
-#        | | | || ____|  / \  |  _ \ \ \ / /
-#        | |_| ||  _|   / _ \ | | | | \ V / 
-#        |  _  || |___ / ___ \| |_| |  | |  
-#        |_| |_||_____/_/   \_\____/   |_|  
-# 
-#    Sacred Geometry :: Organic Systems :: Breathing Interfaces
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: scripts/create-desktop-shortcuts.ps1                       ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
 # HEADY_BRAND:END
 
 $WScriptShell = New-Object -ComObject WScript.Shell

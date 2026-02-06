@@ -1,0 +1,137 @@
+# HEADY_BRAND:BEGIN
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  █╗  █╗███████╗ █████╗ ██████╗ █╗   █╗                     ║
+# ║  █║  █║█╔════╝█╔══█╗█╔══█╗╚█╗ █╔╝                     ║
+# ║  ███████║█████╗  ███████║█║  █║ ╚████╔╝                      ║
+# ║  █╔══█║█╔══╝  █╔══█║█║  █║  ╚█╔╝                       ║
+# ║  █║  █║███████╗█║  █║██████╔╝   █║                        ║
+# ║  ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝                        ║
+# ║                                                                  ║
+# ║  ∞ SACRED GEOMETRY ∞  Organic Systems · Breathing Interfaces    ║
+# ║  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ║
+# ║  FILE: configs/governance-policies.yaml                           ║
+# ║  LAYER: root                                                      ║
+# ╚══════════════════════════════════════════════════════════════════╝
+# HEADY_BRAND:END
+
+#
+# Governance Policies - Access control, cost limits, change policies, data domains.
+
+version: "2.0.0"
+
+# ─── ACCESS CONTROL ──────────────────────────────────────────────────────
+accessControl:
+  description: Least-privilege access between services
+  rules:
+    - role: heady-manager
+      allowedDomains: [pipeline, health, admin, mcp]
+      allowedActions: [read, write, execute]
+    - role: heady-conductor
+      allowedDomains: [pipeline, audit, build]
+      allowedActions: [read, write, execute]
+    - role: builder
+      allowedDomains: [build, deploy, test]
+      allowedActions: [read, execute]
+    - role: researcher
+      allowedDomains: [news, concepts, external-apis]
+      allowedActions: [read]
+    - role: deployer
+      allowedDomains: [deploy, infra, env]
+      allowedActions: [read, execute]
+    - role: auditor
+      allowedDomains: [audit, security, compliance]
+      allowedActions: [read]
+    - role: observer
+      allowedDomains: [health, metrics, alerts]
+      allowedActions: [read, write]
+
+# ─── DATA DOMAINS ────────────────────────────────────────────────────────
+dataDomains:
+  - name: pipeline
+    description: Pipeline definitions, task graphs, run state
+    sensitivity: internal
+  - name: health
+    description: Node health metrics, readiness scores
+    sensitivity: internal
+  - name: admin
+    description: Admin operations, API keys, tokens
+    sensitivity: restricted
+  - name: news
+    description: Ingested news and external content
+    sensitivity: public
+  - name: concepts
+    description: Extracted concepts and pattern registry
+    sensitivity: internal
+  - name: audit
+    description: Audit logs, compliance records
+    sensitivity: restricted
+  - name: deploy
+    description: Deployment configs, env vars, secrets
+    sensitivity: restricted
+  - name: user-data
+    description: User-specific data and preferences
+    sensitivity: restricted
+
+# ─── COST & RATE GOVERNANCE ──────────────────────────────────────────────
+costGovernance:
+  dailySpendCap: 50.00
+  weeklySpendCap: 300.00
+  perAgentDailyCap:
+    builder: 10.00
+    researcher: 15.00
+    deployer: 10.00
+    auditor: 5.00
+    observer: 5.00
+  alertOnOverage: true
+  autoThrottleOnCritical: true
+
+# ─── CHANGE POLICIES ─────────────────────────────────────────────────────
+changePolicy:
+  autoEnablePatterns:
+    description: Patterns from public-domain-patterns.md that can be auto-enabled
+    allowed:
+      - retry-backoff-jitter
+      - idempotent-tasks
+    requireApproval:
+      - circuit-breaker
+      - saga-compensation
+      - bulkhead-isolation
+      - event-sourcing
+      - cqrs
+  destructiveOperations:
+    requireApproval: true
+    examples:
+      - database-migration
+      - node-pool-resize
+      - secret-rotation
+      - pattern-rollout-major
+  deploymentPolicy:
+    requireHealthyReadiness: true
+    minReadinessScore: 70
+    requirePassingTests: true
+
+# ─── SECURITY GOVERNANCE ─────────────────────────────────────────────────
+security:
+  authMethod: api-key-timing-safe
+  internalComms:
+    protocol: direct-socket
+    proxyPolicy: no-proxy-for-internal
+    mtlsPlanned: true
+  externalComms:
+    treatAsUntrusted: true
+    logExposureDecisions: true
+    restrictDataSent: true
+  secretManagement:
+    provider: render-secrets
+    rotationPolicy: quarterly
+    neverHardcode: true
+
+# ─── HUMAN-IN-THE-LOOP ──────────────────────────────────────────────────
+humanInTheLoop:
+  requiredFor:
+    - destructive-operations
+    - large-pattern-rollouts
+    - budget-increase-requests
+    - security-policy-changes
+  notificationMethod: checkpoint-email
+  escalationTimeout: 3600  # seconds before auto-safe-mode

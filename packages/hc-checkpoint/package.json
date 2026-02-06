@@ -1,0 +1,12 @@
+{
+  "name": "@heady/hc-checkpoint",
+  "version": "1.0.0",
+  "description": "Heady Checkpoint Protocol - Deep re-analysis at each pipeline stage boundary",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0"
+  }
+}

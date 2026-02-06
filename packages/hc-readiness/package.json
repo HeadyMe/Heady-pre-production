@@ -1,0 +1,12 @@
+{
+  "name": "@heady/hc-readiness",
+  "version": "1.0.0",
+  "description": "Heady Operational Readiness Evaluator - Scored readiness assessment at each checkpoint",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
