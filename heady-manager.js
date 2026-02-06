@@ -332,15 +332,296 @@ app.use((error, req, res, next) => {
   });
 });
 
+// Layer Management
+const LAYERS_CONFIG_PATH = path.join(__dirname, "scripts", "heady-layers.json");
+const LAYER_STATE_PATH = path.join(__dirname, "scripts", ".heady-active-layer");
+
+function getActiveLayer() {
+  try {
+    if (fs.existsSync(LAYER_STATE_PATH)) {
+      return fs.readFileSync(LAYER_STATE_PATH, "utf8").trim();
+    }
+    const config = readJsonFileSafe(LAYERS_CONFIG_PATH);
+    return config ? config.default_layer : "local";
+  } catch {
+    return "local";
+  }
+}
+
+function getLayerConfig() {
+  return readJsonFileSafe(LAYERS_CONFIG_PATH);
+}
+
+app.get("/api/layer", (req, res) => {
+  const activeId = getActiveLayer();
+  const config = getLayerConfig();
+  const layer = config && config.layers ? config.layers[activeId] : null;
+
+  res.json({
+    active_layer: activeId,
+    name: layer ? layer.name : "Unknown",
+    endpoint: layer ? layer.endpoint : "http://localhost:3300",
+    icon: layer ? layer.icon : "?",
+    color: layer ? layer.color : "White",
+    description: layer ? layer.description : "",
+    git_remote: layer ? layer.git_remote : null,
+    all_layers: config ? Object.keys(config.layers) : [],
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.post("/api/layer/switch", (req, res) => {
+  const { layer } = req.body;
+  const config = getLayerConfig();
+
+  if (!config || !config.layers || !config.layers[layer]) {
+    return res.status(400).json({
+      error: `Unknown layer '${layer}'`,
+      available: config ? Object.keys(config.layers) : []
+    });
+  }
+
+  try {
+    fs.writeFileSync(LAYER_STATE_PATH, layer, "utf8");
+    const layerInfo = config.layers[layer];
+    res.json({
+      success: true,
+      active_layer: layer,
+      name: layerInfo.name,
+      endpoint: layerInfo.endpoint,
+      message: `Switched to ${layerInfo.name}`
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // System pulse endpoint
 app.get("/api/pulse", (req, res) => {
+  const activeLayer = getActiveLayer();
+  const config = getLayerConfig();
+  const layer = config && config.layers ? config.layers[activeLayer] : null;
+
   res.json({
     ok: true,
     service: "heady-manager",
     ts: new Date().toISOString(),
     version: "2.0.0",
     status: "active",
-    endpoints: ["/api/health", "/api/registry", "/api/maid/*", "/api/conductor/*"]
+    active_layer: activeLayer,
+    layer_name: layer ? layer.name : "Unknown",
+    endpoints: ["/api/health", "/api/registry", "/api/maid/*", "/api/conductor/*", "/api/layer"]
+  });
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// PRODUCTION NODE MANAGEMENT & SYSTEM STATE
+// ═══════════════════════════════════════════════════════════════════════
+
+const REGISTRY_PATH = path.join(__dirname, ".heady", "registry.json");
+
+function loadRegistry() {
+  return readJsonFileSafe(REGISTRY_PATH) || { nodes: {}, tools: {}, workflows: {}, services: {}, skills: {} };
+}
+
+function saveRegistry(data) {
+  fs.writeFileSync(REGISTRY_PATH, JSON.stringify(data, null, 2), "utf8");
+}
+
+// Get all nodes and their status
+app.get("/api/nodes", (req, res) => {
+  const reg = loadRegistry();
+  const nodes = Object.entries(reg.nodes || {}).map(([key, node]) => ({
+    id: key,
+    ...node
+  }));
+  res.json({
+    total: nodes.length,
+    active: nodes.filter(n => n.status === "active").length,
+    nodes,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Get single node status
+app.get("/api/nodes/:nodeId", (req, res) => {
+  const reg = loadRegistry();
+  const node = reg.nodes[req.params.nodeId.toUpperCase()];
+  if (!node) return res.status(404).json({ error: `Node '${req.params.nodeId}' not found` });
+  res.json({ id: req.params.nodeId.toUpperCase(), ...node });
+});
+
+// Activate a single node
+app.post("/api/nodes/:nodeId/activate", (req, res) => {
+  const reg = loadRegistry();
+  const nodeId = req.params.nodeId.toUpperCase();
+  if (!reg.nodes[nodeId]) return res.status(404).json({ error: `Node '${nodeId}' not found` });
+  
+  reg.nodes[nodeId].status = "active";
+  reg.nodes[nodeId].last_invoked = new Date().toISOString();
+  saveRegistry(reg);
+  
+  res.json({ success: true, node: nodeId, status: "active", activated_at: reg.nodes[nodeId].last_invoked });
+});
+
+// Activate ALL nodes (production mode)
+app.post("/api/nodes/activate-all", (req, res) => {
+  const reg = loadRegistry();
+  const ts = new Date().toISOString();
+  const activated = [];
+  
+  for (const [name, node] of Object.entries(reg.nodes)) {
+    node.status = "active";
+    node.last_invoked = ts;
+    activated.push(name);
+  }
+  
+  reg.metadata = reg.metadata || {};
+  reg.metadata.last_updated = ts;
+  reg.metadata.environment = "production";
+  reg.metadata.all_nodes_active = true;
+  
+  saveRegistry(reg);
+  
+  res.json({
+    success: true,
+    activated_count: activated.length,
+    nodes: activated,
+    environment: "production",
+    timestamp: ts
+  });
+});
+
+// Deactivate a single node
+app.post("/api/nodes/:nodeId/deactivate", (req, res) => {
+  const reg = loadRegistry();
+  const nodeId = req.params.nodeId.toUpperCase();
+  if (!reg.nodes[nodeId]) return res.status(404).json({ error: `Node '${nodeId}' not found` });
+  
+  reg.nodes[nodeId].status = "available";
+  saveRegistry(reg);
+  
+  res.json({ success: true, node: nodeId, status: "available" });
+});
+
+// Full system status (production dashboard)
+app.get("/api/system/status", (req, res) => {
+  const reg = loadRegistry();
+  const activeLayer = getActiveLayer();
+  const config = getLayerConfig();
+  const layer = config && config.layers ? config.layers[activeLayer] : null;
+  
+  const nodeList = Object.entries(reg.nodes || {});
+  const toolList = Object.entries(reg.tools || {});
+  const workflowList = Object.entries(reg.workflows || {});
+  const serviceList = Object.entries(reg.services || {});
+  
+  const activeNodes = nodeList.filter(([, n]) => n.status === "active").length;
+  const activeTools = toolList.filter(([, t]) => t.status === "active").length;
+  const activeWorkflows = workflowList.filter(([, w]) => w.status === "active").length;
+  const healthyServices = serviceList.filter(([, s]) => s.status === "healthy" || s.status === "active").length;
+  
+  const isProduction = (reg.metadata || {}).environment === "production";
+  const allNodesActive = activeNodes === nodeList.length;
+  
+  res.json({
+    system: "Heady Systems",
+    version: (reg.metadata || {}).version || "2.0.0",
+    environment: isProduction ? "production" : "development",
+    production_ready: isProduction && allNodesActive,
+    active_layer: {
+      id: activeLayer,
+      name: layer ? layer.name : "Unknown",
+      endpoint: layer ? layer.endpoint : "http://localhost:3300"
+    },
+    uptime: process.uptime(),
+    memory: process.memoryUsage(),
+    capabilities: {
+      nodes: { total: nodeList.length, active: activeNodes, list: nodeList.map(([k, v]) => ({ id: k, role: v.role, status: v.status })) },
+      tools: { total: toolList.length, active: activeTools },
+      workflows: { total: workflowList.length, active: activeWorkflows },
+      services: { total: serviceList.length, healthy: healthyServices }
+    },
+    sacred_geometry: {
+      architecture: "active",
+      organic_systems: allNodesActive,
+      breathing_interfaces: isProduction
+    },
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Production activation endpoint - activates EVERYTHING
+app.post("/api/system/production", (req, res) => {
+  const reg = loadRegistry();
+  const ts = new Date().toISOString();
+  const report = { nodes: [], tools: [], workflows: [], services: [] };
+  
+  // Activate all nodes
+  for (const [name, node] of Object.entries(reg.nodes || {})) {
+    node.status = "active";
+    node.last_invoked = ts;
+    report.nodes.push(name);
+  }
+  
+  // Activate all tools
+  for (const [name, tool] of Object.entries(reg.tools || {})) {
+    tool.status = "active";
+    report.tools.push(name);
+  }
+  
+  // Activate all workflows
+  for (const [name, wf] of Object.entries(reg.workflows || {})) {
+    wf.status = "active";
+    report.workflows.push(name);
+  }
+  
+  // Set services to active
+  for (const [name, svc] of Object.entries(reg.services || {})) {
+    if (name === "heady-manager") svc.status = "healthy";
+    else svc.status = "active";
+    report.services.push(name);
+  }
+  
+  // Activate all skills
+  for (const [name, sk] of Object.entries(reg.skills || {})) {
+    sk.status = "active";
+  }
+  
+  // Update metadata
+  reg.metadata = {
+    ...(reg.metadata || {}),
+    last_updated: ts,
+    version: "2.0.0-production",
+    environment: "production",
+    all_nodes_active: true,
+    production_activated_at: ts
+  };
+  
+  saveRegistry(reg);
+  
+  // Switch layer state to production
+  try {
+    fs.writeFileSync(LAYER_STATE_PATH, "cloud-sys", "utf8");
+  } catch (e) {
+    console.error("Could not set production layer:", e.message);
+  }
+  
+  res.json({
+    success: true,
+    environment: "production",
+    activated: {
+      nodes: report.nodes.length,
+      tools: report.tools.length,
+      workflows: report.workflows.length,
+      services: report.services.length
+    },
+    node_manifest: report.nodes.map(n => {
+      const node = reg.nodes[n];
+      return { id: n, role: node.role, tool: node.primary_tool, status: "active" };
+    }),
+    sacred_geometry: "FULLY_ACTIVATED",
+    timestamp: ts
   });
 });
 

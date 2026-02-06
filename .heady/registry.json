@@ -1,7 +1,9 @@
 {
   "metadata": {
-    "last_updated": "2026-02-04T18:04:19.659984",
-    "version": "1.0.0"
+    "last_updated": "2026-02-05T22:00:13.432031",
+    "version": "2.0.0-production",
+    "environment": "production",
+    "all_nodes_active": true
   },
   "nodes": {
     "BRIDGE": {
@@ -16,8 +18,8 @@
         "network",
         "tunnel"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "MUSE": {
       "name": "MUSE",
@@ -30,8 +32,8 @@
         "marketing",
         "mock_data"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "SENTINEL": {
       "name": "SENTINEL",
@@ -43,8 +45,8 @@
         "verify_auth",
         "audit_ledger"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "NOVA": {
       "name": "NOVA",
@@ -54,8 +56,8 @@
       "trigger_on": [
         "scan_gaps"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "OBSERVER": {
       "name": "OBSERVER",
@@ -65,8 +67,8 @@
       "trigger_on": [
         "monitor"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "JANITOR": {
       "name": "JANITOR",
@@ -76,8 +78,8 @@
       "trigger_on": [
         "clean"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "JULES": {
       "name": "JULES",
@@ -87,8 +89,8 @@
       "trigger_on": [
         "optimization"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "SOPHIA": {
       "name": "SOPHIA",
@@ -98,8 +100,8 @@
       "trigger_on": [
         "learn_tool"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "CIPHER": {
       "name": "CIPHER",
@@ -109,8 +111,8 @@
       "trigger_on": [
         "obfuscate"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "ATLAS": {
       "name": "ATLAS",
@@ -120,8 +122,8 @@
       "trigger_on": [
         "documentation"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "MURPHY": {
       "name": "MURPHY",
@@ -131,8 +133,8 @@
       "trigger_on": [
         "security_audit"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "SASHA": {
       "name": "SASHA",
@@ -142,8 +144,8 @@
       "trigger_on": [
         "brainstorming"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "SCOUT": {
       "name": "SCOUT",
@@ -153,8 +155,8 @@
       "trigger_on": [
         "scan_github"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "OCULUS": {
       "name": "OCULUS",
@@ -164,8 +166,8 @@
       "trigger_on": [
         "visualize"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "BUILDER": {
       "name": "BUILDER",
@@ -175,8 +177,8 @@
       "trigger_on": [
         "new_project"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "PYTHIA": {
       "name": "PYTHIA",
@@ -190,8 +192,8 @@
         "model",
         "ask_oracle"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "LENS": {
       "name": "LENS",
@@ -207,8 +209,8 @@
         "metrics",
         "performance"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "MEMORY": {
       "name": "MEMORY",
@@ -224,8 +226,8 @@
         "knowledge",
         "learn"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "BRAIN": {
       "name": "BRAIN",
@@ -241,8 +243,8 @@
         "reason",
         "understand"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     },
     "CONDUCTOR": {
       "name": "CONDUCTOR",
@@ -257,8 +259,8 @@
         "manage",
         "control"
       ],
-      "status": "available",
-      "last_invoked": null
+      "status": "active",
+      "last_invoked": "2026-02-05T22:00:13.432031"
     }
   },
   "workflows": {
@@ -268,7 +270,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\autobuild.md",
       "slash_command": "/autobuild",
       "turbo_enabled": false,
-      "status": "available"
+      "status": "active"
     },
     "branding-protocol": {
       "name": "branding-protocol",
@@ -276,7 +278,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\branding-protocol.md",
       "slash_command": "/branding-protocol",
       "turbo_enabled": false,
-      "status": "available"
+      "status": "active"
     },
     "codemap-optimization": {
       "name": "codemap-optimization",
@@ -284,7 +286,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\codemap-optimization.md",
       "slash_command": "/codemap-optimization",
       "turbo_enabled": false,
-      "status": "available"
+      "status": "active"
     },
     "docker-mcp-setup": {
       "name": "docker-mcp-setup",
@@ -292,7 +294,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\docker-mcp-setup.md",
       "slash_command": "/docker-mcp-setup",
       "turbo_enabled": true,
-      "status": "available"
+      "status": "active"
     },
     "hc-autobuild": {
       "name": "hc-autobuild",
@@ -300,7 +302,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\hc-autobuild.md",
       "slash_command": "/hc-autobuild",
       "turbo_enabled": true,
-      "status": "available"
+      "status": "active"
     },
     "hcautobuild": {
       "name": "hcautobuild",
@@ -308,7 +310,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\hcautobuild.md",
       "slash_command": "/hcautobuild",
       "turbo_enabled": false,
-      "status": "available"
+      "status": "active"
     },
     "heady-sync": {
       "name": "heady-sync",
@@ -316,7 +318,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\heady-sync.md",
       "slash_command": "/heady-sync",
       "turbo_enabled": true,
-      "status": "available"
+      "status": "active"
     },
     "headysync-prep": {
       "name": "headysync-prep",
@@ -324,7 +326,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\headysync-prep.md",
       "slash_command": "/headysync-prep",
       "turbo_enabled": false,
-      "status": "available"
+      "status": "active"
     },
     "workspace-integration": {
       "name": "workspace-integration",
@@ -332,7 +334,7 @@
       "file_path": "C:\\Users\\erich\\Heady\\.windsurf\\workflows\\workspace-integration.md",
       "slash_command": "/workspace-integration",
       "turbo_enabled": true,
-      "status": "available"
+      "status": "active"
     }
   },
   "skills": {
@@ -340,7 +342,7 @@
       "name": "hc",
       "description": "Heady Conductor orchestration",
       "category": "orchestration",
-      "status": "available"
+      "status": "active"
     }
   },
   "services": {
@@ -349,7 +351,7 @@
       "type": "api",
       "endpoint": "http://localhost:3300",
       "port": 3300,
-      "status": "unknown",
+      "status": "healthy",
       "health_check_url": "http://localhost:3300/api/health"
     },
     "heady-frontend": {
@@ -373,7 +375,7 @@
       "type": "mcp",
       "endpoint": "stdio",
       "port": null,
-      "status": "unknown",
+      "status": "active",
       "health_check_url": null
     },
     "postgres": {
@@ -400,7 +402,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Brainstorm": {
       "name": "Brainstorm",
@@ -408,7 +410,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Clean_Sweep": {
       "name": "Clean_Sweep",
@@ -416,7 +418,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "consolidator": {
       "name": "consolidator",
@@ -424,7 +426,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Content_Generator": {
       "name": "Content_Generator",
@@ -432,7 +434,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Gap_Scanner": {
       "name": "Gap_Scanner",
@@ -440,7 +442,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Github_Scanner": {
       "name": "Github_Scanner",
@@ -448,7 +450,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Heady_Chain": {
       "name": "Heady_Chain",
@@ -456,7 +458,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Heady_Crypt": {
       "name": "Heady_Crypt",
@@ -464,7 +466,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "HuggingFace_Tool": {
       "name": "HuggingFace_Tool",
@@ -472,7 +474,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Hydrator": {
       "name": "Hydrator",
@@ -480,7 +482,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Optimizer": {
       "name": "Optimizer",
@@ -488,7 +490,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Security_Audit": {
       "name": "Security_Audit",
@@ -496,7 +498,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Tool_Learner": {
       "name": "Tool_Learner",
@@ -504,7 +506,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Visualizer": {
       "name": "Visualizer",
@@ -512,7 +514,7 @@
       "category": "general",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Natural_Observer": {
       "name": "Natural_Observer",
@@ -520,7 +522,7 @@
       "category": "Daemons",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Client": {
       "name": "Client",
@@ -528,7 +530,7 @@
       "category": "MCP",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Server": {
       "name": "Server",
@@ -536,7 +538,7 @@
       "category": "MCP",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Warp_Manager": {
       "name": "Warp_Manager",
@@ -544,7 +546,7 @@
       "category": "Network",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Auth_Protocol": {
       "name": "Auth_Protocol",
@@ -552,7 +554,7 @@
       "category": "Security",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "Key_Manager": {
       "name": "Key_Manager",
@@ -560,7 +562,7 @@
       "category": "Security",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     },
     "MCP_Auth": {
       "name": "MCP_Auth",
@@ -568,7 +570,7 @@
       "category": "Security",
       "description": null,
       "dependencies": null,
-      "status": "available"
+      "status": "active"
     }
   }
 }
