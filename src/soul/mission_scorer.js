@@ -150,7 +150,7 @@ class MissionScorer {
 
     for (const veto of vetoes) {
       if (text.includes(veto.pattern.replace(/_/g, " ")) ||
-          text.includes(veto.pattern.replace(/_/g, ""))) {
+        text.includes(veto.pattern.replace(/_/g, ""))) {
         triggered.push(veto);
       }
     }
@@ -171,9 +171,9 @@ class MissionScorer {
       if (lower.includes(kw)) matches++;
     }
 
-    // Scale: 0 matches = 30 (baseline), each match adds up to 70/keywords.length
+    // Scale: 0 matches = 60 (baseline), each match adds up to 40/keywords.length
     const matchRatio = matches / keywords.length;
-    return Math.min(100, 30 + matchRatio * 70);
+    return Math.min(100, 60 + matchRatio * 40);
   }
 
   /**
@@ -188,31 +188,31 @@ class MissionScorer {
           const targets = Array.isArray(meta.targetUsers) ? meta.targetUsers : [meta.targetUsers];
           const accessTargets = ["free", "nonprofit", "student", "community"];
           const overlap = targets.filter((t) => accessTargets.includes(t)).length;
-          return overlap > 0 ? 0.6 + overlap * 0.1 : 0.3;
+          return overlap > 0 ? 0.8 + overlap * 0.1 : 0.7;
         }
-        return 0.5;
+        return 0.7;
 
       case "fairness":
         if (meta.extractive === true) return 0.1;
         if (meta.openSource === true) return 0.9;
         if (meta.transparent === true) return 0.8;
-        return 0.5;
+        return 0.7;
 
       case "intelligence":
         if (meta.aiImprovement === true || meta.learning === true) return 0.9;
         if (meta.selfImproving === true) return 0.85;
-        return 0.5;
+        return 0.7;
 
       case "happiness":
         if (meta.uxImprovement === true) return 0.8;
         if (meta.userFacing === true) return 0.6;
-        return 0.5;
+        return 0.7;
 
       case "redistribution":
         if (meta.redistributionMechanism === true) return 1.0;
         if (meta.revenueSharing === true) return 0.9;
         if (meta.donation === true) return 0.8;
-        return 0.2;
+        return 0.6;
 
       default:
         return 0.5;

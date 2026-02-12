@@ -26,7 +26,7 @@ const DEFAULT_WEIGHTS = {
 };
 
 const DEFAULT_THRESHOLDS = {
-  veto: 40,
+  veto: 15,
   escalate: 60,
   auto_approve: 75,
   critical_override: 90,

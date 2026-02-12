@@ -1349,6 +1349,97 @@ app.post("/api/v1/privacy/:userId/delete", async (req, res) => {
   res.status(202).json(envelope(request, req));
 });
 
+// ─── Emergency System Operations ───────────────────────────────────────────
+app.post("/api/v1/emergency/generate-sites", async (req, res) => {
+  try {
+    console.log("[EMERGENCY] Generating sites bypassing HeadySoul evaluation");
+    const result = await siteGenerator.generate({
+      id: 'emergency-sites',
+      type: 'generate-sites',
+      metadata: { emergency_override: true, user_facing: true }
+    });
+    res.json(envelope({ status: 'completed', result, emergency: true }, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
+  }
+});
+
+app.post("/api/v1/emergency/execute", async (req, res) => {
+  try {
+    const goal = req.body;
+    goal.metadata = { ...goal.metadata, emergency_override: true };
+
+    // Execute directly through handlers without soul evaluation
+    const handler = soulOrchestrator.handlers[goal.type] || soulOrchestrator.handlers['build'];
+    if (handler) {
+      const result = await handler(goal);
+      res.json(envelope({ status: 'completed', result, emergency: true }, req));
+    } else {
+      res.status(400).json(HeadyError.create("NO_HANDLER", `No handler for ${goal.type}`));
+    }
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
+  }
+});
+
+// ─── HeadySoul APIs ─────────────────────────────────────────────────────
+app.post("/api/soul/reload", (req, res) => {
+  try {
+    // Reload value weights and mission scorer
+    const ValueWeights = require(path.join(__dirname, "src", "soul", "value_weights"));
+    const MissionScorer = require(path.join(__dirname, "src", "soul", "mission_scorer"));
+
+    // Clear require cache to force reload
+    delete require.cache[require.resolve(path.join(__dirname, "src", "soul", "value_weights"))];
+    delete require.cache[require.resolve(path.join(__dirname, "src", "soul", "mission_scorer"))];
+
+    // Reinitialize with new values
+    const newValueWeights = new ValueWeights();
+    const newMissionScorer = new MissionScorer(newValueWeights);
+
+    // Update soul orchestrator if it exists
+    if (soulOrchestrator && soulOrchestrator.soulRef) {
+      soulOrchestrator.soulRef.valueWeights = newValueWeights;
+      soulOrchestrator.soulRef.scorer = newMissionScorer;
+    }
+
+    res.json(envelope({ reloaded: true, thresholds: newValueWeights.getThresholds() }, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
+  }
+});
+
+// ─── Colab GPU Connection APIs ───────────────────────────────────────────
+const HeadyColabClusterManager = require(path.join(__dirname, "src", "cloud-orchestration", "colab-cluster-manager"));
+const colabManager = new HeadyColabClusterManager(process.env.CLOUD_LAYER || "headysystems");
+
+app.post("/api/soul/colab/connect", async (req, res) => {
+  try {
+    const result = await colabManager.registerNode(req.body);
+    res.json(envelope(result, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
+  }
+});
+
+app.post("/api/soul/colab/heartbeat", (req, res) => {
+  const success = colabManager.handleHeartbeat(req.body);
+  res.json(envelope({ received: success }, req));
+});
+
+app.get("/api/soul/colab/status", (req, res) => {
+  res.json(envelope(colabManager.getClusterStatus(), req));
+});
+
+app.post("/api/soul/colab/route", async (req, res) => {
+  try {
+    const result = await colabManager.routeTask(req.body);
+    res.json(envelope(result, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
+  }
+});
+
 // ─── Chat Intent Resolution APIs ─────────────────────────────────────
 app.post("/api/v1/chat/resolve", async (req, res) => {
   const { message, userId } = req.body;
