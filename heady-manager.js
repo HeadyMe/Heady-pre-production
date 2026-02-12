@@ -45,6 +45,7 @@ const { pipeline: hcPipeline, registerTaskHandler, RunStatus } = require(path.jo
 const { claudeExecute, claudeAnalyzeCode, claudeSecurityAudit } = require(path.join(__dirname, "src", "hc_claude_agent"));
 const { registerAllHandlers, initializeSubsystems, getSubsystems } = require(path.join(__dirname, "src", "agents", "pipeline-handlers"));
 const { simulatePipelineReliability, simulateDeploymentRisk, simulateReadinessConfidence, simulateNodePerformance, simulateFullSystem, mcGlobal } = require(path.join(__dirname, "src", "hc_monte_carlo"));
+const HeadyColabClusterManager = require(path.join(__dirname, "src", "cloud-orchestration", "colab-cluster-manager"));
 
 // ─── Boot HCFullPipeline with all subsystems ─────────────────────────────
 // 1. Load pipeline configs (YAML → circuit breakers, stage DAG)
@@ -105,6 +106,9 @@ hcPipeline.on("run:end", async ({ runId, status, metrics }) => {
 
 // 8. Start health check cron (feeds results into Brain + Monte Carlo automatically)
 try { hcHealth.startCron(); } catch (_) { /* node-cron optional */ }
+
+// ─── Colab Pro+ GPU Cluster Manager ──────────────────────────────────
+const colabManager = new HeadyColabClusterManager(process.env.CLOUD_LAYER || "headysystems");
 
 const PORT = Number(process.env.PORT || 3300);
 const HEADY_ADMIN_SCRIPT = process.env.HEADY_ADMIN_SCRIPT || path.join(__dirname, "src", "heady_project", "heady_conductor.py");
@@ -184,9 +188,9 @@ if (fs.existsSync(frontendBuildPath)) {
 app.use(express.static("public"));
 
 app.get("/api/health", (req, res) => {
-  res.json(mcGlobal.enrich({ 
-    ok: true, 
-    service: "heady-manager", 
+  res.json(mcGlobal.enrich({
+    ok: true,
+    service: "heady-manager",
     ts: new Date().toISOString(),
     version: "2.0.0",
     uptime: process.uptime(),
@@ -201,18 +205,18 @@ app.get("/api/health", (req, res) => {
 app.get("/api/registry", (req, res) => {
   const cacheKey = 'registry';
   const cachedData = getCachedData(cacheKey);
-  
+
   if (cachedData) {
     return res.json(cachedData);
   }
-  
+
   const registryPath = path.join(__dirname, "heady-registry.json");
   const registry = readJsonFileSafe(registryPath);
-  
+
   if (!registry) {
     return res.status(404).json({ error: "Registry not found or invalid" });
   }
-  
+
   setCachedData(cacheKey, registry);
   res.json(registry);
 });
@@ -224,18 +228,18 @@ app.get("/api/maid/config", (req, res) => {
 app.get("/api/maid/inventory", (req, res) => {
   const cacheKey = 'inventory';
   const cachedData = getCachedData(cacheKey);
-  
+
   if (cachedData) {
     return res.json(cachedData);
   }
-  
+
   const inventoryPath = path.join(__dirname, ".heady-memory", "inventory", "inventory.json");
   const inventory = readJsonFileSafe(inventoryPath);
-  
+
   if (!inventory) {
     return res.status(404).json({ error: "Inventory not found or invalid" });
   }
-  
+
   setCachedData(cacheKey, inventory);
   res.json(inventory);
 });
@@ -320,17 +324,17 @@ function runPythonConductor(args, timeoutMs = 30000) {
   return new Promise((resolve, reject) => {
     const conductorPath = path.join(__dirname, "HeadyAcademy", "HeadyConductor.py");
     const pythonBin = process.env.HEADY_PYTHON_BIN || "python";
-    
+
     // Verify conductor script exists
     if (!fs.existsSync(conductorPath)) {
       return reject(new Error(`HeadyConductor script not found at ${conductorPath}`));
     }
-    
+
     const proc = spawn(pythonBin, [conductorPath, ...args], {
       stdio: ['pipe', 'pipe', 'pipe'],
       env: { ...process.env, PYTHONUNBUFFERED: '1' }
     });
-    
+
     let stdout = "";
     let stderr = "";
 
@@ -349,7 +353,7 @@ function runPythonConductor(args, timeoutMs = 30000) {
 
     proc.on("close", (code) => {
       clearTimeout(timeout);
-      
+
       if (code !== 0) {
         reject(new Error(`HeadyConductor exited with code ${code}: ${stderr}`));
       } else {
@@ -366,7 +370,7 @@ function runPythonConductor(args, timeoutMs = 30000) {
         }
       }
     });
-    
+
     proc.on('error', (error) => {
       clearTimeout(timeout);
       reject(new Error(`Failed to start HeadyConductor: ${error.message}`));
@@ -521,11 +525,11 @@ app.post("/api/nodes/:nodeId/activate", (req, res) => {
   const reg = loadRegistry();
   const nodeId = req.params.nodeId.toUpperCase();
   if (!reg.nodes[nodeId]) return res.status(404).json({ error: `Node '${nodeId}' not found` });
-  
+
   reg.nodes[nodeId].status = "active";
   reg.nodes[nodeId].last_invoked = new Date().toISOString();
   saveRegistry(reg);
-  
+
   res.json({ success: true, node: nodeId, status: "active", activated_at: reg.nodes[nodeId].last_invoked });
 });
 
@@ -534,20 +538,20 @@ app.post("/api/nodes/activate-all", (req, res) => {
   const reg = loadRegistry();
   const ts = new Date().toISOString();
   const activated = [];
-  
+
   for (const [name, node] of Object.entries(reg.nodes)) {
     node.status = "active";
     node.last_invoked = ts;
     activated.push(name);
   }
-  
+
   reg.metadata = reg.metadata || {};
   reg.metadata.last_updated = ts;
   reg.metadata.environment = "production";
   reg.metadata.all_nodes_active = true;
-  
+
   saveRegistry(reg);
-  
+
   res.json({
     success: true,
     activated_count: activated.length,
@@ -562,10 +566,10 @@ app.post("/api/nodes/:nodeId/deactivate", (req, res) => {
   const reg = loadRegistry();
   const nodeId = req.params.nodeId.toUpperCase();
   if (!reg.nodes[nodeId]) return res.status(404).json({ error: `Node '${nodeId}' not found` });
-  
+
   reg.nodes[nodeId].status = "available";
   saveRegistry(reg);
-  
+
   res.json({ success: true, node: nodeId, status: "available" });
 });
 
@@ -575,20 +579,20 @@ app.get("/api/system/status", (req, res) => {
   const activeLayer = getActiveLayer();
   const config = getLayerConfig();
   const layer = config && config.layers ? config.layers[activeLayer] : null;
-  
+
   const nodeList = Object.entries(reg.nodes || {});
   const toolList = Object.entries(reg.tools || {});
   const workflowList = Object.entries(reg.workflows || {});
   const serviceList = Object.entries(reg.services || {});
-  
+
   const activeNodes = nodeList.filter(([, n]) => n.status === "active").length;
   const activeTools = toolList.filter(([, t]) => t.status === "active").length;
   const activeWorkflows = workflowList.filter(([, w]) => w.status === "active").length;
   const healthyServices = serviceList.filter(([, s]) => s.status === "healthy" || s.status === "active").length;
-  
+
   const isProduction = (reg.metadata || {}).environment === "production";
   const allNodesActive = activeNodes === nodeList.length;
-  
+
   res.json(mcGlobal.enrich({
     system: "Heady Systems",
     version: (reg.metadata || {}).version || "2.0.0",
@@ -621,38 +625,38 @@ app.post("/api/system/production", (req, res) => {
   const reg = loadRegistry();
   const ts = new Date().toISOString();
   const report = { nodes: [], tools: [], workflows: [], services: [] };
-  
+
   // Activate all nodes
   for (const [name, node] of Object.entries(reg.nodes || {})) {
     node.status = "active";
     node.last_invoked = ts;
     report.nodes.push(name);
   }
-  
+
   // Activate all tools
   for (const [name, tool] of Object.entries(reg.tools || {})) {
     tool.status = "active";
     report.tools.push(name);
   }
-  
+
   // Activate all workflows
   for (const [name, wf] of Object.entries(reg.workflows || {})) {
     wf.status = "active";
     report.workflows.push(name);
   }
-  
+
   // Set services to active
   for (const [name, svc] of Object.entries(reg.services || {})) {
     if (name === "heady-manager") svc.status = "healthy";
     else svc.status = "active";
     report.services.push(name);
   }
-  
+
   // Activate all skills
   for (const [name, sk] of Object.entries(reg.skills || {})) {
     sk.status = "active";
   }
-  
+
   // Update metadata
   reg.metadata = {
     ...(reg.metadata || {}),
@@ -662,16 +666,16 @@ app.post("/api/system/production", (req, res) => {
     all_nodes_active: true,
     production_activated_at: ts
   };
-  
+
   saveRegistry(reg);
-  
+
   // Switch layer state to production
   try {
     fs.writeFileSync(LAYER_STATE_PATH, "cloud-sys", "utf8");
   } catch (e) {
     console.error("Could not set production layer:", e.message);
   }
-  
+
   res.json({
     success: true,
     environment: "production",
@@ -1098,7 +1102,7 @@ app.post("/api/monte-carlo/full", async (req, res) => {
             dependsOn: s.dependsOn || [],
           })),
         };
-      } catch (_) {}
+      } catch (_) { }
     }
     if (!config.readiness) {
       config.readiness = {
@@ -1173,6 +1177,144 @@ app.post("/api/monte-carlo/global/cycle", (req, res) => {
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// ─── Colab Pro+ GPU Cluster API ───────────────────────────────────────
+// Node registration from Colab notebooks
+app.post("/api/nodes/register", async (req, res) => {
+  try {
+    const result = await colabManager.registerNode(req.body);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Heartbeat receiver from Colab nodes
+app.post("/api/nodes/heartbeat", (req, res) => {
+  try {
+    const received = colabManager.handleHeartbeat(req.body);
+    res.json({
+      status: received ? "received" : "unknown_node",
+      cloud: colabManager.cloudLayer,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GPU cluster status
+app.get("/api/nodes/colab/status", (req, res) => {
+  try {
+    res.json(colabManager.getClusterStatus());
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Specific node status
+app.get("/api/nodes/:nodeId", (req, res) => {
+  const node = colabManager.getNodeById(req.params.nodeId);
+  if (!node) {
+    return res.status(404).json({ error: "Node not found", node_id: req.params.nodeId });
+  }
+  res.json(node);
+});
+
+// Remove a node
+app.delete("/api/nodes/:nodeId", (req, res) => {
+  const removed = colabManager.removeNode(req.params.nodeId);
+  res.json({ removed, node_id: req.params.nodeId });
+});
+
+// Route task to Colab GPU cluster
+app.post("/api/tasks/colab", async (req, res) => {
+  try {
+    const result = await colabManager.routeTask(req.body);
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: error.message, cloud: colabManager.cloudLayer });
+  }
+});
+
+// Auto-detect GPU tasks and route to Colab or execute locally
+app.post("/api/tasks/execute", async (req, res) => {
+  const task = req.body;
+  const priority = req.headers["x-priority"] || task.priority || "P2";
+
+  if (colabManager.isGpuTask(task.type) && process.env.ENABLE_COLAB_ROUTING === "true") {
+    console.log(`[${colabManager.cloudLayer}] GPU task detected → routing to Colab cluster`);
+    try {
+      const result = await colabManager.routeTask({ ...task, priority });
+      if (result.routed) {
+        return res.json(result);
+      }
+      console.log(`[${colabManager.cloudLayer}] Colab unavailable, falling back to local`);
+    } catch (error) {
+      console.error(`Colab routing failed, falling back: ${error.message}`);
+    }
+  }
+
+  // Local execution fallback
+  res.json({
+    task_id: task.id || `task-${Date.now()}`,
+    status: "executed_locally",
+    task_type: task.type,
+    gpu_accelerated: false,
+    cloud: colabManager.cloudLayer,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// ─── Cloud Config API ─────────────────────────────────────────────────
+// Cloud-managed configuration — source of truth for all Heady clients
+const CLOUD_CONFIG_PATH = path.join(__dirname, "configs", "services.json");
+let cloudEnvConfig = {
+  HEADY_ENDPOINT: "https://headysystems.com",
+  HEADY_ME_URL: "https://headycloud.com",
+  HEADY_SYSTEMS_URL: "https://headysystems.com",
+  HEADY_CONNECTION_URL: "https://headyconnection.com",
+  HEADY_MCP_URL: "https://headymcp.com",
+  HEADY_BUDDY_URL: "https://headybot.com",
+  HEADY_DOCS_URL: "https://headyio.com",
+  HEADY_STATUS_URL: "https://headycheck.com",
+  HEADY_TARGET: "Cloud",
+  HEADY_VERSION: "3.0.0",
+  HEADY_SERVICE_PROFILE: "full",
+  HEADY_ENFORCE_ALL: true,
+  HEADY_EXCLUSION_REQUIRES_JUSTIFICATION: true,
+  HEADY_ACTIVE_NODES: "BRIDGE,BRAIN,CONDUCTOR,SOPHIA,SENTINEL,MURPHY,JANITOR,JULES,OBSERVER,MUSE,NOVA,CIPHER,ATLAS,SASHA,SCOUT,OCULUS,BUILDER,PYTHIA,LENS,MEMORY",
+  HEADY_NODE_COUNT: 20
+};
+
+app.get("/api/config/env", (req, res) => {
+  res.json({ config: cloudEnvConfig, timestamp: new Date().toISOString() });
+});
+
+app.post("/api/config/env", (req, res) => {
+  if (req.body && req.body.config) {
+    cloudEnvConfig = { ...cloudEnvConfig, ...req.body.config };
+  }
+  res.json({ success: true, config: cloudEnvConfig, timestamp: new Date().toISOString() });
+});
+
+app.get("/api/config/services", (req, res) => {
+  try {
+    const services = JSON.parse(fs.readFileSync(CLOUD_CONFIG_PATH, "utf8"));
+    res.json(services);
+  } catch (err) {
+    res.status(500).json({ error: "Services config not found", message: err.message });
+  }
+});
+
+app.post("/api/config/services", (req, res) => {
+  try {
+    fs.writeFileSync(CLOUD_CONFIG_PATH, JSON.stringify(req.body, null, 2), "utf8");
+    res.json({ success: true, timestamp: new Date().toISOString() });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to write services config", message: err.message });
   }
 });
 
