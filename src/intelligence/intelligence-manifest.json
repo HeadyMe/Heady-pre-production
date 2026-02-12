@@ -1,0 +1,141 @@
+{
+  "protocol": "Heady Full-Stack Intelligence Protocol",
+  "version": "1.2",
+  "codename": "ASAP-MAX",
+
+  "priorities": {
+    "P0": {
+      "label": "Critical Path",
+      "description": "Security/infra risk, production blockers — start NOW",
+      "speed_weight": 0.9,
+      "speed_mode": "MAX",
+      "max_stagnation_sec": 300,
+      "preemptive_reservation": true
+    },
+    "P1": {
+      "label": "High Impact",
+      "description": "Unblocks multiple tasks, user-facing features — start immediately after P0 clears",
+      "speed_weight": 0.8,
+      "speed_mode": "ON",
+      "max_stagnation_sec": 300,
+      "preemptive_reservation": false
+    },
+    "P2": {
+      "label": "Tech Debt",
+      "description": "Refactors, optimization — start when capacity available",
+      "speed_weight": 0.7,
+      "speed_mode": "OFF",
+      "max_stagnation_sec": 600,
+      "preemptive_reservation": false
+    },
+    "P3": {
+      "label": "Polish",
+      "description": "Docs, cosmetics — start when idle",
+      "speed_weight": 0.5,
+      "speed_mode": "OFF",
+      "max_stagnation_sec": 900,
+      "preemptive_reservation": false
+    }
+  },
+
+  "execution": {
+    "max_concurrency": 8,
+    "fair_access_minimum_pct": 20,
+    "zero_idle_backfill": true,
+    "recompute_on_completion": true,
+    "critical_path_reanalysis_interval_sec": 30,
+    "stagnation_check_interval_sec": 60,
+    "stagnation_limit_sec": 300,
+    "circular_dependency_policy": "break_lowest_priority_edge",
+    "preemptive_warmup": true,
+    "auto_crash_critical_path": true
+  },
+
+  "speed_modes": {
+    "MAX": {
+      "weight": 0.9,
+      "validation": "minimal",
+      "strategy": "fastest",
+      "skip_optional_steps": true,
+      "auto_add_agents": true
+    },
+    "ON": {
+      "weight": 0.8,
+      "validation": "balanced",
+      "strategy": "optimized",
+      "skip_optional_steps": false,
+      "auto_add_agents": false
+    },
+    "OFF": {
+      "weight": 0.7,
+      "validation": "thorough",
+      "strategy": "complete",
+      "skip_optional_steps": false,
+      "auto_add_agents": false
+    }
+  },
+
+  "repo_profiles": {
+    "fast_lane": {
+      "criteria": "high_coverage_low_coupling",
+      "default_speed": "MAX",
+      "validation": "minimal"
+    },
+    "slow_lane": {
+      "criteria": "legacy_cross_cutting",
+      "default_speed": "OFF",
+      "validation": "extra"
+    },
+    "hotspot": {
+      "criteria": "frequently_changed",
+      "default_speed": "ON",
+      "validation": "elevated_scrutiny",
+      "streamlined_tooling": true
+    }
+  },
+
+  "anti_stagnation": {
+    "timeout_sec": 300,
+    "actions": ["reassign", "escalate_priority", "add_agents", "skip_optional", "break_dependency"],
+    "max_retries": 3,
+    "escalation_chain": ["reassign", "escalate_priority", "force_complete"]
+  },
+
+  "channels": {
+    "required_count": 7,
+    "latency_targets_ms": {
+      "task_dispatch": 100,
+      "heartbeat": 5000,
+      "dag_recompute": 500,
+      "priority_update": 200,
+      "stagnation_check": 1000,
+      "speed_mode_switch": 150,
+      "learning_log": 2000
+    },
+    "pause_on_latency_miss": true,
+    "reroute_on_failure": true
+  },
+
+  "learning": {
+    "log_all_tasks": true,
+    "track_actual_duration": true,
+    "self_optimize_estimates": true,
+    "pattern_detection": true,
+    "feed_to_pattern_engine": true
+  },
+
+  "social_impact": {
+    "tag_all_tasks": true,
+    "wealth_redistribution": true,
+    "fair_access_enforced": true
+  },
+
+  "cloud_integration": {
+    "branded_domains_only": true,
+    "primary_api": "https://headysystems.com",
+    "cloud_layer": "https://headycloud.com",
+    "connection_layer": "https://headyconnection.com",
+    "mcp_protocol": "https://headymcp.com",
+    "health_monitor": "https://headycheck.com"
+  }
+}
