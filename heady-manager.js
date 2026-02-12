@@ -45,8 +45,14 @@ const { pipeline: hcPipeline, registerTaskHandler, RunStatus } = require(path.jo
 const { claudeExecute, claudeAnalyzeCode, claudeSecurityAudit } = require(path.join(__dirname, "src", "hc_claude_agent"));
 const { registerAllHandlers, initializeSubsystems, getSubsystems } = require(path.join(__dirname, "src", "agents", "pipeline-handlers"));
 const { simulatePipelineReliability, simulateDeploymentRisk, simulateReadinessConfidence, simulateNodePerformance, simulateFullSystem, mcGlobal } = require(path.join(__dirname, "src", "hc_monte_carlo"));
-const HeadyColabClusterManager = require(path.join(__dirname, "src", "cloud-orchestration", "colab-cluster-manager"));
-const HeadyIntelligenceEngine = require(path.join(__dirname, "src", "intelligence"));
+
+// ─── Deep Research Wave 1+2 Modules ──────────────────────────────────
+const { HeadyGateway, HeadyError, envelope } = require(path.join(__dirname, "src", "gateway"));
+const { HeadySessionManager } = require(path.join(__dirname, "src", "sessions"));
+const { DriftDetectionEngine } = require(path.join(__dirname, "src", "drift"));
+const { IntentResolver, ConfirmationPolicy } = require(path.join(__dirname, "src", "chat", "intent-resolver"));
+const { ConnectorRegistry } = require(path.join(__dirname, "src", "mcp", "connector-registry"));
+const { SoulOrchestrator } = require(path.join(__dirname, "src", "soul", "soul-orchestrator"));
 
 // ─── Boot HCFullPipeline with all subsystems ─────────────────────────────
 // 1. Load pipeline configs (YAML → circuit breakers, stage DAG)
@@ -107,13 +113,6 @@ hcPipeline.on("run:end", async ({ runId, status, metrics }) => {
 
 // 8. Start health check cron (feeds results into Brain + Monte Carlo automatically)
 try { hcHealth.startCron(); } catch (_) { /* node-cron optional */ }
-
-// ─── Colab Pro+ GPU Cluster Manager ──────────────────────────────────
-const colabManager = new HeadyColabClusterManager(process.env.CLOUD_LAYER || "headysystems");
-
-// ─── Intelligence Engine (Full-Stack Intelligence Protocol v1.2) ────────
-const intel = new HeadyIntelligenceEngine();
-intel.start();
 
 const PORT = Number(process.env.PORT || 3300);
 const HEADY_ADMIN_SCRIPT = process.env.HEADY_ADMIN_SCRIPT || path.join(__dirname, "src", "heady_project", "heady_conductor.py");
@@ -421,7 +420,7 @@ app.get("/api/layer", (req, res) => {
   res.json({
     active_layer: activeId,
     name: layer ? layer.name : "Unknown",
-    endpoint: layer ? layer.endpoint : "http://localhost:3300",
+    endpoint: layer ? layer.endpoint : "https://headysystems.com",
     icon: layer ? layer.icon : "?",
     color: layer ? layer.color : "White",
     description: layer ? layer.description : "",
@@ -606,7 +605,7 @@ app.get("/api/system/status", (req, res) => {
     active_layer: {
       id: activeLayer,
       name: layer ? layer.name : "Unknown",
-      endpoint: layer ? layer.endpoint : "http://localhost:3300"
+      endpoint: layer ? layer.endpoint : "https://headysystems.com"
     },
     uptime: process.uptime(),
     memory: process.memoryUsage(),
@@ -1185,94 +1184,6 @@ app.post("/api/monte-carlo/global/cycle", (req, res) => {
   }
 });
 
-// ─── Colab Pro+ GPU Cluster API ───────────────────────────────────────
-// Node registration from Colab notebooks
-app.post("/api/nodes/register", async (req, res) => {
-  try {
-    const result = await colabManager.registerNode(req.body);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Heartbeat receiver from Colab nodes
-app.post("/api/nodes/heartbeat", (req, res) => {
-  try {
-    const received = colabManager.handleHeartbeat(req.body);
-    res.json({
-      status: received ? "received" : "unknown_node",
-      cloud: colabManager.cloudLayer,
-      timestamp: new Date().toISOString()
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// GPU cluster status
-app.get("/api/nodes/colab/status", (req, res) => {
-  try {
-    res.json(colabManager.getClusterStatus());
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Specific node status
-app.get("/api/nodes/:nodeId", (req, res) => {
-  const node = colabManager.getNodeById(req.params.nodeId);
-  if (!node) {
-    return res.status(404).json({ error: "Node not found", node_id: req.params.nodeId });
-  }
-  res.json(node);
-});
-
-// Remove a node
-app.delete("/api/nodes/:nodeId", (req, res) => {
-  const removed = colabManager.removeNode(req.params.nodeId);
-  res.json({ removed, node_id: req.params.nodeId });
-});
-
-// Route task to Colab GPU cluster
-app.post("/api/tasks/colab", async (req, res) => {
-  try {
-    const result = await colabManager.routeTask(req.body);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message, cloud: colabManager.cloudLayer });
-  }
-});
-
-// Auto-detect GPU tasks and route to Colab or execute locally
-app.post("/api/tasks/execute", async (req, res) => {
-  const task = req.body;
-  const priority = req.headers["x-priority"] || task.priority || "P2";
-
-  if (colabManager.isGpuTask(task.type) && process.env.ENABLE_COLAB_ROUTING === "true") {
-    console.log(`[${colabManager.cloudLayer}] GPU task detected → routing to Colab cluster`);
-    try {
-      const result = await colabManager.routeTask({ ...task, priority });
-      if (result.routed) {
-        return res.json(result);
-      }
-      console.log(`[${colabManager.cloudLayer}] Colab unavailable, falling back to local`);
-    } catch (error) {
-      console.error(`Colab routing failed, falling back: ${error.message}`);
-    }
-  }
-
-  // Local execution fallback
-  res.json({
-    task_id: task.id || `task-${Date.now()}`,
-    status: "executed_locally",
-    task_type: task.type,
-    gpu_accelerated: false,
-    cloud: colabManager.cloudLayer,
-    timestamp: new Date().toISOString()
-  });
-});
-
 // ─── Cloud Config API ─────────────────────────────────────────────────
 // Cloud-managed configuration — source of truth for all Heady clients
 const CLOUD_CONFIG_PATH = path.join(__dirname, "configs", "services.json");
@@ -1323,279 +1234,328 @@ app.post("/api/config/services", (req, res) => {
   }
 });
 
-// ─── Intelligence Protocol v1.2 API ─────────────────────────────────────
+// ═══════════════════════════════════════════════════════════════════════
+// DEEP RESEARCH: GATEWAY, SESSIONS, DRIFT, CHAT, MCP APIs
+// ═══════════════════════════════════════════════════════════════════════
 
-// Full intelligence state
-app.get("/api/intelligence/state", (req, res) => {
-  res.json(intel.getState());
+// Initialize Deep Research modules
+const headyGateway = new HeadyGateway();
+const sessionManager = new HeadySessionManager();
+const driftEngine = new DriftDetectionEngine(__dirname);
+const intentResolver = new IntentResolver();
+const confirmationPolicy = new ConfirmationPolicy();
+const connectorRegistry = new ConnectorRegistry();
+
+// Initialize SoulOrchestrator — THE unified decision authority
+let intelligenceEngine;
+try { const IntelEngine = require(path.join(__dirname, "src", "intelligence")); intelligenceEngine = new IntelEngine(); } catch (e) { intelligenceEngine = null; }
+const soulOrchestrator = new SoulOrchestrator(
+  intelligenceEngine?.soul || null,
+  intelligenceEngine
+);
+
+// Register site generation handler
+const { SiteGenerator } = require(path.join(__dirname, "src", "site-generator"));
+const siteGenerator = new SiteGenerator(path.join(__dirname, "sites"));
+soulOrchestrator.registerHandler('site-gen', async (task) => siteGenerator.generate(task));
+soulOrchestrator.registerHandler('build', async (task) => {
+  if (task.metadata?.resources?.includes('sites/shared')) return siteGenerator.generateSharedAssets();
+  return { status: 'completed', type: 'build' };
+});
+soulOrchestrator.registerHandler('verify', async (task) => siteGenerator.verifySites());
+
+// Start orchestrator + background processes
+soulOrchestrator.start();
+if (intelligenceEngine) intelligenceEngine.start();
+driftEngine.startPeriodicScan();
+connectorRegistry.startHealthChecks();
+
+// ─── Gateway Stats ───────────────────────────────────────────────────
+app.get("/api/v1/gateway/stats", (req, res) => {
+  res.json(envelope(headyGateway.getStats(), req));
 });
 
-// Submit task to intelligence engine
-app.post("/api/intelligence/tasks", (req, res) => {
+// ─── Session APIs ────────────────────────────────────────────────────
+app.post("/api/v1/sessions", (req, res) => {
+  const session = sessionManager.createSession(req.body);
+  res.status(201).json(envelope(session, req));
+});
+
+app.get("/api/v1/sessions/:id", (req, res) => {
+  const session = sessionManager.getSession(req.params.id);
+  if (!session) return res.status(404).json(HeadyError.notFound(`session:${req.params.id}`));
+  res.json(envelope(session, req));
+});
+
+app.post("/api/v1/sessions/:id/messages", (req, res) => {
+  const session = sessionManager.t1.addMessage(req.params.id, req.body);
+  if (!session) return res.status(404).json(HeadyError.notFound(`session:${req.params.id}`));
+  res.json(envelope({ messageCount: session.conversationHistory.length }, req));
+});
+
+app.post("/api/v1/sessions/:id/actions", (req, res) => {
+  const action = sessionManager.t1.addPendingAction(req.params.id, req.body);
+  if (!action) return res.status(404).json(HeadyError.notFound(`session:${req.params.id}`));
+  res.status(201).json(envelope(action, req));
+});
+
+app.post("/api/v1/sessions/:id/actions/:actionId/approve", (req, res) => {
+  const action = sessionManager.t1.approvePendingAction(req.params.id, req.params.actionId);
+  if (!action) return res.status(404).json(HeadyError.notFound(`action:${req.params.actionId}`));
+  res.json(envelope(action, req));
+});
+
+app.post("/api/v1/sessions/:id/actions/:actionId/reject", (req, res) => {
+  const action = sessionManager.t1.rejectPendingAction(req.params.id, req.params.actionId);
+  if (!action) return res.status(404).json(HeadyError.notFound(`action:${req.params.actionId}`));
+  res.json(envelope(action, req));
+});
+
+app.post("/api/v1/sessions/:id/promote", (req, res) => {
+  const ok = sessionManager.promoteToT2(req.params.id);
+  if (!ok) return res.status(404).json(HeadyError.notFound(`session:${req.params.id}`));
+  res.json(envelope({ promoted: true, tier: "t2" }, req));
+});
+
+app.post("/api/v1/sessions/:id/memory-proposal", (req, res) => {
+  const proposal = sessionManager.proposeMemory(req.params.id, req.body);
+  res.status(201).json(envelope(proposal, req));
+});
+
+app.get("/api/v1/sessions/:id/summary", (req, res) => {
+  const summary = sessionManager.generateSummary(req.params.id);
+  if (!summary) return res.status(404).json(HeadyError.notFound(`session:${req.params.id}`));
+  res.json(envelope(summary, req));
+});
+
+app.delete("/api/v1/sessions/:id", async (req, res) => {
+  const summary = await sessionManager.endSession(req.params.id);
+  res.json(envelope({ ended: true, summary }, req));
+});
+
+app.get("/api/v1/sessions/stats/overview", (req, res) => {
+  res.json(envelope(sessionManager.getStats(), req));
+});
+
+// ─── GDPR / Privacy APIs ────────────────────────────────────────────
+app.get("/api/v1/privacy/:userId/export", async (req, res) => {
+  const format = req.query.format || "json";
+  const data = await sessionManager.exportUserData(req.params.userId, format);
+  res.json(envelope(data, req));
+});
+
+app.post("/api/v1/privacy/:userId/delete", async (req, res) => {
+  const request = await sessionManager.requestDeletion(req.params.userId);
+  res.status(202).json(envelope(request, req));
+});
+
+// ─── Chat Intent Resolution APIs ─────────────────────────────────────
+app.post("/api/v1/chat/resolve", async (req, res) => {
+  const { message, userId } = req.body;
+  if (!message) return res.status(400).json(HeadyError.create("MISSING_MESSAGE", "message field required"));
+  const result = await intentResolver.resolve(message, { userId });
+  res.json(envelope(result, req));
+});
+
+app.post("/api/v1/chat/learn", (req, res) => {
+  const { userId, input, skill, params } = req.body;
+  intentResolver.learnPreference(userId, input, skill, params);
+  res.json(envelope({ learned: true }, req));
+});
+
+app.get("/api/v1/chat/stats", (req, res) => {
+  res.json(envelope(intentResolver.getStats(), req));
+});
+
+app.get("/api/v1/chat/confirmation-policy", (req, res) => {
+  res.json(envelope(confirmationPolicy.policies, req));
+});
+
+app.post("/api/v1/chat/pre-approve", (req, res) => {
+  const { userId, category } = req.body;
+  const result = confirmationPolicy.preApprove(userId, category);
+  res.json(envelope(result, req));
+});
+
+// ─── Drift Detection APIs ────────────────────────────────────────────
+app.get("/api/v1/drift/latest", (req, res) => {
+  const report = driftEngine.getLatestReport();
+  if (!report) return res.json(envelope({ status: "no_scans_yet" }, req));
+  res.json(envelope(report, req));
+});
+
+app.get("/api/v1/drift/history", (req, res) => {
+  res.json(envelope({ reports: driftEngine.getHistory().slice(-20) }, req));
+});
+
+app.get("/api/v1/drift/trend", (req, res) => {
+  res.json(envelope(driftEngine.getTrend(), req));
+});
+
+app.post("/api/v1/drift/scan", async (req, res) => {
   try {
-    const result = intel.submitTask(req.body);
-    res.json({ success: true, ...result });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const report = await driftEngine.runFullScan();
+    res.json(envelope(report, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
   }
 });
 
-// Complete a task
-app.post("/api/intelligence/tasks/:taskId/complete", (req, res) => {
-  const result = intel.completeTask(req.params.taskId, req.body.result || {});
-  if (!result) return res.status(404).json({ error: "Task not found" });
-  res.json({ success: true, task: result });
+// ─── MCP Connector Registry APIs ─────────────────────────────────────
+app.post("/api/v1/mcp/connectors/register", (req, res) => {
+  const result = connectorRegistry.register(req.body);
+  if (!result.success) return res.status(400).json(envelope(result, req));
+  res.status(201).json(envelope(result, req));
 });
 
-// Fail a task
-app.post("/api/intelligence/tasks/:taskId/fail", (req, res) => {
-  const result = intel.scheduler.failTask(req.params.taskId, req.body.error || "unknown");
-  if (!result) return res.status(404).json({ error: "Task not found" });
-  res.json({ success: true, task: result });
+app.get("/api/v1/mcp/connectors", (req, res) => {
+  const list = connectorRegistry.listConnectors(req.query);
+  res.json(envelope({ connectors: list, total: list.length }, req));
 });
 
-// Reprioritize a task
-app.post("/api/intelligence/tasks/:taskId/reprioritize", (req, res) => {
-  const { priority } = req.body;
-  if (!["P0", "P1", "P2", "P3"].includes(priority)) {
-    return res.status(400).json({ error: "Invalid priority. Use P0-P3" });
-  }
-  const result = intel.scheduler.reprioritize(req.params.taskId, priority);
-  if (!result) return res.status(404).json({ error: "Task not found" });
-  res.json({ success: true, task: result });
+app.get("/api/v1/mcp/connectors/dashboard", (req, res) => {
+  res.json(envelope(connectorRegistry.getDashboard(), req));
 });
 
-// Get all tasks
-app.get("/api/intelligence/tasks", (req, res) => {
-  const tasks = intel.scheduler.getAllTasks();
-  const state = intel.scheduler.getState();
-  res.json({ tasks, state });
+app.get("/api/v1/mcp/connectors/:id", (req, res) => {
+  const connector = connectorRegistry.getConnector(req.params.id);
+  if (!connector) return res.status(404).json(HeadyError.notFound(`connector:${req.params.id}`));
+  res.json(envelope(connector, req));
 });
 
-// Get ready tasks (dependencies satisfied)
-app.get("/api/intelligence/tasks/ready", (req, res) => {
-  res.json({ ready: intel.scheduler.getReadyTasks() });
+app.delete("/api/v1/mcp/connectors/:id", (req, res) => {
+  const result = connectorRegistry.deregister(req.params.id);
+  if (!result.success) return res.status(404).json(envelope(result, req));
+  res.status(204).end();
 });
 
-// Get critical path
-app.get("/api/intelligence/critical-path", (req, res) => {
-  const criticalPath = intel.scheduler.criticalPath;
-  const tasks = criticalPath.map((id) => intel.scheduler.tasks.get(id)).filter(Boolean);
-  res.json({ critical_path: criticalPath, tasks, length: criticalPath.length });
+app.put("/api/v1/mcp/connectors/:id/heartbeat", (req, res) => {
+  const result = connectorRegistry.heartbeat(req.params.id);
+  if (!result.success) return res.status(404).json(envelope(result, req));
+  res.json(envelope(result, req));
 });
 
-// Trigger DAG recompute
-app.post("/api/intelligence/dag/recompute", (req, res) => {
-  const result = intel.scheduler.recomputeDAG();
-  res.json({ success: true, ...result });
+app.get("/api/v1/mcp/connectors/:id/capabilities", (req, res) => {
+  const caps = connectorRegistry.getCapabilities(req.params.id);
+  if (!caps) return res.status(404).json(HeadyError.notFound(`connector:${req.params.id}`));
+  res.json(envelope({ capabilities: caps }, req));
 });
 
-// Allocator state + trigger allocation
-app.get("/api/intelligence/allocator", (req, res) => {
-  res.json(intel.allocator.getState());
+app.post("/api/v1/mcp/connectors/:id/invoke/:capability", async (req, res) => {
+  const result = await connectorRegistry.invokeCapability(
+    req.params.id, req.params.capability, req.body, { traceId: req.headers['x-heady-trace-id'] }
+  );
+  if (!result.success) return res.status(400).json(envelope(result, req));
+  res.json(envelope(result, req));
 });
 
-app.post("/api/intelligence/allocator/run", (req, res) => {
-  const result = intel.allocator.allocate();
-  res.json({ success: true, ...result });
+// ─── SoulOrchestrator APIs ────────────────────────────────────────────
+app.get("/api/v1/orchestrator/state", (req, res) => {
+  res.json(envelope(soulOrchestrator.getState(), req));
 });
 
-// Register agent
-app.post("/api/intelligence/agents", (req, res) => {
-  const { agent_id, capabilities } = req.body;
-  if (!agent_id) return res.status(400).json({ error: "agent_id required" });
-  const agent = intel.allocator.registerAgent(agent_id, capabilities || {});
-  res.json({ success: true, agent });
+app.get("/api/v1/orchestrator/history", (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+  res.json(envelope({ workloads: soulOrchestrator.getHistory(limit) }, req));
 });
 
-// Speed controller state
-app.get("/api/intelligence/speed", (req, res) => {
-  res.json(intel.speedController.getState());
-});
-
-// Force speed mode on task
-app.post("/api/intelligence/speed/:taskId", (req, res) => {
-  const { mode } = req.body;
-  if (!["MAX", "ON", "OFF"].includes(mode)) {
-    return res.status(400).json({ error: "Invalid mode. Use MAX, ON, or OFF" });
-  }
-  intel.speedController.speedOverrides.set(req.params.taskId, mode);
-  const changes = intel.speedController.evaluateAll();
-  res.json({ success: true, changes });
-});
-
-// Crash critical path
-app.post("/api/intelligence/speed/crash", (req, res) => {
-  const actions = intel.speedController.crashIfNeeded();
-  res.json({ success: true, actions: actions || [] });
-});
-
-// Critical path monitor state
-app.get("/api/intelligence/monitor", (req, res) => {
-  res.json(intel.criticalPathMonitor.getState());
-});
-
-// Trigger manual analysis cycle
-app.post("/api/intelligence/monitor/analyze", (req, res) => {
-  const snapshot = intel.criticalPathMonitor.analyze();
-  res.json({ success: true, snapshot });
-});
-
-// Watchdog state
-app.get("/api/intelligence/watchdog", (req, res) => {
-  res.json(intel.watchdog.getState());
-});
-
-// Trigger manual watchdog check
-app.post("/api/intelligence/watchdog/check", (req, res) => {
-  const actions = intel.watchdog.check();
-  res.json({ success: true, actions });
-});
-
-// Record channel latency
-app.post("/api/intelligence/watchdog/latency", (req, res) => {
-  const { channel, latency_ms } = req.body;
-  if (!channel || latency_ms === undefined) {
-    return res.status(400).json({ error: "channel and latency_ms required" });
-  }
-  intel.watchdog.recordLatency(channel, latency_ms);
-  res.json({ success: true, channel, latency_ms });
-});
-
-// Repo indexer state
-app.get("/api/intelligence/repos", (req, res) => {
-  res.json(intel.repoIndexer.getState());
-});
-
-// Index a repo
-app.post("/api/intelligence/repos/index", (req, res) => {
-  const { repo_id, files } = req.body;
-  if (!repo_id || !files) return res.status(400).json({ error: "repo_id and files required" });
-  const result = intel.repoIndexer.indexRepo(repo_id, files);
-  res.json({ success: true, repo: result });
-});
-
-// Get file speed recommendation
-app.get("/api/intelligence/repos/speed", (req, res) => {
-  const filePath = req.query.file;
-  if (!filePath) return res.status(400).json({ error: "file query param required" });
-  res.json(intel.repoIndexer.getFileSpeedRecommendation(filePath));
-});
-
-// Estimator stats
-app.get("/api/intelligence/estimator", (req, res) => {
-  res.json(intel.repoIndexer.getEstimatorStats());
-});
-
-// Learning log
-app.get("/api/intelligence/learning", (req, res) => {
-  const limit = parseInt(req.query.limit) || 100;
-  res.json({ log: intel.scheduler.getLearningLog(limit) });
-});
-
-// Intelligence manifest
-app.get("/api/intelligence/manifest", (req, res) => {
+app.post("/api/v1/orchestrator/execute", async (req, res) => {
   try {
-    const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "intelligence", "intelligence-manifest.json"), "utf8"));
-    res.json(manifest);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const goal = req.body;
+    if (!goal || (!goal.type && !goal.description)) {
+      return res.status(400).json(HeadyError.create("INVALID_GOAL", "Goal must have type or description"));
+    }
+    const report = await soulOrchestrator.executeGoal(goal);
+    res.json(envelope(report, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
   }
 });
 
-// ─── HeadySoul Governance API ─────────────────────────────────────────
-
-// Full HeadySoul state
-app.get("/api/soul/state", (req, res) => {
-  res.json(intel.soul.getState());
-});
-
-// Evaluate a task for mission alignment
-app.post("/api/soul/evaluate", async (req, res) => {
+app.post("/api/v1/orchestrator/execute-many", async (req, res) => {
   try {
-    const decision = await intel.soul.evaluateTask(req.body);
-    res.json(decision);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const goals = req.body.goals;
+    if (!goals || !Array.isArray(goals)) {
+      return res.status(400).json(HeadyError.create("INVALID_GOALS", "Body must contain goals array"));
+    }
+    const report = await soulOrchestrator.executeGoals(goals);
+    res.json(envelope(report, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
   }
 });
 
-// Filter strategies by mission alignment
-app.post("/api/soul/filter-strategies", async (req, res) => {
+app.post("/api/v1/orchestrator/generate-sites", async (req, res) => {
   try {
-    const { strategies, context } = req.body;
-    if (!strategies) return res.status(400).json({ error: "strategies array required" });
-    const result = await intel.soul.filterStrategies(strategies, context || {});
-    res.json(result);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const report = await soulOrchestrator.executeGoal({
+      type: 'generate-sites',
+      description: 'Generate all 8 branded domain websites',
+      priority: 'P0',
+      metadata: { user_facing: true }
+    });
+    res.json(envelope(report, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
   }
 });
 
-// Audit a pipeline run
-app.get("/api/soul/audit", (req, res) => {
-  const runId = req.query.run_id || null;
-  res.json(intel.soul.auditPipelineRun(runId));
+app.get("/api/v1/sites/status", (req, res) => {
+  res.json(envelope(siteGenerator.getGeneratedSites(), req));
 });
 
-// Full alignment report
-app.get("/api/soul/report", (req, res) => {
-  res.json(intel.soul.generateAlignmentReport());
+// ─── Domain-based website serving ────────────────────────────────────
+const SITES_PATH = path.join(__dirname, "sites");
+const SITE_NAMES = ['headysystems', 'headybuddy', 'headycheck', 'headyio', 'headymcp', 'headybot', 'headycloud', 'headyconnection'];
+const domainSiteMap = {
+  'headysystems.com': 'headysystems',
+  'headybuddy.org': 'headybuddy',
+  'headycheck.com': 'headycheck',
+  'headyio.com': 'headyio',
+  'headymcp.com': 'headymcp',
+  'headybot.com': 'headybot',
+  'headycloud.com': 'headycloud',
+  'headyconnection.com': 'headyconnection',
+};
+
+// Path-based access: /sites/:siteName serves the site regardless of hostname
+app.get('/sites/:siteName', (req, res) => {
+  const siteName = req.params.siteName.replace(/\.(com|org)$/, '');
+  if (!SITE_NAMES.includes(siteName)) return res.status(404).json({ error: 'Unknown site', available: SITE_NAMES });
+  const indexPath = path.join(SITES_PATH, siteName, 'index.html');
+  if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
+  res.status(404).json({ error: 'Site not generated yet. POST /api/v1/orchestrator/generate-sites to build.' });
 });
 
-// Get escalation queue
-app.get("/api/soul/escalations", (req, res) => {
-  res.json(intel.soul.getEscalationQueue());
-});
-
-// Record human override
-app.post("/api/soul/override", (req, res) => {
-  const { task_id, decision, reason } = req.body;
-  if (!task_id || !decision) {
-    return res.status(400).json({ error: "task_id and decision (approve/veto) required" });
-  }
-  const result = intel.soul.recordOverride(task_id, decision, reason || "");
-  res.json({ success: true, override: result });
-});
-
-// Get decision log
-app.get("/api/soul/decisions", (req, res) => {
-  const limit = parseInt(req.query.limit) || 50;
-  const vetoed = req.query.vetoed === "true" ? true : req.query.vetoed === "false" ? false : undefined;
-  res.json({ decisions: intel.soul.logger.getDecisions({ limit, vetoed }) });
-});
-
-// Get overrides history
-app.get("/api/soul/overrides", (req, res) => {
-  const limit = parseInt(req.query.limit) || 50;
-  res.json({ overrides: intel.soul.logger.getOverrides(limit) });
-});
-
-// Connect Colab GPU node for ML scoring
-app.post("/api/soul/colab/connect", async (req, res) => {
-  const { url } = req.body;
-  if (!url) return res.status(400).json({ error: "url required" });
-  const result = await intel.soul.connectColab(url);
-  res.json({ success: true, ...result });
-});
-
-// Get value weights
-app.get("/api/soul/values", (req, res) => {
-  res.json({
-    weights: intel.soul.valueWeights.getWeights(),
-    thresholds: intel.soul.valueWeights.getThresholds(),
-    sacred_geometry: intel.soul.valueWeights.sacredGeometry,
+// Site index: list all available sites with links
+app.get('/sites', (req, res) => {
+  const sites = SITE_NAMES.map(name => {
+    const indexPath = path.join(SITES_PATH, name, 'index.html');
+    const exists = fs.existsSync(indexPath);
+    return {
+      name,
+      domain: Object.entries(domainSiteMap).find(([, v]) => v === name)?.[0],
+      path: `/sites/${name}`,
+      generated: exists,
+      sizeBytes: exists ? fs.statSync(indexPath).size : 0
+    };
   });
+  res.json({ sites, total: sites.length, generated: sites.filter(s => s.generated).length });
 });
 
-// HeadySoul config (YAML)
-app.get("/api/soul/config", (req, res) => {
-  try {
-    const config = fs.readFileSync(path.join(__dirname, "configs", "heady-soul.yaml"), "utf8");
-    res.type("text/yaml").send(config);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+// Domain-based routing (production — when DNS points domains here)
+app.use((req, res, next) => {
+  const host = req.headers['x-heady-domain'] || req.hostname || '';
+  const siteDir = domainSiteMap[host];
+  if (siteDir && !req.path.startsWith('/api/') && !req.path.startsWith('/sites')) {
+    const sitePath = path.join(SITES_PATH, siteDir);
+    if (fs.existsSync(sitePath)) {
+      const filePath = path.join(sitePath, req.path === '/' ? 'index.html' : req.path);
+      if (fs.existsSync(filePath)) return res.sendFile(filePath);
+      const indexPath = path.join(sitePath, 'index.html');
+      if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
+    }
   }
+  next();
 });
 
 // 404 handler
@@ -1630,16 +1590,33 @@ const server = app.listen(PORT, () => {
   console.log(`${c}${b}  ║${r}  ${g}●${r} ${w}Supervisor:${r}   ${m}${agentCount} agents${r} registered                          ${c}${b}║${r}`);
   console.log(`${c}${b}  ║${r}  ${g}●${r} ${w}Subsystems:${r}   ${d}Brain ┃ Checkpoint ┃ Readiness ┃ Health${r}     ${c}${b}║${r}`);
   console.log(`${c}${b}  ║${r}  ${g}●${r} ${w}Monte Carlo:${r}  ${y}ALWAYS-ON${r} ${d}┃ Pipeline ┃ Deploy ┃ Ready ┃ Nodes${r}${c}${b}║${r}`);
+  console.log(`${c}${b}  ║${r}  ${g}●${r} ${w}Orchestrator:${r} ${y}SoulOrchestrator v2.0${r} ${d}┃ DAG ┃ Parallel${r}      ${c}${b}║${r}`);
+  console.log(`${c}${b}  ║${r}  ${g}●${r} ${w}Modules:${r}      ${d}Gateway ┃ Sessions ┃ Drift ┃ Chat ┃ MCP${r}  ${c}${b}║${r}`);
   console.log(`${c}${b}  ║${r}  ${g}●${r} ${w}Agents:${r}       ${d}${agentList.substring(0, 46)}${r}${" ".repeat(Math.max(0, 46 - agentList.substring(0, 46).length))}${c}${b}║${r}`);
   console.log(`${c}${b}  ╚══════════════════════════════════════════════════════════════════╝${r}`);
   console.log("");
+
+  // Auto-generate all sites on startup via SoulOrchestrator
+  soulOrchestrator.executeGoal({
+    type: 'generate-sites',
+    description: 'Generate all 8 branded domain websites',
+    priority: 'P0',
+    metadata: { user_facing: true }
+  }).then(report => {
+    console.log(`[SoulOrchestrator] Sites generated: ${report.completed}/${report.totalTasks} tasks, ${report.utilization}% utilization`);
+  }).catch(err => {
+    console.error('[SoulOrchestrator] Site generation error:', err.message);
+  });
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
   mcGlobal.stopAutoRun();
-  intel.stop();
+  soulOrchestrator.stop();
+  driftEngine.stopPeriodicScan?.();
+  connectorRegistry.stopHealthChecks?.();
+  if (intelligenceEngine) intelligenceEngine.stop();
   server.close(() => {
     console.log('Process terminated');
   });
@@ -1648,7 +1625,10 @@ process.on('SIGTERM', () => {
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully');
   mcGlobal.stopAutoRun();
-  intel.stop();
+  soulOrchestrator.stop();
+  driftEngine.stopPeriodicScan?.();
+  connectorRegistry.stopHealthChecks?.();
+  if (intelligenceEngine) intelligenceEngine.stop();
   server.close(() => {
     console.log('Process terminated');
   });

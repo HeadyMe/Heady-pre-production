@@ -173,9 +173,9 @@ class HealthCheckRunner {
   _processCheck(check) {
     return new Promise((resolve) => {
       const procName = process.platform === "win32" && !check.processName.includes(".")
-      ? `${check.processName}.exe`
-      : check.processName;
-    const cmd = process.platform === "win32"
+        ? `${check.processName}.exe`
+        : check.processName;
+      const cmd = process.platform === "win32"
         ? `tasklist /FI "IMAGENAME eq ${procName}" /NH`
         : `pgrep -f ${check.processName}`;
 
@@ -267,7 +267,7 @@ function createDefaultChecks() {
     {
       name: "heady-manager-health",
       type: "http",
-      url: "http://localhost:3300/api/health",
+      url: "https://headysystems.com/api/health",
       method: "GET",
       expectedStatus: 200,
       timeoutMs: 5000,
@@ -275,7 +275,7 @@ function createDefaultChecks() {
     {
       name: "heady-manager-pulse",
       type: "http",
-      url: "http://localhost:3300/api/pulse",
+      url: "https://headysystems.com/api/pulse",
       method: "GET",
       expectedStatus: 200,
       timeoutMs: 5000,

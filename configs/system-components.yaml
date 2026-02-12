@@ -169,7 +169,7 @@ websites:
 
   - name: heady-dashboard
     role: Operations dashboard
-    endpoint: http://localhost:3300
+    endpoint: https://headysystems.com
     deployment: local + render
     criticality: high
 

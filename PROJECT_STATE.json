@@ -61,7 +61,7 @@
   "orchestration": {
     "primary_engine": "hb",
     "manager_port": 3300,
-    "manager_health": "http://localhost:3300/api/health",
+    "manager_health": "https://headysystems.com/api/health",
     "locking_enabled": true,
     "conflict_prevention": true
   },

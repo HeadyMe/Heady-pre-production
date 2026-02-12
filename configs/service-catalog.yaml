@@ -27,7 +27,7 @@ services:
     type: web
     skills: [api-gateway, mcp-protocol, static-serving, rate-limiting, auth]
     tools: [express, helmet, compression, ws]
-    endpoint: http://localhost:3300
+    endpoint: https://headysystems.com
     healthCheck: /api/health
     criticality: critical
     owner: system

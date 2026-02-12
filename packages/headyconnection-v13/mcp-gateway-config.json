@@ -1,15 +1,17 @@
 {
   "allowHosts": [
-    "127.0.0.1",
-    "localhost"
+    "headysystems.com",
+    "headymcp.com",
+    "headyconnection.com"
   ],
   "allowOrigins": [
-    "http://127.0.0.1",
-    "http://localhost"
+    "https://headysystems.com",
+    "https://headymcp.com",
+    "https://headyconnection.com"
   ],
-  "bind": "127.0.0.1",
+  "bind": "0.0.0.0",
   "jwt": {
-    "audience": "app.headysystems.com",
+    "audience": "headysystems.com",
     "issuer": "headysystems.com",
     "mode": "hs256",
     "secretEnv": "MCP_GATEWAY_JWT_SECRET"

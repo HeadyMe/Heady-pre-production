@@ -29,12 +29,12 @@ const CONFIG = {
   x: 20, // Right side padding
   y: 100, // Top padding
   opacity: 0.95,
-  headyManagerUrl: 'http://localhost:3300'
+  headyManagerUrl: 'https://headysystems.com'
 };
 
 function createWindow() {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
-  
+
   mainWindow = new BrowserWindow({
     width: CONFIG.width,
     height: CONFIG.height,
@@ -78,7 +78,7 @@ function createWindow() {
 
 function createTray() {
   tray = new Tray(path.join(__dirname, 'assets', 'tray-icon.png'));
-  
+
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Show HeadyBuddy',
@@ -119,7 +119,7 @@ function createTray() {
 
   tray.setToolTip('HeadyBuddy - Your AI Companion');
   tray.setContextMenu(contextMenu);
-  
+
   tray.on('click', () => {
     mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
   });
@@ -152,7 +152,7 @@ ipcMain.handle('close-window', () => {
 app.whenReady().then(() => {
   createWindow();
   createTray();
-  
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();

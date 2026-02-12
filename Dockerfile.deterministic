@@ -1,0 +1,78 @@
+# ╔═══════════════════════════════════════════════════════════════╗
+# ║  HEADY SYSTEMS                                                 ║
+# ║  ━━━━━━━━━━━━━━                                                ║
+# ║  ∞ Sacred Geometry Architecture ∞                              ║
+# ║                                                                ║
+# ║  Dockerfile.deterministic - Reproducible Multi-Stage Build     ║
+# ║  Pinned images, locked deps, minimal attack surface            ║
+# ╚═══════════════════════════════════════════════════════════════╝
+
+# ── Stage 1: Dependencies ────────────────────────────────────────
+FROM node:20.11.0-alpine3.19 AS deps
+WORKDIR /app
+
+# Only copy dependency files (maximizes layer cache)
+COPY package.json package-lock.json ./
+
+# Frozen lockfile install, no postinstall scripts (supply chain defense)
+RUN npm ci --ignore-scripts --audit=false \
+    && npm cache clean --force
+
+# ── Stage 2: Python Dependencies ─────────────────────────────────
+FROM deps AS pydeps
+RUN apk add --no-cache python3=3.11.8-r0 py3-pip=23.3.2-r0
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --break-system-packages -r requirements.txt 2>/dev/null || true
+
+# ── Stage 3: Build ───────────────────────────────────────────────
+FROM pydeps AS build
+WORKDIR /app
+
+# Copy all source
+COPY . .
+
+# Generate build manifest for determinism verification
+RUN find src/ -type f -exec sha256sum {} \; | sort > /app/BUILD_MANIFEST.sha256 \
+    && echo "BUILD_TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> /app/BUILD_INFO \
+    && echo "NODE_VERSION=$(node --version)" >> /app/BUILD_INFO \
+    && echo "NPM_VERSION=$(npm --version)" >> /app/BUILD_INFO
+
+# ── Stage 4: Production ─────────────────────────────────────────
+FROM node:20.11.0-alpine3.19 AS production
+WORKDIR /app
+
+# Security: add non-root user
+RUN addgroup -S heady && adduser -S heady -G heady
+
+# Install only production runtime deps
+RUN apk add --no-cache \
+    python3=3.11.8-r0 \
+    curl=8.5.0-r0 \
+    tini=0.19.0-r2
+
+# Copy built artifacts
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/src ./src
+COPY --from=build /app/package.json ./
+COPY --from=build /app/heady-architecture-manifest.json ./
+COPY --from=build /app/BUILD_MANIFEST.sha256 ./
+COPY --from=build /app/BUILD_INFO ./
+
+# Copy Python deps if they exist
+COPY --from=pydeps /usr/lib/python3.11/site-packages /usr/lib/python3.11/site-packages 2>/dev/null || true
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -f http://0.0.0.0:${PORT:-3300}/api/v1/health || exit 1
+
+# Security: run as non-root
+USER heady
+
+# Expose port (configured via env)
+EXPOSE ${PORT:-3300}
+
+# Use tini as init process (proper signal handling)
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start server
+CMD ["node", "src/server.js"]

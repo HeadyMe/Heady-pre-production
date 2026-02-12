@@ -1,0 +1,275 @@
+{
+  "_meta": {
+    "name": "Heady Architecture Manifest",
+    "version": "2.0.0",
+    "protocol": "Sacred Geometry Architecture",
+    "generatedAt": "2026-02-12T12:54:00.000Z",
+    "description": "Single source of truth for all Heady services, domains, capabilities, and policies"
+  },
+
+  "domains": {
+    "headysystems.com": {
+      "purpose": "Primary API, system status, stories, pipeline",
+      "renderService": "srv-d61t6gngi27c739rqpn0",
+      "renderName": "heady-manager-headysystems",
+      "layer": "headysystems",
+      "apiBase": "/api/v1",
+      "subdomains": {
+        "api": "Primary REST + GraphQL API",
+        "staging": "Staging environment"
+      }
+    },
+    "headycloud.com": {
+      "purpose": "Cloud layer management, HeadyMe",
+      "renderService": "srv-d61t6b95pdvs73f53u2g",
+      "renderName": "heady-manager-headyme",
+      "layer": "headyme",
+      "apiBase": "/api/v1",
+      "subdomains": {
+        "collab": "Real-time collaboration WebSocket"
+      }
+    },
+    "headyconnection.com": {
+      "purpose": "Connection layer, AI nodes",
+      "renderService": "srv-d6370hvgi27c73fam54g",
+      "renderName": "heady-manager-headyconnection",
+      "layer": "headyconnection",
+      "apiBase": "/api/v1",
+      "subdomains": {
+        "dev": "Development environment"
+      }
+    },
+    "headymcp.com": {
+      "purpose": "MCP protocol server, connector marketplace",
+      "routesTo": "headysystems",
+      "apiBase": "/api/v1/mcp"
+    },
+    "headybot.com": {
+      "purpose": "HeadyBuddy AI chat",
+      "routesTo": "headyme",
+      "apiBase": "/api/v1/buddy"
+    },
+    "headycheck.com": {
+      "purpose": "Health/status monitoring, dashboards",
+      "routesTo": "headysystems",
+      "apiBase": "/api/v1/health"
+    },
+    "headyio.com": {
+      "purpose": "Developer docs, API reference, partner portal",
+      "routesTo": "headysystems",
+      "apiBase": "/api/v1/docs"
+    },
+    "headybuddy.org": {
+      "purpose": "HeadyBuddy portal, PWA, privacy dashboard",
+      "routesTo": "headyme",
+      "apiBase": "/api/v1/buddy"
+    },
+    "headyconnection.org": {
+      "purpose": "Redirect to headyconnection.com",
+      "redirectTo": "headyconnection.com",
+      "redirectType": 301
+    }
+  },
+
+  "services": {
+    "heady-manager": {
+      "modules": {
+        "gateway": {
+          "path": "src/gateway/",
+          "purpose": "API versioning, auth, rate limiting, structured errors"
+        },
+        "sessions": {
+          "path": "src/sessions/",
+          "purpose": "3-tier session management (ephemeral/session/persistent)"
+        },
+        "chat": {
+          "path": "src/chat/",
+          "purpose": "HeadyBuddy conversation handling, intent resolution"
+        },
+        "skills": {
+          "path": "src/skills/",
+          "purpose": "Skill registry, execution, progress streaming"
+        },
+        "soul": {
+          "path": "src/soul/",
+          "purpose": "HeadySoul governance, value scoring, hard vetoes"
+        },
+        "intelligence": {
+          "path": "src/intelligence/",
+          "purpose": "DAG scheduler, parallel allocator, critical path"
+        },
+        "drift": {
+          "path": "src/drift/",
+          "purpose": "Configuration drift detection, HCFP-rebuild triggers"
+        },
+        "mcp": {
+          "path": "src/mcp/",
+          "purpose": "MCP connector registry, lifecycle, health monitoring"
+        }
+      }
+    }
+  },
+
+  "apiVersioning": {
+    "current": "v1",
+    "supported": ["v1"],
+    "deprecationPolicy": {
+      "sunsetPeriod": "6 months",
+      "sunsetHeader": true,
+      "migrationGuide": true
+    },
+    "responseFormat": {
+      "envelope": true,
+      "fields": ["data", "meta", "pagination", "errors", "links"]
+    }
+  },
+
+  "authentication": {
+    "methods": {
+      "apiKey": {
+        "header": "X-Heady-Api-Key",
+        "storage": "sha256 hash in DB",
+        "scoping": "per-service, per-capability",
+        "rotation": "manual via dashboard"
+      },
+      "oauth2": {
+        "flow": "authorization_code_pkce",
+        "authorizeUrl": "https://headysystems.com/oauth/authorize",
+        "tokenUrl": "https://headysystems.com/oauth/token",
+        "accessTokenTTL": "1h",
+        "refreshTokenTTL": "30d"
+      }
+    },
+    "jwt": {
+      "algorithm": "RS256",
+      "keyRotation": "90 days",
+      "issuer": "headysystems.com"
+    }
+  },
+
+  "rateLimiting": {
+    "algorithm": "token_bucket",
+    "tiers": {
+      "free":       { "tokensPerHour": 100,   "burstMultiplier": 2, "cost": "$0" },
+      "nonprofit":  { "tokensPerHour": 10000,  "burstMultiplier": 2, "cost": "$0" },
+      "indie":      { "tokensPerHour": 5000,   "burstMultiplier": 2, "cost": "PPP-adjusted" },
+      "pro":        { "tokensPerHour": 50000,  "burstMultiplier": 2, "cost": "standard" },
+      "enterprise": { "tokensPerHour": null,   "burstMultiplier": null, "cost": "custom" }
+    },
+    "headers": [
+      "X-RateLimit-Limit",
+      "X-RateLimit-Remaining",
+      "X-RateLimit-Reset",
+      "X-RateLimit-Tier",
+      "Retry-After"
+    ]
+  },
+
+  "sessionArchitecture": {
+    "tiers": {
+      "t1_ephemeral": {
+        "scope": "per-tab",
+        "ttl": "30min idle",
+        "storage": "in-memory",
+        "encryption": "TLS 1.3 in transit"
+      },
+      "t2_session": {
+        "scope": "cross-tab, single device",
+        "ttl": "24h",
+        "storage": "Redis + signed JWT (RS256)",
+        "encryption": "AES-256-GCM"
+      },
+      "t3_persistent": {
+        "scope": "cross-device, user-owned",
+        "ttl": "until deleted",
+        "storage": "PostgreSQL",
+        "encryption": "E2E user-derived key",
+        "gdprCompliant": true
+      }
+    }
+  },
+
+  "observability": {
+    "logging": {
+      "format": "structured JSON",
+      "traceIdHeader": "X-Heady-Trace-Id",
+      "fields": ["timestamp", "level", "traceId", "spanId", "service", "component", "message", "data"]
+    },
+    "metrics": {
+      "provider": "grafana-cloud",
+      "pushInterval": "60s",
+      "dashboardAutoGeneration": true
+    },
+    "errorTaxonomy": {
+      "transient": { "action": "auto-retry", "strategy": "exponential_backoff_jitter", "maxRetries": 3 },
+      "degraded": { "action": "serve-cached", "strategy": "circuit_breaker", "threshold": "50% fail in 5min" },
+      "nonRecoverable": { "action": "fail-fast", "strategy": "none" },
+      "infrastructure": { "action": "escalate", "strategy": "alert_oncall" }
+    }
+  },
+
+  "mcpProtocol": {
+    "version": "1.0",
+    "specFormat": "openapi-3.1-with-mcp-extensions",
+    "connectorTiers": {
+      "verified": "Heady team built/reviewed, full API access",
+      "reviewed": "Security scan + manual review, standard access",
+      "community": "Automated scan only, sandboxed, rate-limited"
+    },
+    "healthCheck": {
+      "interval": 30,
+      "timeout": 5000,
+      "unhealthyThreshold": 3,
+      "autoDisableOnErrorRate": 0.05
+    },
+    "auth": ["api_key", "oauth2", "mtls", "custom"]
+  },
+
+  "deploymentStrategy": {
+    "pipeline": "canary-validated-sequential",
+    "phases": {
+      "dev":     { "validation": "all tests pass", "autoRollback": "any failure" },
+      "staging": { "validation": "error rate <2%, p99 <500ms", "canary": "10%→50%→100%", "autoRollback": "error rate >5% for >2min" },
+      "prod":    { "validation": "manual + auto", "blueGreen": "5%→25%→50%→100%", "autoRollback": "instant DNS switch" }
+    }
+  },
+
+  "driftDetection": {
+    "interval": "30 minutes",
+    "signals": {
+      "namingInconsistency":   { "weight": 0.15, "threshold": 0.05 },
+      "dependencySkew":        { "weight": 0.25, "threshold": 3 },
+      "configDrift":           { "weight": 0.20, "threshold": "any" },
+      "dockerImageDivergence": { "weight": 0.15, "threshold": "sha_mismatch" },
+      "apiSchemaMismatch":     { "weight": 0.15, "threshold": "any" },
+      "soulValueDrift":        { "weight": 0.10, "threshold": 60 }
+    },
+    "thresholds": {
+      "autoTriggerRebuild": 0.7,
+      "warnAndQueue": 0.4,
+      "healthy": 0.4
+    }
+  },
+
+  "soulIntegration": {
+    "evaluationTiers": {
+      "tier1_full": ["P0", "deployments", "pricing", "user-facing", "policy"],
+      "tier2_cached": ["P1", "P2", "features", "refactors"],
+      "tier3_skip": ["P3", "docs", "polish", "internal"]
+    },
+    "hardVetoes": ["dark_pattern", "vendor_lock_in", "surveillance", "paywall_essential", "exploit_vulnerable"],
+    "valueWeights": {
+      "access": 0.30,
+      "fairness": 0.25,
+      "intelligence": 0.20,
+      "happiness": 0.15,
+      "redistribution": 0.10
+    }
+  },
+
+  "cloudflare": {
+    "accountId": "92baf0dd5ae3f84750f3c2d969bf2954",
+    "workerName": "heady-edge-router",
+    "tunnelStrategy": "terraform-managed"
+  }
+}
