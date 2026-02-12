@@ -23,7 +23,7 @@ version: "2.0.0"
 probes:
   - name: heady-manager-api
     type: http
-    url: http://localhost:3300/api/health
+    url: https://headysystems.com/api/health
     method: GET
     expectedStatus: 200
     expectedBody: { contains: "status" }
@@ -33,7 +33,7 @@ probes:
 
   - name: heady-manager-pulse
     type: http
-    url: http://localhost:3300/api/pulse
+    url: https://headysystems.com/api/pulse
     method: GET
     expectedStatus: 200
     maxLatencyMs: 2000
@@ -42,7 +42,7 @@ probes:
 
   - name: heady-frontend
     type: http
-    url: http://localhost:3300/
+    url: https://headysystems.com/
     method: GET
     expectedStatus: 200
     expectedBody: { contains: "Heady" }
@@ -52,7 +52,7 @@ probes:
 
   - name: heady-admin
     type: http
-    url: http://localhost:3300/admin.html
+    url: https://headysystems.com/admin.html
     method: GET
     expectedStatus: 200
     maxLatencyMs: 3000

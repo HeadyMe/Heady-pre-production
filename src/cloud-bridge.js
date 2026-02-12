@@ -18,7 +18,7 @@
 const http = require('http');
 const https = require('https');
 
-const LOCAL_MANAGER_URL = process.env.LOCAL_MANAGER_URL || 'http://localhost:3300';
+const LOCAL_MANAGER_URL = process.env.LOCAL_MANAGER_URL || 'https://headysystems.com';
 const CLOUD_HEADYME_URL = process.env.CLOUD_HEADYME_URL || 'https://heady-manager-headyme.onrender.com';
 const CLOUD_HEADYSYSTEMS_URL = process.env.CLOUD_HEADYSYSTEMS_URL || 'https://heady-manager-headysystems.onrender.com';
 const SYNC_INTERVAL = parseInt(process.env.SYNC_INTERVAL || '30', 10) * 1000;
@@ -56,12 +56,12 @@ async function syncStatus() {
   const local = await checkHealth(LOCAL_MANAGER_URL);
   const cloudMe = await checkHealth(CLOUD_HEADYME_URL);
   const cloudSys = await checkHealth(CLOUD_HEADYSYSTEMS_URL);
-  
+
   console.log(`[${new Date().toISOString()}] Sync Status:`);
   console.log(`  Local: ${local.ok ? 'LIVE' : 'DOWN'} ${local.version || ''}`);
   console.log(`  Cloud HeadyMe: ${cloudMe.ok ? 'LIVE' : 'DOWN'} ${cloudMe.version || ''}`);
   console.log(`  Cloud HeadySystems: ${cloudSys.ok ? 'LIVE' : 'DOWN'} ${cloudSys.version || ''}`);
-  
+
   // Sync logic here - push local state to cloud
   if (local.ok && (cloudMe.ok || cloudSys.ok)) {
     console.log('  → Hybrid sync active');

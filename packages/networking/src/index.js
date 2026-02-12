@@ -18,7 +18,7 @@
  * @heady/networking - Centralized HTTP client creation.
  *
  * PROTOCOL:
- *   - Heady-internal domains (*.heady.internal, localhost, 127.0.0.1, render internal)
+ *   - Heady-internal domains (branded Heady domains, render internal)
  *     are ALWAYS called via direct sockets (no proxy).
  *   - External domains use proxies only when explicitly configured.
  *   - Circuit breaker wraps every external call.
@@ -32,11 +32,11 @@ const { CircuitBreaker } = require("./circuit-breaker");
 
 // ─── INTERNAL DOMAINS (always bypass proxy) ──────────────────────────────
 const INTERNAL_DOMAINS = [
-  "localhost",
-  "127.0.0.1",
-  "::1",
-  "*.heady.internal",
-  "api.heady.local",
+  "headysystems.com",
+  "headycloud.com",
+  "headyconnection.com",
+  "headymcp.com",
+  "headybot.com",
   "heady-manager",
   "*.onrender.com",
 ];

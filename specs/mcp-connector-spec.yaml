@@ -1,0 +1,422 @@
+# ╔═══════════════════════════════════════════════════════════════╗
+# ║  HEADY SYSTEMS                                                 ║
+# ║  ━━━━━━━━━━━━━━                                                ║
+# ║  ∞ Sacred Geometry Architecture ∞                              ║
+# ║                                                                ║
+# ║  mcp-connector-spec.yaml - MCP Connector Specification v1.0   ║
+# ╚═══════════════════════════════════════════════════════════════╝
+
+openapi: "3.1.0"
+info:
+  title: "Heady MCP Connector Specification"
+  version: "1.0.0"
+  description: |
+    Canonical specification for building MCP connectors that integrate
+    with the Heady ecosystem. All connectors MUST implement this spec
+    to register with headymcp.com.
+  contact:
+    name: "Heady Systems"
+    url: "https://headyio.com/mcp"
+
+x-mcp-protocol:
+  version: "1.0"
+  minSupported: "1.0"
+  registrationEndpoint: "https://headymcp.com/api/v1/connectors/register"
+  deregistrationEndpoint: "https://headymcp.com/api/v1/connectors/{connectorId}"
+  heartbeatEndpoint: "https://headymcp.com/api/v1/connectors/{connectorId}/heartbeat"
+  heartbeatInterval: 30
+
+x-mcp-connector-manifest:
+  description: |
+    Every connector MUST ship a manifest file (mcp-manifest.json) at its root.
+    The manifest declares capabilities, auth requirements, health endpoints,
+    versioning policy, and HeadySoul evaluation tier.
+  schema:
+    type: object
+    required:
+      - name
+      - version
+      - vendor
+      - capabilities
+      - auth
+      - health
+    properties:
+      name:
+        type: string
+        description: "Unique connector name (lowercase, hyphens only)"
+        pattern: "^[a-z][a-z0-9-]{2,48}$"
+        example: "github-connector"
+      version:
+        type: string
+        description: "Semantic version of the connector"
+        pattern: "^\\d+\\.\\d+\\.\\d+$"
+        example: "2.1.0"
+      vendor:
+        type: string
+        enum: ["heady-official", "heady-reviewed", "community"]
+        description: "Connector tier — determines vetting level and access"
+      description:
+        type: string
+        maxLength: 500
+      icon:
+        type: string
+        format: uri
+        description: "URL to connector icon (SVG preferred, 64x64 min)"
+      capabilities:
+        type: array
+        items:
+          $ref: "#/x-mcp-schemas/Capability"
+        minItems: 1
+      auth:
+        $ref: "#/x-mcp-schemas/AuthConfig"
+      health:
+        $ref: "#/x-mcp-schemas/HealthConfig"
+      versioning:
+        $ref: "#/x-mcp-schemas/VersioningPolicy"
+      soulTier:
+        type: string
+        enum: ["tier1", "tier2", "tier3"]
+        default: "tier2"
+        description: |
+          HeadySoul evaluation tier:
+          tier1 (full eval) — deployments, pricing, user-facing
+          tier2 (cached eval) — features, standard operations
+          tier3 (skip eval) — read-only, low-risk operations
+      rateLimit:
+        type: object
+        properties:
+          requestsPerMinute:
+            type: integer
+            default: 60
+          burstSize:
+            type: integer
+            default: 10
+      tags:
+        type: array
+        items:
+          type: string
+        description: "Searchable tags for marketplace discovery"
+
+x-mcp-schemas:
+  Capability:
+    type: object
+    required:
+      - name
+      - method
+      - path
+      - description
+    properties:
+      name:
+        type: string
+        description: "Capability identifier (dot-separated namespace)"
+        pattern: "^[a-z]+\\.[a-z_]+$"
+        example: "repo.list"
+      description:
+        type: string
+        maxLength: 200
+      method:
+        type: string
+        enum: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+      path:
+        type: string
+        description: "Relative path on the connector"
+        example: "/repos"
+      auth:
+        type: object
+        properties:
+          required:
+            type: boolean
+            default: true
+          scopes:
+            type: array
+            items:
+              type: string
+            example: ["repo:read"]
+      confirmationRequired:
+        type: boolean
+        default: false
+        description: "If true, HeadyBuddy asks user to confirm before executing"
+      rollbackCapable:
+        type: boolean
+        default: false
+        description: "If true, connector supports undo/rollback for this capability"
+      cacheable:
+        type: boolean
+        default: false
+      cacheTTL:
+        type: integer
+        description: "Cache TTL in seconds (only if cacheable=true)"
+        default: 300
+      soulTierOverride:
+        type: string
+        enum: ["tier1", "tier2", "tier3"]
+        description: "Override connector-level soul tier for this specific capability"
+      parameters:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+              enum: ["string", "integer", "boolean", "object", "array"]
+            required:
+              type: boolean
+              default: false
+            description:
+              type: string
+      responseSchema:
+        type: object
+        description: "JSON Schema of the response body"
+
+  AuthConfig:
+    type: object
+    required:
+      - type
+    properties:
+      type:
+        type: string
+        enum: ["api_key", "oauth2", "mtls", "none"]
+      apiKey:
+        type: object
+        properties:
+          header:
+            type: string
+            default: "X-MCP-Api-Key"
+          parameterName:
+            type: string
+      oauth2:
+        type: object
+        properties:
+          authorizationUrl:
+            type: string
+            format: uri
+          tokenUrl:
+            type: string
+            format: uri
+          scopes:
+            type: object
+            additionalProperties:
+              type: string
+          pkceRequired:
+            type: boolean
+            default: true
+      mtls:
+        type: object
+        properties:
+          certIssuer:
+            type: string
+          minTlsVersion:
+            type: string
+            default: "1.3"
+      consentModel:
+        type: string
+        enum: ["per-connector", "per-action"]
+        default: "per-action"
+        description: "per-action = user approves each capability separately"
+
+  HealthConfig:
+    type: object
+    required:
+      - endpoint
+    properties:
+      endpoint:
+        type: string
+        default: "/health"
+      interval:
+        type: integer
+        default: 30
+        description: "Health check interval in seconds"
+      timeout:
+        type: integer
+        default: 5000
+        description: "Health check timeout in milliseconds"
+      unhealthyThreshold:
+        type: integer
+        default: 3
+        description: "Consecutive failures before marking unhealthy"
+      degradedThreshold:
+        type: integer
+        default: 2
+        description: "Consecutive slow responses before marking degraded"
+      latencyThresholdMs:
+        type: integer
+        default: 500
+        description: "Response time above this = degraded"
+      metrics:
+        type: array
+        items:
+          type: string
+        default: ["latency_p99", "error_rate", "active_connections"]
+        description: "Metrics the connector exposes at /health"
+
+  VersioningPolicy:
+    type: object
+    properties:
+      minSupported:
+        type: string
+        description: "Minimum MCP protocol version this connector supports"
+        default: "1.0"
+      deprecationNotice:
+        type: string
+        description: "If set, connector is deprecated — include migration URL"
+      breakingChanges:
+        type: array
+        items:
+          type: string
+        description: "List of breaking changes in this version"
+      migrationGuide:
+        type: string
+        format: uri
+        description: "URL to migration guide for upgrading from previous version"
+      shimSupported:
+        type: boolean
+        default: true
+        description: "If true, Heady can auto-generate compatibility shims"
+      maxShimGap:
+        type: integer
+        default: 1
+        description: "Maximum minor version gap for auto-shimming"
+
+x-mcp-connector-tiers:
+  verified:
+    description: "Built or audited by Heady team"
+    vetting: "Full code review + security audit"
+    badge: "✓ Verified"
+    apiAccess: "Full — all capabilities, priority support"
+    requirements:
+      - "Source code reviewed by Heady team"
+      - "Security audit passed"
+      - ">95% test coverage"
+      - "Signed container images"
+  reviewed:
+    description: "Community-built, reviewed by Heady"
+    vetting: "Automated security scan + manual review"
+    badge: "◆ Reviewed"
+    apiAccess: "Standard — all capabilities, community support"
+    requirements:
+      - "Automated security scan (Snyk/Trivy)"
+      - "Manual review of capabilities and auth"
+      - ">80% test coverage"
+      - "Published container image"
+  community:
+    description: "Community-built, self-published"
+    vetting: "Automated scan only"
+    badge: "○ Community"
+    apiAccess: "Sandboxed — rate-limited, no sensitive capabilities"
+    requirements:
+      - "Automated security scan passes"
+      - "Valid mcp-manifest.json"
+      - "Health endpoint responds"
+    restrictions:
+      - "Rate limited to 60 req/min"
+      - "Cannot access user PII"
+      - "Auto-disabled if error rate >5%"
+      - "No confirmationRequired=false for write operations"
+
+x-mcp-lifecycle:
+  registration:
+    description: "Connector registers with headymcp.com"
+    steps:
+      - "POST mcp-manifest.json to /api/v1/connectors/register"
+      - "Heady validates manifest schema"
+      - "Heady runs security scan (tier-dependent)"
+      - "Connector receives connectorId + API credentials"
+      - "Connector starts sending heartbeats"
+  runtime:
+    description: "Connector serving requests"
+    steps:
+      - "Heartbeat every 30s to /api/v1/connectors/{id}/heartbeat"
+      - "Health checks from Heady every 30s"
+      - "Capabilities discoverable via /api/v1/mcp/connectors/{id}/capabilities"
+      - "Requests routed through HeadyAPI gateway"
+  deregistration:
+    description: "Connector gracefully shuts down"
+    steps:
+      - "DELETE /api/v1/connectors/{id}"
+      - "Heady marks connector as offline"
+      - "Pending requests receive graceful error"
+      - "Connector removed from discovery after 24h"
+
+paths:
+  /api/v1/mcp/connectors:
+    get:
+      summary: "List all registered connectors"
+      parameters:
+        - name: tier
+          in: query
+          schema:
+            type: string
+            enum: ["verified", "reviewed", "community"]
+        - name: tag
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: ["healthy", "degraded", "unhealthy", "offline"]
+      responses:
+        "200":
+          description: "List of connectors"
+
+  /api/v1/mcp/connectors/register:
+    post:
+      summary: "Register a new connector"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/x-mcp-connector-manifest/schema"
+      responses:
+        "201":
+          description: "Connector registered"
+        "400":
+          description: "Invalid manifest"
+
+  /api/v1/mcp/connectors/{connectorId}:
+    get:
+      summary: "Get connector details"
+      responses:
+        "200":
+          description: "Connector details including health status"
+    delete:
+      summary: "Deregister connector"
+      responses:
+        "204":
+          description: "Connector deregistered"
+
+  /api/v1/mcp/connectors/{connectorId}/heartbeat:
+    put:
+      summary: "Connector heartbeat"
+      responses:
+        "200":
+          description: "Heartbeat acknowledged"
+
+  /api/v1/mcp/connectors/{connectorId}/capabilities:
+    get:
+      summary: "List connector capabilities"
+      responses:
+        "200":
+          description: "List of capabilities with current availability"
+
+  /api/v1/mcp/connectors/{connectorId}/invoke/{capabilityName}:
+    post:
+      summary: "Invoke a connector capability"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: "Capability result"
+        "202":
+          description: "Async execution started (returns progress URL)"
+        "403":
+          description: "Insufficient scopes"
+        "429":
+          description: "Rate limited"

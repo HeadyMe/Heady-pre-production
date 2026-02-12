@@ -349,15 +349,16 @@
     "heady-manager": {
       "name": "heady-manager",
       "type": "api",
-      "endpoint": "http://localhost:3300",
+      "endpoint": "https://headysystems.com",
       "port": 3300,
       "status": "healthy",
-      "health_check_url": "http://localhost:3300/api/health"
+      "health_check_url": "https://headysystems.com/api/health"
     },
     "heady-frontend": {
       "name": "heady-frontend",
       "type": "web",
-      "endpoint": "http://localhost:3000",
+      "endpoint": "https://headysystems.com",
+      "comment_was_frontend": true,
       "port": 3000,
       "status": "unknown",
       "health_check_url": null
@@ -365,7 +366,8 @@
     "python-worker": {
       "name": "python-worker",
       "type": "worker",
-      "endpoint": "http://localhost:5000",
+      "endpoint": "https://headysystems.com",
+      "comment_was_worker": true,
       "port": 5000,
       "status": "unknown",
       "health_check_url": null
