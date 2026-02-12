@@ -22,6 +22,7 @@ const HeadySpeedController = require("./speed-controller");
 const HeadyCriticalPathMonitor = require("./critical-path-monitor");
 const HeadyAntiStagnationWatchdog = require("./anti-stagnation-watchdog");
 const HeadyRepoIndexer = require("./repo-indexer");
+const HeadySoul = require("../soul/heady_soul");
 
 class HeadyIntelligenceEngine {
   constructor() {
@@ -35,6 +36,7 @@ class HeadyIntelligenceEngine {
       this.scheduler, this.allocator, this.speedController
     );
     this.repoIndexer = new HeadyRepoIndexer();
+    this.soul = new HeadySoul();
     this.started = false;
   }
 
@@ -43,17 +45,19 @@ class HeadyIntelligenceEngine {
    */
   start() {
     if (this.started) return;
-    console.log("[Intelligence] Heady Full-Stack Intelligence Protocol v1.2 — starting");
+    console.log("[Intelligence] Heady Full-Stack Intelligence Protocol v1.3 — starting");
+    this.soul.start();
     this.criticalPathMonitor.start();
     this.watchdog.start();
     this.started = true;
-    console.log("[Intelligence] All subsystems active — zero idle, zero wait");
+    console.log("[Intelligence] All subsystems active — HeadySoul governing, zero idle, zero wait");
   }
 
   /**
    * Stop all intelligence subsystems
    */
   stop() {
+    this.soul.stop();
     this.criticalPathMonitor.stop();
     this.watchdog.stop();
     this.started = false;
@@ -63,8 +67,30 @@ class HeadyIntelligenceEngine {
   /**
    * Submit a task to the intelligence engine
    */
-  submitTask(taskData) {
+  async submitTask(taskData) {
+    // HeadySoul evaluates FIRST — mission alignment before anything else
+    const soulDecision = await this.soul.evaluateTask(taskData);
+
+    // Hard veto: block entirely
+    if (soulDecision.veto) {
+      return {
+        task: { id: taskData.id, status: "BLOCKED_MISSION_VETO", ...taskData },
+        allocation: { allocated: 0 },
+        soul: soulDecision,
+      };
+    }
+
+    // Add task to scheduler with soul metadata
     const task = this.scheduler.addTask(taskData);
+    task.metadata.soul_score = soulDecision.score;
+    task.metadata.soul_tier = soulDecision.tier;
+    task.metadata.soul_auto_approve = soulDecision.auto_approve;
+
+    // If escalated, mark but allow (pending human review)
+    if (soulDecision.escalate) {
+      task.metadata.soul_escalated = true;
+      task.metadata.soul_reason = soulDecision.reason;
+    }
 
     // Check repo profile for speed recommendation
     if (taskData.file_path) {
@@ -86,7 +112,7 @@ class HeadyIntelligenceEngine {
 
     // Trigger allocation immediately
     const allocation = this.allocator.allocate();
-    return { task, allocation };
+    return { task, allocation, soul: soulDecision };
   }
 
   /**
@@ -116,8 +142,9 @@ class HeadyIntelligenceEngine {
   getState() {
     return {
       protocol: "Heady Full-Stack Intelligence Protocol",
-      version: "1.2",
+      version: "1.3",
       status: this.started ? "active" : "stopped",
+      soul: this.soul.getState(),
       scheduler: this.scheduler.getState(),
       allocator: this.allocator.getState(),
       speed_controller: this.speedController.getState(),
