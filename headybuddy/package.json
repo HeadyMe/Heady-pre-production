@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "HeadyBuddy - AI Companion Task Completion Assistant",
   "main": "main.js",
+  "author": "Heady Systems",
   "scripts": {
     "start": "electron .",
     "dev": "electron . --dev",
@@ -10,11 +11,11 @@
     "build:win": "electron-builder --win"
   },
   "dependencies": {
-    "electron": "^28.0.0",
     "axios": "^1.6.0",
     "ws": "^8.14.0"
   },
   "devDependencies": {
+    "electron": "^28.0.0",
     "electron-builder": "^24.9.0"
   },
   "build": {
@@ -34,30 +35,13 @@
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
-        },
-        {
-          "target": "msix",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "assets/icon.ico",
       "publisherName": "Heady Systems",
       "verifyUpdateCodeSignature": false
-    },
-    "msix": {
-      "identityName": "HeadySystems.HeadyBuddy",
-      "publisher": "CN=Heady Systems",
-      "publisherDisplayName": "Heady Systems",
-      "displayName": "HeadyBuddy",
-      "description": "AI Companion Task Assistant with Sacred Geometry Design",
-      "backgroundColor": "#1a1a2e",
-      "showNameOnTiles": true,
-      "languages": ["en-US"],
-      "capabilities": [
-        "internetClient",
-        "privateNetworkClientServer"
-      ]
     }
   }
-}

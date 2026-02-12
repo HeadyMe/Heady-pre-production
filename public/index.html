@@ -3,64 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heady Systems | Sacred Geometry</title>
+    <title>Heady Systems — Sacred Geometry Architecture</title>
+    <meta name="theme-color" content="#00e5cc">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #060610; --surface: #0c0c1a; --surface2: #141428;
+            --border: #1e1e3a; --accent: #00e5cc; --accent2: #0099ff;
+            --glow: #00e5cc20; --text: #e4e4f0; --text2: #9494b0; --text3: #5a5a78;
+        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg); color: var(--text);
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            line-height: 1.618; overflow: hidden;
+            -webkit-font-smoothing: antialiased;
         }
-        .container {
-            text-align: center;
-            padding: 2rem;
-        }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #00d4ff, #7b2cbf);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .status {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 212, 255, 0.2);
-            border: 1px solid #00d4ff;
-            border-radius: 20px;
-            margin: 1rem 0;
-        }
-        .endpoints {
-            margin-top: 2rem;
-            text-align: left;
-            background: rgba(255,255,255,0.05);
-            padding: 1.5rem;
-            border-radius: 10px;
-        }
-        .endpoint {
-            margin: 0.5rem 0;
-            font-family: monospace;
-            color: #00d4ff;
-        }
+        .sg-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+        .sg-bg svg { position: absolute; color: var(--accent); }
+        .sg-bg .flower { width: 700px; height: 700px; top: -200px; right: -200px; animation: rot 120s linear infinite; }
+        .sg-bg .meta { width: 500px; height: 500px; bottom: -150px; left: -150px; animation: rot 90s linear infinite reverse; }
+        @keyframes rot { to { transform: rotate(360deg); } }
+        .orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; }
+        .o1 { width: 400px; height: 400px; top: -100px; left: -80px; background: var(--accent); opacity: 0.06; animation: breathe 8s ease-in-out infinite; }
+        .o2 { width: 350px; height: 350px; bottom: -80px; right: -60px; background: var(--accent2); opacity: 0.05; animation: breathe 10s ease-in-out infinite 2s; }
+        @keyframes breathe { 0%,100% { opacity: 0.04; transform: scale(1); } 50% { opacity: 0.08; transform: scale(1.15); } }
+        .grid-overlay { position: fixed; inset: 0; pointer-events: none; background-image: linear-gradient(var(--accent) 1px, transparent 1px), linear-gradient(90deg, var(--accent) 1px, transparent 1px); background-size: 89px 89px; opacity: 0.015; }
+        .container { text-align: center; padding: 2rem; position: relative; z-index: 1; max-width: 600px; }
+        .logo-svg { width: 80px; height: 80px; margin-bottom: 24px; }
+        h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; background: linear-gradient(135deg, var(--text) 0%, var(--accent) 50%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .sub { color: var(--text2); font-size: 15px; margin-bottom: 24px; }
+        .badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 18px; background: var(--glow); border: 1px solid #00e5cc40; border-radius: 100px; font-size: 13px; color: var(--accent); font-weight: 600; letter-spacing: 0.05em; margin-bottom: 32px; }
+        .pulse { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; position: relative; }
+        .pulse::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid var(--accent); animation: ring 2s ease-out infinite; }
+        @keyframes ring { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2); opacity: 0; } }
+        .domains { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 24px; }
+        .domain { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; font-size: 13px; color: var(--text2); text-align: left; transition: all 0.2s; text-decoration: none; display: block; }
+        .domain:hover { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 20px var(--glow); }
+        .domain strong { display: block; color: var(--text); font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+        .divider { display: flex; align-items: center; gap: 16px; margin: 32px 0; color: var(--text3); }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+        .divider span { font-size: 18px; opacity: 0.4; }
+        @media (max-width: 480px) { .domains { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+    <div class="sg-bg">
+        <svg viewBox="0 0 200 200" class="flower"><defs><circle id="c" r="30" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.15"/></defs><use href="#c" x="100" y="100"/><use href="#c" x="130" y="100"/><use href="#c" x="70" y="100"/><use href="#c" x="115" y="74"/><use href="#c" x="85" y="74"/><use href="#c" x="115" y="126"/><use href="#c" x="85" y="126"/></svg>
+        <svg viewBox="0 0 200 200" class="meta"><g fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.12"><circle cx="100" cy="100" r="50"/><circle cx="100" cy="50" r="50"/><circle cx="100" cy="150" r="50"/><circle cx="143" cy="75" r="50"/><circle cx="57" cy="75" r="50"/><circle cx="143" cy="125" r="50"/><circle cx="57" cy="125" r="50"/></g></svg>
+    </div>
+    <div class="orb o1"></div>
+    <div class="orb o2"></div>
+    <div class="grid-overlay"></div>
+
     <div class="container">
-        <h1>∞ Heady Systems ∞</h1>
-        <p>Sacred Geometry Architecture | v2.0.0</p>
-        <div class="status">● System Active</div>
-        
-        <div class="endpoints">
-            <h3>Available Endpoints:</h3>
-            <div class="endpoint">GET /api/health</div>
-            <div class="endpoint">GET /api/registry</div>
-            <div class="endpoint">GET /api/maid/config</div>
-            <div class="endpoint">POST /api/conductor/orchestrate</div>
+        <svg viewBox="0 0 48 48" class="logo-svg"><defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#00e5cc"/><stop offset="100%" style="stop-color:#0099ff"/></linearGradient></defs><circle cx="24" cy="24" r="23" fill="none" stroke="url(#lg)" stroke-width="1.5"/><circle cx="24" cy="24" r="10" fill="none" stroke="url(#lg)" stroke-width="0.8" opacity="0.6"/><circle cx="24" cy="14" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/><circle cx="24" cy="34" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/><circle cx="32.7" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/><circle cx="15.3" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/><circle cx="32.7" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/><circle cx="15.3" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/><text x="24" y="28" text-anchor="middle" fill="url(#lg)" font-size="16" font-weight="700" font-family="serif">&#x221e;</text></svg>
+
+        <h1>Heady Systems</h1>
+        <p class="sub">Sacred Geometry Architecture &mdash; Organic Systems &middot; Breathing Interfaces</p>
+        <div class="badge"><span class="pulse"></span>System Online</div>
+
+        <div class="divider"><span>&#x221e;</span></div>
+
+        <div class="domains">
+            <a href="https://headysystems.com" class="domain"><strong>headysystems.com</strong>Primary API</a>
+            <a href="https://headycloud.com" class="domain"><strong>headycloud.com</strong>Cloud Layer</a>
+            <a href="https://headyconnection.com" class="domain"><strong>headyconnection.com</strong>Node Mesh</a>
+            <a href="https://headymcp.com" class="domain"><strong>headymcp.com</strong>MCP Protocol</a>
+            <a href="https://headybot.com" class="domain"><strong>headybot.com</strong>AI Chat</a>
+            <a href="https://headycheck.com" class="domain"><strong>headycheck.com</strong>Health Monitor</a>
+            <a href="https://headyio.com" class="domain"><strong>headyio.com</strong>Developer Docs</a>
+            <a href="https://headybuddy.org" class="domain"><strong>headybuddy.org</strong>HeadyBuddy</a>
         </div>
     </div>
 </body>
