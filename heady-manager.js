@@ -46,6 +46,7 @@ const { claudeExecute, claudeAnalyzeCode, claudeSecurityAudit } = require(path.j
 const { registerAllHandlers, initializeSubsystems, getSubsystems } = require(path.join(__dirname, "src", "agents", "pipeline-handlers"));
 const { simulatePipelineReliability, simulateDeploymentRisk, simulateReadinessConfidence, simulateNodePerformance, simulateFullSystem, mcGlobal } = require(path.join(__dirname, "src", "hc_monte_carlo"));
 const HeadyColabClusterManager = require(path.join(__dirname, "src", "cloud-orchestration", "colab-cluster-manager"));
+const HeadyIntelligenceEngine = require(path.join(__dirname, "src", "intelligence"));
 
 // ─── Boot HCFullPipeline with all subsystems ─────────────────────────────
 // 1. Load pipeline configs (YAML → circuit breakers, stage DAG)
@@ -109,6 +110,10 @@ try { hcHealth.startCron(); } catch (_) { /* node-cron optional */ }
 
 // ─── Colab Pro+ GPU Cluster Manager ──────────────────────────────────
 const colabManager = new HeadyColabClusterManager(process.env.CLOUD_LAYER || "headysystems");
+
+// ─── Intelligence Engine (Full-Stack Intelligence Protocol v1.2) ────────
+const intel = new HeadyIntelligenceEngine();
+intel.start();
 
 const PORT = Number(process.env.PORT || 3300);
 const HEADY_ADMIN_SCRIPT = process.env.HEADY_ADMIN_SCRIPT || path.join(__dirname, "src", "heady_project", "heady_conductor.py");
@@ -1318,6 +1323,186 @@ app.post("/api/config/services", (req, res) => {
   }
 });
 
+// ─── Intelligence Protocol v1.2 API ─────────────────────────────────────
+
+// Full intelligence state
+app.get("/api/intelligence/state", (req, res) => {
+  res.json(intel.getState());
+});
+
+// Submit task to intelligence engine
+app.post("/api/intelligence/tasks", (req, res) => {
+  try {
+    const result = intel.submitTask(req.body);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Complete a task
+app.post("/api/intelligence/tasks/:taskId/complete", (req, res) => {
+  const result = intel.completeTask(req.params.taskId, req.body.result || {});
+  if (!result) return res.status(404).json({ error: "Task not found" });
+  res.json({ success: true, task: result });
+});
+
+// Fail a task
+app.post("/api/intelligence/tasks/:taskId/fail", (req, res) => {
+  const result = intel.scheduler.failTask(req.params.taskId, req.body.error || "unknown");
+  if (!result) return res.status(404).json({ error: "Task not found" });
+  res.json({ success: true, task: result });
+});
+
+// Reprioritize a task
+app.post("/api/intelligence/tasks/:taskId/reprioritize", (req, res) => {
+  const { priority } = req.body;
+  if (!["P0", "P1", "P2", "P3"].includes(priority)) {
+    return res.status(400).json({ error: "Invalid priority. Use P0-P3" });
+  }
+  const result = intel.scheduler.reprioritize(req.params.taskId, priority);
+  if (!result) return res.status(404).json({ error: "Task not found" });
+  res.json({ success: true, task: result });
+});
+
+// Get all tasks
+app.get("/api/intelligence/tasks", (req, res) => {
+  const tasks = intel.scheduler.getAllTasks();
+  const state = intel.scheduler.getState();
+  res.json({ tasks, state });
+});
+
+// Get ready tasks (dependencies satisfied)
+app.get("/api/intelligence/tasks/ready", (req, res) => {
+  res.json({ ready: intel.scheduler.getReadyTasks() });
+});
+
+// Get critical path
+app.get("/api/intelligence/critical-path", (req, res) => {
+  const criticalPath = intel.scheduler.criticalPath;
+  const tasks = criticalPath.map((id) => intel.scheduler.tasks.get(id)).filter(Boolean);
+  res.json({ critical_path: criticalPath, tasks, length: criticalPath.length });
+});
+
+// Trigger DAG recompute
+app.post("/api/intelligence/dag/recompute", (req, res) => {
+  const result = intel.scheduler.recomputeDAG();
+  res.json({ success: true, ...result });
+});
+
+// Allocator state + trigger allocation
+app.get("/api/intelligence/allocator", (req, res) => {
+  res.json(intel.allocator.getState());
+});
+
+app.post("/api/intelligence/allocator/run", (req, res) => {
+  const result = intel.allocator.allocate();
+  res.json({ success: true, ...result });
+});
+
+// Register agent
+app.post("/api/intelligence/agents", (req, res) => {
+  const { agent_id, capabilities } = req.body;
+  if (!agent_id) return res.status(400).json({ error: "agent_id required" });
+  const agent = intel.allocator.registerAgent(agent_id, capabilities || {});
+  res.json({ success: true, agent });
+});
+
+// Speed controller state
+app.get("/api/intelligence/speed", (req, res) => {
+  res.json(intel.speedController.getState());
+});
+
+// Force speed mode on task
+app.post("/api/intelligence/speed/:taskId", (req, res) => {
+  const { mode } = req.body;
+  if (!["MAX", "ON", "OFF"].includes(mode)) {
+    return res.status(400).json({ error: "Invalid mode. Use MAX, ON, or OFF" });
+  }
+  intel.speedController.speedOverrides.set(req.params.taskId, mode);
+  const changes = intel.speedController.evaluateAll();
+  res.json({ success: true, changes });
+});
+
+// Crash critical path
+app.post("/api/intelligence/speed/crash", (req, res) => {
+  const actions = intel.speedController.crashIfNeeded();
+  res.json({ success: true, actions: actions || [] });
+});
+
+// Critical path monitor state
+app.get("/api/intelligence/monitor", (req, res) => {
+  res.json(intel.criticalPathMonitor.getState());
+});
+
+// Trigger manual analysis cycle
+app.post("/api/intelligence/monitor/analyze", (req, res) => {
+  const snapshot = intel.criticalPathMonitor.analyze();
+  res.json({ success: true, snapshot });
+});
+
+// Watchdog state
+app.get("/api/intelligence/watchdog", (req, res) => {
+  res.json(intel.watchdog.getState());
+});
+
+// Trigger manual watchdog check
+app.post("/api/intelligence/watchdog/check", (req, res) => {
+  const actions = intel.watchdog.check();
+  res.json({ success: true, actions });
+});
+
+// Record channel latency
+app.post("/api/intelligence/watchdog/latency", (req, res) => {
+  const { channel, latency_ms } = req.body;
+  if (!channel || latency_ms === undefined) {
+    return res.status(400).json({ error: "channel and latency_ms required" });
+  }
+  intel.watchdog.recordLatency(channel, latency_ms);
+  res.json({ success: true, channel, latency_ms });
+});
+
+// Repo indexer state
+app.get("/api/intelligence/repos", (req, res) => {
+  res.json(intel.repoIndexer.getState());
+});
+
+// Index a repo
+app.post("/api/intelligence/repos/index", (req, res) => {
+  const { repo_id, files } = req.body;
+  if (!repo_id || !files) return res.status(400).json({ error: "repo_id and files required" });
+  const result = intel.repoIndexer.indexRepo(repo_id, files);
+  res.json({ success: true, repo: result });
+});
+
+// Get file speed recommendation
+app.get("/api/intelligence/repos/speed", (req, res) => {
+  const filePath = req.query.file;
+  if (!filePath) return res.status(400).json({ error: "file query param required" });
+  res.json(intel.repoIndexer.getFileSpeedRecommendation(filePath));
+});
+
+// Estimator stats
+app.get("/api/intelligence/estimator", (req, res) => {
+  res.json(intel.repoIndexer.getEstimatorStats());
+});
+
+// Learning log
+app.get("/api/intelligence/learning", (req, res) => {
+  const limit = parseInt(req.query.limit) || 100;
+  res.json({ log: intel.scheduler.getLearningLog(limit) });
+});
+
+// Intelligence manifest
+app.get("/api/intelligence/manifest", (req, res) => {
+  try {
+    const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, "src", "intelligence", "intelligence-manifest.json"), "utf8"));
+    res.json(manifest);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -1359,6 +1544,7 @@ const server = app.listen(PORT, () => {
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
   mcGlobal.stopAutoRun();
+  intel.stop();
   server.close(() => {
     console.log('Process terminated');
   });
@@ -1367,6 +1553,7 @@ process.on('SIGTERM', () => {
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully');
   mcGlobal.stopAutoRun();
+  intel.stop();
   server.close(() => {
     console.log('Process terminated');
   });
