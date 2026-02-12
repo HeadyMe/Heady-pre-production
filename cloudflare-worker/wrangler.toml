@@ -1,0 +1,6 @@
+name = "heady-proxy"
+main = "proxy-router.js"
+compatibility_date = "2026-02-12"
+
+[env.production]
+name = "heady-proxy"
