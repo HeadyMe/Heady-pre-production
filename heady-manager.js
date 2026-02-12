@@ -420,7 +420,7 @@ app.get("/api/layer", (req, res) => {
   res.json({
     active_layer: activeId,
     name: layer ? layer.name : "Unknown",
-    endpoint: layer ? layer.endpoint : "https://headysystems.com",
+    endpoint: layer ? layer.endpoint : "https://heady-manager-headysystems.onrender.com",
     icon: layer ? layer.icon : "?",
     color: layer ? layer.color : "White",
     description: layer ? layer.description : "",
@@ -605,7 +605,7 @@ app.get("/api/system/status", (req, res) => {
     active_layer: {
       id: activeLayer,
       name: layer ? layer.name : "Unknown",
-      endpoint: layer ? layer.endpoint : "https://headysystems.com"
+      endpoint: layer ? layer.endpoint : "https://heady-manager-headysystems.onrender.com"
     },
     uptime: process.uptime(),
     memory: process.memoryUsage(),
@@ -1188,14 +1188,14 @@ app.post("/api/monte-carlo/global/cycle", (req, res) => {
 // Cloud-managed configuration — source of truth for all Heady clients
 const CLOUD_CONFIG_PATH = path.join(__dirname, "configs", "services.json");
 let cloudEnvConfig = {
-  HEADY_ENDPOINT: "https://headysystems.com",
-  HEADY_ME_URL: "https://headycloud.com",
-  HEADY_SYSTEMS_URL: "https://headysystems.com",
-  HEADY_CONNECTION_URL: "https://headyconnection.com",
-  HEADY_MCP_URL: "https://headymcp.com",
-  HEADY_BUDDY_URL: "https://headybot.com",
-  HEADY_DOCS_URL: "https://headyio.com",
-  HEADY_STATUS_URL: "https://headycheck.com",
+  HEADY_ENDPOINT: "https://heady-manager-headysystems.onrender.com",
+  HEADY_ME_URL: "https://heady-manager-headyme.onrender.com",
+  HEADY_SYSTEMS_URL: "https://heady-manager-headysystems.onrender.com",
+  HEADY_CONNECTION_URL: "https://heady-manager-headyconnection.onrender.com",
+  HEADY_MCP_URL: "https://heady-manager-headysystems.onrender.com",
+  HEADY_BUDDY_URL: "https://heady-manager-headysystems.onrender.com",
+  HEADY_DOCS_URL: "https://heady-manager-headysystems.onrender.com",
+  HEADY_STATUS_URL: "https://heady-manager-headysystems.onrender.com",
   HEADY_TARGET: "Cloud",
   HEADY_VERSION: "3.0.0",
   HEADY_SERVICE_PROFILE: "full",
@@ -1538,6 +1538,51 @@ app.post("/api/v1/mcp/connectors/:id/invoke/:capability", async (req, res) => {
   );
   if (!result.success) return res.status(400).json(envelope(result, req));
   res.json(envelope(result, req));
+});
+
+// ─── MCP API Compatibility (for frontend) ───────────────────────────────
+app.get("/api/mcp/servers", (req, res) => {
+  const connectors = connectorRegistry.listConnectors(req.query);
+  const servers = connectors.map(c => ({
+    id: c.id,
+    name: c.name,
+    description: c.description,
+    status: c.status || 'active',
+    capabilities: c.capabilities || []
+  }));
+  res.json(envelope({ servers, total: servers.length }, req));
+});
+
+app.post("/api/mcp/tool", async (req, res) => {
+  const { server, tool, arguments: args } = req.body;
+
+  // Find the connector
+  const connector = connectorRegistry.getConnector(server);
+  if (!connector) {
+    return res.status(404).json(HeadyError.notFound(`server:${server}`));
+  }
+
+  // Invoke the tool/capability
+  const result = await connectorRegistry.invokeCapability(
+    server, tool, args, { traceId: req.headers['x-heady-trace-id'] }
+  );
+
+  if (!result.success) {
+    return res.status(400).json(envelope(result, req));
+  }
+
+  res.json(envelope(result, req));
+});
+
+app.get("/api/mcp/status", (req, res) => {
+  const connectors = connectorRegistry.listConnectors(req.query);
+  const dashboard = connectorRegistry.getDashboard();
+
+  res.json(envelope({
+    servers: connectors.length,
+    active: connectors.filter(c => c.status === 'active').length,
+    dashboard
+  }, req));
 });
 
 // ─── SoulOrchestrator APIs ────────────────────────────────────────────

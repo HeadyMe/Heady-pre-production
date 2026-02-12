@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HeadyBuddy</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <!-- Sacred Geometry Background -->
     <div class="sacred-bg">
@@ -40,7 +42,7 @@
                 <h2>Current Task</h2>
                 <span class="task-count" id="task-count">0</span>
             </div>
-            
+
             <div class="task-display" id="current-task">
                 <div class="task-placeholder">
                     <span class="placeholder-icon">✨</span>
@@ -50,10 +52,7 @@
             </div>
 
             <div class="task-input-container">
-                <input type="text" 
-                       id="task-input" 
-                       placeholder="Enter your task..."
-                       autocomplete="off">
+                <input type="text" id="task-input" placeholder="Enter your task..." autocomplete="off">
                 <button class="add-task-btn" id="add-task-btn">➕</button>
             </div>
         </div>
@@ -64,22 +63,20 @@
                 <span class="section-icon">💬</span>
                 <h2>Buddy Chat</h2>
             </div>
-            
+
             <div class="chat-messages" id="chat-messages">
                 <div class="message buddy-message">
                     <div class="message-avatar">🧠</div>
                     <div class="message-content">
-                        <p>Hello! I'm HeadyBuddy, your AI companion. I'm here to help you stay focused and complete your tasks! 🚀</p>
+                        <p>Hello! I'm HeadyBuddy, your AI companion. I'm here to help you stay focused and complete your
+                            tasks! 🚀</p>
                         <span class="message-time">Just now</span>
                     </div>
                 </div>
             </div>
 
             <div class="chat-input-container">
-                <input type="text" 
-                       id="chat-input" 
-                       placeholder="Ask me anything..."
-                       autocomplete="off">
+                <input type="text" id="chat-input" placeholder="Ask me anything..." autocomplete="off">
                 <button class="send-btn" id="send-btn">➤</button>
             </div>
         </div>
@@ -90,7 +87,7 @@
                 <span class="section-icon">⚡</span>
                 <h2>Quick Actions</h2>
             </div>
-            
+
             <div class="action-buttons">
                 <button class="action-btn" id="sync-btn">
                     <span class="action-icon">🔄</span>
@@ -117,7 +114,7 @@
                 <span class="section-icon">📊</span>
                 <h2>System Status</h2>
             </div>
-            
+
             <div class="status-grid">
                 <div class="status-item" id="heady-manager-status">
                     <span class="status-dot offline"></span>
@@ -133,6 +130,33 @@
                 </div>
             </div>
         </div>
+
+        <!-- Automation Section -->
+        <div class="section automation-section">
+            <div class="section-header">
+                <span class="section-icon">🤖</span>
+                <h2>Automation</h2>
+            </div>
+
+            <div class="automation-grid">
+                <button class="automation-btn" onclick="getAvailableNotebooks()">
+                    <span class="automation-icon">📋</span>
+                    <span class="automation-label">List Notebooks</span>
+                </button>
+                <button class="automation-btn" onclick="uploadColabNotebooks()">
+                    <span class="automation-icon">📓</span>
+                    <span class="automation-label">Upload to Colab</span>
+                </button>
+                <button class="automation-btn" onclick="takeScreenshot()">
+                    <span class="automation-icon">📸</span>
+                    <span class="automation-label">Screenshot</span>
+                </button>
+                <button class="automation-btn" onclick="closeAutomation()">
+                    <span class="automation-icon">🔒</span>
+                    <span class="automation-label">Close Engine</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Resize Handle -->
@@ -140,4 +164,5 @@
 
     <script src="renderer.js"></script>
 </body>
+
 </html>

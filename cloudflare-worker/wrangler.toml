@@ -1,6 +1,12 @@
-name = "heady-proxy"
-main = "proxy-router.js"
+name = "builder-dev"
+main = "builder-worker.js"
 compatibility_date = "2026-02-12"
 
 [env.production]
-name = "heady-proxy"
+name = "builder-prod"
+
+# Variables for the worker
+[vars]
+ENVIRONMENT = "development"
+MAX_NOTEBOOKS = "4"
+WORKER_COORDINATION = "true"

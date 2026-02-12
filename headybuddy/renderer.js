@@ -25,6 +25,7 @@ const { ipcRenderer } = require('electron');
 let currentTask = null;
 let chatHistory = [];
 let isHeadyConnected = false;
+let isAutomationActive = false;
 
 // DOM Elements
 const taskInput = document.getElementById('task-input');
@@ -71,7 +72,7 @@ async function init() {
     setupEventListeners();
     await checkHeadyStatus();
     sendBuddyMessage('greeting');
-    
+
     // Check status every 30 seconds
     setInterval(checkHeadyStatus, 30000);
 }
@@ -153,7 +154,7 @@ function completeTask() {
     if (currentTask) {
         currentTask.completed = true;
         currentTask.completedAt = new Date();
-        
+
         currentTaskDisplay.innerHTML = `
             <div class="completed-task">
                 <span class="completed-icon">✅</span>
@@ -164,7 +165,7 @@ function completeTask() {
 
         sendBuddyMessage('completion');
         updateTaskCount(0);
-        
+
         // Clear after 3 seconds
         setTimeout(() => {
             currentTask = null;
@@ -224,7 +225,7 @@ function addMessage(text, sender) {
 
 function processUserMessage(message) {
     const lowerMsg = message.toLowerCase();
-    
+
     // Simple command processing
     if (lowerMsg.includes('sync') || lowerMsg.includes('git')) {
         setTimeout(() => addMessage("I'll sync your repositories! Give me a moment... 🤖", 'buddy'), 500);
@@ -259,7 +260,7 @@ function processUserMessage(message) {
 
 function sendBuddyMessage(type) {
     let responses;
-    switch(type) {
+    switch (type) {
         case 'greeting':
             responses = BUDDY_PERSONALITY.greetings;
             break;
@@ -275,7 +276,7 @@ function sendBuddyMessage(type) {
         default:
             responses = BUDDY_PERSONALITY.greetings;
     }
-    
+
     const response = responses[Math.floor(Math.random() * responses.length)];
     addMessage(response, 'buddy');
 }
@@ -283,7 +284,7 @@ function sendBuddyMessage(type) {
 // System Commands
 async function runCommand(command) {
     try {
-        switch(command) {
+        switch (command) {
             case 'sync':
                 addMessage("Running HeadySync... 🔄", 'buddy');
                 // In real implementation, this would call PowerShell script
@@ -319,15 +320,15 @@ async function checkHeadyStatus() {
 
 function updateHeadyStatus(status) {
     isHeadyConnected = status.connected;
-    
+
     const headyDot = document.querySelector('#heady-manager-status .status-dot');
     const mcpDot = document.querySelector('#mcp-status .status-dot');
     const gitDot = document.querySelector('#git-status .status-dot');
-    
+
     if (headyDot) {
         headyDot.className = `status-dot ${status.connected ? 'online' : 'offline'}`;
     }
-    
+
     // Simulate MCP and Git status
     if (mcpDot) mcpDot.className = `status-dot ${status.connected ? 'online' : 'offline'}`;
     if (gitDot) gitDot.className = `status-dot online`;
@@ -335,7 +336,7 @@ function updateHeadyStatus(status) {
 
 async function checkHeadyStatusAndReport() {
     await checkHeadyStatus();
-    
+
     if (isHeadyConnected) {
         addMessage("HeadyManager is online and running smoothly! 💚", 'buddy');
     } else {
@@ -351,10 +352,10 @@ function escapeHtml(text) {
 }
 
 function formatTime(date) {
-    return date.toLocaleTimeString('en-US', { 
-        hour: 'numeric', 
+    return date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
         minute: '2-digit',
-        hour12: true 
+        hour12: true
     });
 }
 
@@ -372,3 +373,101 @@ init();
 // Expose functions for onclick handlers
 window.completeTask = completeTask;
 window.clearTask = clearTask;
+
+// Automation functions
+window.uploadColabNotebooks = uploadColabNotebooks;
+window.getAvailableNotebooks = getAvailableNotebooks;
+window.takeScreenshot = takeScreenshot;
+window.closeAutomation = closeAutomation;
+
+/**
+ * Upload notebooks to Google Colab
+ */
+async function uploadColabNotebooks() {
+    try {
+        updateStatus('🚀 Starting Colab upload...', 'info');
+
+        const result = await ipcRenderer.invoke('automation-upload-colab');
+
+        if (result.success) {
+            updateStatus('✅ Notebooks uploaded successfully!', 'success');
+            addChatMessage('system', `Uploaded ${result.results.filter(r => r.success).length} notebooks to Colab`);
+
+            // Show results
+            result.results.forEach(r => {
+                if (r.success) {
+                    addChatMessage('system', `📓 ${r.name}: ${r.url}`);
+                } else {
+                    addChatMessage('system', `❌ ${r.name}: ${r.error}`);
+                }
+            });
+        } else {
+            updateStatus('❌ Upload failed: ' + result.error, 'error');
+            addChatMessage('system', `Upload failed: ${result.error}`);
+        }
+    } catch (error) {
+        updateStatus('❌ Upload error: ' + error.message, 'error');
+        addChatMessage('system', `Upload error: ${error.message}`);
+    }
+}
+
+/**
+ * Get available notebooks
+ */
+async function getAvailableNotebooks() {
+    try {
+        const result = await ipcRenderer.invoke('automation-get-notebooks');
+
+        if (result.success) {
+            addChatMessage('system', `Found ${result.notebooks.length} notebooks ready for upload:`);
+            result.notebooks.forEach(nb => {
+                addChatMessage('system', `📄 ${nb.name} - ${nb.file}`);
+            });
+        } else {
+            addChatMessage('system', `Error getting notebooks: ${result.error}`);
+        }
+    } catch (error) {
+        addChatMessage('system', `Error: ${error.message}`);
+    }
+}
+
+/**
+ * Take screenshot
+ */
+async function takeScreenshot() {
+    try {
+        updateStatus('📸 Taking screenshot...', 'info');
+
+        const result = await ipcRenderer.invoke('automation-screenshot');
+
+        if (result.success) {
+            updateStatus('✅ Screenshot saved!', 'success');
+            addChatMessage('system', `📸 Screenshot saved: ${result.path}`);
+        } else {
+            updateStatus('❌ Screenshot failed: ' + result.error, 'error');
+            addChatMessage('system', `Screenshot failed: ${result.error}`);
+        }
+    } catch (error) {
+        updateStatus('❌ Screenshot error: ' + error.message, 'error');
+        addChatMessage('system', `Screenshot error: ${error.message}`);
+    }
+}
+
+/**
+ * Close automation engine
+ */
+async function closeAutomation() {
+    try {
+        const result = await ipcRenderer.invoke('automation-close');
+
+        if (result.success) {
+            isAutomationActive = false;
+            updateStatus('🔒 Automation closed', 'info');
+            addChatMessage('system', 'Automation engine closed');
+        } else {
+            addChatMessage('system', `Error closing automation: ${result.error}`);
+        }
+    } catch (error) {
+        addChatMessage('system', `Error: ${error.message}`);
+    }
+}

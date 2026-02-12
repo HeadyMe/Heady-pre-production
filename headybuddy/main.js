@@ -17,10 +17,12 @@
 const { app, BrowserWindow, ipcMain, screen, Tray, Menu } = require('electron');
 const path = require('path');
 const axios = require('axios');
+const HeadyBuddyAutomation = require('./automation-engine');
 
 let mainWindow;
 let tray;
 let isAlwaysOnTop = true;
+let automation;
 
 // HeadyBuddy Configuration
 const CONFIG = {
@@ -29,7 +31,7 @@ const CONFIG = {
   x: 20, // Right side padding
   y: 100, // Top padding
   opacity: 0.95,
-  headyManagerUrl: 'https://headysystems.com'
+  headyManagerUrl: 'https://heady-manager-headysystems.onrender.com'
 };
 
 function createWindow() {
@@ -149,9 +151,65 @@ ipcMain.handle('close-window', () => {
   mainWindow.hide();
 });
 
+// Automation IPC handlers
+ipcMain.handle('automation-upload-colab', async () => {
+  try {
+    if (!automation) {
+      throw new Error('Automation engine not initialized');
+    }
+
+    const notebooks = automation.getAvailableNotebooks();
+    const results = await automation.uploadToColab(notebooks);
+
+    return { success: true, results };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('automation-get-notebooks', async () => {
+  try {
+    if (!automation) {
+      throw new Error('Automation engine not initialized');
+    }
+
+    const notebooks = automation.getAvailableNotebooks();
+    return { success: true, notebooks };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('automation-screenshot', async (event, pageName = 'default') => {
+  try {
+    if (!automation) {
+      throw new Error('Automation engine not initialized');
+    }
+
+    const screenshotPath = await automation.screenshot(pageName);
+    return { success: true, path: screenshotPath };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+ipcMain.handle('automation-close', async () => {
+  try {
+    if (automation) {
+      await automation.close();
+    }
+    return { success: true };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
 app.whenReady().then(() => {
   createWindow();
   createTray();
+
+  // Initialize automation engine
+  automation = new HeadyBuddyAutomation();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -183,4 +241,9 @@ app.on('ready', () => {
 
 app.on('will-quit', () => {
   globalShortcut.unregisterAll();
+
+  // Cleanup automation engine
+  if (automation) {
+    automation.close();
+  }
 });
