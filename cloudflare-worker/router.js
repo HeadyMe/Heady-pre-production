@@ -25,15 +25,15 @@ const ROUTE_MAP = {
 };
 
 const REDIRECTS = {
-  'headyconnection.org':    'https://headyconnection.com',
-  'www.headysystems.com':   'https://headysystems.com',
-  'www.headycloud.com':     'https://headycloud.com',
-  'www.headybuddy.org':     'https://headybuddy.org',
-  'www.headyconnection.com':'https://headyconnection.com',
-  'www.headymcp.com':       'https://headymcp.com',
-  'www.headybot.com':       'https://headybot.com',
-  'www.headycheck.com':     'https://headycheck.com',
-  'www.headyio.com':        'https://headyio.com',
+  'headyconnection.org':    'https://heady-manager-headyconnection.onrender.com',
+  'www.headysystems.com':   'https://heady-manager-headysystems.onrender.com',
+  'www.headycloud.com':     'https://heady-manager-headyme.onrender.com',
+  'www.headybuddy.org':     'https://heady-manager-headysystems.onrender.com',
+  'www.headyconnection.com':'https://heady-manager-headyconnection.onrender.com',
+  'www.headymcp.com':       'https://heady-manager-headysystems.onrender.com',
+  'www.headybot.com':       'https://heady-manager-headysystems.onrender.com',
+  'www.headycheck.com':     'https://heady-manager-headysystems.onrender.com',
+  'www.headyio.com':        'https://heady-manager-headysystems.onrender.com',
 };
 
 const CACHE_RULES = {
@@ -85,7 +85,7 @@ function jsonError(code, message, status, opts = {}) {
       retryAfterMs: opts.retryAfterMs || null,
       traceId: opts.traceId || null,
       suggestion: opts.suggestion || null,
-      docs: `https://headyio.com/errors/${code}`
+      docs: `https://heady-manager-headysystems.onrender.com/errors/${code}`
     }
   }), {
     status,
