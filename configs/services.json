@@ -1,0 +1,723 @@
+{
+  "version": "3.0.0",
+  "defaultProfile": "full",
+  "enforceAllByDefault": true,
+  "exclusionRequiresJustification": true,
+  "internal": {
+    "_description": "Self-contained Heady components — no outside resources required",
+    "nodes": {
+      "BRIDGE": {
+        "role": "The Connector",
+        "enabled": true,
+        "removable": false,
+        "category": "core"
+      },
+      "BRAIN": {
+        "role": "The Central Intelligence",
+        "enabled": true,
+        "removable": false,
+        "category": "core"
+      },
+      "CONDUCTOR": {
+        "role": "The Orchestrator",
+        "enabled": true,
+        "removable": false,
+        "category": "core"
+      },
+      "SOPHIA": {
+        "role": "The Matriarch",
+        "enabled": true,
+        "removable": false,
+        "category": "core"
+      },
+      "SENTINEL": {
+        "role": "The Guardian",
+        "enabled": true,
+        "removable": true,
+        "category": "security"
+      },
+      "MURPHY": {
+        "role": "The Inspector",
+        "enabled": true,
+        "removable": true,
+        "category": "quality"
+      },
+      "JANITOR": {
+        "role": "The Custodian",
+        "enabled": true,
+        "removable": true,
+        "category": "maintenance"
+      },
+      "JULES": {
+        "role": "The Hyper-Surgeon",
+        "enabled": true,
+        "removable": true,
+        "category": "precision",
+        "gpu": {
+          "accelerable": true,
+          "tasks": [
+            "optimization",
+            "code_quality",
+            "refactor"
+          ]
+        }
+      },
+      "OBSERVER": {
+        "role": "The Natural Observer",
+        "enabled": true,
+        "removable": true,
+        "category": "analysis"
+      },
+      "MUSE": {
+        "role": "The Brand Architect",
+        "enabled": true,
+        "removable": true,
+        "category": "creative"
+      },
+      "NOVA": {
+        "role": "The Expander",
+        "enabled": true,
+        "removable": true,
+        "category": "growth"
+      },
+      "CIPHER": {
+        "role": "The Cryptolinguist",
+        "enabled": true,
+        "removable": true,
+        "category": "encoding"
+      },
+      "ATLAS": {
+        "role": "The Auto-Archivist",
+        "enabled": true,
+        "removable": true,
+        "category": "archival",
+        "gpu": {
+          "accelerable": true,
+          "tasks": [
+            "generate_embeddings",
+            "semantic_search",
+            "documentation",
+            "summarize"
+          ]
+        }
+      },
+      "SASHA": {
+        "role": "The Dreamer",
+        "enabled": true,
+        "removable": true,
+        "category": "creative"
+      },
+      "SCOUT": {
+        "role": "The Hunter",
+        "enabled": true,
+        "removable": true,
+        "category": "discovery"
+      },
+      "OCULUS": {
+        "role": "The Visualizer",
+        "enabled": true,
+        "removable": true,
+        "category": "visual"
+      },
+      "BUILDER": {
+        "role": "The Constructor",
+        "enabled": true,
+        "removable": true,
+        "category": "build",
+        "gpu": {
+          "accelerable": true,
+          "tasks": [
+            "build_project",
+            "newproject",
+            "hydrate"
+          ]
+        }
+      },
+      "PYTHIA": {
+        "role": "The Oracle",
+        "enabled": true,
+        "removable": true,
+        "category": "prediction",
+        "gpu": {
+          "accelerable": true,
+          "tasks": [
+            "generate_text",
+            "reasoning_chain",
+            "huggingface",
+            "predict",
+            "infer"
+          ]
+        }
+      },
+      "LENS": {
+        "role": "The All-Seeing Eye",
+        "enabled": true,
+        "removable": true,
+        "category": "perception"
+      },
+      "MEMORY": {
+        "role": "The Eternal Archive",
+        "enabled": true,
+        "removable": false,
+        "category": "core"
+      }
+    },
+    "engines": {
+      "sacredGeometry": {
+        "description": "Sacred Geometry Architecture — organic pattern system",
+        "enabled": true,
+        "removable": false
+      },
+      "monteCarlo": {
+        "description": "Monte Carlo optimization — statistical pipeline scoring",
+        "enabled": true,
+        "removable": false
+      },
+      "storyDriver": {
+        "description": "Story Driver — narrative-driven orchestration",
+        "enabled": true,
+        "removable": true
+      },
+      "codeMap": {
+        "description": "CodeMap — codebase topology and dependency mapping",
+        "enabled": true,
+        "removable": true
+      },
+      "pipelineEngine": {
+        "description": "Pipeline Engine — build, deploy, and CI/CD orchestration",
+        "enabled": true,
+        "removable": false
+      },
+      "layerManager": {
+        "description": "Layer Manager — cloud-me / cloud-sys switching",
+        "enabled": true,
+        "removable": false
+      }
+    },
+    "services": {
+      "headyBuddy": {
+        "description": "HeadyBuddy AI chat assistant",
+        "domain": "https://headybot.com",
+        "enabled": true,
+        "removable": true
+      },
+      "mcpProtocol": {
+        "description": "MCP multi-channel protocol server",
+        "domain": "https://headymcp.com",
+        "enabled": true,
+        "removable": false
+      },
+      "healthMonitor": {
+        "description": "Health check and status monitoring",
+        "domain": "https://headycheck.com",
+        "enabled": true,
+        "removable": false
+      },
+      "connectionLayer": {
+        "description": "Node networking and AI node orchestration",
+        "domain": "https://headyconnection.com",
+        "enabled": true,
+        "removable": false
+      },
+      "cloudLayer": {
+        "description": "Cloud infrastructure management",
+        "domain": "https://headycloud.com",
+        "enabled": true,
+        "removable": false
+      },
+      "systemCore": {
+        "description": "Primary system API and management",
+        "domain": "https://headysystems.com",
+        "enabled": true,
+        "removable": false
+      },
+      "devPlatform": {
+        "description": "Developer documentation and API reference",
+        "domain": "https://headyio.com",
+        "enabled": true,
+        "removable": true
+      }
+    }
+  },
+  "external": {
+    "_description": "Third-party services — user-definable, incorporated into response and action flow",
+    "ai": {
+      "claude": {
+        "description": "Anthropic Claude — advanced reasoning and code generation",
+        "provider": "Anthropic",
+        "endpoint": "https://api.anthropic.com",
+        "credentialRef": "op://Heady/Claude API Secret/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "reasoning",
+          "code_generation",
+          "analysis",
+          "conversation"
+        ]
+      },
+      "perplexity": {
+        "description": "Perplexity — real-time search-augmented AI",
+        "provider": "Perplexity AI",
+        "endpoint": "https://api.perplexity.ai",
+        "credentialRef": "op://Heady/Perplexity Secret/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "web_search",
+          "real_time_data",
+          "citations"
+        ]
+      },
+      "huggingFace": {
+        "description": "Hugging Face — model hosting and inference",
+        "provider": "Hugging Face",
+        "endpoint": "https://api-inference.huggingface.co",
+        "credentialRef": "op://Heady/Hugging Face Secret v2/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "model_inference",
+          "embeddings",
+          "classification",
+          "generation"
+        ]
+      }
+    },
+    "infrastructure": {
+      "render": {
+        "description": "Render — cloud hosting and deployment",
+        "provider": "Render",
+        "credentialRef": "op://Heady/Render API Token G Labs Jules/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "hosting",
+          "deployment",
+          "auto_scaling"
+        ]
+      },
+      "cloudflare": {
+        "description": "Cloudflare — DNS, CDN, edge security, domain management",
+        "provider": "Cloudflare",
+        "credentialRef": "op://Heady/Cloudflare Secret/credential",
+        "enabled": true,
+        "removable": false,
+        "removalBlockReason": "All 9 branded domains route through Cloudflare — removing breaks all connectivity",
+        "capabilities": [
+          "dns",
+          "cdn",
+          "edge_security",
+          "ssl",
+          "domain_management"
+        ]
+      },
+      "aws": {
+        "description": "AWS — production cloud infrastructure",
+        "provider": "Amazon Web Services",
+        "credentialRef": "op://Heady/AWS Production Account/username",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "compute",
+          "storage",
+          "databases",
+          "lambda"
+        ]
+      }
+    },
+    "devtools": {
+      "github": {
+        "description": "GitHub — source control, CI/CD, collaboration",
+        "provider": "GitHub",
+        "credentialRef": "op://Heady/GitHub Personal Access Token/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "version_control",
+          "ci_cd",
+          "code_review",
+          "issues"
+        ]
+      },
+      "gitKraken": {
+        "description": "GitKraken/GitLens — visual git management",
+        "provider": "GitKraken",
+        "credentialRef": "op://Heady/GitLens Secret for GitKraken/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "git_visualization",
+          "blame",
+          "history"
+        ]
+      }
+    },
+    "data": {
+      "postgresql": {
+        "description": "PostgreSQL — production relational database",
+        "provider": "Self-hosted",
+        "credentialRef": "op://Heady/Production PostgreSQL/password",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "relational_data",
+          "queries",
+          "transactions",
+          "migrations"
+        ]
+      }
+    },
+    "security": {
+      "onePassword": {
+        "description": "1Password — secrets management and credential vault",
+        "provider": "1Password",
+        "credentialRef": "service_account_token",
+        "enabled": true,
+        "removable": false,
+        "removalBlockReason": "All credentials are stored in 1Password — removing breaks authentication chain",
+        "capabilities": [
+          "secrets_management",
+          "credential_rotation",
+          "vault_access"
+        ]
+      }
+    },
+    "gpu": {
+      "colabProPlus": {
+        "description": "Google Colab Pro+ — GPU compute clusters (A100/V100/T4) for AI node acceleration",
+        "provider": "Google",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "gpu_compute",
+          "background_execution",
+          "model_inference",
+          "embeddings",
+          "batch_processing"
+        ],
+        "gpuTypes": [
+          "A100",
+          "V100",
+          "T4"
+        ],
+        "maxConcurrentTasks": 8,
+        "heartbeatIntervalSec": 30,
+        "accelerableNodes": [
+          "ATLAS",
+          "PYTHIA",
+          "JULES",
+          "BUILDER"
+        ],
+        "costPerMonth": 49.99
+      },
+      "ngrok": {
+        "description": "ngrok — secure tunnels for Colab GPU node public HTTPS access",
+        "provider": "ngrok",
+        "credentialRef": "colab_secrets:NGROK_TOKEN",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "tunneling",
+          "https_endpoint",
+          "dynamic_url"
+        ]
+      }
+    },
+    "specialized": {
+      "ctx": {
+        "description": "CTX API — specialized context processing",
+        "provider": "CTX",
+        "credentialRef": "op://Heady/CTX API Secret/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "context_processing",
+          "enrichment"
+        ]
+      },
+      "jules": {
+        "description": "Jules — hyper-precision surgical code operations",
+        "provider": "Heady Internal",
+        "credentialRef": "op://Heady/Jules Secret/credential",
+        "enabled": true,
+        "removable": true,
+        "capabilities": [
+          "precision_editing",
+          "surgical_refactoring",
+          "code_optimization"
+        ]
+      }
+    }
+  },
+  "profiles": {
+    "full": {
+      "description": "All internal and external services active — maximum capability",
+      "isDefault": true,
+      "internal": {
+        "allEnabled": true
+      },
+      "external": {
+        "allEnabled": true
+      }
+    },
+    "internal-only": {
+      "description": "Only self-contained Heady components — no external dependencies",
+      "internal": {
+        "allEnabled": true
+      },
+      "external": {
+        "allEnabled": false,
+        "exceptions": [
+          "cloudflare",
+          "onePassword"
+        ]
+      }
+    },
+    "lightweight": {
+      "description": "Core nodes + essential services only — minimal resource usage",
+      "internal": {
+        "nodes": {
+          "onlyCategories": [
+            "core",
+            "security"
+          ]
+        },
+        "engines": {
+          "allEnabled": true
+        },
+        "services": {
+          "allEnabled": true
+        }
+      },
+      "external": {
+        "allEnabled": false,
+        "exceptions": [
+          "cloudflare",
+          "onePassword",
+          "github"
+        ]
+      }
+    },
+    "creative": {
+      "description": "Creative and generative pipeline — brand, story, visual focus",
+      "internal": {
+        "nodes": {
+          "onlyCategories": [
+            "core",
+            "creative",
+            "visual",
+            "perception"
+          ]
+        },
+        "engines": {
+          "allEnabled": true
+        },
+        "services": {
+          "allEnabled": true
+        }
+      },
+      "external": {
+        "allEnabled": true
+      }
+    },
+    "security-audit": {
+      "description": "Security and quality focused — inspection, guardian, encryption",
+      "internal": {
+        "nodes": {
+          "onlyCategories": [
+            "core",
+            "security",
+            "quality",
+            "encoding"
+          ]
+        },
+        "engines": {
+          "allEnabled": true
+        },
+        "services": {
+          "allEnabled": true
+        }
+      },
+      "external": {
+        "allEnabled": true
+      }
+    },
+    "gpu-accelerated": {
+      "description": "Full services + GPU routing — compute-intensive tasks routed to Colab Pro+ cluster",
+      "internal": {
+        "allEnabled": true
+      },
+      "external": {
+        "allEnabled": true
+      },
+      "gpuRouting": {
+        "enabled": true,
+        "preferGpu": [
+          "generate_embeddings",
+          "semantic_search",
+          "generate_text",
+          "reasoning_chain",
+          "optimization",
+          "summarize"
+        ],
+        "fallbackToLocal": true
+      }
+    },
+    "custom": {
+      "description": "User-defined combination — specify exactly which services to include/exclude",
+      "internal": {
+        "allEnabled": true,
+        "exclusions": []
+      },
+      "external": {
+        "allEnabled": true,
+        "exclusions": []
+      },
+      "exclusionJustifications": {}
+    }
+  },
+  "orchestration": {
+    "responseFlow": {
+      "description": "Order of service involvement in every response/action cycle",
+      "stages": [
+        {
+          "stage": "intake",
+          "services": [
+            "BRAIN",
+            "BRIDGE",
+            "CONDUCTOR"
+          ],
+          "description": "Parse input, route to appropriate nodes, orchestrate flow"
+        },
+        {
+          "stage": "analysis",
+          "services": [
+            "OBSERVER",
+            "LENS",
+            "SCOUT",
+            "SENTINEL"
+          ],
+          "description": "Analyze context, scan for patterns, detect threats"
+        },
+        {
+          "stage": "enrichment",
+          "services": [
+            "MEMORY",
+            "ATLAS",
+            "perplexity",
+            "huggingFace",
+            "ctx"
+          ],
+          "description": "Pull historical context, search real-time data, enrich with models"
+        },
+        {
+          "stage": "reasoning",
+          "services": [
+            "PYTHIA",
+            "SOPHIA",
+            "claude"
+          ],
+          "description": "Predict outcomes, apply wisdom, generate reasoning"
+        },
+        {
+          "stage": "creation",
+          "services": [
+            "MUSE",
+            "SASHA",
+            "OCULUS",
+            "BUILDER",
+            "JULES",
+            "NOVA"
+          ],
+          "description": "Design, imagine, visualize, construct, refine, expand"
+        },
+        {
+          "stage": "quality",
+          "services": [
+            "MURPHY",
+            "CIPHER",
+            "SENTINEL",
+            "monteCarlo"
+          ],
+          "description": "Inspect output, encode/validate, guard, score statistically"
+        },
+        {
+          "stage": "delivery",
+          "services": [
+            "CONDUCTOR",
+            "BRIDGE",
+            "mcpProtocol",
+            "storyDriver",
+            "sacredGeometry"
+          ],
+          "description": "Orchestrate final output, connect to destination, format via MCP, narrate, apply organic patterns"
+        },
+        {
+          "stage": "gpu-acceleration",
+          "services": [
+            "ATLAS",
+            "PYTHIA",
+            "JULES",
+            "BUILDER",
+            "colabProPlus"
+          ],
+          "description": "Route compute-intensive tasks to Colab Pro+ GPU cluster when available",
+          "conditional": true,
+          "condition": "Task requires GPU compute (embeddings, inference, optimization, large builds)"
+        },
+        {
+          "stage": "maintenance",
+          "services": [
+            "JANITOR",
+            "MEMORY",
+            "healthMonitor",
+            "ATLAS"
+          ],
+          "description": "Clean up, archive to memory, log health, catalog artifacts"
+        }
+      ]
+    },
+    "taskRouting": {
+      "_description": "Maps task types to the AI node that handles them — used for Colab GPU routing",
+      "generate_embeddings": "ATLAS",
+      "semantic_search": "ATLAS",
+      "documentation": "ATLAS",
+      "summarize": "ATLAS",
+      "generate_text": "PYTHIA",
+      "reasoning_chain": "PYTHIA",
+      "huggingface": "PYTHIA",
+      "predict": "PYTHIA",
+      "infer": "PYTHIA",
+      "optimization": "JULES",
+      "code_quality": "JULES",
+      "refactor": "JULES",
+      "build_project": "BUILDER",
+      "newproject": "BUILDER",
+      "hydrate": "BUILDER"
+    },
+    "fallbackBehavior": "If a service in a stage is disabled, skip it — never block the pipeline. Log the skip for audit."
+  },
+  "rules": {
+    "nonRemovableServices": [
+      "BRIDGE",
+      "BRAIN",
+      "CONDUCTOR",
+      "SOPHIA",
+      "MEMORY",
+      "sacredGeometry",
+      "monteCarlo",
+      "pipelineEngine",
+      "layerManager",
+      "mcpProtocol",
+      "healthMonitor",
+      "connectionLayer",
+      "cloudLayer",
+      "systemCore",
+      "cloudflare",
+      "onePassword"
+    ],
+    "removalPolicy": "Any service marked removable=true can be excluded from a profile. Exclusion MUST include a justification string. Services marked removable=false are core infrastructure and cannot be disabled under any circumstances.",
+    "defaultPolicy": "All internal and external services are active 100% of the time in the default 'full' profile. Custom profiles inherit 'full' and subtract services with justification."
+  }
+}

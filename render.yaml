@@ -28,7 +28,25 @@ services:
       - key: HEADY_TARGET
         value: "${HEADY_TARGET}"
       - key: HEADY_VERSION
-        value: "2.0.0-unified"
+        value: "3.0.0"
+      - key: CLOUD_LAYER
+        value: "headysystems"
+      - key: HEADY_ENDPOINT
+        value: "https://headysystems.com"
+      - key: HEADY_ME_URL
+        value: "https://headycloud.com"
+      - key: HEADY_SYSTEMS_URL
+        value: "https://headysystems.com"
+      - key: HEADY_CONNECTION_URL
+        value: "https://headyconnection.com"
+      - key: ENABLE_COLAB_ROUTING
+        value: "true"
+      - key: COLAB_REGISTRATION_ENABLED
+        value: "true"
+      - key: PYTHIA_ENABLED
+        value: "true"
+      - key: ALLOWED_ORIGINS
+        value: "https://headysystems.com,https://headycloud.com,https://headyconnection.com,https://headymcp.com,https://headybot.com,https://headyio.com,https://headycheck.com,https://headybuddy.org"
       - key: ENABLE_CODEMAP
         value: "true"
       - key: JULES_ENABLED
@@ -56,4 +74,6 @@ services:
       - key: ENABLE_GPUDIRECT
         value: "${ENABLE_GPUDIRECT}"
       - key: HF_TOKEN
-        value: "${HF_TOKEN}"
+        fromSecret: HF_TOKEN
+      - key: RENDER_API_KEY
+        fromSecret: RENDER_API_KEY
