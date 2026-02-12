@@ -15,9 +15,38 @@
  *   headysystems.com | headycloud.com | headyconnection.com
  */
 
-const axios = require("axios");
+const https = require("https");
+const http = require("http");
+const { URL } = require("url");
 const path = require("path");
 const fs = require("fs");
+
+function httpRequest(method, urlStr, body, headers = {}, timeout = 30000) {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(urlStr);
+    const lib = parsed.protocol === "https:" ? https : http;
+    const options = {
+      hostname: parsed.hostname,
+      port: parsed.port || (parsed.protocol === "https:" ? 443 : 80),
+      path: parsed.pathname + parsed.search,
+      method,
+      headers: { "Content-Type": "application/json", ...headers },
+      timeout,
+    };
+    const req = lib.request(options, (res) => {
+      let data = "";
+      res.on("data", (chunk) => (data += chunk));
+      res.on("end", () => {
+        try { resolve({ status: res.statusCode, data: JSON.parse(data) }); }
+        catch { resolve({ status: res.statusCode, data }); }
+      });
+    });
+    req.on("error", reject);
+    req.on("timeout", () => { req.destroy(); reject(new Error("Request timeout")); });
+    if (body) req.write(JSON.stringify(body));
+    req.end();
+  });
+}
 
 const CLOUD_DOMAINS = {
   headysystems: "https://headysystems.com",
@@ -57,10 +86,9 @@ class HeadyColabClusterManager {
     console.log(`[${this.cloudLayer}] Registering Colab node: ${node_id} (${node_role})`);
 
     try {
-      const healthCheck = await axios.get(`${url}/health`, {
-        timeout: 10000,
-        headers: { "User-Agent": `HeadyManager/${this.cloudLayer}` },
-      });
+      const healthCheck = await httpRequest("GET", `${url}/health`, null, {
+        "User-Agent": `HeadyManager/${this.cloudLayer}`,
+      }, 10000);
 
       const nodeInfo = {
         ...nodeData,
@@ -159,7 +187,8 @@ class HeadyColabClusterManager {
     );
 
     try {
-      const response = await axios.post(
+      const response = await httpRequest(
+        "POST",
         `${selectedNode.url}/task`,
         {
           task_id: task.id || `task-${Date.now()}`,
@@ -169,13 +198,11 @@ class HeadyColabClusterManager {
           source_cloud: this.cloudLayer,
         },
         {
-          headers: {
-            "X-Priority": task.priority || "P1",
-            "X-Source-Cloud": this.cloudLayer,
-            Authorization: `Bearer ${process.env.HEADY_API_KEY}`,
-          },
-          timeout: task.priority === "P0" ? 300000 : 60000,
-        }
+          "X-Priority": task.priority || "P1",
+          "X-Source-Cloud": this.cloudLayer,
+          Authorization: `Bearer ${process.env.HEADY_API_KEY}`,
+        },
+        task.priority === "P0" ? 300000 : 60000
       );
 
       // Update metrics
@@ -251,7 +278,7 @@ class HeadyColabClusterManager {
       average_load:
         healthyNodes.length > 0
           ? healthyNodes.reduce((sum, n) => sum + (n.metrics?.current_load || 0), 0) /
-            healthyNodes.length
+          healthyNodes.length
           : 0,
       task_routing_map: TASK_NODE_MAP,
     };
