@@ -1503,6 +1503,101 @@ app.get("/api/intelligence/manifest", (req, res) => {
   }
 });
 
+// ─── HeadySoul Governance API ─────────────────────────────────────────
+
+// Full HeadySoul state
+app.get("/api/soul/state", (req, res) => {
+  res.json(intel.soul.getState());
+});
+
+// Evaluate a task for mission alignment
+app.post("/api/soul/evaluate", async (req, res) => {
+  try {
+    const decision = await intel.soul.evaluateTask(req.body);
+    res.json(decision);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Filter strategies by mission alignment
+app.post("/api/soul/filter-strategies", async (req, res) => {
+  try {
+    const { strategies, context } = req.body;
+    if (!strategies) return res.status(400).json({ error: "strategies array required" });
+    const result = await intel.soul.filterStrategies(strategies, context || {});
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Audit a pipeline run
+app.get("/api/soul/audit", (req, res) => {
+  const runId = req.query.run_id || null;
+  res.json(intel.soul.auditPipelineRun(runId));
+});
+
+// Full alignment report
+app.get("/api/soul/report", (req, res) => {
+  res.json(intel.soul.generateAlignmentReport());
+});
+
+// Get escalation queue
+app.get("/api/soul/escalations", (req, res) => {
+  res.json(intel.soul.getEscalationQueue());
+});
+
+// Record human override
+app.post("/api/soul/override", (req, res) => {
+  const { task_id, decision, reason } = req.body;
+  if (!task_id || !decision) {
+    return res.status(400).json({ error: "task_id and decision (approve/veto) required" });
+  }
+  const result = intel.soul.recordOverride(task_id, decision, reason || "");
+  res.json({ success: true, override: result });
+});
+
+// Get decision log
+app.get("/api/soul/decisions", (req, res) => {
+  const limit = parseInt(req.query.limit) || 50;
+  const vetoed = req.query.vetoed === "true" ? true : req.query.vetoed === "false" ? false : undefined;
+  res.json({ decisions: intel.soul.logger.getDecisions({ limit, vetoed }) });
+});
+
+// Get overrides history
+app.get("/api/soul/overrides", (req, res) => {
+  const limit = parseInt(req.query.limit) || 50;
+  res.json({ overrides: intel.soul.logger.getOverrides(limit) });
+});
+
+// Connect Colab GPU node for ML scoring
+app.post("/api/soul/colab/connect", async (req, res) => {
+  const { url } = req.body;
+  if (!url) return res.status(400).json({ error: "url required" });
+  const result = await intel.soul.connectColab(url);
+  res.json({ success: true, ...result });
+});
+
+// Get value weights
+app.get("/api/soul/values", (req, res) => {
+  res.json({
+    weights: intel.soul.valueWeights.getWeights(),
+    thresholds: intel.soul.valueWeights.getThresholds(),
+    sacred_geometry: intel.soul.valueWeights.sacredGeometry,
+  });
+});
+
+// HeadySoul config (YAML)
+app.get("/api/soul/config", (req, res) => {
+  try {
+    const config = fs.readFileSync(path.join(__dirname, "configs", "heady-soul.yaml"), "utf8");
+    res.type("text/yaml").send(config);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({

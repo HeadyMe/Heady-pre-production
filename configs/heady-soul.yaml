@@ -1,0 +1,101 @@
+# ╔══════════════════════════════════════════════════════════════════╗
+# ║  ∞ SACRED GEOMETRY ∞  HeadySoul — Ultimate Governance Layer     ║
+# ║  FILE: heady-soul.yaml                                          ║
+# ║  OWNER: Eric Haywood                                            ║
+# ╚══════════════════════════════════════════════════════════════════╝
+
+version: 1.0.0
+owner: Eric Haywood
+last_updated: "2026-02-12"
+
+# Mission value weights (must sum to 1.0)
+# These define what "goodness" means for every decision Heady makes
+value_weights:
+  access: 0.30          # Expand access to underserved users, free/nonprofit/student
+  fairness: 0.25        # No lock-in, no extraction, co-ownership, transparency
+  intelligence: 0.20    # System learning, self-improvement, adaptive optimization
+  happiness: 0.15       # User joy, satisfaction, delight, positive experience
+  redistribution: 0.10  # Wealth/value redistribution, revenue sharing, donations
+
+# Decision thresholds (0-100 scale)
+thresholds:
+  veto: 40              # Below this = block execution, require human override
+  escalate: 60          # Below this but above veto = escalate to Eric
+  auto_approve: 75      # Above this = fast-track, no review needed
+  critical_override: 90 # Above this = exempt from stagnation watchdog
+
+# Evaluation tiers — not everything needs full HeadySoul review
+tiers:
+  tier1:
+    description: "P0 critical path, high social impact, deployments — full HeadySoul evaluation"
+    applies_to: ["P0", "deployment", "pricing", "user_facing", "policy"]
+    evaluation: full
+  tier2:
+    description: "Standard work — cached alignment rules from past decisions"
+    applies_to: ["P1", "P2", "feature", "refactor"]
+    evaluation: cached
+  tier3:
+    description: "Low-risk, low-impact — skip HeadySoul, trust Intelligence Engine"
+    applies_to: ["P3", "docs", "polish", "internal"]
+    evaluation: skip
+
+# Escalation channels
+escalation:
+  primary: heady_buddy
+  primary_url: "https://headybot.com"
+  fallback: dashboard
+  fallback_url: "https://headysystems.com/soul/escalations"
+  email: eric@headysystems.com
+  max_pending_escalations: 20
+  auto_approve_after_hours: 24
+
+# Anti-extraction rules — hard vetoes, no override possible
+hard_vetoes:
+  - pattern: "dark_pattern"
+    description: "Any UI/UX pattern designed to manipulate or deceive users"
+  - pattern: "vendor_lock_in"
+    description: "Features that prevent users from leaving or exporting data"
+  - pattern: "surveillance"
+    description: "Tracking or data collection beyond what's needed for service"
+  - pattern: "paywall_essential"
+    description: "Putting essential accessibility features behind a paywall"
+  - pattern: "exploit_vulnerable"
+    description: "Features that disproportionately affect vulnerable populations"
+
+# Sacred Geometry alignment — coherence checks
+sacred_geometry:
+  principles:
+    - organic: "Solutions should feel natural, not forced"
+    - breathing: "Systems should have rhythm, rest, and renewal"
+    - deterministic: "Same inputs should produce same outputs"
+    - self_correcting: "Errors should trigger automatic healing"
+    - fractal: "Same values at every scale — code, service, org, society"
+  coherence_weight: 0.15  # Additional weight for Sacred Geometry alignment
+
+# Drift detection
+drift:
+  window_size: 20         # Number of recent decisions to analyze
+  threshold: 10.0         # Points drop that triggers warning
+  alert_on_consecutive_vetoes: 3
+  auto_pause_on_severe_drift: true
+  severe_drift_threshold: 20.0
+
+# Override learning
+learning:
+  enabled: true
+  min_overrides_to_train: 20
+  retrain_interval: 50    # Retrain after this many new decisions
+  confidence_threshold: 0.8  # Prediction confidence needed to auto-decide
+
+# Audit settings
+audit:
+  retention_days: 365
+  report_interval_hours: 24
+  include_in_checkpoint: true
+
+# Cloud integration
+cloud:
+  branded_domains_only: true
+  api_base: "https://headysystems.com"
+  soul_colab_url_env: "HEADY_SOUL_COLAB_URL"
+  fallback_to_local: true
