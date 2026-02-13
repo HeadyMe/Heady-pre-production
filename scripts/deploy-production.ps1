@@ -76,7 +76,8 @@ function Verify-Production {
     param([string]$Name)
     
     $serviceName = $RenderServices[$Name]
-    $url = "https://$serviceName.onrender.com/api/health"
+    $domainMap = @{ "heady-manager-headyme" = "headycloud.com"; "heady-manager-headysystems" = "headysystems.com" }
+    $url = "https://$($domainMap[$serviceName])/api/health"
     
     Write-Host "`nVerifying $Name at $url..." -ForegroundColor Yellow
     
@@ -113,13 +114,14 @@ Write-Host "  DEPLOYMENT INITIATED" -ForegroundColor Green
 Write-Host "==================================================" -ForegroundColor Cyan
 Write-Host "`nProduction URLs:" -ForegroundColor White
 foreach ($t in $targetList) {
-    Write-Host "  • $t : https://$($RenderServices[$t]).onrender.com" -ForegroundColor Gray
+    $domainMap2 = @{ "heady-manager-headyme" = "headycloud.com"; "heady-manager-headysystems" = "headysystems.com" }
+    Write-Host "  • $t : https://$($domainMap2[$RenderServices[$t]])" -ForegroundColor Gray
 }
 
 Write-Host "`nNext Steps:" -ForegroundColor Yellow
 Write-Host "  1. Wait 2-5 minutes for Render build" -ForegroundColor Gray
 Write-Host "  2. Run: .\scripts\verify-production.ps1" -ForegroundColor Gray
-Write-Host "  3. Check health: curl https://<service>.onrender.com/api/health" -ForegroundColor Gray
+Write-Host "  3. Check health: curl https://headysystems.com/api/health" -ForegroundColor Gray
 
 Write-Host "`n==================================================" -ForegroundColor Cyan
 Write-Host "  Files -> Scan -> Analyze -> Optimize" -ForegroundColor Cyan

@@ -29,10 +29,10 @@ Set-Location $HeadyRoot
 # Pre-deployment verification
 Write-Host "[1/5] Pre-Deployment Verification..." -ForegroundColor Yellow
 try {
-    $health = Invoke-RestMethod -Uri "http://localhost:3300/api/health" -Method Get -ErrorAction Stop
+    $health = Invoke-RestMethod -Uri "https://headysystems.com/api/health" -Method Get -ErrorAction Stop
     Write-Host "  [OK] HeadyManager is operational" -ForegroundColor Green
     
-    $summary = Invoke-RestMethod -Uri "http://localhost:3300/api/conductor/summary" -Method Get -ErrorAction Stop
+    $summary = Invoke-RestMethod -Uri "https://headysystems.com/api/conductor/summary" -Method Get -ErrorAction Stop
     Write-Host "  [OK] HeadyConductor is ready" -ForegroundColor Green
     Write-Host "  * Total Capabilities: $($summary.registry_summary.total_capabilities)" -ForegroundColor Gray
 } catch {
@@ -83,7 +83,7 @@ if (Test-Path ".env") {
 # Final system check
 Write-Host "`n[5/5] Final System Check..." -ForegroundColor Yellow
 try {
-    $finalCheck = Invoke-RestMethod -Uri "http://localhost:3300/api/conductor/summary" -Method Get
+    $finalCheck = Invoke-RestMethod -Uri "https://headysystems.com/api/conductor/summary" -Method Get
     
     Write-Host "`nDEPLOYMENT READINESS:" -ForegroundColor Cyan
     Write-Host "  * HeadyManager: READY" -ForegroundColor Green

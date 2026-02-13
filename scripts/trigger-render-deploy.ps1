@@ -41,6 +41,6 @@ Write-Host "2. Click 'Manual Deploy' → 'Deploy latest commit'" -ForegroundColo
 Write-Host "3. Find 'heady-manager-headysystems' service" -ForegroundColor Gray
 Write-Host "4. Click 'Manual Deploy' → 'Deploy latest commit'" -ForegroundColor Gray
 Write-Host "`nProduction URLs will be:" -ForegroundColor Yellow
-Write-Host "  • https://heady-manager-headyme.onrender.com" -ForegroundColor Gray
-Write-Host "  • https://heady-manager-headysystems.onrender.com" -ForegroundColor Gray
+Write-Host "  • https://headycloud.com" -ForegroundColor Gray
+Write-Host "  • https://headysystems.com" -ForegroundColor Gray
 Write-Host "==================================================" -ForegroundColor Cyan

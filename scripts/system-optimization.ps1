@@ -29,7 +29,7 @@ Set-Location $HeadyRoot
 # Step 1: Verify HeadyManager (Orchestrator)
 Write-Host "[1/7] Verifying HeadyManager Orchestrator..." -ForegroundColor Yellow
 try {
-    $health = Invoke-RestMethod -Uri "http://localhost:3300/api/health" -Method Get -ErrorAction Stop
+    $health = Invoke-RestMethod -Uri "https://headysystems.com/api/health" -Method Get -ErrorAction Stop
     Write-Host "  [OK] HeadyManager is running on port 3300" -ForegroundColor Green
     Write-Host "  * Version: $($health.version)" -ForegroundColor Gray
     Write-Host "  * Uptime: $([math]::Round($health.uptime, 2))s" -ForegroundColor Gray
@@ -42,7 +42,7 @@ try {
 # Step 2: Verify HeadyConductor Integration
 Write-Host "`n[2/7] Verifying HeadyConductor Integration..." -ForegroundColor Yellow
 try {
-    $summary = Invoke-RestMethod -Uri "http://localhost:3300/api/conductor/summary" -Method Get -ErrorAction Stop
+    $summary = Invoke-RestMethod -Uri "https://headysystems.com/api/conductor/summary" -Method Get -ErrorAction Stop
     Write-Host "  [OK] HeadyConductor is operational" -ForegroundColor Green
     Write-Host "  * Total Capabilities: $($summary.registry_summary.total_capabilities)" -ForegroundColor Gray
     Write-Host "  * Nodes: $($summary.registry_summary.nodes)" -ForegroundColor Gray
@@ -111,7 +111,7 @@ $testRequest = @{
 } | ConvertTo-Json
 
 try {
-    $orchestrationTest = Invoke-RestMethod -Uri "http://localhost:3300/api/conductor/orchestrate" `
+    $orchestrationTest = Invoke-RestMethod -Uri "https://headysystems.com/api/conductor/orchestrate" `
         -Method Post `
         -ContentType "application/json" `
         -Body $testRequest `
@@ -128,7 +128,7 @@ Write-Host "`n[7/7] System Status Summary" -ForegroundColor Yellow
 Write-Host "=" * 80 -ForegroundColor Cyan
 
 try {
-    $finalSummary = Invoke-RestMethod -Uri "http://localhost:3300/api/conductor/summary" -Method Get
+    $finalSummary = Invoke-RestMethod -Uri "https://headysystems.com/api/conductor/summary" -Method Get
     
     Write-Host "`nCORE COMPONENTS:" -ForegroundColor Cyan
     Write-Host "  * HeadyManager: OPERATIONAL" -ForegroundColor Green

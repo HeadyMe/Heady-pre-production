@@ -270,7 +270,7 @@ function Action-Switch {
         Write-Host "  Usage: hl switch <layer-id>" -ForegroundColor Yellow
         Write-Host ""
         Write-Host "  Available layers:" -ForegroundColor DarkGray
-        Write-Host "    local      - Local Dev (localhost:3300)" -ForegroundColor Green
+        Write-Host "    local      - Local Dev (headysystems.com)" -ForegroundColor Green
         Write-Host "    cloud-me   - Cloud HeadyMe (Render)" -ForegroundColor Cyan
         Write-Host "    cloud-sys  - Cloud HeadySystems (Render)" -ForegroundColor Magenta
         Write-Host "    cloud-conn - Cloud HeadyConnection (Render)" -ForegroundColor Yellow

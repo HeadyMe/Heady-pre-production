@@ -24,7 +24,7 @@ services:
   headysoul:
     build: ./services/headysoul
     container_name: headysoul
-    ports: ["8000:8000"]
+    ports: [ "8000:8000" ]
     env_file: .env
     restart: always
     runtime: nvidia
@@ -35,7 +35,7 @@ services:
   jules:
     build: ./services/jules
     container_name: jules
-    ports: ["8001:8001"]
+    ports: [ "8001:8001" ]
     env_file: .env
     restart: always
     networks:
@@ -45,7 +45,7 @@ services:
   observer:
     build: ./services/observer
     container_name: observer
-    ports: ["8002:8002"]
+    ports: [ "8002:8002" ]
     env_file: .env
     restart: always
     networks:
@@ -55,7 +55,7 @@ services:
   atlas:
     build: ./services/atlas
     container_name: atlas
-    ports: ["8003:8003"]
+    ports: [ "8003:8003" ]
     env_file: .env
     restart: always
     networks:
@@ -80,8 +80,8 @@ services:
       - BUILDER_ENABLED=true
       - ATLAS_ENABLED=true
       # Cloud connectivity
-      - CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
-      - CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
+      - CLOUD_HEADYME_URL=https://headycloud.com
+      - CLOUD_HEADYSYSTEMS_URL=https://headysystems.com
       - HYBRID_MODE=true
     volumes:
       - heady-memory:/app/.heady-memory
@@ -89,7 +89,7 @@ services:
     networks:
       - heady-hybrid
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3300/api/health"]
+      test: [ "CMD", "curl", "-sf", "http://heady-manager-local:3300/api/health" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -152,8 +152,8 @@ services:
       - NODE_ENV=production
       - BRIDGE_MODE=true
       - LOCAL_MANAGER_URL=http://heady-manager-local:3300
-      - CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
-      - CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
+      - CLOUD_HEADYME_URL=https://headycloud.com
+      - CLOUD_HEADYSYSTEMS_URL=https://headysystems.com
       - SYNC_INTERVAL=30
     depends_on:
       - heady-manager-local
@@ -166,6 +166,7 @@ volumes:
   heady-logs:
   heady-redis:
   heady-postgres:
+
 
 networks:
   heady-hybrid:

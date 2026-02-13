@@ -37,8 +37,10 @@ const INTERNAL_DOMAINS = [
   "headyconnection.com",
   "headymcp.com",
   "headybot.com",
-  "heady-manager",
-  "*.onrender.com",
+  "headycheck.com",
+  "headyio.com",
+  "headybuddy.org",
+  "headyconnection.org",
 ];
 
 // ─── DIRECT AGENTS (no proxy, keep-alive) ────────────────────────────────

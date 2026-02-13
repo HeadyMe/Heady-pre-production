@@ -80,7 +80,7 @@ try {
     $response = Invoke-RestMethod -Uri "https://api.render.com/v1/services" -Method POST -Headers $headers -Body $serviceConfig
     Write-Host "✅ Service created successfully!" -ForegroundColor Green
     Write-Host "   ID: $($response.service.id)" -ForegroundColor Gray
-    Write-Host "   URL: https://$($response.service.name).onrender.com" -ForegroundColor Gray
+    Write-Host "   URL: https://headysystems.com" -ForegroundColor Gray
 } catch {
     Write-Host "⚠️  API Error: $($_.Exception.Message)" -ForegroundColor Yellow
     Write-Host "   Please use manual Blueprint Sync instead" -ForegroundColor Gray

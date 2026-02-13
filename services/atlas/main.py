@@ -399,4 +399,4 @@ if __name__ == "__main__":
     print(f"🧠 FAISS Index: {atlas.index.ntotal} vectors")
     
     # Start server
-    uvicorn.run(app, host="0.0.0.0", port=8003)
+    uvicorn.run(app, host="::", port=8003)

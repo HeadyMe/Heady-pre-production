@@ -66,9 +66,9 @@ probes:
     interval: 120
     criticality: critical
 
-  - name: render-deployment
+  - name: cloud-deployment
     type: http
-    url: https://heady-manager.onrender.com/api/health
+    url: https://headysystems.com/api/health
     method: GET
     expectedStatus: 200
     maxLatencyMs: 10000

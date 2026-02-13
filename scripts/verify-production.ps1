@@ -27,25 +27,13 @@ Write-Host "  HEADY PRODUCTION VERIFICATION" -ForegroundColor White
 Write-Host "==================================================" -ForegroundColor Cyan
 
 $services = @{
-    "HeadyMe" = "https://heady-manager-headyme.onrender.com/api/health"
-    "HeadySystems" = "https://heady-manager-headysystems.onrender.com/api/health"
+    "HeadyCloud" = "https://headycloud.com/api/health"
+    "HeadySystems" = "https://headysystems.com/api/health"
+    "HeadyConnection" = "https://headyconnection.com/api/health"
 }
 
-$local = "http://localhost:3300/api/health"
-
-# Check local first
-Write-Host "`nChecking LOCAL system..." -ForegroundColor Yellow
-try {
-    $response = Invoke-RestMethod -Uri $local -TimeoutSec 10
-    if ($response.ok) {
-        Write-Host "✅ LOCAL: LIVE (v$($response.version), uptime: $([math]::Round($response.uptime))s)" -ForegroundColor Green
-    }
-} catch {
-    Write-Host "❌ LOCAL: Not responding" -ForegroundColor Red
-}
-
-# Check production
-Write-Host "`nChecking PRODUCTION services..." -ForegroundColor Yellow
+# Check cloud production services
+Write-Host "`nChecking PRODUCTION cloud services..." -ForegroundColor Yellow
 $allLive = $true
 
 foreach ($svc in $services.GetEnumerator()) {

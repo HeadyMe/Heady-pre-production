@@ -147,9 +147,9 @@ PYTHON_WORKER_PATH=backend/python_worker
 HEADY_PYTHON_BIN=python
 
 # Cloud Endpoints (for hybrid mode)
-CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
-CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
-CLOUD_HEADYCONNECTION_URL=https://heady-manager-headyconnection.onrender.com
+CLOUD_HEADYME_URL=https://headycloud.com
+CLOUD_HEADYSYSTEMS_URL=https://headysystems.com
+CLOUD_HEADYCONNECTION_URL=https://headyconnection.com
 "@ | Set-Content (Join-Path $OutputPath ".env.example") -Encoding UTF8
 
 # package.json (root)

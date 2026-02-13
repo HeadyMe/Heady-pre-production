@@ -387,4 +387,4 @@ if __name__ == "__main__":
     print(f"📊 Monitoring {len(observer.services)} services")
     
     # Start server
-    uvicorn.run(app, host="0.0.0.0", port=8002)
+    uvicorn.run(app, host="::", port=8002)

@@ -84,7 +84,9 @@ function Verify-Target {
     Write-HeadyBanner "Verifying $Name"
     
     try {
-        $response = Invoke-RestMethod -Uri "https://$($config.RenderName).onrender.com/api/health" -TimeoutSec 30
+        $domainLookup = @{ "heady-manager-headyme" = "headycloud.com"; "heady-manager-headysystems" = "headysystems.com"; "heady-manager-headyconnection" = "headyconnection.com" }
+        $fqdn = $domainLookup[$config.RenderName]
+        $response = Invoke-RestMethod -Uri "https://$fqdn/api/health" -TimeoutSec 30
         if ($response.ok) {
             Write-Host "✅ $Name is LIVE" -ForegroundColor Green
             Write-Host "   Version: $($response.version)" -ForegroundColor Gray
@@ -100,14 +102,13 @@ function Verify-Target {
 function Get-DeploymentStatus {
     Write-HeadyBanner "Heady Deployment Status"
     
-    # Local status
-    Write-Host "`n📍 LOCAL SYSTEM" -ForegroundColor Magenta
+    # Cloud status
+    Write-Host "`n☁️  CLOUD SYSTEMS" -ForegroundColor Magenta
     try {
-        $local = Invoke-RestMethod -Uri "http://localhost:3300/api/health" -TimeoutSec 5
-        Write-Host "   ✅ Local: LIVE on port 3300" -ForegroundColor Green
-        Write-Host "   Version: $($local.version)" -ForegroundColor Gray
+        $cloud = Invoke-RestMethod -Uri "https://headysystems.com/api/health" -TimeoutSec 5
+        Write-Host "   ✅ HeadySystems: LIVE (v$($cloud.version))" -ForegroundColor Green
     } catch {
-        Write-Host "   ❌ Local: OFFLINE" -ForegroundColor Red
+        Write-Host "   ❌ HeadySystems: OFFLINE" -ForegroundColor Red
     }
     
     # Remote statuses

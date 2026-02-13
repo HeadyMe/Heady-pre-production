@@ -125,9 +125,9 @@ docker-compose -f docker-compose.mcp.yml ps
 
 # Display endpoints
 Write-Host "`n∞ AVAILABLE ENDPOINTS ∞" -ForegroundColor Cyan
-Write-Host "  HeadyManager API: http://localhost:3300/api/health" -ForegroundColor White
-Write-Host "  PostgreSQL:       localhost:5432" -ForegroundColor White
-Write-Host "  Redis:            localhost:6379" -ForegroundColor White
+Write-Host "  HeadyManager API: https://headysystems.com/api/health" -ForegroundColor White
+Write-Host "  HeadyCloud:       https://headycloud.com/api/health" -ForegroundColor White
+Write-Host "  HeadyConnection:  https://headyconnection.com/api/health" -ForegroundColor White
 
 # Follow logs if requested
 if ($Logs) {

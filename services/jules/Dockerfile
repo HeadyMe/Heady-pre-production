@@ -22,7 +22,7 @@ EXPOSE 8001
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8001/health || exit 1
+    CMD curl -sf http://$(hostname -i):8001/health || exit 1
 
 # Run the application
 CMD ["python", "main.py"]

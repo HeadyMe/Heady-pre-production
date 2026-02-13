@@ -79,19 +79,20 @@ Start-Sleep -Seconds 5
 # Verify local
 Write-Host "`n🔍 Verifying local system..." -ForegroundColor Yellow
 try {
-    $response = Invoke-RestMethod -Uri "http://localhost:3300/api/health" -TimeoutSec 10
+    $response = Invoke-RestMethod -Uri "https://headysystems.com/api/health" -TimeoutSec 10
     if ($response.ok) {
-        Write-Host "✅ Local Manager: LIVE (v$($response.version))" -ForegroundColor Green
+        Write-Host "✅ HeadySystems: LIVE (v$($response.version))" -ForegroundColor Green
     }
 } catch {
-    Write-Host "⏳ Local Manager: Still starting..." -ForegroundColor Yellow
+    Write-Host "⏳ HeadySystems: Still starting..." -ForegroundColor Yellow
 }
 
 # Verify cloud connectivity
 Write-Host "`n🌐 Checking cloud connectivity..." -ForegroundColor Yellow
 $cloudUrls = @(
-    "https://heady-manager-headyme.onrender.com/api/health",
-    "https://heady-manager-headysystems.onrender.com/api/health"
+    "https://headycloud.com/api/health",
+    "https://headysystems.com/api/health",
+    "https://headyconnection.com/api/health"
 )
 
 foreach ($url in $cloudUrls) {
@@ -108,14 +109,12 @@ foreach ($url in $cloudUrls) {
 Write-Host "`n==================================================" -ForegroundColor Cyan
 Write-Host "  HYBRID SYSTEM STATUS" -ForegroundColor White
 Write-Host "==================================================" -ForegroundColor Cyan
-Write-Host "`nLocal Endpoints:" -ForegroundColor Yellow
-Write-Host "  • Manager: http://localhost:3300" -ForegroundColor Gray
-Write-Host "  • Health:  http://localhost:3300/api/health" -ForegroundColor Gray
-Write-Host "  • Redis:   localhost:6379" -ForegroundColor Gray
-Write-Host "  • Postgres: localhost:5432" -ForegroundColor Gray
 Write-Host "`nCloud Endpoints:" -ForegroundColor Yellow
-Write-Host "  • HeadyMe: https://heady-manager-headyme.onrender.com" -ForegroundColor Gray
-Write-Host "  • HeadySystems: https://heady-manager-headysystems.onrender.com" -ForegroundColor Gray
+Write-Host "  • HeadyCloud:      https://headycloud.com" -ForegroundColor Gray
+Write-Host "  • HeadySystems:    https://headysystems.com" -ForegroundColor Gray
+Write-Host "  • HeadyConnection: https://headyconnection.com" -ForegroundColor Gray
+Write-Host "  • HeadyBuddy:      https://headybuddy.org" -ForegroundColor Gray
+Write-Host "  • HeadyMCP:        https://headymcp.com" -ForegroundColor Gray
 Write-Host "`nCommands:" -ForegroundColor Yellow
 Write-Host "  • View logs: docker-compose logs -f" -ForegroundColor Gray
 Write-Host "  • Stop: docker-compose down" -ForegroundColor Gray
