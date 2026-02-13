@@ -1132,19 +1132,29 @@ el.innerHTML=\`<div class="status-row"><span>Total Connectors</span><span>\${das
   headybot: {
     title: 'HeadyBot',
     domain: 'headybot.com',
-    tagline: 'AI Chat Interface',
-    desc: 'Direct line to HeadyBuddy AI. Chat naturally, get intelligent system-aware responses.',
+    tagline: 'Talk to HeadyBuddy',
+    desc: 'Direct line to HeadyBuddy AI — the full chat interface. Ask about system health, run drift scans, manage connectors, or just have a conversation.',
     badge: 'Bot Online',
+    vertical: 'companion',
+    tags: ['vertical: companion', 'layer: user-facing', 'audience: everyone'],
+    ecosystemContext: 'HeadyBot is the web chat interface for <a href="https://headybuddy.org">HeadyBuddy</a>, powered by the <a href="https://headysystems.com">Heady Systems platform</a>. Same Buddy, browser surface.',
     nav: [
       { l: 'Chat', h: '#chat' },
-      { l: 'Buddy Portal', h: 'https://headysystems.com' },
-      { l: 'Systems', h: 'https://headysystems.com' }
+      { l: 'About Buddy', h: 'https://headybuddy.org' },
+      { l: 'Platform', h: 'https://headysystems.com' },
+      { l: 'Docs', h: 'https://headyio.com' }
     ],
     primaryCta: { l: 'Start Chat', h: '#chat' },
-    secondaryCta: { l: 'API Docs', h: 'https://headysystems.com' },
+    secondaryCta: { l: 'About HeadyBuddy', h: 'https://headybuddy.org' },
+    relatedLinks: [
+      { label: 'About HeadyBuddy', url: 'https://headybuddy.org', desc: 'What Buddy is and where it lives' },
+      { label: 'Platform', url: 'https://headysystems.com', desc: 'The AI engine behind the chat' },
+      { label: 'API docs', url: 'https://headyio.com', desc: 'Chat resolve endpoint reference' },
+      { label: 'System health', url: 'https://headycheck.com', desc: 'Is the chat backend healthy?' }
+    ],
     sections: [
       {
-        id: 'chat', title: 'HeadyBot Chat', sub: 'Full-featured AI conversation interface',
+        id: 'chat', title: 'HeadyBot Chat', sub: 'Full-featured AI conversation interface — powered by 3-stage intent resolution',
         body: `<div class="chat-box" style="height:600px"><div class="chat-msgs" id="bot-msgs">
 <div class="chat-msg bot"><div class="avatar">&#x1f916;</div><div class="chat-text">Welcome to HeadyBot! I'm connected to the full Heady intelligence platform. Ask me about system health, run drift scans, manage connectors, or just chat. What can I do for you?</div></div>
 </div><div class="chat-input"><input type="text" id="bot-in" placeholder="Type your message..." onkeydown="if(event.key==='Enter')botSend()"><button onclick="botSend()">Send</button></div></div>
@@ -1159,7 +1169,8 @@ if(r?.data?.topMatch){const m=r.data.topMatch;reply='<strong>'+m.skill+'</strong
 else{reply="I'm processing your request through the intent resolver. Try asking about: system status, health checks, drift detection, deployments, or MCP connectors."}
 msgs.innerHTML+=\`<div class="chat-msg bot"><div class="avatar">&#x1f916;</div><div class="chat-text">\${reply}</div></div>\`;
 msgs.scrollTop=msgs.scrollHeight;}
-</script>`
+</script>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">This is the web chat surface for <a href="https://headybuddy.org" style="color:var(--accent)">HeadyBuddy</a>. Buddy also lives on <a href="https://headybuddy.org#surfaces" style="color:var(--accent)">desktop, mobile, browser widget, and IDE</a>.</p>`
       }
     ]
   },
@@ -1167,17 +1178,27 @@ msgs.scrollTop=msgs.scrollHeight;}
   headycloud: {
     title: 'HeadyCloud',
     domain: 'headycloud.com',
-    tagline: 'Cloud Layer Management',
-    desc: 'Manage cloud orchestration layers, service deployments, and infrastructure from a unified dashboard.',
+    tagline: 'Cloud Orchestration Layer',
+    desc: 'Cloud orchestration, deployment layers, Monte Carlo-validated pipelines, and infrastructure management for the Heady ecosystem.',
     badge: 'Cloud Active',
+    vertical: 'infrastructure',
+    tags: ['vertical: infrastructure', 'layer: cloud', 'audience: ops'],
+    ecosystemContext: 'HeadyCloud manages cloud deployments for the <a href="https://headysystems.com">Heady Systems platform</a>. Monitor deployment health at <a href="https://headycheck.com">HeadyCheck</a>. See the <a href="https://headyio.com">API docs</a> for orchestrator endpoints.',
     nav: [
       { l: 'Layers', h: '#layers' },
       { l: 'Deploy', h: '#deploy' },
-      { l: 'Systems', h: 'https://headysystems.com' },
-      { l: 'Status', h: 'https://headysystems.com' }
+      { l: 'Platform', h: 'https://headysystems.com' },
+      { l: 'Health', h: 'https://headycheck.com' },
+      { l: 'Docs', h: 'https://headyio.com' }
     ],
     primaryCta: { l: 'View Layers', h: '#layers' },
     secondaryCta: { l: 'Deploy Now', h: '#deploy' },
+    relatedLinks: [
+      { label: 'Platform', url: 'https://headysystems.com', desc: 'The system these layers deploy' },
+      { label: 'Health dashboard', url: 'https://headycheck.com', desc: 'Are deploys healthy?' },
+      { label: 'Orchestrator docs', url: 'https://headyio.com', desc: 'Pipeline and deploy API' },
+      { label: 'Ask Buddy', url: 'https://headybot.com', desc: '"Deploy to production"' }
+    ],
     sections: [
       {
         id: 'layers', title: 'Cloud Layers', sub: 'Active service layers in the Heady cloud',
@@ -1209,39 +1230,67 @@ el.innerHTML=\`<div class="status-row"><span>HeadySystems</span><span class="tag
   headyconnection: {
     title: 'HeadyConnection',
     domain: 'headyconnection.com',
-    tagline: 'Connection Layer',
-    desc: 'AI node mesh — connecting intelligence across services, agents, and cloud layers.',
-    badge: 'Mesh Active',
+    tagline: 'The Nonprofit Behind Heady',
+    desc: 'HeadyConnection is the nonprofit organization governing the Heady mission — expanding access to AI, funding community programs, and ensuring ethical technology for everyone.',
+    badge: 'Nonprofit Active',
+    vertical: 'nonprofit',
+    tags: ['vertical: nonprofit', 'layer: governance', 'audience: community'],
+    ecosystemContext: 'HeadyConnection is the nonprofit that governs the mission behind all Heady products. <a href="https://headysystems.com">Heady Systems</a> revenue funds these programs. <a href="https://headybuddy.org">HeadyBuddy</a> is our flagship user-facing companion.',
     nav: [
-      { l: 'Nodes', h: '#nodes' },
-      { l: 'Agents', h: '#agents' },
-      { l: 'Systems', h: 'https://headysystems.com' },
-      { l: 'Cloud', h: 'https://headycloud.com' }
+      { l: 'Mission', h: '#mission' },
+      { l: 'Programs', h: '#programs' },
+      { l: 'Buddy', h: 'https://headybuddy.org' },
+      { l: 'Platform', h: 'https://headysystems.com' },
+      { l: 'Docs', h: 'https://headyio.com' }
     ],
-    primaryCta: { l: 'View Node Mesh', h: '#nodes' },
-    secondaryCta: { l: 'Agent Registry', h: '#agents' },
+    primaryCta: { l: 'Our Mission', h: '#mission' },
+    secondaryCta: { l: 'Meet Buddy', h: 'https://headybuddy.org' },
+    relatedLinks: [
+      { label: 'Meet HeadyBuddy', url: 'https://headybuddy.org', desc: 'Our flagship AI companion' },
+      { label: 'The platform', url: 'https://headysystems.com', desc: 'Technology that funds the mission' },
+      { label: 'System health', url: 'https://headycheck.com', desc: 'Is everything running?' },
+      { label: 'Developer docs', url: 'https://headyio.com', desc: 'Build on our platform' }
+    ],
     sections: [
       {
-        id: 'nodes', title: 'Node Mesh', sub: 'Active intelligence nodes',
-        body: `<div class="live-panel" id="node-mesh"><div style="color:var(--text2)">Scanning node mesh...</div></div>
-<script>${JS_API}
-(async()=>{const el=document.getElementById('node-mesh');
-const cfg=await H.get('/api/config/env');
-if(!cfg){el.innerHTML='<div style="color:var(--err)">Node mesh unreachable</div>';return}
-const nodes=(cfg.config?.HEADY_ACTIVE_NODES||'').split(',').filter(Boolean);
-el.innerHTML=nodes.map(n=>\`<div class="status-row"><span><span class="status-dot up"></span> \${n}</span><span class="tag tg">Active</span></div>\`).join('')+'<div class="status-row" style="margin-top:12px"><span><strong>Total Nodes</strong></span><span><strong>'+nodes.length+'</strong></span></div>';
-})();</script>`
+        id: 'mission', title: 'Our Mission', sub: 'Technology should expand access, not restrict it',
+        unique: true,
+        body: `<div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#10b98120">&#x1f30d;</div><h3>Expand Access</h3><p>AI should be available to everyone regardless of income, location, or background. We build tools that reduce barriers, not create them.</p></div>
+<div class="card"><div class="card-icon" style="background:#059669b20">&#x2696;&#xfe0f;</div><h3>Ensure Fairness</h3><p>Every Heady action passes through HeadySoul — our mission alignment engine. Five hard vetoes prevent dark patterns, surveillance, and exploitation.</p></div>
+<div class="card"><div class="card-icon" style="background:#4ecdc420">&#x1f9e0;</div><h3>Build Intelligence</h3><p>Sacred Geometry architecture — organic, self-correcting systems that follow natural patterns. Same values at every scale, from code to organization.</p></div>
+<div class="card"><div class="card-icon" style="background:#ff7eb320">&#x2764;&#xfe0f;</div><h3>Create Happiness</h3><p>Technology should feel like a friend, not a tool. HeadyBuddy is your companion — it remembers you, adapts to you, and follows you everywhere.</p></div>
+</div>
+<div class="eco-block" style="margin-top:var(--sp-lg)">
+  <div class="eco-label">HeadySoul Value Weights</div>
+  <div style="color:var(--text2);font-size:14px;line-height:1.7">
+    <strong>Access: 30%</strong> · <strong>Fairness: 25%</strong> · <strong>Intelligence: 20%</strong> · <strong>Happiness: 15%</strong> · <strong>Redistribution: 10%</strong>
+    <br><small style="color:var(--text3)">Every AI decision is scored against these weights. Scores below 40 are vetoed. Revenue flows back to nonprofit programs.</small>
+  </div>
+</div>`
       },
       {
-        id: 'agents', title: 'Agent Registry', sub: 'Registered AI agents in the system',
-        body: `<div class="live-panel" id="agent-list"><div style="color:var(--text2)">Loading agents...</div></div>
-<script>${JS_API}
-(async()=>{const el=document.getElementById('agent-list');
-const d=await H.get('/api/subsystems');
-if(!d){el.innerHTML='<div style="color:var(--err)">Agent registry unreachable</div>';return}
-const agents=d.supervisor?.agents||[];
-el.innerHTML=agents.map(a=>\`<div class="status-row"><span>\${a}</span><span class="tag tp">Registered</span></div>\`).join('')||'<div style="color:var(--text2)">No agents currently registered</div>';
-})();</script>`
+        id: 'programs', title: 'Programs & Impact', sub: 'Where the mission meets the world',
+        unique: true,
+        body: `<div class="grid g3c">
+<div class="card"><div class="card-icon" style="background:#3b82f620">&#x1f4da;</div><h3>HeadyAcademy</h3><p>Free AI education — courses, workshops, and mentorship for underserved communities</p></div>
+<div class="card"><div class="card-icon" style="background:#f59e0b20">&#x1f4b0;</div><h3>PPP Pricing</h3><p>Purchasing power parity — automatically adjusted pricing so everyone can access premium features</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f91d;</div><h3>Community Grants</h3><p>Funding for developers and organizations building ethical AI tools on the Heady platform</p></div>
+</div>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyConnection is funded by revenue from <a href="https://headysystems.com" style="color:var(--accent)">Heady Systems</a> products. 100% of nonprofit funds go to programs, not overhead.</p>`
+      },
+      {
+        id: 'governance', title: 'Governance', sub: 'How we hold ourselves accountable',
+        unique: true,
+        body: `<div class="grid g2c">
+<div class="card"><h3>HeadySoul Hard Vetoes</h3><p>Five non-negotiable rules that no AI action can bypass:<br><br>
+<span class="vtag">No dark patterns</span>
+<span class="vtag">No vendor lock-in</span>
+<span class="vtag">No surveillance</span>
+<span class="vtag">No paywalling essentials</span>
+<span class="vtag">No exploiting vulnerable users</span></p></div>
+<div class="card"><h3>Transparency</h3><p>Every HeadySoul decision is logged and auditable. Override tracking, escalation chains, and mission alignment scores are all public via the <a href="https://headyio.com" style="color:var(--accent)">API</a>.</p></div>
+</div>`
       }
     ]
   }
@@ -1254,6 +1303,42 @@ el.innerHTML=agents.map(a=>\`<div class="status-row"><span>\${a}</span><span cla
 function buildHTML(site, siteKey) {
   const theme = DOMAIN_THEMES[siteKey] || DOMAIN_THEMES.headysystems;
   const navHtml = site.nav.map(n => `<a href="${n.h}">${n.l}</a>`).join('');
+
+  // Tags HTML (vertical tags below hero)
+  const tagsHtml = (site.tags || []).map(t => `<span class="vtag">${t}</span>`).join(' ');
+
+  // Ecosystem context bar (breadcrumb-style "where this fits")
+  const contextBarHtml = site.ecosystemContext ? `
+  <div class="context-bar">
+    <div class="wrap">
+      <strong style="color:var(--accent)">Part of the Heady Ecosystem</strong>
+      <span class="context-sep">/</span>
+      ${site.ecosystemContext}
+    </div>
+  </div>` : '';
+
+  // Related links ecosystem block (rendered after sections)
+  const relatedHtml = (site.relatedLinks || []).length > 0 ? `
+    <div class="wrap">
+      <div class="eco-block">
+        <div class="eco-label">Related in the Heady Ecosystem</div>
+        <div class="eco-text">${theme.role}</div>
+        <div class="eco-links">
+          ${site.relatedLinks.map(r => `<a href="${r.url}" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>${r.label}</strong><br><small style="color:var(--text3)">${r.desc}</small></span></a>`).join('\n          ')}
+        </div>
+      </div>
+    </div>` : '';
+
+  // Footer ecosystem grid (uses ECOSYSTEM registry, highlights current site)
+  const footerEcoHtml = ECOSYSTEM.map(e => {
+    const isCurrent = e.key === siteKey;
+    const eTheme = DOMAIN_THEMES[e.key] || {};
+    return `<div class="footer-eco-item"${isCurrent ? ' style="background:var(--surface2);border-radius:8px"' : ''}>
+        <a href="https://${e.domain}">${e.icon} ${e.name}${isCurrent ? ' (you are here)' : ''}</a>
+        <small>${eTheme.role || e.short}</small>
+      </div>`;
+  }).join('\n      ');
+
   const sectionsHtml = site.sections.map((s, i) => `
     ${i > 0 ? '<div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>' : ''}
     <section id="${s.id}">
@@ -1286,6 +1371,8 @@ function buildHTML(site, siteKey) {
   <div class="orb orb-3"></div>
   <div class="sg-grid"></div>
 
+${contextBarHtml}
+
   <div class="wrap">
     <nav>
       <a href="/" class="logo">
@@ -1304,6 +1391,7 @@ function buildHTML(site, siteKey) {
       <div class="hero-badge"><span class="pulse-dot"></span>${site.badge}</div>
       <h1>${site.tagline}</h1>
       <p class="hero-desc">${site.desc}</p>
+      ${tagsHtml ? `<div style="margin:var(--sp-sm) 0">${tagsHtml}</div>` : ''}
       <div class="hero-btns">
         <a href="${site.primaryCta.h}" class="btn btn-primary">${site.primaryCta.l}</a>
         <a href="${site.secondaryCta.h}" class="btn btn-ghost">${site.secondaryCta.l}</a>
@@ -1313,18 +1401,24 @@ function buildHTML(site, siteKey) {
 
 ${sectionsHtml}
 
+${relatedHtml}
+
   <footer>
     <div class="wrap">
       <div class="sg-divider"><span>&#x221e;</span></div>
-      <p>&copy; ${new Date().getFullYear()} Heady Systems &mdash; Sacred Geometry Architecture</p>
-      <div class="footer-links">
-        <a href="https://headysystems.com">Systems</a>
-        <a href="https://headysystems.com">Status</a>
-        <a href="https://headysystems.com">Docs</a>
-        <a href="https://headysystems.com">MCP</a>
-        <a href="https://headysystems.com">Buddy</a>
-        <a href="https://headycloud.com">Cloud</a>
-        <a href="https://headyconnection.com">Connection</a>
+      <h3 style="color:var(--text1);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
+      <div class="footer-eco">
+      ${footerEcoHtml}
+      </div>
+      <div class="footer-bottom">
+        <span style="color:var(--text3);font-size:12px">&copy; ${new Date().getFullYear()} ${theme.org || 'Heady Systems'} &mdash; Sacred Geometry Architecture</span>
+        <span>
+          <a href="https://headyconnection.org">Nonprofit</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headyio.com">Docs</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headycheck.com">Status</a>
+        </span>
       </div>
     </div>
   </footer>

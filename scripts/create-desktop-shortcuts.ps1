@@ -28,7 +28,7 @@ $mainShortcut.Save()
 
 # Heady Admin IDE
 $adminShortcut = $WScriptShell.CreateShortcut("$desktop\Heady Admin IDE.lnk")
-$adminShortcut.TargetPath = "http://localhost:3300/admin"
+$adminShortcut.TargetPath = "https://headysystems.com/admin"
 $adminShortcut.WorkingDirectory = "c:\Users\erich\Heady"
 $adminShortcut.IconLocation = "shell32.dll, 14"
 $adminShortcut.Description = "Heady Admin IDE - Web-based Development Environment"
@@ -63,7 +63,7 @@ $monitorShortcut.Save()
 
 # Heady Documentation Portal
 $docsShortcut = $WScriptShell.CreateShortcut("$desktop\Heady Documentation.lnk")
-$docsShortcut.TargetPath = "http://localhost:3300"
+$docsShortcut.TargetPath = "https://headysystems.com"
 $docsShortcut.WorkingDirectory = "c:\Users\erich\Heady"
 $docsShortcut.IconLocation = "shell32.dll, 23"
 $docsShortcut.Description = "Heady Documentation Portal - System Documentation and Guides"

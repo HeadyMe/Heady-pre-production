@@ -27,7 +27,7 @@ logger = get_logger(__name__)
 def serve_api():
     logger.info("Starting API server on port 8000...")
     from .api import app
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="::", port=8000)
 
 def main():
     parser = argparse.ArgumentParser(description="Heady Admin Console")

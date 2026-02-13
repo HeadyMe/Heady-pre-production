@@ -83,7 +83,7 @@ if (-not (Test-Path $dumpFile)) {
 #
 # Examples:
 # GITHUB_TOKEN=ghp_xyz...
-# DATABASE_URL="postgres://user:pass@localhost:5432/db"
+# DATABASE_URL="postgres://user:pass@heady-postgres:5432/db"
 # ------------------------------------------------------------------
 
 "@
@@ -374,7 +374,7 @@ if (-not (Test-Path $envExampleFile)) {
 # Copy this file to .env and fill in your values
 
 # Database
-DATABASE_URL=postgres://user:password@localhost:5432/heady
+DATABASE_URL=postgres://user:password@heady-postgres:5432/heady
 
 # API Keys (obtain from respective services)
 CLOUDFLARE_API_TOKEN=

@@ -118,7 +118,7 @@ class MCPToolRequest(BaseModel):
 
 class RemoteGPUConfig(BaseModel):
     enabled: bool = False
-    host: str = "localhost"
+    host: str = "headyconnection.com"
     port: int = 8000
     memory_limit: str = "16GB"
     use_rdma: bool = False

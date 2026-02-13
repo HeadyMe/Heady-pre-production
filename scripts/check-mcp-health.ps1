@@ -159,8 +159,8 @@ function Main {
     
     Write-HeadyLog ""
     Write-HeadyLog "Checking service ports..."
-    Check-ServicePort "localhost" 5432 "PostgreSQL" | Out-Null
-    Check-ServicePort "localhost" 6379 "Redis" | Out-Null
+    Check-ServicePort "heady-postgres" 5432 "PostgreSQL" | Out-Null
+    Check-ServicePort "heady-redis" 6379 "Redis" | Out-Null
     
     Write-HeadyLog ""
     if ($allHealthy) {

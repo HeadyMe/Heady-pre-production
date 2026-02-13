@@ -24,5 +24,5 @@ $Targets=@{
 }
 function Banner($m){Write-Host "`n=== $m ===`n" -ForegroundColor Cyan}
 if($Deploy){Banner "DEPLOYING";foreach($t in $Targets.Keys){Set-Location $HeadyRoot;$rn=$t.ToLower().Replace("heady","heady-");try{git remote get-url $rn 2>$null}catch{git remote add $rn $Targets[$t].Repo};git push $rn main --force}}}
-if($Status){Banner "STATUS";try{$l=Invoke-RestMethod "http://localhost:3300/api/health" -TimeoutSec 5;Write-Host "LOCAL: LIVE" -ForegroundColor Green}catch{Write-Host "LOCAL: OFFLINE" -ForegroundColor Red}}
+if($Status){Banner "STATUS";try{$l=Invoke-RestMethod "https://headysystems.com/api/health" -TimeoutSec 5;Write-Host "CLOUD: LIVE" -ForegroundColor Green}catch{Write-Host "CLOUD: OFFLINE" -ForegroundColor Red}}
 Banner "Files -> Scan -> Analyze -> Optimize"

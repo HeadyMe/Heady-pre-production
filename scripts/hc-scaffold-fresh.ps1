@@ -122,7 +122,7 @@ PORT=3300
 NODE_ENV=development
 
 # Database
-DATABASE_URL=postgresql://heady:heady_secret@localhost:5432/heady
+DATABASE_URL=postgresql://heady:heady_secret@heady-postgres:5432/heady
 
 # Authentication
 HEADY_API_KEY=
@@ -249,7 +249,7 @@ RUN npm run build || true
 EXPOSE 3300
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-  CMD wget -qO- http://localhost:3300/api/health || exit 1
+  CMD curl -sf http://$(hostname -i):3300/api/health || exit 1
 
 CMD ["node", "heady-manager.js"]
 "@ | Set-Content (Join-Path $OutputPath "Dockerfile") -Encoding UTF8
@@ -274,7 +274,7 @@ services:
     networks:
       - heady-net
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3300/api/health"]
+      test: ["CMD", "curl", "-sf", "http://heady-manager:3300/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -581,7 +581,7 @@ app.get("*", (req, res) => {
 // ─── Start ──────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`\n  ∞ Heady Manager v3.0.0 listening on port ${PORT}`);
-  console.log(`  ∞ Health: http://localhost:${PORT}/api/health`);
+  console.log(`  ∞ Health: https://headysystems.com/api/health`);
   console.log(`  ∞ Environment: ${process.env.NODE_ENV || "development"}\n`);
 });
 '@ | Set-Content (Join-Path $OutputPath "heady-manager.js") -Encoding UTF8
@@ -630,7 +630,7 @@ export default defineConfig({
   server: {
     port: 3001,
     proxy: {
-      "/api": "http://localhost:3300",
+      "/api": "https://headysystems.com",
     },
   },
   build: {

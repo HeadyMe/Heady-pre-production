@@ -14,6 +14,6 @@
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 <!-- HEADY_BRAND:END -->
 
-# Localhost Binding Policy
+# Cloud Service Binding Policy
 
-All internal services must bind to 127.0.0.1.
+All internal services must bind to `::` (all interfaces) and be accessed via branded domain FQDNs through Cloudflare.

@@ -112,7 +112,7 @@ class GatewayConfigurator:
     @staticmethod
     def generate_config() -> Dict[str, Any]:
         return {
-            "bind": "0.0.0.0",
+            "bind": "::",
             "allowHosts": ["headymcp.com", "headysystems.com", "headyconnection.com"],
             "allowOrigins": ["https://headymcp.com", "https://headysystems.com", "https://headyconnection.com"],
             "rateLimitPerMin": 60,
@@ -194,7 +194,7 @@ def main():
 * **Trust Domain:** {TRUST_DOMAIN}
 
 ## Security Posture
-* **Gateway:** 127.0.0.1 (Tunnel-Only)
+* **Gateway:** Cloudflare Tunnel (Tunnel-Only)
 * **Governance:** Locked (v1.2.0)
 * **PromptOps:** Enforced
 """

@@ -24,6 +24,6 @@
 * **Trust Domain:** headysystems.com
 
 ## Security Posture
-* **Gateway:** 127.0.0.1 (Tunnel-Only)
+* **Gateway:** Cloudflare Tunnel (Tunnel-Only)
 * **Governance:** Locked (v1.2.0)
 * **PromptOps:** Enforced
