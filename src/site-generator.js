@@ -1127,6 +1127,8 @@ class SiteGenerator {
     const sharedDir = path.join(this.outputDir, '_shared');
     fs.mkdirSync(sharedDir, { recursive: true });
 
+    const CSS = buildCSS('headysystems'); // Define CSS constant
+
     fs.writeFileSync(path.join(sharedDir, 'heady.css'), CSS, 'utf8');
     fs.writeFileSync(path.join(sharedDir, 'heady.js'), JS_API, 'utf8');
 
