@@ -141,6 +141,59 @@ const ECOSYSTEM = [
   { key: 'headyweb', domain: 'headyweb.com', name: 'HeadyWeb', short: 'Browser', icon: '🌐' },
 ];
 
+// System Verticals — canonical taxonomy used across all domains
+const SYSTEM_VERTICALS = {
+  platform: { label: 'Platform', icon: '✴️', primary: 'headysystems', desc: 'Core AI infrastructure powering every Heady product' },
+  companion: { label: 'Companion', icon: '✨', primary: 'headybuddy', desc: 'HeadyBuddy — persistent AI companion on every surface' },
+  nonprofit: { label: 'Nonprofit', icon: '🌍', primary: 'headyconnection', desc: 'Mission governance, community programs, and impact' },
+  operations: { label: 'Operations', icon: '💚', primary: 'headycheck', desc: 'Health monitoring, drift detection, and system observability' },
+  cloud: { label: 'Cloud', icon: '☁️', primary: 'headycloud', desc: 'Cloud orchestration, deployment layers, and infrastructure' },
+  documentation: { label: 'Documentation', icon: '📚', primary: 'headyio', desc: 'API reference, architecture guides, integration docs' },
+  extensibility: { label: 'Extensibility', icon: '🔌', primary: 'headymcp', desc: 'MCP connectors — extend Heady with any tool or service' },
+  browser: { label: 'Browser', icon: '🌐', primary: 'headyweb', desc: 'AI-powered browser shell with Buddy sidebar' },
+};
+
+// Cross-domain relationships — bidirectional links with context
+// Each entry defines how two domains relate to each other
+const CROSS_DOMAIN_MAP = {
+  headysystems: {
+    headyconnection: { outLabel: 'Funds the mission', inLabel: 'Governs the platform', outVerb: 'See our impact', inVerb: 'See the technology' },
+    headybuddy: { outLabel: 'Powers Buddy', inLabel: 'Interface to the platform', outVerb: 'Meet Buddy', inVerb: 'See the engine' },
+    headyio: { outLabel: 'Documented here', inLabel: 'Describes this platform', outVerb: 'Read the docs', inVerb: 'See it live' },
+    headycheck: { outLabel: 'Monitored by HeadyCheck', inLabel: 'Monitors this platform', outVerb: 'View health', inVerb: 'See what\'s monitored' },
+    headymcp: { outLabel: 'Extended via MCP', inLabel: 'Extends this platform', outVerb: 'Browse connectors', inVerb: 'See the platform' },
+    headycloud: { outLabel: 'Deployed via HeadyCloud', inLabel: 'Deploys this platform', outVerb: 'View layers', inVerb: 'See what\'s deployed' },
+    headyweb: { outLabel: 'Accessible via HeadyWeb', inLabel: 'Powered by this platform', outVerb: 'Open browser', inVerb: 'See the engine' },
+  },
+  headyconnection: {
+    headybuddy: { outLabel: 'Created Buddy', inLabel: 'A program of the nonprofit', outVerb: 'Meet our companion', inVerb: 'Learn the philosophy' },
+    headysystems: { outLabel: 'Funded by platform revenue', inLabel: 'Revenue funds the mission', outVerb: 'Explore the platform', inVerb: 'See the impact' },
+  },
+  headybuddy: {
+    headybot: { outLabel: 'Chat via HeadyBot', inLabel: 'Buddy is the brain', outVerb: 'Try web chat', inVerb: 'Learn about Buddy' },
+    headyweb: { outLabel: 'Browse with Buddy', inLabel: 'Buddy lives in the sidebar', outVerb: 'Open HeadyWeb', inVerb: 'Meet Buddy' },
+  },
+};
+
+// Website classes — defines how each class of site should connect
+const WEBSITE_CLASSES = {
+  brand_public: {
+    label: 'Public Brand Site',
+    members: ['headysystems', 'headyconnection', 'headybuddy', 'headyweb'],
+    pattern: 'Differentiated look/voice, shared ecosystem section, cross-links explaining relationships'
+  },
+  product_surface: {
+    label: 'Product Surface',
+    members: ['headybot', 'headycheck', 'headycloud'],
+    pattern: 'Same Sacred Geometry UI, persistent "You are in" strip, links back to explainer pages'
+  },
+  system_docs: {
+    label: 'System & Docs Surface',
+    members: ['headyio', 'headymcp'],
+    pattern: 'Labeled as "for builders", links up to HeadySystems and sideways to nonprofit/program stories'
+  },
+};
+
 function buildCSS(siteKey) {
   const theme = DOMAIN_THEMES[siteKey] || DOMAIN_THEMES.headysystems;
   return `
@@ -807,6 +860,181 @@ footer a:hover { color: var(--accent); }
 }
 .footer-bottom a:hover { color: var(--accent); }
 
+/* ── System Context Block ("Where This Fits") ── */
+.system-context {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-lg);
+  margin: var(--sp-lg) 0;
+  position: relative;
+  overflow: hidden;
+}
+.system-context::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+}
+.system-context-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
+}
+.system-context-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--glow);
+  border: 1px solid var(--accent)30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.system-context-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 700;
+}
+.system-context-vertical {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.system-context-desc {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: var(--sp-md);
+}
+.system-context-desc a { color: var(--accent); text-decoration: none; }
+.system-context-desc a:hover { text-decoration: underline; }
+
+/* ── Cross-Domain Connections ── */
+.cross-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--sp-sm);
+  margin-top: var(--sp-md);
+}
+.cross-link-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text2);
+  transition: all 0.25s;
+  font-size: 13px;
+}
+.cross-link-card:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--glow);
+  transform: translateX(4px);
+}
+.cross-link-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.cross-link-text strong {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.cross-link-text small {
+  color: var(--text3);
+  font-size: 11px;
+}
+
+/* ── System Map ── */
+.system-map {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-lg);
+  margin: var(--sp-lg) 0;
+}
+.system-map-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: var(--sp-md);
+  text-align: center;
+}
+.system-map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--sp-sm);
+}
+.system-map-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--sp-sm);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text2);
+  transition: all 0.25s;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.system-map-node:hover {
+  background: var(--glow);
+  border-color: var(--accent)40;
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.system-map-node.current {
+  background: var(--glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.system-map-node .node-icon { font-size: 24px; }
+.system-map-node .node-name { font-size: 13px; font-weight: 600; }
+.system-map-node .node-role { font-size: 11px; color: var(--text3); }
+
+/* ── Global Vertical Nav Strip ── */
+.vertical-nav {
+  display: flex;
+  gap: 2px;
+  padding: 6px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.vertical-nav a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text3);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.vertical-nav a:hover { color: var(--accent); background: var(--glow); }
+.vertical-nav a.active { color: var(--accent); background: var(--glow); font-weight: 600; }
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .nav-links { display: none; }
@@ -817,6 +1045,9 @@ footer a:hover { color: var(--accent); }
   .sg-metatron { width: 300px; height: 300px; }
   .footer-eco { grid-template-columns: repeat(2, 1fr); }
   .context-bar { display: none; }
+  .cross-links { grid-template-columns: 1fr; }
+  .system-map-grid { grid-template-columns: repeat(2, 1fr); }
+  .system-context { margin: var(--sp-md) 0; }
 }
 `;
 }
@@ -1385,6 +1616,70 @@ function buildHTML(site, siteKey) {
     </div>
   </div>` : '';
 
+  // Global vertical nav strip — consistent across all domains
+  const verticalNavHtml = Object.entries(SYSTEM_VERTICALS).map(([vKey, v]) => {
+    const primaryDomain = DOMAIN_THEMES[v.primary] ? (ECOSYSTEM.find(e => e.key === v.primary)?.domain || '') : '';
+    const isActive = site.vertical === vKey;
+    return `<a href="https://${primaryDomain}"${isActive ? ' class="active"' : ''}>${v.icon} ${v.label}</a>`;
+  }).join('');
+
+  // "Where This Fits" system context block — replaces generic ecosystem block
+  const vertical = SYSTEM_VERTICALS[site.vertical] || {};
+  const websiteClass = Object.values(WEBSITE_CLASSES).find(wc => wc.members.includes(siteKey));
+
+  // Build cross-domain relationship links for this site
+  let crossLinksHtml = '';
+  const rels = CROSS_DOMAIN_MAP[siteKey] || {};
+  const crossLinks = Object.entries(rels).map(([targetKey, rel]) => {
+    const targetEco = ECOSYSTEM.find(e => e.key === targetKey);
+    const targetTheme = DOMAIN_THEMES[targetKey];
+    if (!targetEco || !targetTheme) return '';
+    return `<a href="https://${targetEco.domain}" class="cross-link-card">
+        <div class="cross-link-icon">${targetEco.icon}</div>
+        <div class="cross-link-text">
+          <strong>${rel.outVerb}</strong>
+          <small>${rel.outLabel}</small>
+        </div>
+      </a>`;
+  }).filter(Boolean);
+
+  // Also add inbound relationships (where other sites link TO this site)
+  for (const [sourceKey, sourceRels] of Object.entries(CROSS_DOMAIN_MAP)) {
+    if (sourceKey === siteKey) continue;
+    if (sourceRels[siteKey]) {
+      const rel = sourceRels[siteKey];
+      const sourceEco = ECOSYSTEM.find(e => e.key === sourceKey);
+      if (sourceEco) {
+        crossLinks.push(`<a href="https://${sourceEco.domain}" class="cross-link-card">
+        <div class="cross-link-icon">${sourceEco.icon}</div>
+        <div class="cross-link-text">
+          <strong>${rel.inVerb}</strong>
+          <small>${rel.inLabel}</small>
+        </div>
+      </a>`);
+      }
+    }
+  }
+
+  if (crossLinks.length > 0) {
+    crossLinksHtml = `<div class="cross-links">${crossLinks.join('\n      ')}</div>`;
+  }
+
+  const systemContextHtml = `
+    <div class="wrap">
+      <div class="system-context">
+        <div class="system-context-header">
+          <div class="system-context-icon">${vertical.icon || '&#x221e;'}</div>
+          <div>
+            <div class="system-context-title">Where This Fits</div>
+            <div class="system-context-vertical">${vertical.label || site.vertical || 'Heady Ecosystem'} Vertical${websiteClass ? ` &middot; ${websiteClass.label}` : ''}</div>
+          </div>
+        </div>
+        <div class="system-context-desc">${site.ecosystemContext || theme.role}</div>
+        ${crossLinksHtml}
+      </div>
+    </div>`;
+
   // Related links ecosystem block (rendered after sections)
   const relatedHtml = (site.relatedLinks || []).length > 0 ? `
     <div class="wrap">
@@ -1396,6 +1691,18 @@ function buildHTML(site, siteKey) {
         </div>
       </div>
     </div>` : '';
+
+  // System Map — visual graph of all verticals with current highlighted
+  const systemMapHtml = ECOSYSTEM.map(e => {
+    const isCurrent = e.key === siteKey;
+    const eTheme = DOMAIN_THEMES[e.key] || {};
+    const eVertical = Object.values(SYSTEM_VERTICALS).find(v => v.primary === e.key);
+    return `<a href="https://${e.domain}" class="system-map-node${isCurrent ? ' current' : ''}">
+          <span class="node-icon">${e.icon}</span>
+          <span class="node-name">${e.name}${isCurrent ? ' &#x2190;' : ''}</span>
+          <span class="node-role">${eVertical?.desc || eTheme.role || e.short}</span>
+        </a>`;
+  }).join('\n        ');
 
   // Footer ecosystem grid (uses ECOSYSTEM registry, highlights current site)
   const footerEcoHtml = ECOSYSTEM.map(e => {
@@ -1422,7 +1729,7 @@ function buildHTML(site, siteKey) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${site.title} — ${site.tagline}</title>
+  <title>${site.title} \u2014 ${site.tagline}</title>
   <meta name="description" content="${site.desc}">
   <meta name="theme-color" content="${theme.accent}">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
@@ -1442,6 +1749,9 @@ function buildHTML(site, siteKey) {
 ${contextBarHtml}
 
   <div class="wrap">
+    <!-- Global Vertical Navigation — same order on every domain -->
+    <div class="vertical-nav">${verticalNavHtml}</div>
+
     <nav>
       <a href="/" class="logo">
         ${SVG_LOGO}
@@ -1467,14 +1777,27 @@ ${contextBarHtml}
     </div>
   </div>
 
+  <!-- WHERE THIS FITS — system context + cross-domain connections -->
+${systemContextHtml}
+
 ${sectionsHtml}
 
 ${relatedHtml}
 
+  <!-- SYSTEM MAP — visual graph of the full ecosystem -->
+  <div class="wrap">
+    <div class="system-map">
+      <div class="system-map-title">Heady System Map</div>
+      <div class="system-map-grid">
+        ${systemMapHtml}
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div class="wrap">
       <div class="sg-divider"><span>&#x221e;</span></div>
-      <h3 style="color:var(--text1);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
+      <h3 style="color:var(--text);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
       <div class="footer-eco">
       ${footerEcoHtml}
       </div>
@@ -1482,10 +1805,12 @@ ${relatedHtml}
         <span style="color:var(--text3);font-size:12px">&copy; ${new Date().getFullYear()} ${theme.org || 'Heady Systems'} &mdash; Sacred Geometry Architecture</span>
         <span>
           <a href="https://headyconnection.org">Nonprofit</a>
-          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <span style="margin:0 8px;color:var(--text3)">&middot;</span>
           <a href="https://headyio.com">Docs</a>
-          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <span style="margin:0 8px;color:var(--text3)">&middot;</span>
           <a href="https://headycheck.com">Status</a>
+          <span style="margin:0 8px;color:var(--text3)">&middot;</span>
+          <a href="https://headysystems.com/system-registry.json" style="font-family:var(--mono)">registry.json</a>
         </span>
       </div>
     </div>
@@ -1602,4 +1927,4 @@ class SiteGenerator {
   }
 }
 
-module.exports = { SiteGenerator, SITES, buildHTML };
+module.exports = { SiteGenerator, SITES, buildHTML, ECOSYSTEM, DOMAIN_THEMES, SYSTEM_VERTICALS, CROSS_DOMAIN_MAP, WEBSITE_CLASSES };
