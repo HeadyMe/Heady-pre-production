@@ -671,6 +671,181 @@ footer a:hover { color: var(--accent); }
 }
 .footer-bottom a:hover { color: var(--accent); }
 
+/* ── System Context Block ("Where This Fits") ── */
+.system-context {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-lg);
+  margin: var(--sp-lg) 0;
+  position: relative;
+  overflow: hidden;
+}
+.system-context::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+}
+.system-context-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
+}
+.system-context-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--glow);
+  border: 1px solid var(--accent)30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.system-context-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 700;
+}
+.system-context-vertical {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.system-context-desc {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: var(--sp-md);
+}
+.system-context-desc a { color: var(--accent); text-decoration: none; }
+.system-context-desc a:hover { text-decoration: underline; }
+
+/* ── Cross-Domain Connections ── */
+.cross-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--sp-sm);
+  margin-top: var(--sp-md);
+}
+.cross-link-card {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-sm);
+  padding: var(--sp-sm) var(--sp-md);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text2);
+  transition: all 0.25s;
+  font-size: 13px;
+}
+.cross-link-card:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--glow);
+  transform: translateX(4px);
+}
+.cross-link-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.cross-link-text strong {
+  display: block;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.cross-link-text small {
+  color: var(--text3);
+  font-size: 11px;
+}
+
+/* ── System Map ── */
+.system-map {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-lg);
+  margin: var(--sp-lg) 0;
+}
+.system-map-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: var(--sp-md);
+  text-align: center;
+}
+.system-map-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--sp-sm);
+}
+.system-map-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--sp-sm);
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text2);
+  transition: all 0.25s;
+  text-align: center;
+  border: 1px solid transparent;
+}
+.system-map-node:hover {
+  background: var(--glow);
+  border-color: var(--accent)40;
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+.system-map-node.current {
+  background: var(--glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.system-map-node .node-icon { font-size: 24px; }
+.system-map-node .node-name { font-size: 13px; font-weight: 600; }
+.system-map-node .node-role { font-size: 11px; color: var(--text3); }
+
+/* ── Global Vertical Nav Strip ── */
+.vertical-nav {
+  display: flex;
+  gap: 2px;
+  padding: 6px 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.vertical-nav a {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text3);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.vertical-nav a:hover { color: var(--accent); background: var(--glow); }
+.vertical-nav a.active { color: var(--accent); background: var(--glow); font-weight: 600; }
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .nav-links { display: none; }
@@ -681,6 +856,9 @@ footer a:hover { color: var(--accent); }
   .sg-metatron { width: 300px; height: 300px; }
   .footer-eco { grid-template-columns: repeat(2, 1fr); }
   .context-bar { display: none; }
+  .cross-links { grid-template-columns: 1fr; }
+  .system-map-grid { grid-template-columns: repeat(2, 1fr); }
+  .system-context { margin: var(--sp-md) 0; }
 }
 </style>
 </head>
@@ -720,6 +898,9 @@ footer a:hover { color: var(--accent); }
   </div>
 
   <div class="wrap">
+    <!-- Global Vertical Navigation — same order on every domain -->
+    <div class="vertical-nav"><a href="https://headysystems.com">✴️ Platform</a><a href="https://headybuddy.org">✨ Companion</a><a href="https://headyconnection.org">🌍 Nonprofit</a><a href="https://headycheck.com">💚 Operations</a><a href="https://headycloud.com">☁️ Cloud</a><a href="https://headyio.com" class="active">📚 Documentation</a><a href="https://headymcp.com">🔌 Extensibility</a><a href="https://headyweb.com">🌐 Browser</a></div>
+
     <nav>
       <a href="/" class="logo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="sg-logo">
@@ -759,6 +940,28 @@ footer a:hover { color: var(--accent); }
       </div>
     </div>
   </div>
+
+  <!-- WHERE THIS FITS — system context + cross-domain connections -->
+
+    <div class="wrap">
+      <div class="system-context">
+        <div class="system-context-header">
+          <div class="system-context-icon">📚</div>
+          <div>
+            <div class="system-context-title">Where This Fits</div>
+            <div class="system-context-vertical">Documentation Vertical &middot; System & Docs Surface</div>
+          </div>
+        </div>
+        <div class="system-context-desc">These docs cover the <a href="https://headysystems.com">Heady Systems platform</a> API. For a conversational way to explore, ask <a href="https://headybot.com">HeadyBuddy</a>. To understand why we built this, visit <a href="https://headyconnection.org">HeadyConnection</a>.</div>
+        <div class="cross-links"><a href="https://headysystems.com" class="cross-link-card">
+        <div class="cross-link-icon">✴️</div>
+        <div class="cross-link-text">
+          <strong>See it live</strong>
+          <small>Describes this platform</small>
+        </div>
+      </a></div>
+      </div>
+    </div>
 
 
     
@@ -818,10 +1021,64 @@ const intent = await fetch('https://headysystems.com/api/v1/chat/resolve', {
       </div>
     </div>
 
+  <!-- SYSTEM MAP — visual graph of the full ecosystem -->
+  <div class="wrap">
+    <div class="system-map">
+      <div class="system-map-title">Heady System Map</div>
+      <div class="system-map-grid">
+        <a href="https://headysystems.com" class="system-map-node">
+          <span class="node-icon">✴️</span>
+          <span class="node-name">Heady Systems</span>
+          <span class="node-role">Core AI infrastructure powering every Heady product</span>
+        </a>
+        <a href="https://headyconnection.org" class="system-map-node">
+          <span class="node-icon">🌐</span>
+          <span class="node-name">HeadyConnection</span>
+          <span class="node-role">Mission governance, community programs, and impact</span>
+        </a>
+        <a href="https://headybuddy.org" class="system-map-node">
+          <span class="node-icon">✨</span>
+          <span class="node-name">HeadyBuddy</span>
+          <span class="node-role">HeadyBuddy — persistent AI companion on every surface</span>
+        </a>
+        <a href="https://headybot.com" class="system-map-node">
+          <span class="node-icon">🤖</span>
+          <span class="node-name">HeadyBot</span>
+          <span class="node-role">Direct line to HeadyBuddy AI — full-featured conversational interface.</span>
+        </a>
+        <a href="https://headycloud.com" class="system-map-node">
+          <span class="node-icon">☁️</span>
+          <span class="node-name">HeadyCloud</span>
+          <span class="node-role">Cloud orchestration, deployment layers, and infrastructure</span>
+        </a>
+        <a href="https://headymcp.com" class="system-map-node">
+          <span class="node-icon">🔌</span>
+          <span class="node-name">HeadyMCP</span>
+          <span class="node-role">MCP connectors — extend Heady with any tool or service</span>
+        </a>
+        <a href="https://headyio.com" class="system-map-node current">
+          <span class="node-icon">📚</span>
+          <span class="node-name">Heady Docs &#x2190;</span>
+          <span class="node-role">API reference, architecture guides, integration docs</span>
+        </a>
+        <a href="https://headycheck.com" class="system-map-node">
+          <span class="node-icon">💚</span>
+          <span class="node-name">HeadyCheck</span>
+          <span class="node-role">Health monitoring, drift detection, and system observability</span>
+        </a>
+        <a href="https://headyweb.com" class="system-map-node">
+          <span class="node-icon">🌐</span>
+          <span class="node-name">HeadyWeb</span>
+          <span class="node-role">AI-powered browser shell with Buddy sidebar</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div class="wrap">
       <div class="sg-divider"><span>&#x221e;</span></div>
-      <h3 style="color:var(--text1);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
+      <h3 style="color:var(--text);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
       <div class="footer-eco">
       <div class="footer-eco-item">
         <a href="https://headysystems.com">✴️ Heady Systems</a>
@@ -864,10 +1121,12 @@ const intent = await fetch('https://headysystems.com/api/v1/chat/resolve', {
         <span style="color:var(--text3);font-size:12px">&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</span>
         <span>
           <a href="https://headyconnection.org">Nonprofit</a>
-          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <span style="margin:0 8px;color:var(--text3)">&middot;</span>
           <a href="https://headyio.com">Docs</a>
-          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <span style="margin:0 8px;color:var(--text3)">&middot;</span>
           <a href="https://headycheck.com">Status</a>
+          <span style="margin:0 8px;color:var(--text3)">&middot;</span>
+          <a href="https://headysystems.com/system-registry.json" style="font-family:var(--mono)">registry.json</a>
         </span>
       </div>
     </div>

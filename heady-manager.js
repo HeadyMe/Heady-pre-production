@@ -1725,9 +1725,19 @@ app.get("/api/v1/sites/status", (req, res) => {
   res.json(envelope(siteGenerator.getGeneratedSites(), req));
 });
 
+// System Registry — canonical machine-readable ecosystem map
+app.get("/system-registry.json", (req, res) => {
+  try {
+    const { generateSystemRegistry } = require(path.join(__dirname, "src", "system-registry-generator"));
+    res.json(generateSystemRegistry());
+  } catch (err) {
+    res.status(500).json({ error: "Failed to generate system registry", message: err.message });
+  }
+});
+
 // ─── Domain-based website serving ────────────────────────────────────
 const SITES_PATH = path.join(__dirname, "sites");
-const SITE_NAMES = ['headysystems', 'headybuddy', 'headycheck', 'headyio', 'headymcp', 'headybot', 'headycloud', 'headyconnection'];
+const SITE_NAMES = ['headysystems', 'headybuddy', 'headycheck', 'headyio', 'headymcp', 'headybot', 'headycloud', 'headyconnection', 'headyweb'];
 const domainSiteMap = {
   'headysystems.com': 'headysystems',
   'headybuddy.org': 'headybuddy',
@@ -1737,6 +1747,7 @@ const domainSiteMap = {
   'headybot.com': 'headybot',
   'headycloud.com': 'headycloud',
   'headyconnection.com': 'headyconnection',
+  'headyweb.com': 'headyweb',
 };
 
 // Path-based access: /sites/:siteName serves the site regardless of hostname
