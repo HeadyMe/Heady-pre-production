@@ -21,10 +21,10 @@ DOMAINS=(
 
 # Local services to route
 LOCAL_SERVICES=(
-    "http://localhost:3300"  # HeadyManager API
-    "http://localhost:3000"  # HeadyManager UI
-    "ssh://localhost:22"     # SSH
-    "http://localhost:8787"  # Jupyter/Colab proxy
+    "https://headysystems.com"  # HeadyManager API
+    "https://headysystems.com"  # HeadyManager UI
+    "https://headysystems.com"     # SSH
+    "https://headyio.com"  # Jupyter/Colab proxy
 )
 
 echo "🚀 Setting up Cloudflare Tunnel for Heady Systems..."

@@ -38,7 +38,7 @@ Every component is designed to produce **identical outputs from identical inputs
 
 **Standby State:**
 - Process not running
-- Health endpoint unreachable (`http://localhost:3300/api/health`)
+- Health endpoint unreachable (`https://headysystems.com/api/health`)
 - File system operations available but uncoordinated
 
 **Activation Triggers:**
@@ -141,7 +141,7 @@ Every component is designed to produce **identical outputs from identical inputs
 4. **Context Persistence:** Context vectors saved/loaded correctly
 5. **Data Schema:** All required modules present
 6. **Codemap Access:** Code maps available for optimization
-7. **HeadyManager Connection:** `http://localhost:3300/api/health` responds
+7. **HeadyManager Connection:** `https://headysystems.com/api/health` responds
 8. **MCP Servers:** All configured MCP servers reachable
 9. **Orchestrator Status:** Task queue operational
 10. **Squash Merge System:** Multi-codebase merge available
@@ -286,7 +286,7 @@ execSync('pnpm install --frozen-lockfile 2>nul || pnpm install', {
 node heady-manager.js
 
 # 2. Verify health
-Invoke-RestMethod http://localhost:3300/api/health
+Invoke-RestMethod https://headysystems.com/api/health
 
 # 3. Run autobuild
 node src/hc_autobuild.js

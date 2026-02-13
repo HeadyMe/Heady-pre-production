@@ -217,9 +217,9 @@ class HeadyRegistry:
     def discover_services(self):
         """Discover running services."""
         services_data = [
-            {"name": "heady-manager", "type": "api", "endpoint": "http://localhost:3300", "port": 3300, "health_check_url": "http://localhost:3300/api/health"},
-            {"name": "heady-frontend", "type": "web", "endpoint": "http://localhost:3000", "port": 3000},
-            {"name": "python-worker", "type": "worker", "endpoint": "http://localhost:5000", "port": 5000},
+            {"name": "heady-manager", "type": "api", "endpoint": "https://headysystems.com", "port": 443, "health_check_url": "https://headysystems.com/api/health"},
+            {"name": "heady-cloud", "type": "web", "endpoint": "https://headycloud.com", "port": 443},
+            {"name": "heady-connection", "type": "api", "endpoint": "https://headyconnection.com", "port": 443},
             {"name": "mcp-server", "type": "mcp", "endpoint": "stdio", "port": None},
             {"name": "postgres", "type": "database", "endpoint": None, "port": 5432},
             {"name": "redis", "type": "cache", "endpoint": None, "port": 6379}

@@ -65,22 +65,22 @@ class MCPAuthManager:
         return {
             "servers": {
                 "heady_bridge": {
-                    "host": "localhost",
-                    "port": 8080,
+                    "host": "headymcp.com",
+                    "port": 443,
                     "auth_type": "bearer",
                     "timeout": 30,
                     "max_connections": 10
                 },
                 "heady_nova": {
-                    "host": "localhost", 
-                    "port": 8081,
+                    "host": "headyconnection.com",
+                    "port": 443,
                     "auth_type": "api_key",
                     "timeout": 30,
                     "max_connections": 5
                 },
                 "heady_oculus": {
-                    "host": "localhost",
-                    "port": 8082,
+                    "host": "headycheck.com",
+                    "port": 443,
                     "auth_type": "jwt",
                     "timeout": 30,
                     "max_connections": 3

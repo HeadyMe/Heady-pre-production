@@ -222,7 +222,7 @@ docker-compose -f docker-compose.mcp.yml down
 docker exec -it heady-postgres psql -U postgres -d heady
 
 # Via local connection (if port 5432 exposed)
-psql -h localhost -U postgres -d heady
+psql -h heady-postgres -U postgres -d heady
 ```
 
 ### Common Database Commands
@@ -337,7 +337,7 @@ node heady-manager.js
 
 # Manager will detect and register MCP services
 # Check health endpoint
-curl http://localhost:3300/api/health
+curl https://headysystems.com/api/health
 ```
 
 ## Performance Optimization

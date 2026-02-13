@@ -160,7 +160,7 @@ Rename-Item C:\Users\erich\Heady-Fresh C:\Users\erich\Heady
 cd C:\Users\erich\Heady
 npm install
 node heady-manager.js
-# Test: http://localhost:3300/api/health
+# Test: https://headysystems.com/api/health
 ```
 
 ## Phase 8: Post-Rebuild

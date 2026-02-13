@@ -97,26 +97,26 @@ python HeadyAcademy/HeadyRegistry.py
 ### API Endpoints
 ```bash
 # Orchestrate request
-curl -X POST http://localhost:3300/api/conductor/orchestrate \
+curl -X POST https://headysystems.com/api/conductor/orchestrate \
   -H "Content-Type: application/json" \
   -d '{"request": "scan for gaps"}'
 
 # System summary
-curl http://localhost:3300/api/conductor/summary
+curl https://headysystems.com/api/conductor/summary
 
 # Health check
-curl http://localhost:3300/api/conductor/health
+curl https://headysystems.com/api/conductor/health
 
 # Query capabilities
-curl http://localhost:3300/api/conductor/query?q=deploy
+curl https://headysystems.com/api/conductor/query?q=deploy
 
 # Execute workflow
-curl -X POST http://localhost:3300/api/conductor/workflow \
+curl -X POST https://headysystems.com/api/conductor/workflow \
   -H "Content-Type: application/json" \
   -d '{"workflow": "hcautobuild"}'
 
 # Invoke node
-curl -X POST http://localhost:3300/api/conductor/node \
+curl -X POST https://headysystems.com/api/conductor/node \
   -H "Content-Type: application/json" \
   -d '{"node": "SENTINEL"}'
 ```

@@ -37,7 +37,7 @@ docker-compose -f docker-compose.mcp.yml ps
 
 Check HeadyManager health:
 ```powershell
-curl http://localhost:3300/api/health
+curl https://headysystems.com/api/health
 ```
 
 Expected response:
@@ -82,11 +82,11 @@ docker-compose -f docker-compose.mcp.yml restart
 
 | Service | Endpoint | Purpose |
 |---------|----------|---------|
-| **HeadyManager** | `http://localhost:3300` | Main API |
-| **Health Check** | `http://localhost:3300/api/health` | Service status |
-| **Registry** | `http://localhost:3300/api/registry` | Component registry |
-| **PostgreSQL** | `localhost:5432` | Database |
-| **Redis** | `localhost:6379` | Cache |
+| **HeadyManager** | `https://headysystems.com` | Main API |
+| **Health Check** | `https://headysystems.com/api/health` | Service status |
+| **Registry** | `https://headysystems.com/api/registry` | Component registry |
+| **PostgreSQL** | `heady-postgres:5432` | Database |
+| **Redis** | `heady-redis:6379` | Cache |
 
 ## 🐳 Docker Services
 
@@ -152,7 +152,7 @@ Heady/
 Create or update `.env` file:
 ```bash
 # Database
-DATABASE_URL=postgresql://postgres:password@localhost:5432/heady
+DATABASE_URL=postgresql://postgres:password@heady-postgres:5432/heady
 POSTGRES_PASSWORD=your_secure_password
 
 # Cloudflare (optional)

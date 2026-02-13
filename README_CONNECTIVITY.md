@@ -21,14 +21,14 @@ The Heady System operates on two primary nodes locally:
 
 | Service | Component | Port | Local URL | Binding |
 | :--- | :--- | :--- | :--- | :--- |
-| **Heady Manager** | Node.js / Express | `3300` | [http://localhost:3300](http://localhost:3300) | `0.0.0.0` (All Interfaces) |
-| **Heady Conductor** | Python / FastAPI | `8000` | [http://localhost:8000](http://localhost:8000) | `0.0.0.0` (All Interfaces) |
+| **Heady Manager** | Node.js / Express | `3300` | [https://headysystems.com](https://headysystems.com) | `0.0.0.0` (All Interfaces) |
+| **Heady Conductor** | Python / FastAPI | `8000` | [https://headymcp.com](https://headymcp.com) | `0.0.0.0` (All Interfaces) |
 
 ### Verification
 Run the following to check health locally:
 ```bash
-curl http://localhost:3300/api/health
-curl http://localhost:8000/api/health
+curl https://headysystems.com/api/health
+curl https://headymcp.com/api/health
 ```
 
 ## 2. Remote Connectivity
@@ -42,7 +42,7 @@ Both services are configured to bind to `0.0.0.0`, allowing access from other ma
 To expose services securely to the public internet:
 ```bash
 # Example using cloudflared
-cloudflared tunnel --url http://localhost:3300
+cloudflared tunnel --url https://headysystems.com
 ```
 
 ## 3. Heady Service Structure (Monorepo Compatible)

@@ -112,9 +112,9 @@ class GatewayConfigurator:
     @staticmethod
     def generate_config() -> Dict[str, Any]:
         return {
-            "bind": "127.0.0.1",
-            "allowHosts": ["127.0.0.1", "localhost"],
-            "allowOrigins": ["http://127.0.0.1", "http://localhost"],
+            "bind": "0.0.0.0",
+            "allowHosts": ["headymcp.com", "headysystems.com", "headyconnection.com"],
+            "allowOrigins": ["https://headymcp.com", "https://headysystems.com", "https://headyconnection.com"],
             "rateLimitPerMin": 60,
             "jwt": {
                 "mode": "hs256",

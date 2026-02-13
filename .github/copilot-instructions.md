@@ -55,8 +55,8 @@ cp .env.example .env
 npm start  # or node heady-manager.js
 
 # Access interfaces
-# Main UI: http://localhost:3300
-# Admin UI: http://localhost:3300/admin
+# Main UI: https://headysystems.com
+# Admin UI: https://headysystems.com/admin
 ```
 
 ### Testing

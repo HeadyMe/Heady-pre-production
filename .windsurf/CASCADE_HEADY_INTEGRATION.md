@@ -31,7 +31,7 @@ Cascade (Windsurf AI)
     ↓
 cascade-heady-proxy.py
     ↓
-heady-manager.js (localhost:3300)
+heady-manager.js (headysystems.com)
     ↓
 HeadyConductor.orchestrate()
     ↓
@@ -150,7 +150,7 @@ Contains:
 
 ### 1. Verify heady-manager is running
 ```powershell
-curl http://localhost:3300/api/health
+curl https://headysystems.com/api/health
 ```
 
 Expected response:

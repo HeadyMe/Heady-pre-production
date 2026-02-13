@@ -276,17 +276,17 @@ These are the background services that keep everything working:
 ### 1. **Heady Manager** (Port 3300)
 - **What it does:** The main API server - handles all requests and coordinates everything
 - **Analogy:** The reception desk and switchboard
-- **Access:** http://localhost:3300
+- **Access:** https://headysystems.com
 
 ### 2. **Heady Frontend** (Port 3000)
 - **What it does:** The web-based user interface - what you see in your browser
 - **Analogy:** The customer-facing showroom
-- **Access:** http://localhost:3000
+- **Access:** https://headysystems.com
 
 ### 3. **Python Worker** (Port 5000)
 - **What it does:** Handles Python-based tasks and AI operations
 - **Analogy:** The specialized workshop in the back
-- **Access:** http://localhost:5000
+- **Access:** https://headysystems.com
 
 ### 4. **MCP Server**
 - **What it does:** Manages connections using the Model Context Protocol
@@ -324,7 +324,7 @@ These are specific utilities for particular tasks:
 
 **The Admin IDE**
 - Open your web browser
-- Go to: `http://localhost:3300/admin`
+- Go to: `https://headysystems.com/admin`
 - You get a complete development environment with:
   - **File Browser:** Navigate and manage your project files
   - **Code Editor:** Edit files with syntax highlighting
@@ -333,7 +333,7 @@ These are specific utilities for particular tasks:
   - **Settings Panel:** Configure system preferences
 
 **The Main Dashboard**
-- Go to: `http://localhost:3300`
+- Go to: `https://headysystems.com`
 - See system status, health metrics, and quick actions
 
 ---
@@ -352,7 +352,7 @@ node heady-manager.js
 python src/process_data.py
 
 # Check system health
-curl http://localhost:3300/api/health
+curl https://headysystems.com/api/health
 ```
 
 **Using the Conductor via Command Line:**
@@ -383,29 +383,29 @@ You can connect programmatically using HTTP requests:
 
 ```bash
 # Orchestrate a request
-curl -X POST http://localhost:3300/api/conductor/orchestrate \
+curl -X POST https://headysystems.com/api/conductor/orchestrate \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-api-key" \
   -d '{"request": "deploy the system"}'
 
 # Get system summary
-curl http://localhost:3300/api/conductor/summary \
+curl https://headysystems.com/api/conductor/summary \
   -H "X-API-Key: your-api-key"
 
 # Check health
-curl http://localhost:3300/api/conductor/health
+curl https://headysystems.com/api/conductor/health
 
 # Query capabilities
-curl http://localhost:3300/api/conductor/query?q=security
+curl https://headysystems.com/api/conductor/query?q=security
 
 # Execute a workflow
-curl -X POST http://localhost:3300/api/conductor/workflow \
+curl -X POST https://headysystems.com/api/conductor/workflow \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-api-key" \
   -d '{"workflow": "hcautobuild"}'
 
 # Invoke a node
-curl -X POST http://localhost:3300/api/conductor/node \
+curl -X POST https://headysystems.com/api/conductor/node \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-api-key" \
   -d '{"node": "SENTINEL"}'
@@ -414,20 +414,20 @@ curl -X POST http://localhost:3300/api/conductor/node \
 **Admin API (For managing the system):**
 ```bash
 # Browse files
-curl http://localhost:3300/api/admin/files?root=&path= \
+curl https://headysystems.com/api/admin/files?root=&path= \
   -H "X-API-Key: your-api-key"
 
 # Read a file
-curl http://localhost:3300/api/admin/file?root=&path=README.md \
+curl https://headysystems.com/api/admin/file?root=&path=README.md \
   -H "X-API-Key: your-api-key"
 
 # Run a build
-curl -X POST http://localhost:3300/api/admin/build \
+curl -X POST https://headysystems.com/api/admin/build \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-api-key"
 
 # Run an audit
-curl -X POST http://localhost:3300/api/admin/audit \
+curl -X POST https://headysystems.com/api/admin/audit \
   -H "Content-Type: application/json" \
   -H "X-API-Key: your-api-key"
 ```
@@ -520,8 +520,8 @@ npm start
 ```
 
 ### Step 4: Access
-- **Main UI:** Open http://localhost:3300 in your browser
-- **Admin IDE:** Open http://localhost:3300/admin in your browser
+- **Main UI:** Open https://headysystems.com in your browser
+- **Admin IDE:** Open https://headysystems.com/admin in your browser
 
 ### Step 5: Try It Out
 1. Go to the Admin IDE
@@ -537,7 +537,7 @@ npm start
 ### "I want to check if everything is working"
 ```bash
 # Check health
-curl http://localhost:3300/api/health
+curl https://headysystems.com/api/health
 
 # Or use the Conductor
 python HeadyAcademy/HeadyConductor.py --health
@@ -576,7 +576,7 @@ python HeadyAcademy/HeadyConductor.py --node MURPHY
 python HeadyAcademy/HeadyConductor.py --summary
 
 # Or check the web dashboard
-# Open http://localhost:3300 in your browser
+# Open https://headysystems.com in your browser
 ```
 
 ---
@@ -635,7 +635,7 @@ This isn't just fancy language - these principles guide how the system is design
 ## Help & Support
 
 **Getting Help:**
-1. Check the health endpoint: http://localhost:3300/api/health
+1. Check the health endpoint: https://headysystems.com/api/health
 2. Review the logs in the Admin IDE
 3. Run system diagnostics: `python HeadyAcademy/HeadyConductor.py --summary`
 

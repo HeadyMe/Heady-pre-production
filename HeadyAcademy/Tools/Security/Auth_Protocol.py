@@ -341,7 +341,7 @@ def main():
             if not args.provider:
                 print("Error: --provider required for OAuth")
                 return
-            url, state = auth.generate_oauth_url(args.provider, "http://localhost:8080/callback")
+            url, state = auth.generate_oauth_url(args.provider, "https://headysystems.com/callback")
             print(f"OAuth URL: {url}")
             print(f"State: {state}")
         

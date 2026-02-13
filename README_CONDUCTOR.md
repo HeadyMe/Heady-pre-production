@@ -260,7 +260,7 @@ Check health of all services.
       "name": "heady-manager",
       "type": "api",
       "status": "healthy",
-      "endpoint": "http://localhost:3300"
+      "endpoint": "https://headysystems.com"
     }
   }
 }

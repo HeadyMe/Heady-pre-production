@@ -70,8 +70,8 @@ A hybrid Node.js/Python system for the HeadyConnection ecosystem with patented S
    ```
 
 4. **Access interfaces**:
-   - Main UI: http://localhost:3300
-   - Admin IDE: http://localhost:3300/admin
+   - Main UI: https://headysystems.com
+   - Admin IDE: https://headysystems.com/admin
 
 ### Production (Render)
 Deploy via `render.yaml` which uses `heady-shared-secrets` env group for secrets management.

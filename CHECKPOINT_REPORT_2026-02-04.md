@@ -24,7 +24,7 @@
 
 | Location | Status | URL | Health |
 |----------|--------|-----|--------|
-| **LOCAL (Primary)** | ✅ LIVE | http://localhost:3300 | Healthy |
+| **LOCAL (Primary)** | ✅ LIVE | https://headysystems.com | Healthy |
 | **HeadyMe** | ✅ DEPLOYED | https://github.com/HeadyMe/Heady | Ready |
 | **HeadySystems** | ✅ DEPLOYED | https://github.com/HeadySystems/Heady | Ready |
 | **HeadyConnection** | ❌ BLOCKED | https://github.com/HeadyConnection/Heady | Repo Rules |

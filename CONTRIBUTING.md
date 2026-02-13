@@ -31,7 +31,7 @@ We welcome contributions! Follow these steps to get started.
    ```bash
    npm start
    ```
-5. Open the Admin IDE at http://localhost:3300/admin
+5. Open the Admin IDE at https://headysystems.com/admin
 
 ## Code Style
 

@@ -25,7 +25,7 @@ import json
 import requests
 from datetime import datetime
 
-HEADY_MANAGER_URL = "http://localhost:3300"
+HEADY_MANAGER_URL = "https://headysystems.com"
 
 def log_to_file(message):
     """Log to file for debugging."""

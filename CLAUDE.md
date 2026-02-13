@@ -142,51 +142,51 @@ At each checkpoint, you MUST:
 npm start                          # Start heady-manager on port 3300
 
 # Pipeline operations
-curl -X POST localhost:3300/api/pipeline/run     # Trigger pipeline run
-curl localhost:3300/api/pipeline/state            # Current run state
-curl localhost:3300/api/pipeline/config           # Pipeline config summary
-curl localhost:3300/api/pipeline/dag              # Stage dependency graph
-curl localhost:3300/api/pipeline/history          # Run history
-curl localhost:3300/api/pipeline/circuit-breakers # Circuit breaker status
-curl localhost:3300/api/pipeline/log              # Pipeline log entries
+curl -X POST headysystems.com/api/pipeline/run     # Trigger pipeline run
+curl headysystems.com/api/pipeline/state            # Current run state
+curl headysystems.com/api/pipeline/config           # Pipeline config summary
+curl headysystems.com/api/pipeline/dag              # Stage dependency graph
+curl headysystems.com/api/pipeline/history          # Run history
+curl headysystems.com/api/pipeline/circuit-breakers # Circuit breaker status
+curl headysystems.com/api/pipeline/log              # Pipeline log entries
 
 # Claude Code direct access
-curl -X POST localhost:3300/api/pipeline/claude -d '{"prompt":"..."}'        # Ad-hoc Claude execution
-curl -X POST localhost:3300/api/pipeline/claude/analyze -d '{"paths":["src/"]}' # Code analysis
-curl -X POST localhost:3300/api/pipeline/claude/security                     # Security audit
+curl -X POST headysystems.com/api/pipeline/claude -d '{"prompt":"..."}'        # Ad-hoc Claude execution
+curl -X POST headysystems.com/api/pipeline/claude/analyze -d '{"paths":["src/"]}' # Code analysis
+curl -X POST headysystems.com/api/pipeline/claude/security                     # Security audit
 
 # Supervisor (multi-agent routing)
-curl localhost:3300/api/supervisor/status                                     # Agent status
-curl -X POST localhost:3300/api/supervisor/route -d '{"type":"build"}'       # Route task to agents
+curl headysystems.com/api/supervisor/status                                     # Agent status
+curl -X POST headysystems.com/api/supervisor/route -d '{"type":"build"}'       # Route task to agents
 
 # System Brain
-curl localhost:3300/api/brain/status                                         # Brain status + readiness
-curl -X POST localhost:3300/api/brain/tune -d '{"errorRate":0.05}'           # Auto-tune concurrency
-curl -X POST localhost:3300/api/brain/governance-check -d '{"action":"execute","actor":"builder","domain":"build"}'
-curl -X POST localhost:3300/api/brain/evaluate-pattern -d '{"patternId":"circuit-breaker"}'
+curl headysystems.com/api/brain/status                                         # Brain status + readiness
+curl -X POST headysystems.com/api/brain/tune -d '{"errorRate":0.05}'           # Auto-tune concurrency
+curl -X POST headysystems.com/api/brain/governance-check -d '{"action":"execute","actor":"builder","domain":"build"}'
+curl -X POST headysystems.com/api/brain/evaluate-pattern -d '{"patternId":"circuit-breaker"}'
 
 # Readiness Evaluator
-curl localhost:3300/api/readiness/evaluate                                   # Run readiness probes
-curl localhost:3300/api/readiness/history                                    # Evaluation history
+curl headysystems.com/api/readiness/evaluate                                   # Run readiness probes
+curl headysystems.com/api/readiness/history                                    # Evaluation history
 
 # Health Checks
-curl localhost:3300/api/health-checks/snapshot                               # Current health snapshot
-curl -X POST localhost:3300/api/health-checks/run                            # Run all checks now
-curl localhost:3300/api/health-checks/history                                # Check history
+curl headysystems.com/api/health-checks/snapshot                               # Current health snapshot
+curl -X POST headysystems.com/api/health-checks/run                            # Run all checks now
+curl headysystems.com/api/health-checks/history                                # Check history
 
 # Checkpoint Analyzer
-curl -X POST localhost:3300/api/checkpoint/analyze -d '{"stage":"manual"}'   # Run checkpoint analysis
-curl localhost:3300/api/checkpoint/records                                    # Checkpoint records
+curl -X POST headysystems.com/api/checkpoint/analyze -d '{"stage":"manual"}'   # Run checkpoint analysis
+curl headysystems.com/api/checkpoint/records                                    # Checkpoint records
 
 # Combined overview
-curl localhost:3300/api/subsystems                                           # All subsystem status
-curl localhost:3300/api/agents/claude-code/status                            # Claude Code agent status
+curl headysystems.com/api/subsystems                                           # All subsystem status
+curl headysystems.com/api/agents/claude-code/status                            # Claude Code agent status
 
 # System status
-curl localhost:3300/api/health                    # Health check
-curl localhost:3300/api/system/status             # Full system status
-curl localhost:3300/api/nodes                     # Node status
-curl -X POST localhost:3300/api/system/production # Activate production mode
+curl headysystems.com/api/health                    # Health check
+curl headysystems.com/api/system/status             # Full system status
+curl headysystems.com/api/nodes                     # Node status
+curl -X POST headysystems.com/api/system/production # Activate production mode
 
 # Build & Deploy
 .\commit_and_build.ps1             # Local build cycle

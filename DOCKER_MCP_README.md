@@ -92,8 +92,8 @@ docker-compose -f docker-compose.mcp.yml ps
 ### Required for Full Functionality
 ```bash
 # Database Configuration
-DATABASE_URL=postgresql://postgres:password@localhost:5432/heady
-POSTGRES_HOST=localhost
+DATABASE_URL=postgresql://postgres:password@heady-postgres:5432/heady
+POSTGRES_HOST=heady-postgres
 POSTGRES_PORT=5432
 POSTGRES_DB=heady
 POSTGRES_USER=postgres
