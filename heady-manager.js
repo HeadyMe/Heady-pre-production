@@ -1411,6 +1411,89 @@ app.post("/api/soul/reload", (req, res) => {
   }
 });
 
+// ─── Compute Cluster (HA Physical Nodes) ─────────────────────────────────
+const { HeadyComputeCluster } = require(path.join(__dirname, "src", "cluster", "compute-cluster-manager"));
+const computeCluster = new HeadyComputeCluster({
+  cloudLayer: process.env.CLOUD_LAYER || "headysystems",
+  heartbeatTTLSec: 120,
+  healthCheckIntervalSec: 30,
+});
+computeCluster.startHealthChecks();
+
+// Bind compute cluster to intelligence engine allocator
+if (intelligenceEngine && intelligenceEngine.allocator) {
+  intelligenceEngine.allocator.bindComputeCluster(computeCluster);
+}
+
+// ─── Compute Cluster APIs ─────────────────────────────────────────────
+
+// Register a compute node
+app.post("/api/cluster/nodes/register", async (req, res) => {
+  try {
+    const result = await computeCluster.registerNode(req.body);
+    res.status(result.success ? 201 : 400).json(envelope(result, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
+  }
+});
+
+// Node heartbeat
+app.post("/api/cluster/nodes/heartbeat", (req, res) => {
+  const result = computeCluster.handleHeartbeat(req.body);
+  res.json(envelope(result, req));
+});
+
+// Get cluster state
+app.get("/api/cluster/state", (req, res) => {
+  res.json(envelope(computeCluster.getClusterState(), req));
+});
+
+// Get all nodes
+app.get("/api/cluster/nodes", (req, res) => {
+  res.json(envelope({ nodes: computeCluster.getAllNodes() }, req));
+});
+
+// Get single node
+app.get("/api/cluster/nodes/:nodeId", (req, res) => {
+  const node = computeCluster.getNode(req.params.nodeId);
+  if (!node) return res.status(404).json(HeadyError.notFound(`node:${req.params.nodeId}`));
+  res.json(envelope(node, req));
+});
+
+// Remove a node
+app.delete("/api/cluster/nodes/:nodeId", (req, res) => {
+  const removed = computeCluster.removeNode(req.params.nodeId);
+  if (!removed) return res.status(404).json(HeadyError.notFound(`node:${req.params.nodeId}`));
+  res.json(envelope({ removed: true, node_id: req.params.nodeId }, req));
+});
+
+// Route a task to the cluster
+app.post("/api/cluster/tasks/route", async (req, res) => {
+  try {
+    const result = await computeCluster.routeTask(req.body);
+    res.json(envelope(result, req));
+  } catch (error) {
+    res.status(500).json(HeadyError.internal(error.message));
+  }
+});
+
+// Report task completion from a node
+app.post("/api/cluster/tasks/complete", (req, res) => {
+  const result = computeCluster.handleTaskComplete(req.body);
+  res.json(envelope({ accepted: result }, req));
+});
+
+// Check if cluster can handle a task type
+app.get("/api/cluster/can-handle/:taskType", (req, res) => {
+  res.json(envelope(computeCluster.canHandleTask(req.params.taskType), req));
+});
+
+// Cluster task history
+app.get("/api/cluster/tasks/history", (req, res) => {
+  const limit = Math.min(parseInt(req.query.limit) || 50, 200);
+  res.json(envelope({ history: computeCluster.getTaskHistory(limit) }, req));
+});
+
 // ─── Colab GPU Connection APIs ───────────────────────────────────────────
 const HeadyColabClusterManager = require(path.join(__dirname, "src", "cloud-orchestration", "colab-cluster-manager"));
 const colabManager = new HeadyColabClusterManager(process.env.CLOUD_LAYER || "headysystems");
@@ -1752,6 +1835,7 @@ process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully');
   mcGlobal.stopAutoRun();
   soulOrchestrator.stop();
+  computeCluster.stopHealthChecks();
   driftEngine.stopPeriodicScan?.();
   connectorRegistry.stopHealthChecks?.();
   if (intelligenceEngine) intelligenceEngine.stop();
@@ -1764,6 +1848,7 @@ process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully');
   mcGlobal.stopAutoRun();
   soulOrchestrator.stop();
+  computeCluster.stopHealthChecks();
   driftEngine.stopPeriodicScan?.();
   connectorRegistry.stopHealthChecks?.();
   if (intelligenceEngine) intelligenceEngine.stop();

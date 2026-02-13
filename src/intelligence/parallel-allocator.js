@@ -269,6 +269,82 @@ class HeadyParallelAllocator extends EventEmitter {
     this.crashCriticalPath();
   }
 
+  // ─── Compute Cluster Integration ───────────────────────────────
+
+  /**
+   * Bind a HeadyComputeCluster instance for node-aware routing
+   */
+  bindComputeCluster(cluster) {
+    this.computeCluster = cluster;
+    console.log("[Intelligence] Compute cluster bound to parallel allocator");
+
+    // Listen for task completions from physical nodes
+    cluster.on("task:completed", ({ task_id, status }) => {
+      if (status === "completed") {
+        this.scheduler.completeTask(task_id, { source: "compute_cluster" });
+      } else {
+        this.scheduler.failTask(task_id, "compute_cluster_failure");
+      }
+    });
+  }
+
+  /**
+   * Check if a task should be routed to a physical compute node
+   */
+  shouldRouteToCluster(task) {
+    if (!this.computeCluster) return false;
+
+    const clusterConfig = MANIFEST.compute_cluster;
+    if (!clusterConfig || !clusterConfig.enabled) return false;
+
+    // Never route cloud-only tasks to physical nodes
+    if (clusterConfig.routing_policy.cloud_only.includes(task.type)) return false;
+
+    // Prefer physical for designated task types
+    if (clusterConfig.routing_policy.prefer_physical_for.includes(task.type)) {
+      const check = this.computeCluster.canHandleTask(task.type);
+      if (check.can_handle) {
+        // For P0 tasks, only route to highly reliable nodes
+        if (task.priority === "P0") {
+          const node = this.computeCluster.getNode(check.best_node);
+          if (node && node.reliability_score >= (clusterConfig.reliability.min_score_for_p0 || 80)) {
+            return true;
+          }
+          return false;
+        }
+        return true;
+      }
+    }
+
+    // Offload when cloud is overloaded
+    const running = this.scheduler.getRunningTasks().length;
+    const threshold = Math.floor(this.maxConcurrency * (clusterConfig.routing_policy.offload_threshold_pct / 100));
+    if (running >= threshold) {
+      const check = this.computeCluster.canHandleTask(task.type);
+      return check.can_handle;
+    }
+
+    return false;
+  }
+
+  /**
+   * Route a task to the compute cluster
+   */
+  async routeToCluster(task) {
+    if (!this.computeCluster) return null;
+    try {
+      const result = await this.computeCluster.routeTask(task);
+      if (result.routed) {
+        this.scheduler.startTask(task.id, `cluster:${result.node_id}`);
+        this.emit("task_routed_to_cluster", { task_id: task.id, node_id: result.node_id });
+      }
+      return result;
+    } catch (err) {
+      console.error(`[Intelligence] Cluster routing failed for ${task.id}:`, err.message);
+      return null;
+    }
+  }
+
   _findAvailableAgent(task) {
     for (const [, agent] of this.agentPool) {
       if (agent.status === "idle") return agent;
@@ -296,6 +372,11 @@ class HeadyParallelAllocator extends EventEmitter {
         avg_utilization: this._avgUtilization(),
       },
       recent_allocations: this.allocationHistory.slice(-20),
+      compute_cluster: this.computeCluster ? {
+        bound: true,
+        active_nodes: this.computeCluster._getActiveNodeCount(),
+        total_nodes: this.computeCluster.nodes.size,
+      } : { bound: false },
     };
   }
 

@@ -2,7 +2,6 @@
   "protocol": "Heady Full-Stack Intelligence Protocol",
   "version": "1.2",
   "codename": "ASAP-MAX",
-
   "priorities": {
     "P0": {
       "label": "Critical Path",
@@ -37,7 +36,6 @@
       "preemptive_reservation": false
     }
   },
-
   "execution": {
     "max_concurrency": 8,
     "fair_access_minimum_pct": 20,
@@ -50,7 +48,6 @@
     "preemptive_warmup": true,
     "auto_crash_critical_path": true
   },
-
   "speed_modes": {
     "MAX": {
       "weight": 0.9,
@@ -74,7 +71,6 @@
       "auto_add_agents": false
     }
   },
-
   "repo_profiles": {
     "fast_lane": {
       "criteria": "high_coverage_low_coupling",
@@ -93,14 +89,22 @@
       "streamlined_tooling": true
     }
   },
-
   "anti_stagnation": {
     "timeout_sec": 300,
-    "actions": ["reassign", "escalate_priority", "add_agents", "skip_optional", "break_dependency"],
+    "actions": [
+      "reassign",
+      "escalate_priority",
+      "add_agents",
+      "skip_optional",
+      "break_dependency"
+    ],
     "max_retries": 3,
-    "escalation_chain": ["reassign", "escalate_priority", "force_complete"]
+    "escalation_chain": [
+      "reassign",
+      "escalate_priority",
+      "force_complete"
+    ]
   },
-
   "channels": {
     "required_count": 7,
     "latency_targets_ms": {
@@ -115,7 +119,6 @@
     "pause_on_latency_miss": true,
     "reroute_on_failure": true
   },
-
   "learning": {
     "log_all_tasks": true,
     "track_actual_duration": true,
@@ -123,13 +126,11 @@
     "pattern_detection": true,
     "feed_to_pattern_engine": true
   },
-
   "social_impact": {
     "tag_all_tasks": true,
     "wealth_redistribution": true,
     "fair_access_enforced": true
   },
-
   "cloud_integration": {
     "branded_domains_only": true,
     "primary_api": "https://headysystems.com",
@@ -137,5 +138,52 @@
     "connection_layer": "https://headyconnection.com",
     "mcp_protocol": "https://headymcp.com",
     "health_monitor": "https://headycheck.com"
+  },
+  "compute_cluster": {
+    "enabled": true,
+    "heartbeat_ttl_sec": 120,
+    "health_check_interval_sec": 30,
+    "max_task_history": 5000,
+    "node_tiers": {
+      "POWERHOUSE": {
+        "min_cores": 12,
+        "min_ram_gb": 24,
+        "priority_boost": 0.3
+      },
+      "STANDARD": {
+        "min_cores": 4,
+        "min_ram_gb": 8,
+        "priority_boost": 0.1
+      },
+      "LIGHT": {
+        "min_cores": 2,
+        "min_ram_gb": 4,
+        "priority_boost": 0.0
+      }
+    },
+    "routing_policy": {
+      "prefer_physical_for": [
+        "build",
+        "test",
+        "batch_job",
+        "data_process",
+        "ai_inference",
+        "docker_build",
+        "indexing"
+      ],
+      "cloud_only": [
+        "deployment",
+        "site-gen",
+        "verify"
+      ],
+      "offload_threshold_pct": 70,
+      "failover_to_cloud": true,
+      "max_node_concurrent_ratio": 0.5
+    },
+    "reliability": {
+      "min_score_for_p0": 80,
+      "auto_demote_threshold": 30,
+      "consecutive_failure_limit": 5
+    }
   }
 }
