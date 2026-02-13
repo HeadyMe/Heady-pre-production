@@ -59,10 +59,10 @@ cd android
 
 ### 🔌 Service Configuration
 
-#### Working URLs (Current)
-- **HeadySystems**: https://heady-manager-headysystems.onrender.com
-- **HeadyMe**: https://heady-manager-headyme.onrender.com  
-- **HeadyConnection**: https://heady-manager-headyconnection.onrender.com
+#### Working URLs (Custom Domains)
+- **HeadySystems**: https://headysystems.com
+- **HeadyMe**: https://headycloud.com  
+- **HeadyConnection**: https://headyconnection.com
 
 #### API Endpoints
 - **Health**: `/api/health`
@@ -77,7 +77,7 @@ cd android
 # Create .env file
 HEADY_API_KEY=your-api-key
 OPENAI_API_KEY=your-openai-key
-HEADY_MANAGER_URL=https://heady-manager-headysystems.onrender.com
+HEADY_MANAGER_URL=https://headysystems.com
 ```
 
 #### Security
@@ -112,7 +112,7 @@ HEADY_MANAGER_URL=https://heady-manager-headysystems.onrender.com
 #### Desktop Verification
 ```bash
 # Check service health
-curl https://heady-manager-headysystems.onrender.com/api/health
+curl https://headysystems.com/api/health
 
 # Test HeadyBuddy connection
 # Launch HeadyBuddy and check status indicator
