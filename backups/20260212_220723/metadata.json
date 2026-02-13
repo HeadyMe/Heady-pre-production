@@ -1,0 +1,18 @@
+{
+    "backup_timestamp": "2026-02-12T22:07:42-07:00",
+    "backup_directory": "./backups/20260212_220723",
+    "containers": {
+        "headysoul": ,
+        "jules": ,
+        "observer": ,
+        "atlas": 
+    },
+    "system_info": {
+        "hostname": "parrot",
+        "kernel": "6.17.13+2-amd64",
+        "podman_version": "podman version 5.4.2",
+        "total_containers": ,
+        "running_containers": 
+    },
+    "backup_files": ["."," ".."," "atlas.tar.gz"," "configs.tar.gz"," "docker-compose.yml"," ".env"," "headysoul.tar.gz"," "jules.tar.gz"," "metadata.json"," "observer.tar.gz"," ]
+}
