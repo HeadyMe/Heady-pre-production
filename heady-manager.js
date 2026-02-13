@@ -31,6 +31,8 @@
  * ╚═══════════════════════════════════════════════════════════════════════════════╝
  */
 
+require("dotenv").config({ path: require("path").resolve(__dirname, "..", ".env") });
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -1192,10 +1194,10 @@ let cloudEnvConfig = {
   HEADY_ME_URL: "https://headycloud.com",
   HEADY_SYSTEMS_URL: "https://headysystems.com",
   HEADY_CONNECTION_URL: "https://headyconnection.com",
-  HEADY_MCP_URL: "https://headysystems.com",
-  HEADY_BUDDY_URL: "https://headysystems.com",
-  HEADY_DOCS_URL: "https://headysystems.com",
-  HEADY_STATUS_URL: "https://headysystems.com",
+  HEADY_MCP_URL: "https://headymcp.com",
+  HEADY_BUDDY_URL: "https://headybot.com",
+  HEADY_DOCS_URL: "https://headyio.com",
+  HEADY_STATUS_URL: "https://headycheck.com",
   HEADY_TARGET: "Cloud",
   HEADY_VERSION: "3.0.0",
   HEADY_SERVICE_PROFILE: "full",

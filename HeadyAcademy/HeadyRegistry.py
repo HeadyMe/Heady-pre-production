@@ -41,7 +41,7 @@ import json
 import yaml
 from pathlib import Path
 from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, fields
 from datetime import datetime
 import glob
 
@@ -274,16 +274,22 @@ class HeadyRegistry:
         
         print(f" HeadyRegistry: Saved to {self.registry_file}")
     
+    @staticmethod
+    def _safe_init(cls, data_dict):
+        """Construct a dataclass instance, ignoring unknown fields."""
+        valid = {f.name for f in fields(cls)}
+        return cls(**{k: v for k, v in data_dict.items() if k in valid})
+
     def load(self):
         """Load registry from JSON file."""
         with open(self.registry_file, 'r') as f:
             data = json.load(f)
         
-        self.nodes = {k: Node(**v) for k, v in data.get('nodes', {}).items()}
-        self.workflows = {k: Workflow(**v) for k, v in data.get('workflows', {}).items()}
-        self.skills = {k: Skill(**v) for k, v in data.get('skills', {}).items()}
-        self.services = {k: Service(**v) for k, v in data.get('services', {}).items()}
-        self.tools = {k: Tool(**v) for k, v in data.get('tools', {}).items()}
+        self.nodes = {k: self._safe_init(Node, v) for k, v in data.get('nodes', {}).items()}
+        self.workflows = {k: self._safe_init(Workflow, v) for k, v in data.get('workflows', {}).items()}
+        self.skills = {k: self._safe_init(Skill, v) for k, v in data.get('skills', {}).items()}
+        self.services = {k: self._safe_init(Service, v) for k, v in data.get('services', {}).items()}
+        self.tools = {k: self._safe_init(Tool, v) for k, v in data.get('tools', {}).items()}
         
         print(f"HeadyRegistry: Loaded {self.get_total_count()} capabilities from {self.registry_file}")
     

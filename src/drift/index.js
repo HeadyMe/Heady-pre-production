@@ -420,16 +420,25 @@ class SoulValueDriftDetector {
       }
 
       // Check hard vetoes are all implemented
+      // Vetoes can be in heady_soul.js, heady-soul.yaml (src or configs), or value_weights.js
       const hardVetoes = manifest.soulIntegration?.hardVetoes || [];
       const soulJsPath = path.join(projectRoot, 'src', 'soul', 'heady_soul.js');
-      if (fs.existsSync(soulJsPath)) {
-        const soulContent = fs.readFileSync(soulJsPath, 'utf8');
+      const soulYamlPaths = [
+        path.join(projectRoot, 'src', 'soul', 'heady-soul.yaml'),
+        path.join(projectRoot, 'configs', 'heady-soul.yaml'),
+      ];
+      let combinedContent = '';
+      if (fs.existsSync(soulJsPath)) combinedContent += fs.readFileSync(soulJsPath, 'utf8');
+      for (const yp of soulYamlPaths) {
+        if (fs.existsSync(yp)) combinedContent += '\n' + fs.readFileSync(yp, 'utf8');
+      }
+      if (combinedContent) {
         for (const veto of hardVetoes) {
-          if (!soulContent.includes(veto)) {
+          if (!combinedContent.includes(veto)) {
             issues.push({
               type: 'missing_hard_veto',
               veto,
-              fix: `Add '${veto}' to hard veto list in heady_soul.js`
+              fix: `Add '${veto}' to hard veto list in heady-soul.yaml`
             });
           }
         }
