@@ -31,7 +31,7 @@ const CONFIG = {
   x: 20, // Right side padding
   y: 100, // Top padding
   opacity: 0.95,
-  headyManagerUrl: 'https://heady-manager-headysystems.onrender.com'
+  headyManagerUrl: 'https://headysystems.com'
 };
 
 function createWindow() {

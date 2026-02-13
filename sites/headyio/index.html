@@ -601,7 +601,7 @@ footer a:hover { color: var(--accent); }
           <div class="logo-sub">Documentation</div>
         </div>
       </a>
-      <div class="nav-links"><a href="#api">API</a><a href="#arch">Architecture</a><a href="https://heady-manager-headysystems.onrender.com">Systems</a><a href="https://heady-manager-headysystems.onrender.com">Status</a></div>
+      <div class="nav-links"><a href="#api">API</a><a href="#arch">Architecture</a><a href="https://headysystems.com">Systems</a><a href="https://headysystems.com">Status</a></div>
     </nav>
   </div>
 
@@ -624,18 +624,18 @@ footer a:hover { color: var(--accent); }
         <h2 class="section-title">Quick Start</h2>
         <p class="section-sub">Get up and running in seconds</p>
         <div class="code-block">// Fetch system status
-const response = await fetch('https://heady-manager-headysystems.onrender.com/api/system/status');
+const response = await fetch('https://headysystems.com/api/system/status');
 const status = await response.json();
 
 // Create a session
-const session = await fetch('https://heady-manager-headysystems.onrender.com/api/v1/sessions', {
+const session = await fetch('https://headysystems.com/api/v1/sessions', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ userId: 'your-user-id' })
 });
 
 // Chat with HeadyBuddy
-const intent = await fetch('https://heady-manager-headysystems.onrender.com/api/v1/chat/resolve', {
+const intent = await fetch('https://headysystems.com/api/v1/chat/resolve', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ message: 'check system health', userId: 'you' })
@@ -666,13 +666,13 @@ const intent = await fetch('https://heady-manager-headysystems.onrender.com/api/
       <div class="sg-divider"><span>&#x221e;</span></div>
       <p>&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</p>
       <div class="footer-links">
-        <a href="https://heady-manager-headysystems.onrender.com">Systems</a>
-        <a href="https://heady-manager-headysystems.onrender.com">Status</a>
-        <a href="https://heady-manager-headysystems.onrender.com">Docs</a>
-        <a href="https://heady-manager-headysystems.onrender.com">MCP</a>
-        <a href="https://heady-manager-headysystems.onrender.com">Buddy</a>
-        <a href="https://heady-manager-headyme.onrender.com">Cloud</a>
-        <a href="https://heady-manager-headyconnection.onrender.com">Connection</a>
+        <a href="https://headysystems.com">Systems</a>
+        <a href="https://headysystems.com">Status</a>
+        <a href="https://headysystems.com">Docs</a>
+        <a href="https://headysystems.com">MCP</a>
+        <a href="https://headysystems.com">Buddy</a>
+        <a href="https://headycloud.com">Cloud</a>
+        <a href="https://headyconnection.com">Connection</a>
       </div>
     </div>
   </footer>

@@ -634,13 +634,13 @@ const SITES = {
     desc: 'Self-aware, indexed, orchestrated intelligence platform. Every component knows every other component.',
     badge: 'System Online',
     nav: [
-      { l: 'API Docs', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Status', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'MCP', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Buddy', h: 'https://heady-manager-headysystems.onrender.com' }
+      { l: 'API Docs', h: 'https://headysystems.com' },
+      { l: 'Status', h: 'https://headysystems.com' },
+      { l: 'MCP', h: 'https://headysystems.com' },
+      { l: 'Buddy', h: 'https://headysystems.com' }
     ],
     primaryCta: { l: 'View Architecture', h: '#arch' },
-    secondaryCta: { l: 'API Reference', h: 'https://heady-manager-headysystems.onrender.com' },
+    secondaryCta: { l: 'API Reference', h: 'https://headysystems.com' },
     sections: [
       {
         id: 'status', title: 'Live System Status', sub: 'Real-time health across all services',
@@ -689,11 +689,11 @@ el.innerHTML=\`<div class="status-row"><span>Environment</span><span class="tag 
     badge: 'AI Active',
     nav: [
       { l: 'Chat', h: '#chat' },
-      { l: 'Systems', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Docs', h: 'https://heady-manager-headysystems.onrender.com' }
+      { l: 'Systems', h: 'https://headysystems.com' },
+      { l: 'Docs', h: 'https://headysystems.com' }
     ],
     primaryCta: { l: 'Start Chatting', h: '#chat' },
-    secondaryCta: { l: 'Learn More', h: 'https://heady-manager-headysystems.onrender.com' },
+    secondaryCta: { l: 'Learn More', h: 'https://headysystems.com' },
     sections: [
       {
         id: 'chat', title: 'Chat with HeadyBuddy', sub: 'Powered by 3-stage intent resolution',
@@ -730,11 +730,11 @@ msgs.scrollTop=msgs.scrollHeight;}
     badge: 'Monitoring Active',
     nav: [
       { l: 'Dashboard', h: '#dashboard' },
-      { l: 'Systems', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Docs', h: 'https://heady-manager-headysystems.onrender.com' }
+      { l: 'Systems', h: 'https://headysystems.com' },
+      { l: 'Docs', h: 'https://headysystems.com' }
     ],
     primaryCta: { l: 'View Dashboard', h: '#dashboard' },
-    secondaryCta: { l: 'API Docs', h: 'https://heady-manager-headysystems.onrender.com' },
+    secondaryCta: { l: 'API Docs', h: 'https://headysystems.com' },
     sections: [
       {
         id: 'dashboard', title: 'Health Dashboard', sub: 'Live system health across all services',
@@ -773,8 +773,8 @@ el.innerHTML=html||'<div style="color:var(--text2)">No health data available yet
     nav: [
       { l: 'API', h: '#api' },
       { l: 'Architecture', h: '#arch' },
-      { l: 'Systems', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Status', h: 'https://heady-manager-headysystems.onrender.com' }
+      { l: 'Systems', h: 'https://headysystems.com' },
+      { l: 'Status', h: 'https://headysystems.com' }
     ],
     primaryCta: { l: 'API Reference', h: '#api' },
     secondaryCta: { l: 'Quick Start', h: '#quickstart' },
@@ -782,18 +782,18 @@ el.innerHTML=html||'<div style="color:var(--text2)">No health data available yet
       {
         id: 'quickstart', title: 'Quick Start', sub: 'Get up and running in seconds',
         body: `<div class="code-block">// Fetch system status
-const response = await fetch('https://heady-manager-headysystems.onrender.com/api/system/status');
+const response = await fetch('https://headysystems.com/api/system/status');
 const status = await response.json();
 
 // Create a session
-const session = await fetch('https://heady-manager-headysystems.onrender.com/api/v1/sessions', {
+const session = await fetch('https://headysystems.com/api/v1/sessions', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ userId: 'your-user-id' })
 });
 
 // Chat with HeadyBuddy
-const intent = await fetch('https://heady-manager-headysystems.onrender.com/api/v1/chat/resolve', {
+const intent = await fetch('https://headysystems.com/api/v1/chat/resolve', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ message: 'check system health', userId: 'you' })
@@ -824,8 +824,8 @@ const intent = await fetch('https://heady-manager-headysystems.onrender.com/api/
     nav: [
       { l: 'Connectors', h: '#connectors' },
       { l: 'Register', h: '#register' },
-      { l: 'Docs', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Systems', h: 'https://heady-manager-headysystems.onrender.com' }
+      { l: 'Docs', h: 'https://headysystems.com' },
+      { l: 'Systems', h: 'https://headysystems.com' }
     ],
     primaryCta: { l: 'Browse Connectors', h: '#connectors' },
     secondaryCta: { l: 'Register Yours', h: '#register' },
@@ -862,7 +862,7 @@ el.innerHTML=\`<div class="status-row"><span>Total Connectors</span><span>\${das
   "endpoint": "https://your-service.com/mcp",
   "auth": { "type": "bearer" }
 }</div>
-<br><p style="color:var(--text2)">POST this manifest to <code>https://heady-manager-headysystems.onrender.com/api/v1/mcp/connectors/register</code></p>`
+<br><p style="color:var(--text2)">POST this manifest to <code>https://headysystems.com/api/v1/mcp/connectors/register</code></p>`
       }
     ]
   },
@@ -875,11 +875,11 @@ el.innerHTML=\`<div class="status-row"><span>Total Connectors</span><span>\${das
     badge: 'Bot Online',
     nav: [
       { l: 'Chat', h: '#chat' },
-      { l: 'Buddy Portal', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Systems', h: 'https://heady-manager-headysystems.onrender.com' }
+      { l: 'Buddy Portal', h: 'https://headysystems.com' },
+      { l: 'Systems', h: 'https://headysystems.com' }
     ],
     primaryCta: { l: 'Start Chat', h: '#chat' },
-    secondaryCta: { l: 'API Docs', h: 'https://heady-manager-headysystems.onrender.com' },
+    secondaryCta: { l: 'API Docs', h: 'https://headysystems.com' },
     sections: [
       {
         id: 'chat', title: 'HeadyBot Chat', sub: 'Full-featured AI conversation interface',
@@ -911,8 +911,8 @@ msgs.scrollTop=msgs.scrollHeight;}
     nav: [
       { l: 'Layers', h: '#layers' },
       { l: 'Deploy', h: '#deploy' },
-      { l: 'Systems', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Status', h: 'https://heady-manager-headysystems.onrender.com' }
+      { l: 'Systems', h: 'https://headysystems.com' },
+      { l: 'Status', h: 'https://headysystems.com' }
     ],
     primaryCta: { l: 'View Layers', h: '#layers' },
     secondaryCta: { l: 'Deploy Now', h: '#deploy' },
@@ -953,8 +953,8 @@ el.innerHTML=\`<div class="status-row"><span>HeadySystems</span><span class="tag
     nav: [
       { l: 'Nodes', h: '#nodes' },
       { l: 'Agents', h: '#agents' },
-      { l: 'Systems', h: 'https://heady-manager-headysystems.onrender.com' },
-      { l: 'Cloud', h: 'https://heady-manager-headyme.onrender.com' }
+      { l: 'Systems', h: 'https://headysystems.com' },
+      { l: 'Cloud', h: 'https://headycloud.com' }
     ],
     primaryCta: { l: 'View Node Mesh', h: '#nodes' },
     secondaryCta: { l: 'Agent Registry', h: '#agents' },
@@ -1056,13 +1056,13 @@ ${sectionsHtml}
       <div class="sg-divider"><span>&#x221e;</span></div>
       <p>&copy; ${new Date().getFullYear()} Heady Systems &mdash; Sacred Geometry Architecture</p>
       <div class="footer-links">
-        <a href="https://heady-manager-headysystems.onrender.com">Systems</a>
-        <a href="https://heady-manager-headysystems.onrender.com">Status</a>
-        <a href="https://heady-manager-headysystems.onrender.com">Docs</a>
-        <a href="https://heady-manager-headysystems.onrender.com">MCP</a>
-        <a href="https://heady-manager-headysystems.onrender.com">Buddy</a>
-        <a href="https://heady-manager-headyme.onrender.com">Cloud</a>
-        <a href="https://heady-manager-headyconnection.onrender.com">Connection</a>
+        <a href="https://headysystems.com">Systems</a>
+        <a href="https://headysystems.com">Status</a>
+        <a href="https://headysystems.com">Docs</a>
+        <a href="https://headysystems.com">MCP</a>
+        <a href="https://headysystems.com">Buddy</a>
+        <a href="https://headycloud.com">Cloud</a>
+        <a href="https://headyconnection.com">Connection</a>
       </div>
     </div>
   </footer>

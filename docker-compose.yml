@@ -80,8 +80,8 @@ services:
       - BUILDER_ENABLED=true
       - ATLAS_ENABLED=true
       # Cloud connectivity
-      - CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
-      - CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
+      - CLOUD_HEADYME_URL=https://headycloud.com
+      - CLOUD_HEADYSYSTEMS_URL=https://headysystems.com
       - HYBRID_MODE=true
     volumes:
       - heady-memory:/app/.heady-memory
@@ -89,7 +89,7 @@ services:
     networks:
       - heady-hybrid
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3300/api/health"]
+      test: ["CMD", "curl", "-f", "https://headysystems.com/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -152,8 +152,8 @@ services:
       - NODE_ENV=production
       - BRIDGE_MODE=true
       - LOCAL_MANAGER_URL=http://heady-manager-local:3300
-      - CLOUD_HEADYME_URL=https://heady-manager-headyme.onrender.com
-      - CLOUD_HEADYSYSTEMS_URL=https://heady-manager-headysystems.onrender.com
+      - CLOUD_HEADYME_URL=https://headycloud.com
+      - CLOUD_HEADYSYSTEMS_URL=https://headysystems.com
       - SYNC_INTERVAL=30
     depends_on:
       - heady-manager-local

@@ -19,8 +19,8 @@ const http = require('http');
 const https = require('https');
 
 const LOCAL_MANAGER_URL = process.env.LOCAL_MANAGER_URL || 'https://headysystems.com';
-const CLOUD_HEADYME_URL = process.env.CLOUD_HEADYME_URL || 'https://heady-manager-headyme.onrender.com';
-const CLOUD_HEADYSYSTEMS_URL = process.env.CLOUD_HEADYSYSTEMS_URL || 'https://heady-manager-headysystems.onrender.com';
+const CLOUD_HEADYME_URL = process.env.CLOUD_HEADYME_URL || 'https://headycloud.com';
+const CLOUD_HEADYSYSTEMS_URL = process.env.CLOUD_HEADYSYSTEMS_URL || 'https://headysystems.com';
 const SYNC_INTERVAL = parseInt(process.env.SYNC_INTERVAL || '30', 10) * 1000;
 
 console.log('∞ Heady Cloud Bridge - Hybrid Connector ∞');

@@ -420,7 +420,7 @@ app.get("/api/layer", (req, res) => {
   res.json({
     active_layer: activeId,
     name: layer ? layer.name : "Unknown",
-    endpoint: layer ? layer.endpoint : "https://heady-manager-headysystems.onrender.com",
+    endpoint: layer ? layer.endpoint : "https://headysystems.com",
     icon: layer ? layer.icon : "?",
     color: layer ? layer.color : "White",
     description: layer ? layer.description : "",
@@ -605,7 +605,7 @@ app.get("/api/system/status", (req, res) => {
     active_layer: {
       id: activeLayer,
       name: layer ? layer.name : "Unknown",
-      endpoint: layer ? layer.endpoint : "https://heady-manager-headysystems.onrender.com"
+      endpoint: layer ? layer.endpoint : "https://headysystems.com"
     },
     uptime: process.uptime(),
     memory: process.memoryUsage(),
@@ -1188,14 +1188,14 @@ app.post("/api/monte-carlo/global/cycle", (req, res) => {
 // Cloud-managed configuration — source of truth for all Heady clients
 const CLOUD_CONFIG_PATH = path.join(__dirname, "configs", "services.json");
 let cloudEnvConfig = {
-  HEADY_ENDPOINT: "https://heady-manager-headysystems.onrender.com",
-  HEADY_ME_URL: "https://heady-manager-headyme.onrender.com",
-  HEADY_SYSTEMS_URL: "https://heady-manager-headysystems.onrender.com",
-  HEADY_CONNECTION_URL: "https://heady-manager-headyconnection.onrender.com",
-  HEADY_MCP_URL: "https://heady-manager-headysystems.onrender.com",
-  HEADY_BUDDY_URL: "https://heady-manager-headysystems.onrender.com",
-  HEADY_DOCS_URL: "https://heady-manager-headysystems.onrender.com",
-  HEADY_STATUS_URL: "https://heady-manager-headysystems.onrender.com",
+  HEADY_ENDPOINT: "https://headysystems.com",
+  HEADY_ME_URL: "https://headycloud.com",
+  HEADY_SYSTEMS_URL: "https://headysystems.com",
+  HEADY_CONNECTION_URL: "https://headyconnection.com",
+  HEADY_MCP_URL: "https://headysystems.com",
+  HEADY_BUDDY_URL: "https://headysystems.com",
+  HEADY_DOCS_URL: "https://headysystems.com",
+  HEADY_STATUS_URL: "https://headysystems.com",
   HEADY_TARGET: "Cloud",
   HEADY_VERSION: "3.0.0",
   HEADY_SERVICE_PROFILE: "full",

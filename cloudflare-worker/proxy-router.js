@@ -5,15 +5,15 @@
 // ╚══════════════════════════════════════════════════════════════════╝
 
 const RENDER_SERVICES = {
-  'headysystems.com': 'https://heady-manager-headysystems.onrender.com',
-  'headymcp.com': 'https://heady-manager-headysystems.onrender.com',
-  'headycheck.com': 'https://heady-manager-headysystems.onrender.com',
-  'headyio.com': 'https://heady-manager-headysystems.onrender.com',
-  'headycloud.com': 'https://heady-manager-headyme.onrender.com',
-  'headybot.com': 'https://heady-manager-headyme.onrender.com',
-  'headybuddy.org': 'https://heady-manager-headyme.onrender.com',
-  'headyconnection.com': 'https://heady-manager-headyconnection.onrender.com',
-  'headyconnection.org': 'https://heady-manager-headyconnection.onrender.com'
+  'headysystems.com': 'https://headysystems.com',
+  'headymcp.com': 'https://headysystems.com',
+  'headycheck.com': 'https://headysystems.com',
+  'headyio.com': 'https://headysystems.com',
+  'headycloud.com': 'https://headycloud.com',
+  'headybot.com': 'https://headycloud.com',
+  'headybuddy.org': 'https://headycloud.com',
+  'headyconnection.com': 'https://headyconnection.com',
+  'headyconnection.org': 'https://headyconnection.com'
 };
 
 export default {

@@ -21,7 +21,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const HEADY_MANAGER_URL = 'https://heady-manager-headysystems.onrender.com';
+const HEADY_MANAGER_URL = 'https://headysystems.com';
 const POLL_INTERVAL = 2000; // 2 seconds
 
 // ANSI color codes for terminal output

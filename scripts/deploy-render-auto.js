@@ -70,8 +70,8 @@ async function deploy() {
 
   console.log('\n✨ Deployment complete!');
   console.log('URLs:');
-  console.log('  • https://heady-manager-headyme.onrender.com');
-  console.log('  • https://heady-manager-headysystems.onrender.com');
+  console.log('  • https://headycloud.com');
+  console.log('  • https://headysystems.com');
 }
 
 deploy().catch(console.error);

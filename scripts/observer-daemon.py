@@ -30,9 +30,9 @@ class HeadyObserver:
             "https://api.headyconnection.org/health",
             "https://auth.headyconnection.org/health", 
             "https://builder-dev.headysystems.com/status",
-            "https://heady-manager-headysystems.onrender.com/api/health",
-            "https://heady-manager-headyme.onrender.com/api/health",
-            "https://heady-manager-headyconnection.onrender.com/api/health"
+            "https://headysystems.com/api/health",
+            "https://headycloud.com/api/health",
+            "https://headyconnection.com/api/health"
         ]
         
         # Alert configuration

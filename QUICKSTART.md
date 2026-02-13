@@ -54,7 +54,7 @@ PORT=3300                            # Manager port (default 3300)
 HF_TOKEN=your-huggingface-token     # Hugging Face inference
 DATABASE_URL=postgresql://...        # Postgres connection
 NODE_ENV=development                 # development | production
-HEADY_CORS_ORIGINS=http://localhost:3000,http://localhost:3300
+HEADY_CORS_ORIGINS=https://headysystems.com,https://headysystems.com
 
 # Admin IDE
 HEADY_ADMIN_ROOT=.                   # Repo root for file access
@@ -84,8 +84,8 @@ REMOTE_GPU_PORT=
 ```powershell
 # Option A: Just the Manager (most common)
 npm start
-# → http://localhost:3300       (Main UI)
-# → http://localhost:3300/admin (Admin IDE)
+# → https://headysystems.com       (Main UI)
+# → https://headysystems.com/admin (Admin IDE)
 
 # Option B: Manager + Frontend dev server
 npm run start          # Terminal 1 - Manager on :3300
@@ -98,10 +98,10 @@ hc                     # Runs HCAutoBuild cycle (builds + validates)
 ### Verify Health
 
 ```powershell
-curl http://localhost:3300/api/health
+curl https://headysystems.com/api/health
 # → {"ok":true,"service":"heady-manager","ts":"..."}
 
-curl http://localhost:3300/api/pulse
+curl https://headysystems.com/api/pulse
 # → Full system status with Docker info and active layer
 ```
 
@@ -143,11 +143,11 @@ Heady runs across multiple cloud instances managed by the **Layer Switcher**.
 
 | Layer | Name | Endpoint | Color |
 |-------|------|----------|-------|
-| `local` | Local Dev | `http://localhost:3300` | Green |
-| `cloud-me` | Cloud HeadyMe | `https://heady-manager-headyme.onrender.com` | Cyan |
-| `cloud-sys` | Cloud HeadySystems | `https://heady-manager-headysystems.onrender.com` | Magenta |
-| `cloud-conn` | Cloud HeadyConnection | `https://heady-manager-headyconnection.onrender.com` | Yellow |
-| `hybrid` | Local + Cloud | `http://localhost:3300` (w/ `.env.hybrid`) | White |
+| `local` | Local Dev | `https://headysystems.com` | Green |
+| `cloud-me` | Cloud HeadyMe | `https://headycloud.com` | Cyan |
+| `cloud-sys` | Cloud HeadySystems | `https://headysystems.com` | Magenta |
+| `cloud-conn` | Cloud HeadyConnection | `https://headyconnection.com` | Yellow |
+| `hybrid` | Local + Cloud | `https://headysystems.com` (w/ `.env.hybrid`) | White |
 
 ### Layer Commands
 
@@ -306,7 +306,7 @@ python HeadyAcademy/HeadyConductor.py --summary
 python HeadyAcademy/HeadyConductor.py --health
 
 # API
-curl -X POST http://localhost:3300/api/conductor/orchestrate -H "Content-Type: application/json" -d "{\"request\":\"scan for security issues\"}"
+curl -X POST https://headysystems.com/api/conductor/orchestrate -H "Content-Type: application/json" -d "{\"request\":\"scan for security issues\"}"
 ```
 
 ---
@@ -417,7 +417,7 @@ Heady/
 npm install
 cp .env.example .env              # Edit with your keys
 npm start                         # Manager on :3300
-# Visit http://localhost:3300
+# Visit https://headysystems.com
 ```
 
 ### "I want to develop and auto-checkpoint"
@@ -456,7 +456,7 @@ python admin_console.py --check security
 ```powershell
 python HeadyAcademy/HeadyConductor.py --summary
 # or
-curl http://localhost:3300/api/conductor/summary
+curl https://headysystems.com/api/conductor/summary
 ```
 
 ---
