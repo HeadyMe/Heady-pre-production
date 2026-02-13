@@ -19,7 +19,7 @@ services:
     name: heady-manager
     runtime: node
     buildCommand: npm install && pip install pyyaml psutil requests && npm run build --prefix frontend
-    startCommand: node heady-manager.js
+    startCommand: node cluster.js
     envVars:
       - key: PORT
         value: "3300"

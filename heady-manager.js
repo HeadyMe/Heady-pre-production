@@ -1682,7 +1682,7 @@ app.get("/system-registry.json", (req, res) => {
 
 // ─── Domain-based website serving ────────────────────────────────────
 const SITES_PATH = path.join(__dirname, "sites");
-const SITE_NAMES = ['headysystems', 'headybuddy', 'headycheck', 'headyio', 'headymcp', 'headybot', 'headycloud', 'headyconnection', 'headyweb'];
+const SITE_NAMES = ['headysystems', 'headybuddy', 'headycheck', 'headyio', 'headymcp', 'headybot', 'headycloud', 'headyconnection', 'headyos'];
 const domainSiteMap = {
   'headysystems.com': 'headysystems',
   'headybuddy.org': 'headybuddy',
@@ -1692,7 +1692,7 @@ const domainSiteMap = {
   'headybot.com': 'headybot',
   'headycloud.com': 'headycloud',
   'headyconnection.com': 'headyconnection',
-  'headyweb.com': 'headyweb',
+  'headyos.com': 'headyos',
 };
 
 // Path-based access: /sites/:siteName serves the site regardless of hostname

@@ -45,7 +45,7 @@ HeadyWeb
    - Content scripts
    - Context capture
 
-3. **HeadyWeb Cloud** - Web-based application at headyweb.com
+3. **HeadyWeb Cloud** - Web-based application at headyos.com
    - Progressive Web App
    - Next.js-based implementation
    - Cloudflare-hosted

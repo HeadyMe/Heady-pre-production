@@ -119,7 +119,7 @@ const DOMAIN_THEMES = {
     audience: 'Donors, partners, beneficiaries, community',
     org: 'HeadyConnection'
   },
-  headyweb: {
+  headyos: {
     accent: '#7c3aed', accent2: '#a78bfa', glow: '#7c3aed20',
     label: 'AI Browser',
     role: 'AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.',
@@ -138,7 +138,7 @@ const ECOSYSTEM = [
   { key: 'headymcp', domain: 'headymcp.com', name: 'HeadyMCP', short: 'MCP', icon: '🔌' },
   { key: 'headyio', domain: 'headyio.com', name: 'Heady Docs', short: 'Docs', icon: '📚' },
   { key: 'headycheck', domain: 'headycheck.com', name: 'HeadyCheck', short: 'Health', icon: '💚' },
-  { key: 'headyweb', domain: 'headyweb.com', name: 'HeadyWeb', short: 'Browser', icon: '🌐' },
+  { key: 'headyos', domain: 'headyos.com', name: 'HeadyOS', short: 'Browser', icon: '🌐' },
 ];
 
 // System Verticals — canonical taxonomy used across all domains
@@ -150,7 +150,7 @@ const SYSTEM_VERTICALS = {
   cloud: { label: 'Cloud', icon: '☁️', primary: 'headycloud', desc: 'Cloud orchestration, deployment layers, and infrastructure' },
   documentation: { label: 'Documentation', icon: '📚', primary: 'headyio', desc: 'API reference, architecture guides, integration docs' },
   extensibility: { label: 'Extensibility', icon: '🔌', primary: 'headymcp', desc: 'MCP connectors — extend Heady with any tool or service' },
-  browser: { label: 'Browser', icon: '🌐', primary: 'headyweb', desc: 'AI-powered browser shell with Buddy sidebar' },
+  browser: { label: 'Browser', icon: '🌐', primary: 'headyos', desc: 'AI-powered browser shell with Buddy sidebar' },
 };
 
 // Cross-domain relationships — bidirectional links with context
@@ -1534,15 +1534,15 @@ el.innerHTML=\`<div class="status-row"><span>HeadySystems</span><span class="tag
     ]
   },
 
-  headyweb: {
-    title: 'HeadyWeb',
-    domain: 'headyweb.com',
+  headyos: {
+    title: 'HeadyOS',
+    domain: 'headyos.com',
     tagline: 'AI-Powered Browser',
     desc: 'Browse the web with HeadyBuddy at your side. Summarize pages, research topics, generate code, and manage tasks \u2014 all from one AI-native browser shell.',
     badge: 'Browser Active',
     vertical: 'browser',
     tags: ['vertical: browser', 'layer: user-facing', 'audience: everyone'],
-    ecosystemContext: 'HeadyWeb is the AI browser shell for the <a href="https://headysystems.com">Heady Systems platform</a>. <a href="https://headybuddy.org">HeadyBuddy</a> lives in the sidebar, powered by the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.',
+    ecosystemContext: 'HeadyOS is the AI browser shell for the <a href="https://headysystems.com">Heady Systems platform</a>. <a href="https://headybuddy.org">HeadyBuddy</a> lives in the sidebar, powered by the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.',
     nav: [
       { l: 'Features', h: '#features' },
       { l: 'Try It', h: '#launch' },
@@ -1550,11 +1550,11 @@ el.innerHTML=\`<div class="status-row"><span>HeadySystems</span><span class="tag
       { l: 'Platform', h: 'https://headysystems.com' },
       { l: 'Docs', h: 'https://headyio.com' }
     ],
-    primaryCta: { l: 'Launch HeadyWeb', h: '#launch' },
+    primaryCta: { l: 'Launch HeadyOS', h: '#launch' },
     secondaryCta: { l: 'Meet Buddy', h: 'https://headybuddy.org' },
     relatedLinks: [
       { label: 'About HeadyBuddy', url: 'https://headybuddy.org', desc: 'The AI companion powering the sidebar' },
-      { label: 'Platform', url: 'https://headysystems.com', desc: 'The intelligence engine behind HeadyWeb' },
+      { label: 'Platform', url: 'https://headysystems.com', desc: 'The intelligence engine behind HeadyOS' },
       { label: 'Chat directly', url: 'https://headybot.com', desc: 'Talk to Buddy without a browser shell' },
       { label: 'Our mission', url: 'https://headyconnection.org', desc: 'The nonprofit governing everything' }
     ],
@@ -1568,14 +1568,14 @@ el.innerHTML=\`<div class="status-row"><span>HeadySystems</span><span class="tag
 <div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4bb;</div><h3>Code Mode</h3><p>Generate, explain, and refactor code. Buddy sees the page context and can help you work with any codebase.</p></div>
 <div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50d;</div><h3>Research Mode</h3><p>Summarize the current page, compare multiple sources, maintain research sessions across tabs.</p></div>
 </div>
-<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyWeb merges browser and AI companion into one experience. <a href="https://headybuddy.org" style="color:var(--accent)">HeadyBuddy</a> is always aware of your current page and context.</p>`
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyOS merges browser and AI companion into one experience. <a href="https://headybuddy.org" style="color:var(--accent)">HeadyBuddy</a> is always aware of your current page and context.</p>`
       },
       {
-        id: 'launch', title: 'Architecture', sub: 'How HeadyWeb connects everything',
+        id: 'launch', title: 'Architecture', sub: 'How HeadyOS connects everything',
         unique: true,
         body: `<div class="eco-block">
-  <div class="eco-label">HeadyWeb Stack</div>
-  <div class="code-block" style="font-size:12px">HeadyWeb (browser shell UI)
+  <div class="eco-label">HeadyOS Stack</div>
+  <div class="code-block" style="font-size:12px">HeadyOS (browser shell UI)
   \u251c\u2500\u2500 Viewport \u2014 multi-tab page rendering
   \u251c\u2500\u2500 Tab Manager \u2014 create, switch, close tabs
   \u251c\u2500\u2500 HeadyBuddy Sidebar \u2014 Chat / Tasks / Code / Research

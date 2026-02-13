@@ -17,8 +17,8 @@ const HEADYWEB_CONFIG = {
   name: 'HeadyWeb',
   version: '1.0.0',
   description: 'Unified browser experience with integrated HeadyBuddy companion',
-  domain: 'headyweb.com',
-  
+  domain: 'headyos.com',
+
   // Component structure
   components: {
     web: {
@@ -52,7 +52,7 @@ const HEADYWEB_CONFIG = {
       deploy: 'cloudflare-pages'
     }
   },
-  
+
   // Integration points
   integration: {
     buddy: {
@@ -91,7 +91,7 @@ const HEADYWEB_CONFIG = {
       ]
     }
   },
-  
+
   // Deployment targets
   deployment: {
     staging: {
@@ -104,13 +104,13 @@ const HEADYWEB_CONFIG = {
     production: {
       auto: false,
       urls: [
-        'headyweb.com',
+        'headyos.com',
         'browser.headysystems.com',
         'web.headybuddy.org'
       ]
     }
   },
-  
+
   // HCAutoFlow configuration
   hcAutoFlow: {
     preset: 'headyweb-implementation',
@@ -454,13 +454,13 @@ const IMPLEMENTATION_PHASES = [
  * Generate DAG for HCFullPipeline execution
  */
 function generateTaskDag() {
-  const allTasks = IMPLEMENTATION_PHASES.flatMap(phase => 
+  const allTasks = IMPLEMENTATION_PHASES.flatMap(phase =>
     phase.tasks.map(task => ({
       ...task,
       phase: phase.name
     }))
   );
-  
+
   const nodes = allTasks.map(task => ({
     id: task.id,
     label: task.description,
@@ -469,14 +469,14 @@ function generateTaskDag() {
     priority: task.priority,
     duration: task.estimatedDuration
   }));
-  
-  const edges = allTasks.flatMap(task => 
+
+  const edges = allTasks.flatMap(task =>
     task.dependencies.map(depId => ({
       source: depId,
       target: task.id
     }))
   );
-  
+
   return { nodes, edges };
 }
 
