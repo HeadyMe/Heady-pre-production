@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeadyConnection — Connection Layer</title>
-  <meta name="description" content="AI node mesh — connecting intelligence across services, agents, and cloud layers.">
+  <title>HeadyConnection — The Nonprofit Behind Heady</title>
+  <meta name="description" content="HeadyConnection is the nonprofit organization governing the Heady mission — expanding access to AI, funding community programs, and ensuring ethical technology for everyone.">
   <meta name="theme-color" content="#10b981">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
   <style>
@@ -540,6 +540,137 @@ footer a:hover { color: var(--accent); }
   margin-top: var(--sp-sm);
 }
 
+/* ── Ecosystem Block ── */
+.eco-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-lg);
+  margin: var(--sp-lg) 0;
+  position: relative;
+}
+.eco-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+}
+.eco-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: var(--sp-sm);
+}
+.eco-text {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: var(--sp-md);
+}
+.eco-links {
+  display: flex;
+  gap: var(--sp-sm);
+  flex-wrap: wrap;
+}
+.eco-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.eco-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--glow);
+}
+.eco-link .eco-icon { font-size: 14px; }
+
+/* ── Tags ── */
+.vtag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text3);
+  margin-right: 4px;
+}
+
+/* ── Where This Fits ── */
+.context-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--sp-sm) 0;
+  font-size: 13px;
+  color: var(--text3);
+  position: relative;
+  z-index: 1;
+}
+.context-bar a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.context-bar a:hover { text-decoration: underline; }
+.context-sep { margin: 0 8px; opacity: 0.4; }
+
+/* ── Footer Ecosystem Grid ── */
+.footer-eco {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-lg);
+  text-align: left;
+}
+.footer-eco-item {
+  padding: var(--sp-sm);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.footer-eco-item:hover { background: var(--surface2); }
+.footer-eco-item a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  display: block;
+}
+.footer-eco-item a:hover { color: var(--accent); }
+.footer-eco-item small {
+  display: block;
+  color: var(--text3);
+  font-size: 11px;
+  margin-top: 2px;
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+  padding-top: var(--sp-md);
+  border-top: 1px solid var(--border);
+}
+.footer-bottom a {
+  color: var(--text3);
+  text-decoration: none;
+  font-size: 12px;
+}
+.footer-bottom a:hover { color: var(--accent); }
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .nav-links { display: none; }
@@ -548,6 +679,8 @@ footer a:hover { color: var(--accent); }
   .g2c, .g3c { grid-template-columns: 1fr; }
   .sg-flower { width: 400px; height: 400px; }
   .sg-metatron { width: 300px; height: 300px; }
+  .footer-eco { grid-template-columns: repeat(2, 1fr); }
+  .context-bar { display: none; }
 }
 </style>
 </head>
@@ -577,6 +710,15 @@ footer a:hover { color: var(--accent); }
   <div class="orb orb-3"></div>
   <div class="sg-grid"></div>
 
+
+  <div class="context-bar">
+    <div class="wrap">
+      <strong style="color:var(--accent)">Part of the Heady Ecosystem</strong>
+      <span class="context-sep">/</span>
+      HeadyConnection is the nonprofit that governs the mission behind all Heady products. <a href="https://headysystems.com">Heady Systems</a> revenue funds these programs. <a href="https://headybuddy.org">HeadyBuddy</a> is our flagship user-facing companion.
+    </div>
+  </div>
+
   <div class="wrap">
     <nav>
       <a href="/" class="logo">
@@ -598,70 +740,144 @@ footer a:hover { color: var(--accent); }
 </svg>
         <div>
           <div class="logo-text">HeadyConnection</div>
-          <div class="logo-sub">Node Mesh</div>
+          <div class="logo-sub">Nonprofit</div>
         </div>
       </a>
-      <div class="nav-links"><a href="#nodes">Nodes</a><a href="#agents">Agents</a><a href="https://headysystems.com">Systems</a><a href="https://headycloud.com">Cloud</a></div>
+      <div class="nav-links"><a href="#mission">Mission</a><a href="#programs">Programs</a><a href="https://headybuddy.org">Buddy</a><a href="https://headysystems.com">Platform</a><a href="https://headyio.com">Docs</a></div>
     </nav>
   </div>
 
   <div class="hero">
     <div class="wrap">
-      <div class="hero-badge"><span class="pulse-dot"></span>Mesh Active</div>
-      <h1>Connection Layer</h1>
-      <p class="hero-desc">AI node mesh — connecting intelligence across services, agents, and cloud layers.</p>
+      <div class="hero-badge"><span class="pulse-dot"></span>Nonprofit Active</div>
+      <h1>The Nonprofit Behind Heady</h1>
+      <p class="hero-desc">HeadyConnection is the nonprofit organization governing the Heady mission — expanding access to AI, funding community programs, and ensuring ethical technology for everyone.</p>
+      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: nonprofit</span> <span class="vtag">layer: governance</span> <span class="vtag">audience: community</span></div>
       <div class="hero-btns">
-        <a href="#nodes" class="btn btn-primary">View Node Mesh</a>
-        <a href="#agents" class="btn btn-ghost">Agent Registry</a>
+        <a href="#mission" class="btn btn-primary">Our Mission</a>
+        <a href="https://headybuddy.org" class="btn btn-ghost">Meet Buddy</a>
       </div>
     </div>
   </div>
 
 
     
-    <section id="nodes">
+    <section id="mission">
       <div class="wrap">
-        <h2 class="section-title">Node Mesh</h2>
-        <p class="section-sub">Active intelligence nodes</p>
-        <div class="live-panel" id="node-mesh"><div style="color:var(--text2)">Scanning node mesh...</div></div>
-<script>const H={base:location.origin,async get(p){try{const r=await fetch(this.base+p);return r.ok?await r.json():null}catch(e){return null}},async post(p,d){try{const r=await fetch(this.base+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});return r.ok?await r.json():null}catch(e){return null}}};
-(async()=>{const el=document.getElementById('node-mesh');
-const cfg=await H.get('/api/config/env');
-if(!cfg){el.innerHTML='<div style="color:var(--err)">Node mesh unreachable</div>';return}
-const nodes=(cfg.config?.HEADY_ACTIVE_NODES||'').split(',').filter(Boolean);
-el.innerHTML=nodes.map(n=>`<div class="status-row"><span><span class="status-dot up"></span> ${n}</span><span class="tag tg">Active</span></div>`).join('')+'<div class="status-row" style="margin-top:12px"><span><strong>Total Nodes</strong></span><span><strong>'+nodes.length+'</strong></span></div>';
-})();</script>
+        <h2 class="section-title">Our Mission</h2>
+        <p class="section-sub">Technology should expand access, not restrict it</p>
+        <div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#10b98120">&#x1f30d;</div><h3>Expand Access</h3><p>AI should be available to everyone regardless of income, location, or background. We build tools that reduce barriers, not create them.</p></div>
+<div class="card"><div class="card-icon" style="background:#059669b20">&#x2696;&#xfe0f;</div><h3>Ensure Fairness</h3><p>Every Heady action passes through HeadySoul — our mission alignment engine. Five hard vetoes prevent dark patterns, surveillance, and exploitation.</p></div>
+<div class="card"><div class="card-icon" style="background:#4ecdc420">&#x1f9e0;</div><h3>Build Intelligence</h3><p>Sacred Geometry architecture — organic, self-correcting systems that follow natural patterns. Same values at every scale, from code to organization.</p></div>
+<div class="card"><div class="card-icon" style="background:#ff7eb320">&#x2764;&#xfe0f;</div><h3>Create Happiness</h3><p>Technology should feel like a friend, not a tool. HeadyBuddy is your companion — it remembers you, adapts to you, and follows you everywhere.</p></div>
+</div>
+<div class="eco-block" style="margin-top:var(--sp-lg)">
+  <div class="eco-label">HeadySoul Value Weights</div>
+  <div style="color:var(--text2);font-size:14px;line-height:1.7">
+    <strong>Access: 30%</strong> · <strong>Fairness: 25%</strong> · <strong>Intelligence: 20%</strong> · <strong>Happiness: 15%</strong> · <strong>Redistribution: 10%</strong>
+    <br><small style="color:var(--text3)">Every AI decision is scored against these weights. Scores below 40 are vetoed. Revenue flows back to nonprofit programs.</small>
+  </div>
+</div>
       </div>
     </section>
 
     <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
-    <section id="agents">
+    <section id="programs">
       <div class="wrap">
-        <h2 class="section-title">Agent Registry</h2>
-        <p class="section-sub">Registered AI agents in the system</p>
-        <div class="live-panel" id="agent-list"><div style="color:var(--text2)">Loading agents...</div></div>
-<script>const H={base:location.origin,async get(p){try{const r=await fetch(this.base+p);return r.ok?await r.json():null}catch(e){return null}},async post(p,d){try{const r=await fetch(this.base+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});return r.ok?await r.json():null}catch(e){return null}}};
-(async()=>{const el=document.getElementById('agent-list');
-const d=await H.get('/api/subsystems');
-if(!d){el.innerHTML='<div style="color:var(--err)">Agent registry unreachable</div>';return}
-const agents=d.supervisor?.agents||[];
-el.innerHTML=agents.map(a=>`<div class="status-row"><span>${a}</span><span class="tag tp">Registered</span></div>`).join('')||'<div style="color:var(--text2)">No agents currently registered</div>';
-})();</script>
+        <h2 class="section-title">Programs & Impact</h2>
+        <p class="section-sub">Where the mission meets the world</p>
+        <div class="grid g3c">
+<div class="card"><div class="card-icon" style="background:#3b82f620">&#x1f4da;</div><h3>HeadyAcademy</h3><p>Free AI education — courses, workshops, and mentorship for underserved communities</p></div>
+<div class="card"><div class="card-icon" style="background:#f59e0b20">&#x1f4b0;</div><h3>PPP Pricing</h3><p>Purchasing power parity — automatically adjusted pricing so everyone can access premium features</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f91d;</div><h3>Community Grants</h3><p>Funding for developers and organizations building ethical AI tools on the Heady platform</p></div>
+</div>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyConnection is funded by revenue from <a href="https://headysystems.com" style="color:var(--accent)">Heady Systems</a> products. 100% of nonprofit funds go to programs, not overhead.</p>
       </div>
     </section>
+
+    <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
+    <section id="governance">
+      <div class="wrap">
+        <h2 class="section-title">Governance</h2>
+        <p class="section-sub">How we hold ourselves accountable</p>
+        <div class="grid g2c">
+<div class="card"><h3>HeadySoul Hard Vetoes</h3><p>Five non-negotiable rules that no AI action can bypass:<br><br>
+<span class="vtag">No dark patterns</span>
+<span class="vtag">No vendor lock-in</span>
+<span class="vtag">No surveillance</span>
+<span class="vtag">No paywalling essentials</span>
+<span class="vtag">No exploiting vulnerable users</span></p></div>
+<div class="card"><h3>Transparency</h3><p>Every HeadySoul decision is logged and auditable. Override tracking, escalation chains, and mission alignment scores are all public via the <a href="https://headyio.com" style="color:var(--accent)">API</a>.</p></div>
+</div>
+      </div>
+    </section>
+
+
+    <div class="wrap">
+      <div class="eco-block">
+        <div class="eco-label">Related in the Heady Ecosystem</div>
+        <div class="eco-text">The nonprofit mission behind Heady — impact, governance, and community programs.</div>
+        <div class="eco-links">
+          <a href="https://headybuddy.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Meet HeadyBuddy</strong><br><small style="color:var(--text3)">Our flagship AI companion</small></span></a>
+          <a href="https://headysystems.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>The platform</strong><br><small style="color:var(--text3)">Technology that funds the mission</small></span></a>
+          <a href="https://headycheck.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>System health</strong><br><small style="color:var(--text3)">Is everything running?</small></span></a>
+          <a href="https://headyio.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Developer docs</strong><br><small style="color:var(--text3)">Build on our platform</small></span></a>
+        </div>
+      </div>
+    </div>
 
   <footer>
     <div class="wrap">
       <div class="sg-divider"><span>&#x221e;</span></div>
-      <p>&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</p>
-      <div class="footer-links">
-        <a href="https://headysystems.com">Systems</a>
-        <a href="https://headysystems.com">Status</a>
-        <a href="https://headysystems.com">Docs</a>
-        <a href="https://headysystems.com">MCP</a>
-        <a href="https://headysystems.com">Buddy</a>
-        <a href="https://headycloud.com">Cloud</a>
-        <a href="https://headyconnection.com">Connection</a>
+      <h3 style="color:var(--text1);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
+      <div class="footer-eco">
+      <div class="footer-eco-item">
+        <a href="https://headysystems.com">✴️ Heady Systems</a>
+        <small>The Sacred Geometry AI platform powering every Heady product and service.</small>
+      </div>
+      <div class="footer-eco-item" style="background:var(--surface2);border-radius:8px">
+        <a href="https://headyconnection.org">🌐 HeadyConnection (you are here)</a>
+        <small>The nonprofit mission behind Heady — impact, governance, and community programs.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headybuddy.org">✨ HeadyBuddy</a>
+        <small>Your cross-device AI companion — chat, tasks, code, research — everywhere you are.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headybot.com">🤖 HeadyBot</a>
+        <small>Direct line to HeadyBuddy AI — full-featured conversational interface.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headycloud.com">☁️ HeadyCloud</a>
+        <small>Cloud orchestration, deployment layers, and infrastructure management.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headymcp.com">🔌 HeadyMCP</a>
+        <small>Model Context Protocol connectors — extend Heady with any tool or service.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyio.com">📚 Heady Docs</a>
+        <small>API reference, architecture guides, and integration documentation.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headycheck.com">💚 HeadyCheck</a>
+        <small>Real-time health and observability across the entire Heady ecosystem.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyweb.com">🌐 HeadyWeb</a>
+        <small>AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.</small>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span style="color:var(--text3);font-size:12px">&copy; 2026 HeadyConnection &mdash; Sacred Geometry Architecture</span>
+        <span>
+          <a href="https://headyconnection.org">Nonprofit</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headyio.com">Docs</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headycheck.com">Status</a>
+        </span>
       </div>
     </div>
   </footer>

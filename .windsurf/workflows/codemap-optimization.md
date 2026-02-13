@@ -15,20 +15,19 @@
 <!-- HEADY_BRAND:END -->
 
 ---
-description: Codemap Optimization - AI Node Integration for Enhanced Performance
+description: Codemap optimization via Heady cloud orchestration APIs
 ---
 
 # Codemap Optimization Workflow
 
 ## Overview
-Integrates Heady Academy's AI nodes (JULES, OBSERVER, BUILDER, ATLAS) into the HCAutoBuild system for enhanced performance optimization and intelligent automation.
+Runs codemap optimization as a cloud-native orchestration workload using branded Heady APIs.
 
 ## Node Registry
 
 ### 🧠 JULES - The Hyper-Surgeon
 - **Role**: Code optimization and analysis
-- **Tool**: goose (Python-based optimizer)
-- **Trigger**: optimization
+- **Execution**: Orchestrator goal `optimize-code`
 - **Capabilities**:
   - Unused import detection
   - Code quality analysis
@@ -37,18 +36,16 @@ Integrates Heady Academy's AI nodes (JULES, OBSERVER, BUILDER, ATLAS) into the H
 
 ### 👁️ OBSERVER - The Natural Observer
 - **Role**: Enhanced monitoring and performance analysis
-- **Tool**: observer_daemon
-- **Trigger**: monitor
+- **Execution**: Orchestrator goal `monitor-performance`
 - **Capabilities**:
-  - Real-time workspace analysis
-  - File system monitoring
+  - Real-time system analysis
+  - Service and pipeline monitoring
   - Performance metrics collection
   - Optimization opportunity detection
 
 ### 🔨 BUILDER - The Constructor
 - **Role**: Project optimization and cleanup
-- **Tool**: hydrator
-- **Trigger**: new_project
+- **Execution**: Orchestrator goal `optimize-build`
 - **Capabilities**:
   - Build optimization
   - Dependency management
@@ -57,8 +54,7 @@ Integrates Heady Academy's AI nodes (JULES, OBSERVER, BUILDER, ATLAS) into the H
 
 ### 📚 ATLAS - The Auto-Archivist
 - **Role**: Documentation generation and maintenance
-- **Tool**: auto_doc
-- **Trigger**: documentation
+- **Execution**: Orchestrator goal `refresh-docs`
 - **Capabilities**:
   - Automatic documentation generation
   - API documentation extraction
@@ -69,14 +65,11 @@ Integrates Heady Academy's AI nodes (JULES, OBSERVER, BUILDER, ATLAS) into the H
 
 ### Phase 1: Node Activation
 ```bash
-# Activate specific nodes
-.\hcautobuild_optimizer.ps1 -jules
-.\hcautobuild_optimizer.ps1 -observer
-.\hcautobuild_optimizer.ps1 -builder
-.\hcautobuild_optimizer.ps1 -atlas
-
-# Activate all nodes
-.\hcautobuild_optimizer.ps1 -optimize
+# Activate codemap workload across all optimization nodes
+curl -sf -X POST https://headysystems.com/api/v1/orchestrator/execute-many \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"goals":["optimize-code","monitor-performance","optimize-build","refresh-docs"]}'
 ```
 
 ### Phase 2: Analysis & Optimization
@@ -104,13 +97,19 @@ Integrates Heady Academy's AI nodes (JULES, OBSERVER, BUILDER, ATLAS) into the H
 ### Enhanced Commands
 ```bash
 # Run enhanced HCAutoBuild with codemap optimization
-.\hcautobuild_enhanced.ps1 -optimize
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
 
 # Run codemap optimization only
-.\hcautobuild_optimizer.ps1 -optimize
+curl -sf -X POST https://headysystems.com/api/v1/orchestrator/execute \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"goal":"optimize-code"}'
 
 # Enhanced monitoring with codemap integration
-.\hcautobuild_enhanced.ps1 -monitor
+curl -sf https://headysystems.com/api/v1/orchestrator/state
 ```
 
 ### Configuration
@@ -177,52 +176,68 @@ Integrates Heady Academy's AI nodes (JULES, OBSERVER, BUILDER, ATLAS) into the H
 ### Basic Optimization
 ```bash
 # Run full codemap optimization
-.\hcautobuild_optimizer.ps1 -optimize
+curl -sf -X POST https://headysystems.com/api/v1/orchestrator/execute-many \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"goals":["optimize-code","monitor-performance","optimize-build","refresh-docs"]}'
 
 # Run specific node
-.\hcautobuild_optimizer.ps1 -jules -workspace "C:\Project"
+curl -sf -X POST https://headysystems.com/api/v1/orchestrator/execute \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"goal":"optimize-code"}'
 ```
 
 ### Enhanced HCAutoBuild
 ```bash
 # Run HCAutoBuild with optimization
-.\hcautobuild_enhanced.ps1 -optimize
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
 
 # Enhanced monitoring
-.\hcautobuild_enhanced.ps1 -monitor
+curl -sf https://headycloud.com/api/pipeline/state
 
 # Force enhanced checkpoint
-.\hcautobuild_enhanced.ps1 -checkpoint -optimize
+curl -sf -X POST https://headysystems.com/api/v1/orchestrator/execute-many \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"goals":["optimize-code","refresh-docs"]}'
 ```
 
 ### Analysis Mode
 ```bash
 # Run analysis nodes only
-.\hcautobuild_optimizer.ps1 -analyze
+curl -sf -X POST https://headysystems.com/api/pipeline/claude/analyze \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"paths":["src/","configs/"]}'
 
 # Specific analysis
-.\hcautobuild_optimizer.ps1 -observer -atlas
+curl -sf -X POST https://headysystems.com/api/pipeline/claude/security \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 1. **Python not available**: JULES requires Python for optimization
-2. **Missing scripts**: Ensure HeadyAcademy/Tools/ directory exists
-3. **Permission issues**: Check write permissions for .heady directory
+2. **Authorization missing**: Ensure `HEADY_API_KEY` is set
+3. **Service unavailable**: Verify `https://headysystems.com/api/health`
 4. **Node timeout**: Increase NodeTimeout in configuration
 
 ### Debug Mode
 ```bash
 # Run with debug output
-.\hcautobuild_optimizer.ps1 -optimize -verbose
-.\hcautobuild_enhanced.ps1 -optimize -debug
+curl -sv https://headysystems.com/api/v1/orchestrator/state
+curl -sv https://headycloud.com/api/pipeline/state
 ```
 
 ### Log Files
-- Main log: `.heady/logs/hcautobuild_optimizer.log`
-- Enhanced log: `.heady/logs/enhanced/hcautobuild_enhanced.log`
-- Node logs: `.heady/logs/[node_name].log`
+- Pipeline state: `https://headycloud.com/api/pipeline/state`
+- Pipeline history: `https://headycloud.com/api/pipeline/history`
+- Orchestrator history: `https://headysystems.com/api/v1/orchestrator/history`
 
 ## Best Practices
 
@@ -286,6 +301,11 @@ nodes:
     enabled: true
     auto_generate: true
     format: ["markdown", "json"]
+```
+
+### API Authentication
+```bash
+HEADY_API_KEY=<required-token>
 ```
 
 ### Optimization Rules

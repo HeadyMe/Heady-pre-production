@@ -119,6 +119,13 @@ const DOMAIN_THEMES = {
     audience: 'Donors, partners, beneficiaries, community',
     org: 'HeadyConnection'
   },
+  headyweb: {
+    accent: '#7c3aed', accent2: '#a78bfa', glow: '#7c3aed20',
+    label: 'AI Browser',
+    role: 'AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.',
+    audience: 'Everyone',
+    org: 'Heady Systems'
+  },
 };
 
 // Ecosystem registry — used for cross-links, footers, and system map
@@ -131,6 +138,7 @@ const ECOSYSTEM = [
   { key: 'headymcp', domain: 'headymcp.com', name: 'HeadyMCP', short: 'MCP', icon: '🔌' },
   { key: 'headyio', domain: 'headyio.com', name: 'Heady Docs', short: 'Docs', icon: '📚' },
   { key: 'headycheck', domain: 'headycheck.com', name: 'HeadyCheck', short: 'Health', icon: '💚' },
+  { key: 'headyweb', domain: 'headyweb.com', name: 'HeadyWeb', short: 'Browser', icon: '🌐' },
 ];
 
 function buildCSS(siteKey) {
@@ -1290,6 +1298,66 @@ el.innerHTML=\`<div class="status-row"><span>HeadySystems</span><span class="tag
 <span class="vtag">No paywalling essentials</span>
 <span class="vtag">No exploiting vulnerable users</span></p></div>
 <div class="card"><h3>Transparency</h3><p>Every HeadySoul decision is logged and auditable. Override tracking, escalation chains, and mission alignment scores are all public via the <a href="https://headyio.com" style="color:var(--accent)">API</a>.</p></div>
+</div>`
+      }
+    ]
+  },
+
+  headyweb: {
+    title: 'HeadyWeb',
+    domain: 'headyweb.com',
+    tagline: 'AI-Powered Browser',
+    desc: 'Browse the web with HeadyBuddy at your side. Summarize pages, research topics, generate code, and manage tasks \u2014 all from one AI-native browser shell.',
+    badge: 'Browser Active',
+    vertical: 'browser',
+    tags: ['vertical: browser', 'layer: user-facing', 'audience: everyone'],
+    ecosystemContext: 'HeadyWeb is the AI browser shell for the <a href="https://headysystems.com">Heady Systems platform</a>. <a href="https://headybuddy.org">HeadyBuddy</a> lives in the sidebar, powered by the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.',
+    nav: [
+      { l: 'Features', h: '#features' },
+      { l: 'Try It', h: '#launch' },
+      { l: 'Buddy', h: 'https://headybuddy.org' },
+      { l: 'Platform', h: 'https://headysystems.com' },
+      { l: 'Docs', h: 'https://headyio.com' }
+    ],
+    primaryCta: { l: 'Launch HeadyWeb', h: '#launch' },
+    secondaryCta: { l: 'Meet Buddy', h: 'https://headybuddy.org' },
+    relatedLinks: [
+      { label: 'About HeadyBuddy', url: 'https://headybuddy.org', desc: 'The AI companion powering the sidebar' },
+      { label: 'Platform', url: 'https://headysystems.com', desc: 'The intelligence engine behind HeadyWeb' },
+      { label: 'Chat directly', url: 'https://headybot.com', desc: 'Talk to Buddy without a browser shell' },
+      { label: 'Our mission', url: 'https://headyconnection.org', desc: 'The nonprofit governing everything' }
+    ],
+    sections: [
+      {
+        id: 'features', title: 'Browser Meets AI Companion', sub: 'Four modes, one sidebar, every page',
+        unique: true,
+        body: `<div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4ac;</div><h3>Chat Mode</h3><p>Ask Buddy anything while browsing. Get instant answers, summaries, and explanations without leaving the page.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x2699;&#xfe0f;</div><h3>Tasks Mode</h3><p>Run deployments, trigger pipelines, manage MCP connectors, and orchestrate workflows \u2014 all from the sidebar.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4bb;</div><h3>Code Mode</h3><p>Generate, explain, and refactor code. Buddy sees the page context and can help you work with any codebase.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50d;</div><h3>Research Mode</h3><p>Summarize the current page, compare multiple sources, maintain research sessions across tabs.</p></div>
+</div>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyWeb merges browser and AI companion into one experience. <a href="https://headybuddy.org" style="color:var(--accent)">HeadyBuddy</a> is always aware of your current page and context.</p>`
+      },
+      {
+        id: 'launch', title: 'Architecture', sub: 'How HeadyWeb connects everything',
+        unique: true,
+        body: `<div class="eco-block">
+  <div class="eco-label">HeadyWeb Stack</div>
+  <div class="code-block" style="font-size:12px">HeadyWeb (browser shell UI)
+  \u251c\u2500\u2500 Viewport \u2014 multi-tab page rendering
+  \u251c\u2500\u2500 Tab Manager \u2014 create, switch, close tabs
+  \u251c\u2500\u2500 HeadyBuddy Sidebar \u2014 Chat / Tasks / Code / Research
+  \u251c\u2500\u2500 Context Engine \u2014 page URL, selection, clipboard awareness
+  \u2514\u2500\u2500 HeadySystems API \u2014 intent resolution, health, orchestration
+       \u251c\u2500\u2500 3-stage intent matching (keyword, fuzzy, LLM)
+       \u251c\u2500\u2500 MCP tool invocation
+       \u2514\u2500\u2500 HeadySoul governance (value-weighted decisions)</div>
+</div>
+<div class="grid g3c" style="margin-top:var(--sp-md)">
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f310;</div><h3>Desktop App</h3><p>Tauri v2 shell with system WebView. Tray icon, global hotkey, always-on-top overlay.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50c;</div><h3>Browser Extension</h3><p>Manifest V3 sidepanel for Chrome, Edge, Brave, Firefox. Same Buddy, existing browser.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x2601;&#xfe0f;</div><h3>Cloudflare Worker</h3><p>Edge-deployed web app. Zero-latency static hosting with API proxy to HeadySystems.</p></div>
 </div>`
       }
     ]

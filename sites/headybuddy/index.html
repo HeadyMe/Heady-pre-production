@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeadyBuddy — Your AI Assistant</title>
-  <meta name="description" content="Conversational AI powered by Sacred Geometry principles. Ask anything, get intelligent answers.">
+  <title>HeadyBuddy — Your AI Companion, Everywhere</title>
+  <meta name="description" content="One persistent, cross-device AI companion that can chat, execute tasks, browse, and code — following you seamlessly across phone, desktop, browser, and IDE.">
   <meta name="theme-color" content="#ff7eb3">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
   <style>
@@ -540,6 +540,137 @@ footer a:hover { color: var(--accent); }
   margin-top: var(--sp-sm);
 }
 
+/* ── Ecosystem Block ── */
+.eco-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-lg);
+  margin: var(--sp-lg) 0;
+  position: relative;
+}
+.eco-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+}
+.eco-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: var(--sp-sm);
+}
+.eco-text {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: var(--sp-md);
+}
+.eco-links {
+  display: flex;
+  gap: var(--sp-sm);
+  flex-wrap: wrap;
+}
+.eco-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.eco-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--glow);
+}
+.eco-link .eco-icon { font-size: 14px; }
+
+/* ── Tags ── */
+.vtag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text3);
+  margin-right: 4px;
+}
+
+/* ── Where This Fits ── */
+.context-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--sp-sm) 0;
+  font-size: 13px;
+  color: var(--text3);
+  position: relative;
+  z-index: 1;
+}
+.context-bar a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.context-bar a:hover { text-decoration: underline; }
+.context-sep { margin: 0 8px; opacity: 0.4; }
+
+/* ── Footer Ecosystem Grid ── */
+.footer-eco {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-lg);
+  text-align: left;
+}
+.footer-eco-item {
+  padding: var(--sp-sm);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.footer-eco-item:hover { background: var(--surface2); }
+.footer-eco-item a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  display: block;
+}
+.footer-eco-item a:hover { color: var(--accent); }
+.footer-eco-item small {
+  display: block;
+  color: var(--text3);
+  font-size: 11px;
+  margin-top: 2px;
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+  padding-top: var(--sp-md);
+  border-top: 1px solid var(--border);
+}
+.footer-bottom a {
+  color: var(--text3);
+  text-decoration: none;
+  font-size: 12px;
+}
+.footer-bottom a:hover { color: var(--accent); }
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .nav-links { display: none; }
@@ -548,6 +679,8 @@ footer a:hover { color: var(--accent); }
   .g2c, .g3c { grid-template-columns: 1fr; }
   .sg-flower { width: 400px; height: 400px; }
   .sg-metatron { width: 300px; height: 300px; }
+  .footer-eco { grid-template-columns: repeat(2, 1fr); }
+  .context-bar { display: none; }
 }
 </style>
 </head>
@@ -577,6 +710,15 @@ footer a:hover { color: var(--accent); }
   <div class="orb orb-3"></div>
   <div class="sg-grid"></div>
 
+
+  <div class="context-bar">
+    <div class="wrap">
+      <strong style="color:var(--accent)">Part of the Heady Ecosystem</strong>
+      <span class="context-sep">/</span>
+      HeadyBuddy is the primary interface to the entire Heady ecosystem. It runs on the <a href="https://headysystems.com">Heady Systems platform</a> and is a program of <a href="https://headyconnection.org">HeadyConnection</a>, the nonprofit that governs the mission.
+    </div>
+  </div>
+
   <div class="wrap">
     <nav>
       <a href="/" class="logo">
@@ -598,72 +740,136 @@ footer a:hover { color: var(--accent); }
 </svg>
         <div>
           <div class="logo-text">HeadyBuddy</div>
-          <div class="logo-sub">AI Assistant</div>
+          <div class="logo-sub">AI Companion</div>
         </div>
       </a>
-      <div class="nav-links"><a href="#chat">Chat</a><a href="https://headysystems.com">Systems</a><a href="https://headysystems.com">Docs</a></div>
+      <div class="nav-links"><a href="#capabilities">What Buddy Does</a><a href="#surfaces">Surfaces</a><a href="https://headybot.com">Try It</a><a href="https://headysystems.com">Platform</a><a href="https://headyconnection.org">Mission</a></div>
     </nav>
   </div>
 
   <div class="hero">
     <div class="wrap">
-      <div class="hero-badge"><span class="pulse-dot"></span>AI Active</div>
-      <h1>Your AI Assistant</h1>
-      <p class="hero-desc">Conversational AI powered by Sacred Geometry principles. Ask anything, get intelligent answers.</p>
+      <div class="hero-badge"><span class="pulse-dot"></span>Always On</div>
+      <h1>Your AI Companion, Everywhere</h1>
+      <p class="hero-desc">One persistent, cross-device AI companion that can chat, execute tasks, browse, and code — following you seamlessly across phone, desktop, browser, and IDE.</p>
+      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: companion</span> <span class="vtag">layer: user-facing</span> <span class="vtag">audience: everyone</span></div>
       <div class="hero-btns">
-        <a href="#chat" class="btn btn-primary">Start Chatting</a>
-        <a href="https://headysystems.com" class="btn btn-ghost">Learn More</a>
+        <a href="https://headybot.com" class="btn btn-primary">Talk to Buddy</a>
+        <a href="https://headysystems.com" class="btn btn-ghost">See the Platform</a>
       </div>
     </div>
   </div>
 
 
     
-    <section id="chat">
+    <section id="capabilities">
       <div class="wrap">
-        <h2 class="section-title">Chat with HeadyBuddy</h2>
-        <p class="section-sub">Powered by 3-stage intent resolution</p>
-        <div class="chat-box"><div class="chat-msgs" id="chat-msgs">
-<div class="chat-msg bot"><div class="avatar">&#x2728;</div><div class="chat-text">Hey! I'm HeadyBuddy. I can help you with system status, deployments, health checks, and more. What would you like to know?</div></div>
-</div><div class="chat-input"><input type="text" id="chat-in" placeholder="Ask HeadyBuddy anything..." onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()">Send</button></div></div>
-<script>const H={base:location.origin,async get(p){try{const r=await fetch(this.base+p);return r.ok?await r.json():null}catch(e){return null}},async post(p,d){try{const r=await fetch(this.base+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});return r.ok?await r.json():null}catch(e){return null}}};
-async function sendMsg(){const inp=document.getElementById('chat-in');const msg=inp.value.trim();if(!msg)return;inp.value='';
-const msgs=document.getElementById('chat-msgs');
-msgs.innerHTML+=`<div class="chat-msg user"><div class="avatar">&#x1f464;</div><div class="chat-text">${msg}</div></div>`;
-msgs.scrollTop=msgs.scrollHeight;
-const r=await H.post('/api/v1/chat/resolve',{message:msg,userId:'web-visitor'});
-const reply=r?.data?.topMatch?'I can help with <strong>'+r.data.topMatch.skill+'</strong>: '+r.data.topMatch.description+(r.data.requiresConfirmation?' (requires confirmation)':''):'I\'m still learning! Try asking about system status, health checks, or deployments.';
-msgs.innerHTML+=`<div class="chat-msg bot"><div class="avatar">&#x2728;</div><div class="chat-text">${reply}</div></div>`;
-msgs.scrollTop=msgs.scrollHeight;}
-</script>
+        <h2 class="section-title">One Buddy, Many Modes</h2>
+        <p class="section-sub">Not a narrow bot — a general-purpose AI companion like Google Assistant, but better</p>
+        <div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#7c6aef20">&#x1f4ac;</div><h3>Chat Mode</h3><p>Natural conversation, planning, summarization, Q&A — 3-stage intent resolution with keyword, fuzzy, and LLM-ranked matching</p></div>
+<div class="card"><div class="card-icon" style="background:#4ecdc420">&#x2699;&#xfe0f;</div><h3>Tasks Mode</h3><p>Execute workflows, call MCP tools, manage deployments — with confirmation policies for anything risky</p></div>
+<div class="card"><div class="card-icon" style="background:#ff6b9d20">&#x1f4bb;</div><h3>Code Mode</h3><p>Generate and modify code, explain errors, run refactors — powered by HeadyAI-IDE and code-server integration</p></div>
+<div class="card"><div class="card-icon" style="background:#ffd93d20">&#x1f50d;</div><h3>Research Mode</h3><p>Summarize pages, compare sources, maintain multi-tab research sessions across HeadyBrowser and standard browsers</p></div>
+</div>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">These are modes inside one Buddy, not separate products. HeadyBuddy adapts to what you need, remembers your preferences, and follows you across devices.</p>
       </div>
     </section>
 
     <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
-    <section id="features">
+    <section id="surfaces">
       <div class="wrap">
-        <h2 class="section-title">Capabilities</h2>
-        <p class="section-sub">What HeadyBuddy can do</p>
+        <h2 class="section-title">Buddy Lives Everywhere</h2>
+        <p class="section-sub">Same companion, every surface</p>
         <div class="grid g3c">
-<div class="card"><div class="card-icon" style="background:#7c6aef20">&#x1f4ac;</div><h3>Natural Chat</h3><p>3-stage intent resolution with keyword, fuzzy, and LLM-ranked matching for natural conversation</p></div>
-<div class="card"><div class="card-icon" style="background:#4ecdc420">&#x1f6e1;</div><h3>Safe Actions</h3><p>Confirmation policies for destructive actions — HeadyBuddy always asks before doing anything risky</p></div>
-<div class="card"><div class="card-icon" style="background:#ff6b9d20">&#x1f9e0;</div><h3>Learns You</h3><p>Preference learning — HeadyBuddy remembers how you like things done and adapts over time</p></div>
+<div class="card"><div class="card-icon" style="background:#3b82f620">&#x1f5a5;&#xfe0f;</div><h3>Desktop Overlay</h3><p>Always-on tray icon with global hotkey (Ctrl+Shift+H). Draggable, resizable, stays on top. Clipboard and window-title context.</p></div>
+<div class="card"><div class="card-icon" style="background:#10b98120">&#x1f4f1;</div><h3>Android Companion</h3><p>Foreground service with floating bubble. Always available, follows you between apps. Cross-device sync keeps your context.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f310;</div><h3>Browser Widget</h3><p>Buddy bubble on every Heady website. Same session, same identity. Context-aware based on the page you're viewing.</p></div>
+<div class="card"><div class="card-icon" style="background:#f59e0b20">&#x1f468;&#x200d;&#x1f4bb;</div><h3>IDE Sidebar</h3><p>HeadyAI-IDE integration — Buddy in coding mode with full repo context, inline suggestions, and agent orchestration.</p></div>
+<div class="card"><div class="card-icon" style="background:#06b6d420">&#x1f517;</div><h3>Cross-Device Sync</h3><p>Start a conversation on desktop, continue on phone, pick up in IDE. Your identity and context follow you everywhere.</p></div>
+<div class="card"><div class="card-icon" style="background:#ff7eb320">&#x1f6e1;&#xfe0f;</div><h3>Privacy Controls</h3><p>See what Buddy knows, clear history, toggle clipboard reading, pause or quit from any device. You're always in control.</p></div>
 </div>
       </div>
     </section>
 
+    <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
+    <section id="philosophy">
+      <div class="wrap">
+        <h2 class="section-title">Why Buddy Exists</h2>
+        <p class="section-sub">Technology should feel like a friend, not a tool</p>
+        <div class="grid g2c">
+<div class="card"><h3>General, Not Narrow</h3><p>Other assistants are built for one thing. Buddy is your companion for everything — the default interface for all Heady capabilities. We don't create new assistants when a Buddy mode will do.</p></div>
+<div class="card"><h3>Governed by Values</h3><p>Every Buddy action passes through HeadySoul — our mission alignment engine. No dark patterns, no vendor lock-in, no surveillance. Five hard vetoes protect you, always.</p></div>
+</div>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyBuddy is a program of <a href="https://headyconnection.org" style="color:var(--accent)">HeadyConnection</a>, the nonprofit behind Heady. Powered by <a href="https://headysystems.com" style="color:var(--accent)">Heady Systems</a> infrastructure.</p>
+      </div>
+    </section>
+
+
+    <div class="wrap">
+      <div class="eco-block">
+        <div class="eco-label">Related in the Heady Ecosystem</div>
+        <div class="eco-text">Your cross-device AI companion — chat, tasks, code, research — everywhere you are.</div>
+        <div class="eco-links">
+          <a href="https://headybot.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Chat now</strong><br><small style="color:var(--text3)">Open the full chat interface</small></span></a>
+          <a href="https://headyio.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Platform docs</strong><br><small style="color:var(--text3)">API reference for developers</small></span></a>
+          <a href="https://headyconnection.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Our mission</strong><br><small style="color:var(--text3)">Why we built Buddy</small></span></a>
+          <a href="https://headycheck.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>System health</strong><br><small style="color:var(--text3)">Is Buddy online?</small></span></a>
+        </div>
+      </div>
+    </div>
+
   <footer>
     <div class="wrap">
       <div class="sg-divider"><span>&#x221e;</span></div>
-      <p>&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</p>
-      <div class="footer-links">
-        <a href="https://headysystems.com">Systems</a>
-        <a href="https://headysystems.com">Status</a>
-        <a href="https://headysystems.com">Docs</a>
-        <a href="https://headysystems.com">MCP</a>
-        <a href="https://headysystems.com">Buddy</a>
-        <a href="https://headycloud.com">Cloud</a>
-        <a href="https://headyconnection.com">Connection</a>
+      <h3 style="color:var(--text1);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
+      <div class="footer-eco">
+      <div class="footer-eco-item">
+        <a href="https://headysystems.com">✴️ Heady Systems</a>
+        <small>The Sacred Geometry AI platform powering every Heady product and service.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyconnection.org">🌐 HeadyConnection</a>
+        <small>The nonprofit mission behind Heady — impact, governance, and community programs.</small>
+      </div>
+      <div class="footer-eco-item" style="background:var(--surface2);border-radius:8px">
+        <a href="https://headybuddy.org">✨ HeadyBuddy (you are here)</a>
+        <small>Your cross-device AI companion — chat, tasks, code, research — everywhere you are.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headybot.com">🤖 HeadyBot</a>
+        <small>Direct line to HeadyBuddy AI — full-featured conversational interface.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headycloud.com">☁️ HeadyCloud</a>
+        <small>Cloud orchestration, deployment layers, and infrastructure management.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headymcp.com">🔌 HeadyMCP</a>
+        <small>Model Context Protocol connectors — extend Heady with any tool or service.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyio.com">📚 Heady Docs</a>
+        <small>API reference, architecture guides, and integration documentation.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headycheck.com">💚 HeadyCheck</a>
+        <small>Real-time health and observability across the entire Heady ecosystem.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyweb.com">🌐 HeadyWeb</a>
+        <small>AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.</small>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span style="color:var(--text3);font-size:12px">&copy; 2026 HeadyBuddy &mdash; Sacred Geometry Architecture</span>
+        <span>
+          <a href="https://headyconnection.org">Nonprofit</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headyio.com">Docs</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headycheck.com">Status</a>
+        </span>
       </div>
     </div>
   </footer>

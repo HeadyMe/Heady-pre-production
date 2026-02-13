@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyWeb — AI Browser with HeadyBuddy</title>
+  <meta name="description" content="HeadyWeb is an AI-powered browser shell with HeadyBuddy as your persistent sidebar companion. Browse, research, code, and chat — all in one place.">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #060610;
+  --surface: #0c0c1a;
+  --surface2: #141428;
+  --border: #1e1e3a;
+  --accent: #7c3aed;
+  --accent2: #a78bfa;
+  --glow: #7c3aed20;
+  --text: #e4e4f0;
+  --text2: #9494b0;
+  --text3: #5a5a78;
+  --ok: #00d4aa;
+  --warn: #f59e0b;
+  --err: #ef4444;
+  --buddy-accent: #ff7eb3;
+  --radius: 12px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Top Bar (browser chrome) ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  z-index: 10;
+}
+.topbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--accent2);
+  white-space: nowrap;
+  cursor: default;
+}
+.topbar-logo span { font-size: 18px; }
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  gap: 2px;
+  flex: 0 0 auto;
+  max-width: 400px;
+  overflow-x: auto;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px 8px 0 0;
+  font-size: 12px;
+  color: var(--text2);
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.15s;
+}
+.tab.active {
+  background: var(--bg);
+  color: var(--text);
+  border-bottom-color: var(--bg);
+}
+.tab:hover { color: var(--accent2); }
+.tab-close {
+  font-size: 14px;
+  opacity: 0.4;
+  cursor: pointer;
+  line-height: 1;
+}
+.tab-close:hover { opacity: 1; color: var(--err); }
+.tab-add {
+  padding: 6px 10px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s;
+}
+.tab-add:hover { color: var(--accent2); background: var(--surface2); }
+
+/* URL bar */
+.url-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  transition: border-color 0.2s;
+}
+.url-bar:focus-within { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); }
+.url-bar input {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font);
+  outline: none;
+}
+.url-bar input::placeholder { color: var(--text3); }
+.url-icon {
+  font-size: 14px;
+  color: var(--text3);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.url-icon:hover { color: var(--accent2); }
+
+/* Buddy toggle button */
+.buddy-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, var(--buddy-accent), #ff758c);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.buddy-toggle:hover { box-shadow: 0 4px 16px rgba(255, 126, 179, 0.3); transform: translateY(-1px); }
+.buddy-toggle .dot {
+  width: 6px; height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  animation: pulse-buddy 2s ease-in-out infinite;
+}
+@keyframes pulse-buddy {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ── Main Layout ── */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Browser viewport */
+.viewport {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+.viewport iframe {
+  flex: 1;
+  border: none;
+  background: #fff;
+}
+.viewport-home {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px;
+  text-align: center;
+}
+.viewport-home h1 {
+  font-size: 48px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--text), var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.viewport-home p {
+  color: var(--text2);
+  font-size: 16px;
+  max-width: 500px;
+  line-height: 1.7;
+}
+
+/* Quick links grid */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  max-width: 600px;
+  width: 100%;
+  margin-top: 12px;
+}
+.quick-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.quick-link:hover {
+  border-color: var(--accent);
+  color: var(--accent2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.quick-link .ql-icon {
+  font-size: 24px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glow);
+  border-radius: 12px;
+}
+
+/* ── Buddy Sidebar ── */
+.buddy-sidebar {
+  width: 380px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: width 0.3s, opacity 0.3s;
+  overflow: hidden;
+}
+.buddy-sidebar.collapsed { width: 0; border: none; }
+
+.buddy-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.buddy-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+}
+.buddy-title .avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--buddy-accent), #ff758c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+}
+.buddy-close {
+  background: none;
+  border: none;
+  color: var(--text3);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.buddy-close:hover { color: var(--text); background: var(--surface2); }
+
+/* Buddy mode tabs */
+.buddy-modes {
+  display: flex;
+  gap: 2px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+.buddy-mode {
+  padding: 6px 12px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--text3);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.buddy-mode.active {
+  background: var(--surface2);
+  color: var(--accent2);
+}
+.buddy-mode:hover { color: var(--text); }
+
+/* Buddy chat area */
+.buddy-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.buddy-msg {
+  display: flex;
+  gap: 10px;
+  animation: msg-in 0.2s ease-out;
+}
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.buddy-msg .msg-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.buddy-msg.bot .msg-avatar {
+  background: linear-gradient(135deg, var(--buddy-accent), #ff758c);
+  color: #fff;
+}
+.buddy-msg.user .msg-avatar {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--accent2);
+}
+.msg-body {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 85%;
+  color: var(--text);
+}
+.msg-body code {
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--accent2);
+}
+.msg-body strong { color: var(--accent2); }
+.msg-meta {
+  font-size: 10px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* Buddy input */
+.buddy-input-area {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+.buddy-input-row {
+  display: flex;
+  gap: 8px;
+}
+.buddy-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--font);
+  outline: none;
+  resize: none;
+  min-height: 40px;
+  max-height: 120px;
+  transition: border-color 0.2s;
+}
+.buddy-input:focus { border-color: var(--buddy-accent); box-shadow: 0 0 12px rgba(255,126,179,0.15); }
+.buddy-send {
+  background: linear-gradient(135deg, var(--buddy-accent), #ff758c);
+  border: none;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: var(--font);
+  font-size: 13px;
+  transition: all 0.2s;
+  align-self: flex-end;
+}
+.buddy-send:hover { box-shadow: 0 4px 16px rgba(255,126,179,0.3); }
+.buddy-context {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text3);
+}
+.buddy-context .ctx-tag {
+  padding: 2px 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 10px;
+}
+
+/* ── Status bar ── */
+.statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 12px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+.statusbar .status-left, .statusbar .status-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+}
+.status-dot.up { background: var(--ok); box-shadow: 0 0 6px rgba(0,212,170,0.5); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .buddy-sidebar { position: fixed; right: 0; top: 0; bottom: 0; z-index: 100; width: 100%; }
+  .buddy-sidebar.collapsed { width: 0; }
+  .tab-bar { max-width: 200px; }
+  .quick-links { grid-template-columns: repeat(2, 1fr); }
+}
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-logo"><span>&#x221e;</span> HeadyWeb</div>
+
+    <div class="tab-bar">
+      <div class="tab active" data-tab="home">
+        <span>New Tab</span>
+        <span class="tab-close" onclick="closeTab(this)">&times;</span>
+      </div>
+      <button class="tab-add" onclick="addTab()" title="New tab">+</button>
+    </div>
+
+    <div class="url-bar">
+      <span class="url-icon">&#x1f512;</span>
+      <input type="text" id="url-input" placeholder="Search or enter URL..." onkeydown="if(event.key==='Enter')navigate()">
+      <span class="url-icon" onclick="navigate()" title="Go">&#x27a1;</span>
+    </div>
+
+    <button class="buddy-toggle" onclick="toggleBuddy()">
+      <span class="dot"></span> Buddy
+    </button>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="main">
+    <!-- Browser Viewport -->
+    <div class="viewport" id="viewport">
+      <div class="viewport-home" id="home-view">
+        <h1>HeadyWeb</h1>
+        <p>AI-powered browsing with HeadyBuddy at your side. Browse any page, and Buddy can summarize, explain, research, or help you code — all from the sidebar.</p>
+
+        <div class="quick-links">
+          <div class="quick-link" onclick="navigateTo('https://headysystems.com')">
+            <div class="ql-icon">&#x2734;&#xfe0f;</div>
+            Heady Systems
+          </div>
+          <div class="quick-link" onclick="navigateTo('https://headybuddy.org')">
+            <div class="ql-icon">&#x2728;</div>
+            HeadyBuddy
+          </div>
+          <div class="quick-link" onclick="navigateTo('https://headyconnection.org')">
+            <div class="ql-icon">&#x1f30d;</div>
+            HeadyConnection
+          </div>
+          <div class="quick-link" onclick="navigateTo('https://headybot.com')">
+            <div class="ql-icon">&#x1f916;</div>
+            HeadyBot Chat
+          </div>
+          <div class="quick-link" onclick="navigateTo('https://headyio.com')">
+            <div class="ql-icon">&#x1f4da;</div>
+            Docs
+          </div>
+          <div class="quick-link" onclick="navigateTo('https://headymcp.com')">
+            <div class="ql-icon">&#x1f50c;</div>
+            MCP
+          </div>
+          <div class="quick-link" onclick="navigateTo('https://headycheck.com')">
+            <div class="ql-icon">&#x1f49a;</div>
+            Health
+          </div>
+          <div class="quick-link" onclick="navigateTo('https://headycloud.com')">
+            <div class="ql-icon">&#x2601;&#xfe0f;</div>
+            Cloud
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buddy Sidebar -->
+    <div class="buddy-sidebar" id="buddy-sidebar">
+      <div class="buddy-header">
+        <div class="buddy-title">
+          <div class="avatar">&#x2728;</div>
+          HeadyBuddy
+        </div>
+        <button class="buddy-close" onclick="toggleBuddy()">&times;</button>
+      </div>
+
+      <div class="buddy-modes">
+        <button class="buddy-mode active" data-mode="chat" onclick="switchMode('chat')">Chat</button>
+        <button class="buddy-mode" data-mode="tasks" onclick="switchMode('tasks')">Tasks</button>
+        <button class="buddy-mode" data-mode="code" onclick="switchMode('code')">Code</button>
+        <button class="buddy-mode" data-mode="research" onclick="switchMode('research')">Research</button>
+      </div>
+
+      <div class="buddy-messages" id="buddy-messages">
+        <div class="buddy-msg bot">
+          <div class="msg-avatar">&#x2728;</div>
+          <div>
+            <div class="msg-body">
+              Hey! I'm <strong>HeadyBuddy</strong>, your AI companion inside HeadyWeb. I can help you:
+              <br><br>
+              &#x1f4ac; <strong>Chat</strong> — ask me anything<br>
+              &#x2699;&#xfe0f; <strong>Tasks</strong> — run workflows and manage deployments<br>
+              &#x1f4bb; <strong>Code</strong> — generate, explain, or refactor code<br>
+              &#x1f50d; <strong>Research</strong> — summarize pages, compare sources
+              <br><br>
+              Try asking: <code>check system health</code> or <code>summarize this page</code>
+            </div>
+            <div class="msg-meta">HeadyBuddy &middot; just now</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="buddy-input-area">
+        <div class="buddy-input-row">
+          <textarea class="buddy-input" id="buddy-input" placeholder="Ask Buddy anything..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendBuddyMsg()}"></textarea>
+          <button class="buddy-send" onclick="sendBuddyMsg()">Send</button>
+        </div>
+        <div class="buddy-context">
+          <span>Context:</span>
+          <span class="ctx-tag" id="ctx-page">New Tab</span>
+          <span class="ctx-tag" id="ctx-mode">chat</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="statusbar">
+    <div class="status-left">
+      <span><span class="status-dot up"></span> Connected to HeadySystems</span>
+      <span id="status-url">Ready</span>
+    </div>
+    <div class="status-right">
+      <span>HeadyWeb v1.0.0</span>
+      <span>&#x221e; Sacred Geometry</span>
+    </div>
+  </div>
+
+<script>
+// HeadyWeb client-side logic
+const HEADY_API = 'https://headysystems.com';
+let currentMode = 'chat';
+let buddyVisible = true;
+let tabCount = 1;
+
+// ── Navigation ──
+function navigate() {
+  const input = document.getElementById('url-input');
+  let url = input.value.trim();
+  if (!url) return;
+  if (!url.startsWith('http://') && !url.startsWith('https://')) {
+    if (url.includes('.') && !url.includes(' ')) {
+      url = 'https://' + url;
+    } else {
+      url = 'https://www.google.com/search?igu=1&q=' + encodeURIComponent(url);
+    }
+  }
+  navigateTo(url);
+}
+
+function navigateTo(url) {
+  const viewport = document.getElementById('viewport');
+  const homeView = document.getElementById('home-view');
+  const input = document.getElementById('url-input');
+
+  if (homeView) homeView.style.display = 'none';
+
+  let iframe = viewport.querySelector('iframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
+    viewport.appendChild(iframe);
+  }
+  iframe.src = url;
+  input.value = url;
+
+  // Update context and status
+  document.getElementById('ctx-page').textContent = new URL(url).hostname;
+  document.getElementById('status-url').textContent = url;
+
+  // Update active tab
+  const activeTab = document.querySelector('.tab.active span:first-child');
+  if (activeTab) activeTab.textContent = new URL(url).hostname;
+}
+
+// ── Tab Management ──
+function addTab() {
+  tabCount++;
+  const tabBar = document.querySelector('.tab-bar');
+  const addBtn = tabBar.querySelector('.tab-add');
+
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+
+  const tab = document.createElement('div');
+  tab.className = 'tab active';
+  tab.dataset.tab = 'tab-' + tabCount;
+  tab.innerHTML = '<span>New Tab</span><span class="tab-close" onclick="closeTab(this)">&times;</span>';
+  tab.addEventListener('click', function(e) {
+    if (e.target.classList.contains('tab-close')) return;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+  tabBar.insertBefore(tab, addBtn);
+
+  // Reset viewport
+  const viewport = document.getElementById('viewport');
+  const iframe = viewport.querySelector('iframe');
+  if (iframe) iframe.remove();
+  const homeView = document.getElementById('home-view');
+  if (homeView) homeView.style.display = 'flex';
+  document.getElementById('url-input').value = '';
+  document.getElementById('ctx-page').textContent = 'New Tab';
+}
+
+function closeTab(closeBtn) {
+  const tab = closeBtn.parentElement;
+  const tabs = document.querySelectorAll('.tab');
+  if (tabs.length <= 1) return;
+  const wasActive = tab.classList.contains('active');
+  tab.remove();
+  if (wasActive) {
+    const remaining = document.querySelectorAll('.tab');
+    remaining[remaining.length - 1].classList.add('active');
+  }
+}
+
+// ── Buddy Sidebar ──
+function toggleBuddy() {
+  const sidebar = document.getElementById('buddy-sidebar');
+  buddyVisible = !buddyVisible;
+  sidebar.classList.toggle('collapsed', !buddyVisible);
+}
+
+function switchMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.buddy-mode').forEach(m => m.classList.remove('active'));
+  document.querySelector(`.buddy-mode[data-mode="${mode}"]`).classList.add('active');
+  document.getElementById('ctx-mode').textContent = mode;
+}
+
+// ── Buddy Chat ──
+async function sendBuddyMsg() {
+  const input = document.getElementById('buddy-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const msgs = document.getElementById('buddy-messages');
+
+  // User message
+  msgs.innerHTML += `<div class="buddy-msg user">
+    <div class="msg-avatar">&#x1f464;</div>
+    <div>
+      <div class="msg-body">${escapeHtml(msg)}</div>
+      <div class="msg-meta">You &middot; just now</div>
+    </div>
+  </div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Send to HeadyBuddy API
+  try {
+    const res = await fetch(HEADY_API + '/api/v1/chat/resolve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg, userId: 'headyweb-user', mode: currentMode })
+    });
+
+    let reply;
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.data?.topMatch) {
+        const m = data.data.topMatch;
+        reply = `<strong>${m.skill}</strong>: ${m.description}<br><span style="color:var(--text3);font-size:11px">Confidence: ${(m.confidence * 100).toFixed(0)}%${data.data.requiresConfirmation ? ' &middot; Requires confirmation' : ''}</span>`;
+      } else {
+        reply = "I'm processing that through the intent resolver. Try asking about: system status, health checks, drift detection, deployments, or MCP connectors.";
+      }
+    } else {
+      reply = "I couldn't reach the Heady platform right now. The services might be spinning up.";
+    }
+
+    msgs.innerHTML += `<div class="buddy-msg bot">
+      <div class="msg-avatar">&#x2728;</div>
+      <div>
+        <div class="msg-body">${reply}</div>
+        <div class="msg-meta">HeadyBuddy &middot; just now</div>
+      </div>
+    </div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  } catch (err) {
+    msgs.innerHTML += `<div class="buddy-msg bot">
+      <div class="msg-avatar">&#x2728;</div>
+      <div>
+        <div class="msg-body">Connection issue: ${escapeHtml(err.message)}. Make sure HeadySystems is online.</div>
+        <div class="msg-meta">HeadyBuddy &middot; just now</div>
+      </div>
+    </div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ── Init: check system health ──
+(async () => {
+  try {
+    const res = await fetch(HEADY_API + '/api/health');
+    if (res.ok) {
+      document.getElementById('status-url').textContent = 'All systems operational';
+    }
+  } catch (e) {
+    document.getElementById('status-url').textContent = 'Connecting...';
+  }
+})();
+</script>
+</body>
+</html>

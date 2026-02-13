@@ -1,4 +1,13 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HeadyWeb — AI-Powered Browser</title>
+  <meta name="description" content="Browse the web with HeadyBuddy at your side. Summarize pages, research topics, generate code, and manage tasks — all from one AI-native browser shell.">
+  <meta name="theme-color" content="#7c3aed">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
+  <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -8,10 +17,10 @@
   --surface: #0c0c1a;
   --surface2: #141428;
   --border: #1e1e3a;
-  --border-glow: #00e5cc30;
-  --accent: #00e5cc;
-  --accent2: #0099ff;
-  --glow: #00e5cc20;
+  --border-glow: #7c3aed30;
+  --accent: #7c3aed;
+  --accent2: #a78bfa;
+  --glow: #7c3aed20;
   --text: #e4e4f0;
   --text2: #9494b0;
   --text3: #5a5a78;
@@ -673,3 +682,192 @@ footer a:hover { color: var(--accent); }
   .footer-eco { grid-template-columns: repeat(2, 1fr); }
   .context-bar { display: none; }
 }
+</style>
+</head>
+<body>
+  <!-- Sacred Geometry Background Layer -->
+  <div class="sg-bg">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="sg-pattern sg-flower">
+<defs><circle id="c" r="30" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.15"/></defs>
+<use href="#c" x="100" y="100"/><use href="#c" x="130" y="100"/><use href="#c" x="70" y="100"/>
+<use href="#c" x="115" y="74"/><use href="#c" x="85" y="74"/><use href="#c" x="115" y="126"/><use href="#c" x="85" y="126"/>
+<use href="#c" x="100" y="48"/><use href="#c" x="100" y="152"/><use href="#c" x="145" y="74"/><use href="#c" x="55" y="74"/>
+<use href="#c" x="145" y="126"/><use href="#c" x="55" y="126"/><use href="#c" x="160" y="100"/><use href="#c" x="40" y="100"/>
+<use href="#c" x="130" y="48"/><use href="#c" x="70" y="48"/><use href="#c" x="130" y="152"/><use href="#c" x="70" y="152"/>
+</svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="sg-pattern sg-metatron">
+<g fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.12">
+<circle cx="100" cy="100" r="50"/><circle cx="100" cy="50" r="50"/><circle cx="100" cy="150" r="50"/>
+<circle cx="143" cy="75" r="50"/><circle cx="57" cy="75" r="50"/><circle cx="143" cy="125" r="50"/><circle cx="57" cy="125" r="50"/>
+<line x1="100" y1="50" x2="143" y2="75"/><line x1="143" y1="75" x2="143" y2="125"/><line x1="143" y1="125" x2="100" y2="150"/>
+<line x1="100" y1="150" x2="57" y2="125"/><line x1="57" y1="125" x2="57" y2="75"/><line x1="57" y1="75" x2="100" y2="50"/>
+<line x1="100" y1="50" x2="143" y2="125"/><line x1="143" y1="75" x2="57" y2="125"/><line x1="143" y1="125" x2="57" y2="75"/>
+<line x1="100" y1="150" x2="57" y2="75"/><line x1="57" y1="125" x2="143" y2="75"/><line x1="100" y1="50" x2="57" y2="125"/>
+</g></svg>
+  </div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="sg-grid"></div>
+
+
+  <div class="context-bar">
+    <div class="wrap">
+      <strong style="color:var(--accent)">Part of the Heady Ecosystem</strong>
+      <span class="context-sep">/</span>
+      HeadyWeb is the AI browser shell for the <a href="https://headysystems.com">Heady Systems platform</a>. <a href="https://headybuddy.org">HeadyBuddy</a> lives in the sidebar, powered by the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.
+    </div>
+  </div>
+
+  <div class="wrap">
+    <nav>
+      <a href="/" class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="sg-logo">
+<defs>
+<linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" style="stop-color:var(--accent)"/><stop offset="100%" style="stop-color:var(--accent2)"/>
+</linearGradient>
+</defs>
+<circle cx="24" cy="24" r="23" fill="none" stroke="url(#lg)" stroke-width="1.5"/>
+<circle cx="24" cy="24" r="10" fill="none" stroke="url(#lg)" stroke-width="0.8" opacity="0.6"/>
+<circle cx="24" cy="14" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
+<circle cx="24" cy="34" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
+<circle cx="32.7" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
+<circle cx="15.3" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
+<circle cx="32.7" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
+<circle cx="15.3" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
+<text x="24" y="28" text-anchor="middle" fill="url(#lg)" font-size="16" font-weight="700" font-family="serif">&#x221e;</text>
+</svg>
+        <div>
+          <div class="logo-text">HeadyWeb</div>
+          <div class="logo-sub">AI Browser</div>
+        </div>
+      </a>
+      <div class="nav-links"><a href="#features">Features</a><a href="#launch">Try It</a><a href="https://headybuddy.org">Buddy</a><a href="https://headysystems.com">Platform</a><a href="https://headyio.com">Docs</a></div>
+    </nav>
+  </div>
+
+  <div class="hero">
+    <div class="wrap">
+      <div class="hero-badge"><span class="pulse-dot"></span>Browser Active</div>
+      <h1>AI-Powered Browser</h1>
+      <p class="hero-desc">Browse the web with HeadyBuddy at your side. Summarize pages, research topics, generate code, and manage tasks — all from one AI-native browser shell.</p>
+      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: browser</span> <span class="vtag">layer: user-facing</span> <span class="vtag">audience: everyone</span></div>
+      <div class="hero-btns">
+        <a href="#launch" class="btn btn-primary">Launch HeadyWeb</a>
+        <a href="https://headybuddy.org" class="btn btn-ghost">Meet Buddy</a>
+      </div>
+    </div>
+  </div>
+
+
+    
+    <section id="features">
+      <div class="wrap">
+        <h2 class="section-title">Browser Meets AI Companion</h2>
+        <p class="section-sub">Four modes, one sidebar, every page</p>
+        <div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4ac;</div><h3>Chat Mode</h3><p>Ask Buddy anything while browsing. Get instant answers, summaries, and explanations without leaving the page.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x2699;&#xfe0f;</div><h3>Tasks Mode</h3><p>Run deployments, trigger pipelines, manage MCP connectors, and orchestrate workflows — all from the sidebar.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4bb;</div><h3>Code Mode</h3><p>Generate, explain, and refactor code. Buddy sees the page context and can help you work with any codebase.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50d;</div><h3>Research Mode</h3><p>Summarize the current page, compare multiple sources, maintain research sessions across tabs.</p></div>
+</div>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyWeb merges browser and AI companion into one experience. <a href="https://headybuddy.org" style="color:var(--accent)">HeadyBuddy</a> is always aware of your current page and context.</p>
+      </div>
+    </section>
+
+    <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
+    <section id="launch">
+      <div class="wrap">
+        <h2 class="section-title">Architecture</h2>
+        <p class="section-sub">How HeadyWeb connects everything</p>
+        <div class="eco-block">
+  <div class="eco-label">HeadyWeb Stack</div>
+  <div class="code-block" style="font-size:12px">HeadyWeb (browser shell UI)
+  ├── Viewport — multi-tab page rendering
+  ├── Tab Manager — create, switch, close tabs
+  ├── HeadyBuddy Sidebar — Chat / Tasks / Code / Research
+  ├── Context Engine — page URL, selection, clipboard awareness
+  └── HeadySystems API — intent resolution, health, orchestration
+       ├── 3-stage intent matching (keyword, fuzzy, LLM)
+       ├── MCP tool invocation
+       └── HeadySoul governance (value-weighted decisions)</div>
+</div>
+<div class="grid g3c" style="margin-top:var(--sp-md)">
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f310;</div><h3>Desktop App</h3><p>Tauri v2 shell with system WebView. Tray icon, global hotkey, always-on-top overlay.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50c;</div><h3>Browser Extension</h3><p>Manifest V3 sidepanel for Chrome, Edge, Brave, Firefox. Same Buddy, existing browser.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x2601;&#xfe0f;</div><h3>Cloudflare Worker</h3><p>Edge-deployed web app. Zero-latency static hosting with API proxy to HeadySystems.</p></div>
+</div>
+      </div>
+    </section>
+
+
+    <div class="wrap">
+      <div class="eco-block">
+        <div class="eco-label">Related in the Heady Ecosystem</div>
+        <div class="eco-text">AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.</div>
+        <div class="eco-links">
+          <a href="https://headybuddy.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>About HeadyBuddy</strong><br><small style="color:var(--text3)">The AI companion powering the sidebar</small></span></a>
+          <a href="https://headysystems.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Platform</strong><br><small style="color:var(--text3)">The intelligence engine behind HeadyWeb</small></span></a>
+          <a href="https://headybot.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Chat directly</strong><br><small style="color:var(--text3)">Talk to Buddy without a browser shell</small></span></a>
+          <a href="https://headyconnection.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Our mission</strong><br><small style="color:var(--text3)">The nonprofit governing everything</small></span></a>
+        </div>
+      </div>
+    </div>
+
+  <footer>
+    <div class="wrap">
+      <div class="sg-divider"><span>&#x221e;</span></div>
+      <h3 style="color:var(--text1);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
+      <div class="footer-eco">
+      <div class="footer-eco-item">
+        <a href="https://headysystems.com">✴️ Heady Systems</a>
+        <small>The Sacred Geometry AI platform powering every Heady product and service.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyconnection.org">🌐 HeadyConnection</a>
+        <small>The nonprofit mission behind Heady — impact, governance, and community programs.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headybuddy.org">✨ HeadyBuddy</a>
+        <small>Your cross-device AI companion — chat, tasks, code, research — everywhere you are.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headybot.com">🤖 HeadyBot</a>
+        <small>Direct line to HeadyBuddy AI — full-featured conversational interface.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headycloud.com">☁️ HeadyCloud</a>
+        <small>Cloud orchestration, deployment layers, and infrastructure management.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headymcp.com">🔌 HeadyMCP</a>
+        <small>Model Context Protocol connectors — extend Heady with any tool or service.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyio.com">📚 Heady Docs</a>
+        <small>API reference, architecture guides, and integration documentation.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headycheck.com">💚 HeadyCheck</a>
+        <small>Real-time health and observability across the entire Heady ecosystem.</small>
+      </div>
+      <div class="footer-eco-item" style="background:var(--surface2);border-radius:8px">
+        <a href="https://headyweb.com">🌐 HeadyWeb (you are here)</a>
+        <small>AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.</small>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span style="color:var(--text3);font-size:12px">&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</span>
+        <span>
+          <a href="https://headyconnection.org">Nonprofit</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headyio.com">Docs</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headycheck.com">Status</a>
+        </span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

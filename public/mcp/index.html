@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyMCP Protocol Server</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #0f1215;
+            color: #e2e8f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            padding: 2rem;
+            border-radius: 8px;
+            background: #1a202c;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            font-size: 2.5rem;
+            color: #00ccff;
+            margin-bottom: 0.5rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #00ccff;
+            margin-top: 2rem;
+        }
+        .status {
+            display: inline-block;
+            background-color: #10B981;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .endpoint {
+            background: #2D3748;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+        .endpoint-name {
+            color: #00ccff;
+            font-family: monospace;
+            font-size: 1rem;
+        }
+        .endpoint-desc {
+            color: #A0AEC0;
+            margin-top: 0.5rem;
+        }
+        footer {
+            margin-top: 3rem;
+            color: #A0AEC0;
+            font-size: 0.875rem;
+        }
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">∞</div>
+            <h1>HeadyMCP Protocol Server</h1>
+            <p>Multi-Channel Protocol for Sacred Geometry Architecture</p>
+            <div class="status">ACTIVE</div>
+        </header>
+        
+        <h2>API Endpoints</h2>
+        <div class="endpoint">
+            <div class="endpoint-name">GET /api/mcp/status</div>
+            <div class="endpoint-desc">Get current MCP server status</div>
+        </div>
+        <div class="endpoint">
+            <div class="endpoint-name">GET /api/mcp/servers</div>
+            <div class="endpoint-desc">List available MCP servers and capabilities</div>
+        </div>
+        <div class="endpoint">
+            <div class="endpoint-name">POST /api/mcp/tool</div>
+            <div class="endpoint-desc">Execute MCP tool on target server</div>
+        </div>
+        
+        <footer>
+            &copy; 2026 Heady Systems | <a href="https://headyio.com/docs/mcp" style="color: #00ccff;">Documentation</a>
+        </footer>
+    </div>
+</body>
+</html>

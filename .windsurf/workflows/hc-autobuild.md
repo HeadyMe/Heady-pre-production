@@ -15,70 +15,75 @@
 <!-- HEADY_BRAND:END -->
 
 ---
-description: Run HCAutoBuild to build all Heady workspaces
+description: Run HCAutoBuild as a cloud-only pipeline workflow
 ---
 
 # HCAutoBuild Workflow
 
 ## Overview
-HCAutoBuild automatically discovers and builds all Heady projects across Windsurf worktrees.
+HCAutoBuild orchestrates build and readiness validation across Heady cloud layers.
 
 ## Quick Start
 
 ### Run HCAutoBuild
-```powershell
+```bash
 # // turbo
-node "C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052\src\hc_autobuild.js"
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
 ```
 
-### Or via hc.ps1
-```powershell
+### Or check run state
+```bash
 # // turbo
-& "C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052\scripts\hc.ps1" -a autobuild
+curl -sf https://headycloud.com/api/pipeline/state \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
 ## What HCAutoBuild Does
 
-1. **Discovers Worktrees** - Scans all active Windsurf worktree directories
-2. **Finds Projects** - Locates all `package.json` files up to 2 levels deep
-3. **Installs Dependencies** - Runs `pnpm install` for each project
-4. **Runs Build Scripts** - Executes `pnpm run build` if available
-5. **Reports Results** - Summarizes success/failure counts
+1. **Loads Pipeline Config** - Pulls active cloud pipeline configuration
+2. **Runs Build Stages** - Executes configured stages in HCFullPipeline
+3. **Tracks Progress** - Publishes run status and stage checkpoints
+4. **Validates Readiness** - Confirms node, cluster, and system status
+5. **Reports Results** - Exposes run history and health outcomes
 
-## Targeted Worktrees
+## Targeted Cloud Repositories
 
-| Worktree | Auto-Discovered |
-|----------|----------------|
-| Heady-4aa75052 | ✅ |
-| CascadeProjects-4aa75052 | ✅ |
-| Projects-4ce25b33 | ✅ |
-| HeadyMonorepo | ✅ (if exists) |
-| HeadySystems | ✅ (if exists) |
+| Repository | Included in pipeline |
+|------------|----------------------|
+| HeadySystems/Heady | ✅ |
+| HeadyMe/Heady | ✅ |
+| HeadyConnection/Heady | ✅ |
+| HeadySystems/sandbox | ✅ (if enabled) |
+| Additional linked repos | ✅ (if configured) |
 
 ## Prerequisites
 
 Before running HCAutoBuild, ensure:
-```powershell
-# Check Node.js
-node --version
-
-# Check pnpm
-pnpm --version
-
-# Check Git
-git --version
+```bash
+test -n "$HEADY_API_KEY" && echo "HEADY_API_KEY is set" || echo "HEADY_API_KEY is missing"
+curl -sf https://headycloud.com/api/health
+curl -sf https://headysystems.com/api/health
 ```
 
 ## Build Options
 
 ### Full Automated Workflow
-```powershell
-& "C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052\scripts\heady-automated-workflow.ps1"
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
 ```
 
 ### With System Restart
-```powershell
-& "C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052\scripts\hc.ps1" -Restart
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild","mode":"restart"}'
 ```
 
 ## Output Example
@@ -86,15 +91,15 @@ git --version
 ```
 🔨 Heady AutoBuild - Sacred Geometry Build System
 
-🔍 Discovered 3 worktrees:
-   • C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052
-   • C:\Users\erich\.windsurf\worktrees\CascadeProjects\CascadeProjects-4aa75052
-   • C:\Users\erich\.windsurf\worktrees\Projects\Projects-4ce25b33
+🔍 Discovered cloud repositories:
+   • HeadySystems/Heady
+   • HeadyMe/Heady
+   • HeadyConnection/Heady
 
 📋 Found 5 buildable projects
 
-📦 Building: C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052
-✅ Heady-4aa75052 - Build complete
+📦 Building: HeadySystems/Heady
+✅ HeadySystems/Heady - Build complete
 
 ════════════════════════════════════════════════════════════════
 ✅ Heady AutoBuild Complete!
@@ -105,19 +110,18 @@ git --version
 ## Troubleshooting
 
 ### Build Fails
-```powershell
-# Check for lockfile issues
-pnpm install --no-frozen-lockfile
-
-# Clear cache
-pnpm store prune
+```bash
+curl -sf https://headycloud.com/api/pipeline/state/full \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+curl -sf https://headycloud.com/api/pipeline/log \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
-### Missing Dependencies
-```powershell
-# Force reinstall
-rm -rf node_modules
-pnpm install
+### Service health mismatch
+```bash
+curl -sf https://headysystems.com/api/system/status
+curl -sf https://headysystems.com/api/nodes
+curl -sf https://headysystems.com/api/cluster/state
 ```
 
 ## Post-Build Actions
@@ -130,6 +134,6 @@ After successful build:
 ## Integration with CI/CD
 
 HCAutoBuild can be triggered from:
-- GitHub Actions (via `commit_and_build.ps1`)
-- Render.com Blueprint (via `render.yaml`)
+- API-triggered orchestration on `https://headycloud.com/api/pipeline/run`
+- Scheduled cloud automations
 - Manual execution via Windsurf workflow

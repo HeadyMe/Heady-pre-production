@@ -283,7 +283,88 @@ async function computeReadinessScore(context) {
 }
 
 async function sendCheckpointEmail(context) {
-  return { task: "send_checkpoint_email", status: "completed", result: "Checkpoint email queued (stub)" };
+  const fs = require("fs");
+  const axios = require("axios");
+
+  const runId = context.runId || "unknown-run";
+  const stageId = context.stageId || "unknown-stage";
+  const generatedAt = new Date().toISOString();
+  const readiness = mcGlobal.quickReadiness();
+  const lastCheckpoint = checkpointAnalyzer?.getLastRecord?.() || null;
+  const healthSnapshot = healthRunner?.getSnapshot?.() || null;
+
+  const recommendations = (lastCheckpoint?.recommendations || []).slice(0, 5);
+  const subject = `[HCFullPipeline] Checkpoint ${runId} (${stageId})`;
+  const body = [
+    "Heady HCFullPipeline checkpoint summary",
+    "",
+    `Run ID: ${runId}`,
+    `Stage: ${stageId}`,
+    `Generated At: ${generatedAt}`,
+    `Decision: ${lastCheckpoint?.decision || "continue"}`,
+    `Readiness: ${lastCheckpoint?.readinessScore ?? readiness.score ?? "N/A"} (${readiness.grade || "N/A"})`,
+    `Health: ${healthSnapshot?.overallStatus || "unknown"} (healthy=${healthSnapshot?.healthy ?? 0}, degraded=${healthSnapshot?.degraded ?? 0}, down=${healthSnapshot?.down ?? 0})`,
+    "",
+    "Top recommendations:",
+    ...(recommendations.length > 0
+      ? recommendations.map((r, idx) => `${idx + 1}. [${String(r.severity || "info").toUpperCase()}] ${r.message}`)
+      : ["- None"]),
+  ].join("\n");
+
+  const outputDir = path.join(__dirname, "..", "..", "logs", "checkpoint-emails");
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  const safeRunId = String(runId).replace(/[^a-zA-Z0-9_-]/g, "_");
+  const fileBase = `${safeRunId}-${Date.now()}`;
+  const textPath = path.join(outputDir, `${fileBase}.txt`);
+  const jsonPath = path.join(outputDir, `${fileBase}.json`);
+
+  const payload = {
+    runId,
+    stageId,
+    generatedAt,
+    subject,
+    body,
+    checkpoint: lastCheckpoint,
+    readiness,
+    healthSnapshot,
+  };
+
+  fs.writeFileSync(textPath, `Subject: ${subject}\n\n${body}\n`, "utf8");
+  fs.writeFileSync(jsonPath, JSON.stringify(payload, null, 2), "utf8");
+
+  const webhookUrl = process.env.HEADY_CHECKPOINT_WEBHOOK_URL || "";
+  let delivery = "saved";
+  let webhookStatus = null;
+
+  if (webhookUrl) {
+    try {
+      const response = await axios.post(webhookUrl, payload, {
+        headers: { "Content-Type": "application/json" },
+        timeout: 10000,
+      });
+      webhookStatus = response.status;
+      delivery = `webhook:${response.status}`;
+    } catch (error) {
+      webhookStatus = error?.response?.status || "error";
+      delivery = `webhook-failed:${webhookStatus}`;
+    }
+  }
+
+  return {
+    task: "send_checkpoint_email",
+    status: "completed",
+    result: `Checkpoint summary generated (${delivery})`,
+    subject,
+    artifacts: {
+      text: textPath,
+      json: jsonPath,
+    },
+    webhook: {
+      configured: Boolean(webhookUrl),
+      status: webhookStatus,
+    },
+  };
 }
 
 async function logRunConfigHash(context) {

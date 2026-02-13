@@ -1247,7 +1247,6 @@ const driftEngine = new DriftDetectionEngine(__dirname);
 const intentResolver = new IntentResolver();
 const confirmationPolicy = new ConfirmationPolicy();
 const connectorRegistry = new ConnectorRegistry();
-app.locals.connectorRegistry = connectorRegistry;
 
 // Initialize SoulOrchestrator — THE unified decision authority
 let intelligenceEngine;
@@ -1762,18 +1761,6 @@ app.get('/sites', (req, res) => {
     };
   });
   res.json({ sites, total: sites.length, generated: sites.filter(s => s.generated).length });
-});
-
-// MCP domain-specific handling
-const mcpRouter = require('./src/mcp/headymcp-router');
-
-// Detect headymcp.com domain and route to MCP router
-app.use((req, res, next) => {
-  const host = req.headers['x-heady-domain'] || req.hostname || '';
-  if (host.includes('headymcp.com')) {
-    return mcpRouter(req, res, next);
-  }
-  next();
 });
 
 // Domain-based routing (production — when DNS points domains here)

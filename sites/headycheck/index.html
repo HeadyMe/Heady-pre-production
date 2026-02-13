@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeadyCheck — Health Monitoring</title>
-  <meta name="description" content="Real-time health dashboard for the entire Heady ecosystem. Every service, every node, every heartbeat.">
+  <title>HeadyCheck — Ecosystem Health Dashboard</title>
+  <meta name="description" content="Real-time health, drift detection, and Monte Carlo validation across every service, node, and pipeline in the Heady ecosystem.">
   <meta name="theme-color" content="#00d4aa">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
   <style>
@@ -540,6 +540,137 @@ footer a:hover { color: var(--accent); }
   margin-top: var(--sp-sm);
 }
 
+/* ── Ecosystem Block ── */
+.eco-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: var(--sp-lg);
+  margin: var(--sp-lg) 0;
+  position: relative;
+}
+.eco-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+}
+.eco-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: var(--sp-sm);
+}
+.eco-text {
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.7;
+  margin-bottom: var(--sp-md);
+}
+.eco-links {
+  display: flex;
+  gap: var(--sp-sm);
+  flex-wrap: wrap;
+}
+.eco-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.eco-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--glow);
+}
+.eco-link .eco-icon { font-size: 14px; }
+
+/* ── Tags ── */
+.vtag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text3);
+  margin-right: 4px;
+}
+
+/* ── Where This Fits ── */
+.context-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--sp-sm) 0;
+  font-size: 13px;
+  color: var(--text3);
+  position: relative;
+  z-index: 1;
+}
+.context-bar a {
+  color: var(--accent);
+  text-decoration: none;
+}
+.context-bar a:hover { text-decoration: underline; }
+.context-sep { margin: 0 8px; opacity: 0.4; }
+
+/* ── Footer Ecosystem Grid ── */
+.footer-eco {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--sp-sm);
+  margin-bottom: var(--sp-lg);
+  text-align: left;
+}
+.footer-eco-item {
+  padding: var(--sp-sm);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+.footer-eco-item:hover { background: var(--surface2); }
+.footer-eco-item a {
+  color: var(--text2);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  display: block;
+}
+.footer-eco-item a:hover { color: var(--accent); }
+.footer-eco-item small {
+  display: block;
+  color: var(--text3);
+  font-size: 11px;
+  margin-top: 2px;
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+  padding-top: var(--sp-md);
+  border-top: 1px solid var(--border);
+}
+.footer-bottom a {
+  color: var(--text3);
+  text-decoration: none;
+  font-size: 12px;
+}
+.footer-bottom a:hover { color: var(--accent); }
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .nav-links { display: none; }
@@ -548,6 +679,8 @@ footer a:hover { color: var(--accent); }
   .g2c, .g3c { grid-template-columns: 1fr; }
   .sg-flower { width: 400px; height: 400px; }
   .sg-metatron { width: 300px; height: 300px; }
+  .footer-eco { grid-template-columns: repeat(2, 1fr); }
+  .context-bar { display: none; }
 }
 </style>
 </head>
@@ -577,6 +710,15 @@ footer a:hover { color: var(--accent); }
   <div class="orb orb-3"></div>
   <div class="sg-grid"></div>
 
+
+  <div class="context-bar">
+    <div class="wrap">
+      <strong style="color:var(--accent)">Part of the Heady Ecosystem</strong>
+      <span class="context-sep">/</span>
+      HeadyCheck monitors the <a href="https://headysystems.com">Heady Systems platform</a> and all connected services. Ask <a href="https://headybot.com">HeadyBuddy</a> about system health from any device.
+    </div>
+  </div>
+
   <div class="wrap">
     <nav>
       <a href="/" class="logo">
@@ -598,21 +740,22 @@ footer a:hover { color: var(--accent); }
 </svg>
         <div>
           <div class="logo-text">HeadyCheck</div>
-          <div class="logo-sub">Health Monitor</div>
+          <div class="logo-sub">System Health</div>
         </div>
       </a>
-      <div class="nav-links"><a href="#dashboard">Dashboard</a><a href="https://headysystems.com">Systems</a><a href="https://headysystems.com">Docs</a></div>
+      <div class="nav-links"><a href="#dashboard">Dashboard</a><a href="#services">Services</a><a href="https://headysystems.com">Platform</a><a href="https://headyio.com">Docs</a><a href="https://headybot.com">Buddy</a></div>
     </nav>
   </div>
 
   <div class="hero">
     <div class="wrap">
       <div class="hero-badge"><span class="pulse-dot"></span>Monitoring Active</div>
-      <h1>Health Monitoring</h1>
-      <p class="hero-desc">Real-time health dashboard for the entire Heady ecosystem. Every service, every node, every heartbeat.</p>
+      <h1>Ecosystem Health Dashboard</h1>
+      <p class="hero-desc">Real-time health, drift detection, and Monte Carlo validation across every service, node, and pipeline in the Heady ecosystem.</p>
+      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: operations</span> <span class="vtag">layer: observability</span> <span class="vtag">audience: ops</span></div>
       <div class="hero-btns">
         <a href="#dashboard" class="btn btn-primary">View Dashboard</a>
-        <a href="https://headysystems.com" class="btn btn-ghost">API Docs</a>
+        <a href="https://headyio.com" class="btn btn-ghost">API Docs</a>
       </div>
     </div>
   </div>
@@ -644,27 +787,79 @@ el.innerHTML=html||'<div style="color:var(--text2)">No health data available yet
     <section id="services">
       <div class="wrap">
         <h2 class="section-title">Service Health</h2>
-        <p class="section-sub">Individual service status</p>
+        <p class="section-sub">Individual service status across the ecosystem</p>
         <div class="grid g3c">
-<div class="card"><div class="card-icon" style="background:#4ecdc420"><span class="status-dot up"></span></div><h3>headysystems.com</h3><p>Primary API — gateway, sessions, intelligence</p></div>
-<div class="card"><div class="card-icon" style="background:#4ecdc420"><span class="status-dot up"></span></div><h3>headycloud.com</h3><p>Cloud orchestration — HeadyMe layer</p></div>
-<div class="card"><div class="card-icon" style="background:#4ecdc420"><span class="status-dot up"></span></div><h3>headyconnection.com</h3><p>Connection layer — AI node mesh</p></div>
+<div class="card"><div class="card-icon" style="background:#00e5cc20"><span class="status-dot up"></span></div><h3><a href="https://headysystems.com" style="color:inherit;text-decoration:none">headysystems.com</a></h3><p>Primary API — gateway, sessions, intelligence, orchestration</p></div>
+<div class="card"><div class="card-icon" style="background:#3b82f620"><span class="status-dot up"></span></div><h3><a href="https://headycloud.com" style="color:inherit;text-decoration:none">headycloud.com</a></h3><p>Cloud orchestration — deployment layers, HeadyMe</p></div>
+<div class="card"><div class="card-icon" style="background:#10b98120"><span class="status-dot up"></span></div><h3><a href="https://headyconnection.org" style="color:inherit;text-decoration:none">headyconnection.org</a></h3><p>Nonprofit mission — impact programs, governance</p></div>
 </div>
       </div>
     </section>
 
+
+    <div class="wrap">
+      <div class="eco-block">
+        <div class="eco-label">Related in the Heady Ecosystem</div>
+        <div class="eco-text">Real-time health and observability across the entire Heady ecosystem.</div>
+        <div class="eco-links">
+          <a href="https://headyio.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Full API reference</strong><br><small style="color:var(--text3)">Health check endpoints</small></span></a>
+          <a href="https://headybot.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Ask Buddy</strong><br><small style="color:var(--text3)">"Is the system healthy?"</small></span></a>
+          <a href="https://headysystems.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Platform details</strong><br><small style="color:var(--text3)">Architecture behind the health</small></span></a>
+        </div>
+      </div>
+    </div>
+
   <footer>
     <div class="wrap">
       <div class="sg-divider"><span>&#x221e;</span></div>
-      <p>&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</p>
-      <div class="footer-links">
-        <a href="https://headysystems.com">Systems</a>
-        <a href="https://headysystems.com">Status</a>
-        <a href="https://headysystems.com">Docs</a>
-        <a href="https://headysystems.com">MCP</a>
-        <a href="https://headysystems.com">Buddy</a>
-        <a href="https://headycloud.com">Cloud</a>
-        <a href="https://headyconnection.com">Connection</a>
+      <h3 style="color:var(--text1);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
+      <div class="footer-eco">
+      <div class="footer-eco-item">
+        <a href="https://headysystems.com">✴️ Heady Systems</a>
+        <small>The Sacred Geometry AI platform powering every Heady product and service.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyconnection.org">🌐 HeadyConnection</a>
+        <small>The nonprofit mission behind Heady — impact, governance, and community programs.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headybuddy.org">✨ HeadyBuddy</a>
+        <small>Your cross-device AI companion — chat, tasks, code, research — everywhere you are.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headybot.com">🤖 HeadyBot</a>
+        <small>Direct line to HeadyBuddy AI — full-featured conversational interface.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headycloud.com">☁️ HeadyCloud</a>
+        <small>Cloud orchestration, deployment layers, and infrastructure management.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headymcp.com">🔌 HeadyMCP</a>
+        <small>Model Context Protocol connectors — extend Heady with any tool or service.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyio.com">📚 Heady Docs</a>
+        <small>API reference, architecture guides, and integration documentation.</small>
+      </div>
+      <div class="footer-eco-item" style="background:var(--surface2);border-radius:8px">
+        <a href="https://headycheck.com">💚 HeadyCheck (you are here)</a>
+        <small>Real-time health and observability across the entire Heady ecosystem.</small>
+      </div>
+      <div class="footer-eco-item">
+        <a href="https://headyweb.com">🌐 HeadyWeb</a>
+        <small>AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.</small>
+      </div>
+      </div>
+      <div class="footer-bottom">
+        <span style="color:var(--text3);font-size:12px">&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</span>
+        <span>
+          <a href="https://headyconnection.org">Nonprofit</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headyio.com">Docs</a>
+          <span style="margin:0 8px;color:var(--text3)">·</span>
+          <a href="https://headycheck.com">Status</a>
+        </span>
       </div>
     </div>
   </footer>

@@ -15,13 +15,13 @@
 <!-- HEADY_BRAND:END -->
 
 ---
-description: Heady Sacred Geometry Branding Protocol — enforce colorful, heavily branded file headers across the entire project
+description: Heady Sacred Geometry Branding Protocol — cloud-only branding validation and governance
 ---
 
 # Heady Sacred Geometry Branding Protocol
 
 ## Goal
-Every eligible source file carries a **heavy, colorful, visually striking** branded header using the Sacred Geometry block-letter ASCII art. The branding is enforced at three gates: **CLI**, **Git hook**, and **CI**.
+Every eligible source file carries a **heavy, colorful, visually striking** branded header using the Sacred Geometry block-letter ASCII art. Branding validation is managed through cloud orchestration and status APIs.
 
 ## Banner Style
 All branded files receive a box-drawn header with the full HEADY block-letter logo:
@@ -40,22 +40,21 @@ All branded files receive a box-drawn header with the full HEADY block-letter lo
 ║  LAYER: <layer>                                                  ║
 ╚══════════════════════════════════════════════════════════════════╝
 ```
-Wrapped in the appropriate comment syntax per file type (// for JS, # for Python/YAML/PS1, <!-- --> for Markdown).
+Wrapped in the appropriate comment syntax per file type (// for JS, # for Python/YAML, <!-- --> for Markdown).
 
 ## What Gets Branded
 - **JavaScript/TypeScript:** `.js`, `.jsx`, `.ts`, `.tsx`, `.cjs`, `.mjs`
 - **Python:** `.py`
-- **PowerShell:** `.ps1`
 - **Shell:** `.sh`
 - **Markdown:** `.md`
 - **YAML:** `.yml`, `.yaml`
-- **Config (hash-comment):** `Dockerfile`, `.env*`, `.gitignore`, `.gitattributes`, `requirements.txt`, `docker-compose*.yml/.yaml`, `render.yml/.yaml`
+- **Config (hash-comment):** `Dockerfile`, `.env*`, `.gitignore`, `.gitattributes`, `requirements.txt`, `render.yml/.yaml`
 
 ## What Gets Skipped
 - Binary/non-commentable: `.json`, `.lock`, `.ipynb`, `.png`, `.jpg`, `.gif`, `.pdf`, `.zip`, `.exe`
 - Generated/minified: `*.min.js`, `*.map`
 - Large files (> 1MB)
-- Vendor/build dirs: `.git/`, `node_modules/`, `dist/`, `build/`, `venv/`, `__pycache__/`, `.pytest_cache/`
+- Vendor/build directories managed outside cloud pipeline scope
 
 ## Layer Mapping
 Files are auto-tagged with a layer based on path:
@@ -77,37 +76,44 @@ Files are auto-tagged with a layer based on path:
 
 ## Steps
 
-### 1. One-Time Retrofit (brand all existing files)
+### 1. Trigger cloud branding validation run
 // turbo
-```
-npm run brand:fix
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
 ```
 
-### 2. Check Without Writing
+### 2. Analyze branding coverage across source paths
 // turbo
-```
-npm run brand:check
+```bash
+curl -sf -X POST https://headysystems.com/api/pipeline/claude/analyze \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"paths":["src/","docs/","scripts/"]}'
 ```
 
-### 3. Verbose Check (shows all files including already-branded)
+### 3. Check pipeline and system readiness
 // turbo
-```
-npm run brand:check -- --verbose
+```bash
+curl -sf https://headycloud.com/api/pipeline/state \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+curl -sf https://headysystems.com/api/system/status
 ```
 
-### 4. Install Git Pre-Commit Hook (auto-brands staged files)
+### 4. Verify generated site/status signals
+// turbo
+```bash
+curl -sf https://headysystems.com/api/v1/sites/status
+curl -sf https://headysystems.com/api/health
 ```
-npm run hooks:install
-```
-The hook runs `node scripts/brand_headers.js --fix --staged` before each commit.
 
-### 5. CI Enforcement (GitHub Action)
-Workflow: `.github/workflows/brand-headers.yml`
-Runs `npm run brand:check` on every push/PR to `main`.
+### 5. CI Enforcement
+Branding checks are included in cloud pipeline governance and should be verified from pipeline state and history endpoints.
 
 ## Notes
 - Branding is **idempotent** — existing blocks are replaced, never duplicated.
 - Python shebang/encoding lines are preserved above the brand block.
-- The branding script (`scripts/brand_headers.js`) outputs a colorful ANSI report with the HEADY banner.
-- The `heady-manager.js` server prints a branded startup banner on boot.
+- Cloud pipeline runs should be monitored through branded domain endpoints.
 - Standards reference: `.heady/branding.md`

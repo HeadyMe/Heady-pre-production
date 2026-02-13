@@ -15,267 +15,94 @@
 <!-- HEADY_BRAND:END -->
 
 ---
-description: Docker Desktop MCP Setup - Configure and start HeadyMCP services
+description: HeadyMCP cloud setup and verification via branded APIs
 ---
 
-# Docker Desktop MCP Setup Workflow
+# HeadyMCP Cloud Setup Workflow
 
-This workflow sets up Docker Desktop to use HeadyMCP in the toolkit with all necessary services and configurations.
+This workflow validates and operates MCP integrations through branded Heady cloud APIs only.
 
 ## Prerequisites
-
-- Docker Desktop installed (https://www.docker.com/products/docker-desktop)
-- PowerShell 5.0+ on Windows
-- Project root directory access
+- `HEADY_API_KEY` is set for protected endpoints.
 
 ## Steps
 
-### 1. Verify Docker Installation
+### 1. Verify core cloud health
 // turbo
-Run the following command to verify Docker is installed and running:
-
-```powershell
-docker --version
-docker ps
+```bash
+curl -sf https://headysystems.com/api/health
+curl -sf https://headycloud.com/api/health
+curl -sf https://headymcp.com
 ```
 
-If Docker is not running, start Docker Desktop manually or use:
-```powershell
-Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
-Start-Sleep -Seconds 15
-```
-
-### 2. Run Docker MCP Setup Script
+### 2. Check MCP gateway status
 // turbo
-Execute the setup script from the project root:
-
-```powershell
-.\scripts\docker-mcp-setup.ps1
-```
-
-This script will:
-- Verify Docker daemon is running
-- Create MCP network bridge
-- Initialize data directories (`mcp-data/`)
-- Generate `.env` configuration file
-- Create `init.sql` for database schema
-- Generate `mcp_config.json` with service definitions
-- Validate `docker-compose.mcp.yml`
-
-### 3. Review Configuration Files
-
-Check the generated configuration files:
-
-**`.env`** - Environment variables for services
 ```bash
-cat .env
+curl -sf https://headysystems.com/api/mcp/status
+curl -sf https://headysystems.com/api/mcp/servers
+curl -sf https://headysystems.com/api/v1/mcp/connectors/dashboard
 ```
 
-**`init.sql`** - PostgreSQL schema initialization
+### 3. Register a cloud MCP connector (optional)
 ```bash
-cat init.sql
+curl -sf -X POST https://headysystems.com/api/v1/mcp/connectors/register \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"id":"mcp-cloud-connector","name":"MCP Cloud Connector","url":"https://headymcp.com","capabilities":["health","status"]}'
 ```
 
-**`mcp_config.json`** - MCP service definitions
+### 4. Validate connector heartbeat and capabilities
 ```bash
-cat mcp_config.json
+curl -sf -X PUT https://headysystems.com/api/v1/mcp/connectors/mcp-cloud-connector/heartbeat \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+curl -sf https://headysystems.com/api/v1/mcp/connectors/mcp-cloud-connector/capabilities
 ```
 
-**`docker-compose.mcp.yml`** - Docker Compose configuration
-```bash
-cat docker-compose.mcp.yml
-```
-
-### 4. Customize Configuration (Optional)
-
-Edit `.env` to customize settings:
-
-```powershell
-# Edit environment variables
-notepad .env
-
-# Key variables to consider:
-# - POSTGRES_PASSWORD: Change from 'password' for production
-# - REDIS_HOST/PORT: Adjust if needed
-# - NODE_ENV: Set to 'production' or 'development'
-```
-
-### 5. Start MCP Services
+### 5. Trigger cloud pipeline for MCP readiness
 // turbo
-Start all Docker MCP services:
-
-```powershell
-.\scripts\start-docker-mcp.ps1
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
+curl -sf https://headycloud.com/api/pipeline/state \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
-Options:
-```powershell
-# Start with verbose output (follow logs)
-.\scripts\start-docker-mcp.ps1 -Detach:$false
-
-# Start specific services only
-.\scripts\start-docker-mcp.ps1 -Services @("heady-mcp-filesystem", "heady-postgres")
-
-# Build images before starting
-.\scripts\start-docker-mcp.ps1 -BuildImages
-```
-
-### 6. Verify Services Are Running
+### 6. Confirm post-run MCP health
 // turbo
-Check the health of all MCP services:
-
-```powershell
-.\scripts\check-mcp-health.ps1
-```
-
-For detailed information including resource usage:
-```powershell
-.\scripts\check-mcp-health.ps1 -Verbose
-```
-
-View detailed status:
-```powershell
-docker-compose -f docker-compose.mcp.yml ps
-```
-
-### 7. View Service Logs
-
-Check logs for any issues:
-
-```powershell
-# All services
-docker-compose -f docker-compose.mcp.yml logs
-
-# Specific service
-docker-compose -f docker-compose.mcp.yml logs heady-postgres
-
-# Follow logs in real-time
-docker-compose -f docker-compose.mcp.yml logs -f
-```
-
-### 8. Test Database Connection
-
-Verify PostgreSQL is accessible:
-
-```powershell
-# Connect to PostgreSQL
-docker exec -it heady-postgres psql -U postgres -d heady
-
-# In psql, run:
-# \dt                    -- List tables
-# SELECT * FROM heady.projects;  -- Query data
-# \q                     -- Exit
-```
-
-Test Redis:
-
-```powershell
-docker exec -it heady-redis redis-cli ping
-# Should return: PONG
-```
-
-### 9. Integrate with Heady Ecosystem
-
-Start the HeadyManager orchestrator:
-
-```powershell
-node heady-manager.js
-```
-
-Verify manager can access MCP services:
-```powershell
-curl https://headysystems.com/api/health
-```
-
-### 10. Run HeadySync (Optional)
-
-Synchronize with the full Heady ecosystem:
-
-```powershell
-.\scripts\Heady-Sync.ps1
+```bash
+curl -sf https://headysystems.com/api/mcp/status
+curl -sf https://headysystems.com/api/system/status
 ```
 
 ## Verification Checklist
-
-- [ ] Docker Desktop is running (`docker ps` returns output)
-- [ ] All MCP services are running (`docker-compose -f docker-compose.mcp.yml ps`)
-- [ ] Health check passes (`.\scripts\check-mcp-health.ps1`)
-- [ ] PostgreSQL is accessible (can connect with psql)
-- [ ] Redis is accessible (`redis-cli ping` returns PONG)
-- [ ] Database schema is initialized (tables exist in `heady` schema)
-- [ ] HeadyManager can access services (health endpoint responds)
+- [ ] Core cloud health endpoints respond.
+- [ ] MCP status and server inventory return valid JSON.
+- [ ] Connector dashboard is accessible.
+- [ ] Pipeline run is accepted and visible in state.
+- [ ] System status remains healthy after MCP checks.
 
 ## Troubleshooting
 
-### Docker Daemon Not Running
-```powershell
-Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"
-Start-Sleep -Seconds 15
-docker ps
+### Missing API authorization
+```bash
+test -n "$HEADY_API_KEY" && echo "HEADY_API_KEY is set" || echo "HEADY_API_KEY is missing"
 ```
 
-### Port Already in Use
-```powershell
-# Find process using port 5432
-netstat -ano | findstr :5432
-
-# Kill process (replace PID)
-taskkill /PID <PID> /F
+### No connectors listed
+```bash
+curl -sf https://headysystems.com/api/v1/mcp/connectors/dashboard
+curl -sf https://headysystems.com/api/v1/mcp/connectors
 ```
 
-### Container Fails to Start
-```powershell
-# Check logs
-docker-compose -f docker-compose.mcp.yml logs heady-postgres
-
-# Rebuild
-docker-compose -f docker-compose.mcp.yml down -v
-docker-compose -f docker-compose.mcp.yml up -d --build
+### Pipeline already running
+```bash
+curl -sf https://headycloud.com/api/pipeline/state \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
-
-### Permission Issues
-Run PowerShell as Administrator or configure Docker Desktop permissions.
-
-## Common Commands
-
-```powershell
-# Stop services
-.\scripts\stop-docker-mcp.ps1
-
-# Stop and remove volumes
-.\scripts\stop-docker-mcp.ps1 -RemoveVolumes
-
-# Restart specific service
-docker-compose -f docker-compose.mcp.yml restart heady-postgres
-
-# View resource usage
-docker stats
-
-# Backup database
-docker exec heady-postgres pg_dump -U postgres heady > backup.sql
-
-# Restore database
-docker exec -i heady-postgres psql -U postgres heady < backup.sql
-```
-
-## Next Steps
-
-1. Review `DOCKER_MCP_QUICKSTART.md` for detailed usage guide
-2. Explore MCP services in `docker-compose.mcp.yml`
-3. Customize `.env` for your environment
-4. Integrate with HeadySync for full ecosystem synchronization
-5. Monitor services with `docker stats` and `check-mcp-health.ps1`
-
-## Support Resources
-
-- **Docker Documentation**: https://docs.docker.com/
-- **Docker Compose**: https://docs.docker.com/compose/
-- **PostgreSQL**: https://www.postgresql.org/docs/
-- **Redis**: https://redis.io/documentation
-- **MCP Protocol**: https://modelcontextprotocol.io/
 
 ---
 
-**Workflow Version**: 1.0
-**Last Updated**: 2024
-**Status**: Production Ready
+**Workflow Version**: 2.0
+**Status**: Cloud-only

@@ -15,114 +15,100 @@
 <!-- HEADY_BRAND:END -->
 
 ---
-description: Integrate and synchronize all Windsurf workspaces
+description: Integrate and verify Heady cloud workspaces via APIs
 ---
 
 # Workspace Integration Protocol
 
 ## Overview
-Unified integration of all Heady Windsurf worktrees for coordinated development.
+Unified integration of Heady repositories and services using cloud APIs only.
 
-## Active Worktrees
+## Active Cloud Repositories
 
-| Worktree | Path | Purpose |
-|----------|------|---------|
-| **Heady** | `C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052` | Core Heady system |
-| **CascadeProjects** | `C:\Users\erich\.windsurf\worktrees\CascadeProjects\CascadeProjects-4aa75052` | Project workspace |
-| **Projects** | `C:\Users\erich\.windsurf\worktrees\Projects\Projects-4ce25b33` | Bootstrap scripts and infrastructure |
+| Repository | Purpose |
+|------------|---------|
+| `HeadySystems/Heady` | Core Heady system |
+| `HeadyMe/Heady` | Personal layer integration |
+| `HeadyConnection/Heady` | Cross-layer bridge |
+| `HeadySystems/sandbox` | Experimental validation |
 
 ## Integration Steps
 
-### 1. Verify Worktree Status
-```powershell
-# Check all worktrees are accessible
-$worktrees = @(
-    "C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052",
-    "C:\Users\erich\.windsurf\worktrees\CascadeProjects\CascadeProjects-4aa75052",
-    "C:\Users\erich\.windsurf\worktrees\Projects\Projects-4ce25b33"
-)
-
-foreach ($wt in $worktrees) {
-    if (Test-Path $wt) {
-        Write-Host "✅ $wt" -ForegroundColor Green
-    } else {
-        Write-Host "❌ $wt" -ForegroundColor Red
-    }
-}
+### 1. Verify cloud services
+// turbo
+```bash
+curl -sf https://headysystems.com/api/health
+curl -sf https://headycloud.com/api/health
+curl -sf https://headyconnection.com/api/health
 ```
 
-### 2. Sync Git State Across Worktrees
-```powershell
+### 2. Verify cloud layer routing
+```bash
+curl -sf https://headycloud.com/api/layer \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+curl -sf https://headycloud.com/api/pulse \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+```
+
+### 3. Run HCAutoBuild across cloud repos
+```bash
 # // turbo
-foreach ($wt in $worktrees) {
-    Push-Location $wt
-    git fetch --all --prune
-    git status --short
-    Pop-Location
-}
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
 ```
 
-### 3. Run HCAutoBuild Across All Workspaces
-```powershell
-# // turbo
-node "C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052\src\hc_autobuild.js"
+### 4. Validate orchestration state
+// turbo
+```bash
+curl -sf https://headysystems.com/api/system/status
+curl -sf https://headysystems.com/api/nodes
+curl -sf https://headysystems.com/api/v1/orchestrator/state
+curl -sf https://headysystems.com/api/registry
 ```
 
-### 4. Validate Shared Dependencies
-```powershell
-# Check for shared package versions
-$packageFiles = Get-ChildItem -Path $worktrees -Filter "package.json" -Recurse -Depth 2
-foreach ($pkg in $packageFiles) {
-    Write-Host "📦 $($pkg.FullName)" -ForegroundColor Cyan
-}
-```
-
-### 5. Link Shared Modules (Optional)
-```powershell
-# For monorepo-style linking
-cd "C:\Users\erich\.windsurf\worktrees\Heady\Heady-4aa75052"
-pnpm link --global
+### 5. Validate MCP and chat layers
+// turbo
+```bash
+curl -sf https://headysystems.com/api/mcp/status
+curl -sf https://headysystems.com/api/v1/chat/stats
 ```
 
 ## Cross-Workspace Communication
 
-### Shared Configuration Files
+### Shared Cloud Configuration
 - `.windsurfrules` - AI behavior rules
 - `.windsurf/workflows/*.md` - Workflow definitions
 - `render.yaml` - Infrastructure as code
 
-### Shared Scripts
-- `hc_autobuild.js` - Multi-workspace build
-- `recon.js` - Task analysis
-- `heady-automated-workflow.ps1` - Full orchestration
+### Shared APIs
+- `https://headycloud.com/api/pipeline/*` - Build and deploy orchestration
+- `https://headysystems.com/api/v1/orchestrator/*` - Goal orchestration
+- `https://headysystems.com/api/mcp/*` - MCP integration state
 
 ## Verification Checklist
 
-- [ ] All worktrees accessible
-- [ ] Git remotes synchronized
-- [ ] Dependencies installed
-- [ ] Build scripts passing
-- [ ] Shared configs aligned
+- [ ] Core cloud services healthy
+- [ ] Active layer and pulse endpoints responding
+- [ ] Pipeline run accepted
+- [ ] Orchestrator and node status available
+- [ ] MCP and chat layers responding
 
 ## Troubleshooting
 
-### Worktree Not Found
-```powershell
-# List git worktrees from main repo
-git worktree list
-
-# Add missing worktree
-git worktree add <path> <branch>
+### API authorization failure
+```bash
+test -n "$HEADY_API_KEY" && echo "HEADY_API_KEY is set" || echo "HEADY_API_KEY is missing"
 ```
 
-### Dependency Conflicts
-```powershell
-# Clean and reinstall
-pnpm store prune
-pnpm install --force
+### Pipeline already running
+```bash
+curl -sf https://headycloud.com/api/pipeline/state \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
 ## Notes
 - Always run integration after major changes
-- Use `/hc-autobuild` workflow for builds
+- Use `/hc-autobuild` workflow for build execution
 - Check HeadyLens dashboard for status

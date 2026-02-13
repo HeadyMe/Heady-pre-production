@@ -1,180 +1,88 @@
 ---
-description: HCFullPipeline - Archive current repos to pre-production and rebuild from scratch
+description: HCFullPipeline - cloud-only archive, rebuild, and verification
 ---
 
-# HCFullPipeline: Archive & Rebuild Protocol
+# HCFullPipeline: Cloud Rebuild Protocol
 
 ## Overview
-Archives all current Heady repos to `*-pre-production` variants on GitHub, then scaffolds a clean project from scratch with proper structure, no merge conflicts, and modern tooling.
+Runs archive/rebuild orchestration as a cloud-only workflow through branded APIs.
 
 ## Prerequisites
-- GitHub CLI (`gh`) authenticated with access to HeadySystems, HeadyMe, HeadyConnection orgs
-- Node.js 20+ and Python 3.12+
-- All local changes committed and pushed
+- `HEADY_API_KEY` is set.
 
-## Phase 1: Pre-Flight Checks
+## Phase 1: Pre-Flight Health and Readiness
 
-1. Verify all changes are committed and pushed to all remotes:
-```powershell
+1. Verify service health:
 // turbo
-git status
-git log --oneline origin/main..HEAD
+```bash
+curl -sf https://headysystems.com/api/health
+curl -sf https://headycloud.com/api/health
+curl -sf https://headyconnection.com/api/health
 ```
 
-2. Verify GitHub CLI is authenticated:
-```powershell
+2. Verify system state before run:
 // turbo
-gh auth status
+```bash
+curl -sf https://headysystems.com/api/system/status
+curl -sf https://headysystems.com/api/nodes
+curl -sf https://headysystems.com/api/v1/orchestrator/state
 ```
 
-3. Create a local backup tag for safety:
-```powershell
-git tag -a pre-production-archive -m "Archive point before HCFullPipeline rebuild"
-git push origin pre-production-archive
-git push heady-me pre-production-archive
-git push heady-sys pre-production-archive
-```
+## Phase 2: Inspect Pipeline Configuration
 
-## Phase 2: Archive Repos to Pre-Production
-
-4. Run the archive script to rename all GitHub repos:
-```powershell
-.\scripts\hc-archive-to-preproduction.ps1
-```
-
-This renames (via GitHub API):
-| Current Repo | Archived To |
-|---|---|
-| `HeadySystems/Heady` | `HeadySystems/Heady-pre-production` |
-| `HeadyMe/Heady` | `HeadyMe/Heady-pre-production` |
-| `HeadyConnection/Heady` | `HeadyConnection/Heady-pre-production` |
-| `HeadySystems/sandbox` | `HeadySystems/sandbox-pre-production` |
-
-5. Verify archives exist:
-```powershell
+3. Validate configured pipeline and DAG:
 // turbo
-gh repo list HeadySystems --json name --jq '.[].name'
-gh repo list HeadyMe --json name --jq '.[].name'
+```bash
+curl -sf https://headycloud.com/api/pipeline/config
+curl -sf https://headycloud.com/api/pipeline/dag
 ```
 
-## Phase 3: Create Fresh Repos
+## Phase 3: Execute HCFullPipeline Run
 
-6. Create new empty repos on GitHub:
-```powershell
-gh repo create HeadySystems/Heady --public --description "Heady Systems - Sacred Geometry Architecture"
-gh repo create HeadyMe/Heady --public --description "HeadyMe - Personal Heady Instance"
-gh repo create HeadyConnection/Heady --public --description "HeadyConnection - Cross-System Bridge"
-gh repo create HeadySystems/sandbox --public --description "Heady Sandbox - Experimental Features"
+4. Trigger pipeline run:
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
-## Phase 4: Scaffold Fresh Project
-
-7. Run the scaffold script from a clean directory:
-```powershell
-.\scripts\hc-scaffold-fresh.ps1 -OutputPath C:\Users\erich\Heady-Fresh
-```
-
-This creates:
-```
-Heady-Fresh/
-├── .github/
-│   ├── workflows/ci.yml
-│   └── copilot-instructions.md
-├── .windsurf/
-│   └── workflows/
-├── backend/
-│   ├── python_worker/
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.ts
-├── src/
-│   ├── agents/
-│   ├── hc_pipeline.js
-│   ├── hc_claude_agent.js
-│   └── heady_maid.js
-├── configs/
-├── scripts/
-├── HeadyAcademy/
-├── .gitignore
-├── .env.example
-├── Dockerfile
-├── docker-compose.yml
-├── heady-manager.js
-├── package.json
-├── render.yaml
-└── README.md
-```
-
-## Phase 5: Migrate Core Logic
-
-8. Copy essential business logic from the archive (not raw files — clean rewrites):
-   - `heady-manager.js` → Modularized into route files
-   - `src/hc_pipeline.js` → Keep pipeline engine
-   - `src/agents/` → Keep agent handlers
-   - `HeadyAcademy/` → Keep academy structure
-   - `configs/` → Keep YAML configs
-   - `scripts/` → Keep essential scripts (Heady-Sync, layers, hc.ps1)
-
-9. Review and validate the fresh project:
-```powershell
+5. Monitor pipeline state until completion:
 // turbo
-cd C:\Users\erich\Heady-Fresh
-npm install
-npm run build
-npm start
+```bash
+curl -sf https://headycloud.com/api/pipeline/state \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+curl -sf https://headycloud.com/api/pipeline/history \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
-## Phase 6: Push Fresh Project to All Repos
+## Phase 4: Validate Rebuild Outcome
 
-10. Initialize git and push to all fresh repos:
-```powershell
-cd C:\Users\erich\Heady-Fresh
-git init
-git add .
-git commit -m "v3.0.0: HCFullPipeline fresh start - Sacred Geometry reborn"
-git remote add origin git@github.com:HeadySystems/Heady.git
-git remote add heady-me git@github.com:HeadyMe/Heady.git
-git remote add heady-sys git@github.com:HeadySystems/Heady.git
-git remote add heady-conn git@github.com:HeadyConnection/Heady.git
-git remote add sandbox git@github.com:HeadySystems/sandbox.git
-git push -u origin main
-git push heady-me main
-git push heady-conn main
-git push sandbox main
+6. Confirm orchestration and cluster status:
+// turbo
+```bash
+curl -sf https://headysystems.com/api/v1/orchestrator/state
+curl -sf https://headysystems.com/api/cluster/state
+curl -sf https://headysystems.com/api/registry
 ```
 
-## Phase 7: Swap Local Workspace
-
-11. Replace local workspace:
-```powershell
-Rename-Item C:\Users\erich\Heady C:\Users\erich\Heady-archived
-Rename-Item C:\Users\erich\Heady-Fresh C:\Users\erich\Heady
+7. Confirm generated site and service status:
+// turbo
+```bash
+curl -sf https://headysystems.com/api/v1/sites/status
+curl -sf https://headysystems.com/api/health
+curl -sf https://headycloud.com/api/health
+curl -sf https://headyconnection.com/api/health
 ```
 
-12. Verify everything works:
-```powershell
-cd C:\Users\erich\Heady
-npm install
-node heady-manager.js
-# Test: https://headysystems.com/api/health
+## Rollback / Recovery
+
+If any phase fails:
+1. Inspect pipeline errors:
+```bash
+curl -sf https://headycloud.com/api/pipeline/state/full \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
-
-## Phase 8: Post-Rebuild
-
-13. Re-deploy to Render.com (render.yaml already in fresh project)
-14. Update Windsurf workspace paths if needed
-15. Run HeadySync to verify all remotes are in sync:
-```powershell
-.\scripts\Heady-Sync.ps1
+2. Re-run after remediation:
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
-
-## Rollback Plan
-If anything goes wrong:
-1. Pre-production repos still exist with all history
-2. Local `C:\Users\erich\Heady-archived` has the full workspace
-3. Tag `pre-production-archive` marks the exact commit
-4. Rename repos back via `gh repo rename`

@@ -15,121 +15,129 @@
 <!-- HEADY_BRAND:END -->
 
 ---
-description: Automated Checkpoint & Build System (HCAutoBuild)
+description: Automated cloud checkpoint and build workflow (HCAutoBuild)
 ---
 
 # /autobuild Workflow
 
 ## Purpose
-This workflow initiates the HCAutoBuild automated checkpoint and build system. It monitors workspaces for 100% functionality, automatically creates checkpoints, and manages the complete build pipeline until all systems are operational.
+This workflow initiates HCAutoBuild through cloud APIs, verifies readiness, and confirms system-wide health without local commands.
 
 ## Pipeline Stages
-1. **Prep** - Stage changes, install dependencies
-2. **Commit** - Create checkpoint commit
-3. **Push** - Distribute to remotes
-4. **Verify** - Validate deployment and builds
-5. **Fix** - Auto-remediate issues if detected
-6. **Report** - Generate detailed status report
-7. **Standby** - Enter monitoring mode when at 100%
+1. **Prep** - Validate cloud health and orchestration readiness
+2. **Run** - Trigger HCAutoBuild pipeline execution
+3. **Monitor** - Track state, checkpoints, and run history
+4. **Verify** - Validate nodes, cluster, registry, and MCP status
+5. **Report** - Capture final state and readiness score
 
-## Shortcut Commands
+## Cloud Commands
 
-### Basic Usage
-```powershell
-# Run single build cycle
-hc -a hb
-
-# Start continuous monitoring
-hc -a hb -Continuous
-
-# Force checkpoint even if not 100%
-hc -a hb -ForceCheckpoint
-
-# View status only
-hc -a hb -StatusOnly
+### 1) Trigger single build cycle
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
 ```
 
-### Direct PowerShell
-```powershell
-# Navigate to workspace and run
-.\hc_autobuild.ps1
-
-# With options
-.\hc_autobuild.ps1 -Continuous
-.\hc_autobuild.ps1 -ForceCheckpoint
-.\hc_autobuild.ps1 -StatusOnly
+### 2) Monitor run state
+```bash
+curl -sf https://headycloud.com/api/pipeline/state \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+curl -sf https://headycloud.com/api/pipeline/history \
+  -H "Authorization: Bearer $HEADY_API_KEY"
 ```
 
 ## System Behavior
 
 ### When at 100% Functionality
-- ✅ Automatic checkpoint created
-- ✅ System enters standby mode
-- ✅ Awaits changes to restart cycle
-- ✅ Status report generated
+- ✅ Pipeline run completes successfully
+- ✅ Checkpoints are recorded in pipeline state/history
+- ✅ System status remains healthy
+- ✅ Node and cluster readiness stay stable
 
 ### When Below 100% Functionality
-- ⚠️ Issues logged and displayed
-- 🔧 Auto-fix attempts applied
-- 📋 Pending tasks enumerated
-- 🔄 Continuous monitoring (if enabled)
+- ⚠️ Pipeline reports errors in run state/full logs
+- 🔧 Orchestrator can re-run goal-based remediation
+- 📋 Node/cluster/registry diagnostics identify blockers
+- 🔄 Health and readiness endpoints remain monitorable
 
 ## Expected Output
 
 ### Success State
 ```
-╔══════════════════════════════════════════════════════════════╗
-║              HCAutoBuild Status Report                       ║
-╠══════════════════════════════════════════════════════════════╣
-║ Workspace: Heady-cbd7dddf                                    ║
-║   Functionality: 100% ✓                                      ║
-║   Fully Functional: YES ✓                                    ║
-║   Status: ALL SYSTEMS OPERATIONAL ✓                          ║
-╚══════════════════════════════════════════════════════════════╝
+{
+  "status": "completed",
+  "readiness": 100,
+  "pipeline": "autobuild",
+  "result": "all systems operational"
+}
 ```
 
 ### Active State (Tasks Pending)
 ```
-╠══════════════════════════════════════════════════════════════╣
-║ Workspace: Heady-cbd7dddf                                    ║
-║   Functionality: 85% (Good)                                  ║
-║   Pending Tasks:                                             ║
-║     • 3 file(s) with uncommitted changes                     ║
-║     • node_modules not installed                             ║
-╚══════════════════════════════════════════════════════════════╝
-SYSTEM REQUIRES ATTENTION - TASKS PENDING
+{
+  "status": "running",
+  "currentStageId": "verify",
+  "pending": ["node-readiness", "cluster-health"],
+  "result": "requires attention"
+}
 ```
 
 ## Integration Points
 
-### Existing Scripts
-- `commit_and_build.ps1` - Local build cycle
-- `nexus_deploy.ps1` - Multi-remote distribution
-- `render.yaml` - Infrastructure validation
+### Core APIs
+- `https://headycloud.com/api/pipeline/run` - Trigger HCAutoBuild
+- `https://headycloud.com/api/pipeline/state` - Current run state
+- `https://headycloud.com/api/pipeline/history` - Run history
+- `https://headysystems.com/api/system/status` - Global status
+- `https://headysystems.com/api/nodes` - Node status
+- `https://headysystems.com/api/cluster/state` - Cluster readiness
+- `https://headysystems.com/api/registry` - Capability inventory
+- `https://headysystems.com/api/mcp/status` - MCP integration status
 
 ### Checkpoint Registry
-- Location: `.heady/checkpoints.json`
-- Tracks last 20 checkpoints per workspace
-- Includes timestamp, commit hash, functionality score
+- Exposed through `pipeline/state` and `pipeline/history`
+- Includes stage status, timestamps, and run metrics
+- Supports readiness verification and troubleshooting
 
 ## Troubleshooting
 
 ### If Build Fails
-1. Check `.heady/autobuild.log` for details
-2. Run with `-StatusOnly` to diagnose
-3. Address pending tasks manually
-4. Re-run with `-ForceCheckpoint` if needed
+1. Check full run state:
+```bash
+curl -sf https://headycloud.com/api/pipeline/state/full \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+```
+2. Check pipeline log:
+```bash
+curl -sf https://headycloud.com/api/pipeline/log \
+  -H "Authorization: Bearer $HEADY_API_KEY"
+```
+3. Verify service status:
+```bash
+curl -sf https://headysystems.com/api/system/status
+curl -sf https://headysystems.com/api/nodes
+curl -sf https://headysystems.com/api/cluster/state
+```
+4. Re-run pipeline:
+```bash
+curl -sf -X POST https://headycloud.com/api/pipeline/run \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $HEADY_API_KEY" \
+  -d '{"pipeline":"autobuild"}'
+```
 
-### If Continuous Mode Won't Start
-- Verify PowerShell execution policy: `Get-ExecutionPolicy`
-- Check workspace paths in script configuration
-- Ensure git remotes are configured
+### If authorization fails
+```bash
+test -n "$HEADY_API_KEY" && echo "HEADY_API_KEY is set" || echo "HEADY_API_KEY is missing"
+```
 
 ## Exit Codes
-- `0` - Success (STANDBY state reached)
-- `1` - Issues pending (ACTIVE state)
+- `0` - Pipeline completed with healthy status
+- `1` - Pipeline incomplete, degraded, or failed
 
 ## Related Workflows
 - `/verify-system` - Health and status verification
-- `/deploy-system` - Manual deployment trigger
-- `/setup-local` - Initial workspace setup
+- `/heady-health` - Full cloud health verification
+- `/auto-deploy` - Cloud deployment trigger and checks
