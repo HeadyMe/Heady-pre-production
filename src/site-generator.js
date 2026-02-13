@@ -163,7 +163,7 @@ const CROSS_DOMAIN_MAP = {
     headycheck: { outLabel: 'Monitored by HeadyCheck', inLabel: 'Monitors this platform', outVerb: 'View health', inVerb: 'See what\'s monitored' },
     headymcp: { outLabel: 'Extended via MCP', inLabel: 'Extends this platform', outVerb: 'Browse connectors', inVerb: 'See the platform' },
     headycloud: { outLabel: 'Deployed via HeadyCloud', inLabel: 'Deploys this platform', outVerb: 'View layers', inVerb: 'See what\'s deployed' },
-    headyweb: { outLabel: 'Accessible via HeadyWeb', inLabel: 'Powered by this platform', outVerb: 'Open browser', inVerb: 'See the engine' },
+    headyos: { outLabel: 'Accessible via HeadyOS', inLabel: 'Powered by this platform', outVerb: 'Open IDE', inVerb: 'See the engine' },
   },
   headyconnection: {
     headybuddy: { outLabel: 'Created Buddy', inLabel: 'A program of the nonprofit', outVerb: 'Meet our companion', inVerb: 'Learn the philosophy' },
@@ -171,7 +171,7 @@ const CROSS_DOMAIN_MAP = {
   },
   headybuddy: {
     headybot: { outLabel: 'Chat via HeadyBot', inLabel: 'Buddy is the brain', outVerb: 'Try web chat', inVerb: 'Learn about Buddy' },
-    headyweb: { outLabel: 'Browse with Buddy', inLabel: 'Buddy lives in the sidebar', outVerb: 'Open HeadyWeb', inVerb: 'Meet Buddy' },
+    headyos: { outLabel: 'Build with Buddy', inLabel: 'Buddy lives in the IDE', outVerb: 'Open HeadyOS', inVerb: 'Meet Buddy' },
   },
 };
 
@@ -179,7 +179,7 @@ const CROSS_DOMAIN_MAP = {
 const WEBSITE_CLASSES = {
   brand_public: {
     label: 'Public Brand Site',
-    members: ['headysystems', 'headyconnection', 'headybuddy', 'headyweb'],
+    members: ['headysystems', 'headyconnection', 'headybuddy', 'headyos'],
     pattern: 'Differentiated look/voice, shared ecosystem section, cross-links explaining relationships'
   },
   product_surface: {

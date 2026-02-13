@@ -127,6 +127,7 @@ const HEADY_ADMIN_SCRIPT = process.env.HEADY_ADMIN_SCRIPT || path.join(__dirname
 const HEADY_PYTHON_BIN = process.env.HEADY_PYTHON_BIN || "python";
 
 const app = express();
+app.set('trust proxy', true);
 
 // Security middleware
 app.use(helmet({
@@ -178,7 +179,45 @@ function readJsonFileSafe(filePath) {
 }
 
 
-// Serve Frontend Build (React)
+// ─── Domain-based branded site routing (MUST come before static middleware) ───
+const SITES_DIR = path.join(__dirname, "sites");
+const BRANDED_DOMAIN_MAP = {
+  'headysystems.com': 'headysystems',
+  'headybuddy.org': 'headybuddy',
+  'headycheck.com': 'headycheck',
+  'headyio.com': 'headyio',
+  'headymcp.com': 'headymcp',
+  'headybot.com': 'headybot',
+  'headycloud.com': 'headycloud',
+  'headyconnection.com': 'headyconnection',
+  'headyos.com': 'headyos',
+};
+
+function resolveHost(req) {
+  const raw = req.headers['x-forwarded-host'] || req.headers['x-heady-domain'] || req.hostname || req.headers['host'] || '';
+  return raw.split(',')[0].trim().replace(/:\d+$/, '').replace(/^www\./, '').toLowerCase();
+}
+
+// Serve branded site if the request hostname matches a known domain
+app.use((req, res, next) => {
+  // Skip API routes and /sites/ path-based access
+  if (req.path.startsWith('/api/') || req.path.startsWith('/sites')) return next();
+  const host = resolveHost(req);
+  const siteKey = BRANDED_DOMAIN_MAP[host];
+  if (!siteKey) return next();
+  const siteDir = path.join(SITES_DIR, siteKey);
+  if (!fs.existsSync(siteDir)) return next();
+  // Serve the requested file, or fall back to index.html for SPA-style
+  const requestedFile = req.path === '/' ? 'index.html' : req.path.replace(/^\//, '');
+  const filePath = path.join(siteDir, requestedFile);
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) return res.sendFile(filePath);
+  // Fall back to site's index.html
+  const indexPath = path.join(siteDir, 'index.html');
+  if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
+  next();
+});
+
+// Static assets fallback (only reached if no branded domain matched)
 const frontendBuildPath = path.join(__dirname, "frontend", "build");
 if (fs.existsSync(frontendBuildPath)) {
   app.use(express.static(frontendBuildPath));
@@ -1770,26 +1809,14 @@ app.get("/system-registry.json", (req, res) => {
   }
 });
 
-// ─── Domain-based website serving ────────────────────────────────────
-const SITES_PATH = path.join(__dirname, "sites");
-const SITE_NAMES = ['headysystems', 'headybuddy', 'headycheck', 'headyio', 'headymcp', 'headybot', 'headycloud', 'headyconnection', 'headyos'];
-const domainSiteMap = {
-  'headysystems.com': 'headysystems',
-  'headybuddy.org': 'headybuddy',
-  'headycheck.com': 'headycheck',
-  'headyio.com': 'headyio',
-  'headymcp.com': 'headymcp',
-  'headybot.com': 'headybot',
-  'headycloud.com': 'headycloud',
-  'headyconnection.com': 'headyconnection',
-  'headyos.com': 'headyos',
-};
+// ─── Path-based site access (debugging / direct access) ─────────────
+const SITE_NAMES = Object.values(BRANDED_DOMAIN_MAP);
 
 // Path-based access: /sites/:siteName serves the site regardless of hostname
 app.get('/sites/:siteName', (req, res) => {
   const siteName = req.params.siteName.replace(/\.(com|org)$/, '');
   if (!SITE_NAMES.includes(siteName)) return res.status(404).json({ error: 'Unknown site', available: SITE_NAMES });
-  const indexPath = path.join(SITES_PATH, siteName, 'index.html');
+  const indexPath = path.join(SITES_DIR, siteName, 'index.html');
   if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
   res.status(404).json({ error: 'Site not generated yet. POST /api/v1/orchestrator/generate-sites to build.' });
 });
@@ -1797,11 +1824,11 @@ app.get('/sites/:siteName', (req, res) => {
 // Site index: list all available sites with links
 app.get('/sites', (req, res) => {
   const sites = SITE_NAMES.map(name => {
-    const indexPath = path.join(SITES_PATH, name, 'index.html');
+    const indexPath = path.join(SITES_DIR, name, 'index.html');
     const exists = fs.existsSync(indexPath);
     return {
       name,
-      domain: Object.entries(domainSiteMap).find(([, v]) => v === name)?.[0],
+      domain: Object.entries(BRANDED_DOMAIN_MAP).find(([, v]) => v === name)?.[0],
       path: `/sites/${name}`,
       generated: exists,
       sizeBytes: exists ? fs.statSync(indexPath).size : 0
@@ -1815,25 +1842,9 @@ const mcpRouter = require('./src/mcp/headymcp-router');
 
 // Detect headymcp.com domain and route to MCP router
 app.use((req, res, next) => {
-  const host = req.headers['x-heady-domain'] || req.hostname || '';
+  const host = resolveHost(req);
   if (host.includes('headymcp.com')) {
     return mcpRouter(req, res, next);
-  }
-  next();
-});
-
-// Domain-based routing (production — when DNS points domains here)
-app.use((req, res, next) => {
-  const host = req.headers['x-heady-domain'] || req.hostname || '';
-  const siteDir = domainSiteMap[host];
-  if (siteDir && !req.path.startsWith('/api/') && !req.path.startsWith('/sites')) {
-    const sitePath = path.join(SITES_PATH, siteDir);
-    if (fs.existsSync(sitePath)) {
-      const filePath = path.join(sitePath, req.path === '/' ? 'index.html' : req.path);
-      if (fs.existsSync(filePath)) return res.sendFile(filePath);
-      const indexPath = path.join(sitePath, 'index.html');
-      if (fs.existsSync(indexPath)) return res.sendFile(indexPath);
-    }
   }
   next();
 });
