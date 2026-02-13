@@ -58,6 +58,7 @@ const { DriftDetectionEngine } = require(path.join(__dirname, "src", "drift"));
 const { IntentResolver, ConfirmationPolicy } = require(path.join(__dirname, "src", "chat", "intent-resolver"));
 const { ConnectorRegistry } = require(path.join(__dirname, "src", "mcp", "connector-registry"));
 const { SoulOrchestrator } = require(path.join(__dirname, "src", "soul", "soul-orchestrator"));
+const { HeadyModelProvider, ArenaMergeEngine } = require(path.join(__dirname, "src", "heady-ide"));
 
 // ─── Boot HCFullPipeline with all subsystems ─────────────────────────────
 // 1. Load pipeline configs (YAML → circuit breakers, stage DAG)
@@ -1746,6 +1747,146 @@ app.use((req, res, next) => {
     }
   }
   next();
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// HEADY AI-IDE — MODEL PROVIDER & ARENA MERGE ENGINE
+// ═══════════════════════════════════════════════════════════════════════
+
+const headyModelProvider = new HeadyModelProvider({
+  baseUrl: "https://headysystems.com",
+  defaultModel: "heady-full",
+});
+
+const arenaMergeEngine = new ArenaMergeEngine({
+  repoRoot: path.join(__dirname),
+  baseBranch: "main",
+});
+
+// ─── Model Provider Endpoints ────────────────────────────────────────
+
+app.get("/api/ide/models", (req, res) => {
+  const filter = {};
+  if (req.query.tier) filter.tier = req.query.tier;
+  if (req.query.capability) filter.capability = req.query.capability;
+  res.json({
+    models: headyModelProvider.listModels(filter),
+    active: headyModelProvider.activeModel,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/ide/models/:modelId", (req, res) => {
+  const model = headyModelProvider.getModel(req.params.modelId);
+  if (!model) return res.status(404).json({ error: `Model '${req.params.modelId}' not found` });
+  res.json(model);
+});
+
+app.post("/api/ide/models/select", (req, res) => {
+  const { modelId } = req.body;
+  if (!modelId) return res.status(400).json({ error: "modelId required" });
+  const result = headyModelProvider.selectModel(modelId);
+  if (result.error) return res.status(400).json(result);
+  res.json(result);
+});
+
+app.post("/api/ide/models/route", async (req, res) => {
+  const { type, payload } = req.body;
+  if (!type) return res.status(400).json({ error: "type required" });
+  const result = await headyModelProvider.routeRequest({ type, payload });
+  if (result.error) return res.status(400).json(result);
+  res.json(result);
+});
+
+app.get("/api/ide/models/capability/:capability", (req, res) => {
+  res.json({
+    capability: req.params.capability,
+    models: headyModelProvider.getModelsForCapability(req.params.capability),
+  });
+});
+
+app.get("/api/ide/stats", (req, res) => {
+  res.json({
+    modelProvider: headyModelProvider.getStats(),
+    arena: arenaMergeEngine.getStats(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// ─── Arena Merge Engine Endpoints ────────────────────────────────────
+
+app.post("/api/ide/arena/create", (req, res) => {
+  const { task, models } = req.body;
+  if (!task || !task.description) return res.status(400).json({ error: "task.description required" });
+  if (!models || !Array.isArray(models) || models.length < 1) {
+    return res.status(400).json({ error: "models array required (min 1)" });
+  }
+  const session = arenaMergeEngine.createSession(task, models);
+  res.json({ session: { id: session.id, state: session.state, models: session.models.length } });
+});
+
+app.post("/api/ide/arena/:sessionId/setup", async (req, res) => {
+  try {
+    const result = await arenaMergeEngine.setupBranches(req.params.sessionId);
+    if (result.error) return res.status(404).json(result);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/ide/arena/:sessionId/record", async (req, res) => {
+  const { modelId, workResult } = req.body;
+  if (!modelId) return res.status(400).json({ error: "modelId required" });
+  const result = await arenaMergeEngine.recordModelWork(req.params.sessionId, modelId, workResult || {});
+  if (result.error) return res.status(404).json(result);
+  res.json(result);
+});
+
+app.post("/api/ide/arena/:sessionId/evaluate", async (req, res) => {
+  try {
+    const result = await arenaMergeEngine.evaluateBranches(req.params.sessionId);
+    if (result.error) return res.status(404).json(result);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/ide/arena/:sessionId/merge", async (req, res) => {
+  try {
+    const result = await arenaMergeEngine.executeMerge(req.params.sessionId, req.body);
+    if (result.error) return res.status(400).json(result);
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/ide/arena/:sessionId/cleanup", async (req, res) => {
+  const result = await arenaMergeEngine.cleanup(req.params.sessionId);
+  if (result.error) return res.status(404).json(result);
+  res.json(result);
+});
+
+app.get("/api/ide/arena/:sessionId", (req, res) => {
+  const session = arenaMergeEngine.getSession(req.params.sessionId);
+  if (!session) return res.status(404).json({ error: "Session not found" });
+  res.json(session);
+});
+
+app.get("/api/ide/arena", (req, res) => {
+  const filter = {};
+  if (req.query.state) filter.state = req.query.state;
+  res.json({
+    sessions: arenaMergeEngine.listSessions(filter),
+    stats: arenaMergeEngine.getStats(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get("/api/ide/arena/history/all", (req, res) => {
+  res.json({ history: arenaMergeEngine.getHistory() });
 });
 
 // ═══════════════════════════════════════════════════════════════════════
