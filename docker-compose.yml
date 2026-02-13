@@ -20,6 +20,47 @@
 version: '3.8'
 
 services:
+  # HeadySoul GPU Node
+  headysoul:
+    build: ./services/headysoul
+    container_name: headysoul
+    ports: ["8000:8000"]
+    env_file: .env
+    restart: always
+    runtime: nvidia
+    networks:
+      - heady-hybrid
+
+  # JULES AI Node
+  jules:
+    build: ./services/jules
+    container_name: jules
+    ports: ["8001:8001"]
+    env_file: .env
+    restart: always
+    networks:
+      - heady-hybrid
+
+  # OBSERVER Monitor Node
+  observer:
+    build: ./services/observer
+    container_name: observer
+    ports: ["8002:8002"]
+    env_file: .env
+    restart: always
+    networks:
+      - heady-hybrid
+
+  # ATLAS Knowledge Node
+  atlas:
+    build: ./services/atlas
+    container_name: atlas
+    ports: ["8003:8003"]
+    env_file: .env
+    restart: always
+    networks:
+      - heady-hybrid
+
   # Primary Heady Manager (Local)
   heady-manager-local:
     build:
