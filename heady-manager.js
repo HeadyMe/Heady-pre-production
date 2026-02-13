@@ -37,10 +37,13 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const fsp = require("fs").promises;
 const { spawn } = require("child_process");
 const rateLimit = require("express-rate-limit");
 const compression = require("compression");
 const helmet = require("helmet");
+const { ScalableCache } = require(path.join(__dirname, "src", "scalable-cache"));
+const { PythonWorkerPool } = require(path.join(__dirname, "src", "python-worker-pool"));
 
 const { HEADY_MAID_CONFIG } = require(path.join(__dirname, "src", "heady_maid"));
 const { pipeline: hcPipeline, registerTaskHandler, RunStatus } = require(path.join(__dirname, "src", "hc_pipeline"));
@@ -136,45 +139,31 @@ app.use(cors({
   credentials: true
 }));
 
-// Rate limiting
+// Rate limiting — scaled for high concurrency
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // Limit each IP to 1000 requests per windowMs
+  max: 10000, // 10x increase: 10,000 requests per IP per window
   message: { error: "Too many requests from this IP" },
   standardHeaders: true,
   legacyHeaders: false
 });
 app.use('/api/', limiter);
 
-// Enhanced caching middleware
-const cache = new Map();
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+// Scalable cache — Redis-backed when REDIS_URL is set, in-memory fallback
+const cache = new ScalableCache({ maxSize: 10000, ttlMs: 5 * 60 * 1000, prefix: "heady:" });
 
-function getCachedData(key) {
-  const item = cache.get(key);
-  if (item && Date.now() - item.timestamp < CACHE_TTL) {
-    return item.data;
-  }
-  cache.delete(key);
-  return null;
-}
-
-function setCachedData(key, data) {
-  cache.set(key, { data, timestamp: Date.now() });
-  // Evict stale entries first, then cap at 100
-  if (cache.size > 100) {
-    const now = Date.now();
-    for (const [k, v] of cache) {
-      if (now - v.timestamp >= CACHE_TTL) cache.delete(k);
-    }
-    // If still over limit, drop oldest inserted
-    if (cache.size > 100) {
-      const oldestKey = cache.keys().next().value;
-      cache.delete(oldestKey);
-    }
+// Async JSON file reader (non-blocking)
+async function readJsonFileAsync(filePath) {
+  try {
+    const raw = await fsp.readFile(filePath, "utf8");
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error(`Error reading file ${filePath}:`, error.message);
+    return null;
   }
 }
 
+// Sync fallback for boot-time only (not in request handlers)
 function readJsonFileSafe(filePath) {
   try {
     const raw = fs.readFileSync(filePath, "utf8");
@@ -201,29 +190,30 @@ app.get("/api/health", (req, res) => {
     version: "2.0.0",
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    cache: {
-      size: cache.size,
-      maxSize: 100
+    cache: cache.getStats(),
+    workers: {
+      pid: process.pid,
+      conductorPool: conductorPool.getStats(),
     }
   }));
 });
 
-app.get("/api/registry", (req, res) => {
+app.get("/api/registry", async (req, res) => {
   const cacheKey = 'registry';
-  const cachedData = getCachedData(cacheKey);
+  const cachedData = await cache.get(cacheKey);
 
   if (cachedData) {
     return res.json(cachedData);
   }
 
   const registryPath = path.join(__dirname, "heady-registry.json");
-  const registry = readJsonFileSafe(registryPath);
+  const registry = await readJsonFileAsync(registryPath);
 
   if (!registry) {
     return res.status(404).json({ error: "Registry not found or invalid" });
   }
 
-  setCachedData(cacheKey, registry);
+  await cache.set(cacheKey, registry);
   res.json(registry);
 });
 
@@ -231,22 +221,22 @@ app.get("/api/maid/config", (req, res) => {
   res.json(HEADY_MAID_CONFIG);
 });
 
-app.get("/api/maid/inventory", (req, res) => {
+app.get("/api/maid/inventory", async (req, res) => {
   const cacheKey = 'inventory';
-  const cachedData = getCachedData(cacheKey);
+  const cachedData = await cache.get(cacheKey);
 
   if (cachedData) {
     return res.json(cachedData);
   }
 
   const inventoryPath = path.join(__dirname, ".heady-memory", "inventory", "inventory.json");
-  const inventory = readJsonFileSafe(inventoryPath);
+  const inventory = await readJsonFileAsync(inventoryPath);
 
   if (!inventory) {
     return res.status(404).json({ error: "Inventory not found or invalid" });
   }
 
-  setCachedData(cacheKey, inventory);
+  await cache.set(cacheKey, inventory);
   res.json(inventory);
 });
 
@@ -325,63 +315,17 @@ app.post("/api/conductor/node", async (req, res) => {
   }
 });
 
-// Enhanced Python conductor execution with timeout and error handling
+// Python worker pool — persistent, queued, max 4 concurrent (replaces per-request spawning)
+const conductorPool = new PythonWorkerPool({
+  maxWorkers: parseInt(process.env.HEADY_PYTHON_WORKERS, 10) || 4,
+  timeoutMs: 30000,
+  scriptPath: path.join(__dirname, "HeadyAcademy", "HeadyConductor.py"),
+  pythonBin: process.env.HEADY_PYTHON_BIN || "python",
+});
+
+// Backward-compatible wrapper
 function runPythonConductor(args, timeoutMs = 30000) {
-  return new Promise((resolve, reject) => {
-    const conductorPath = path.join(__dirname, "HeadyAcademy", "HeadyConductor.py");
-    const pythonBin = process.env.HEADY_PYTHON_BIN || "python";
-
-    // Verify conductor script exists
-    if (!fs.existsSync(conductorPath)) {
-      return reject(new Error(`HeadyConductor script not found at ${conductorPath}`));
-    }
-
-    const proc = spawn(pythonBin, [conductorPath, ...args], {
-      stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...process.env, PYTHONUNBUFFERED: '1' }
-    });
-
-    let stdout = "";
-    let stderr = "";
-
-    const timeout = setTimeout(() => {
-      proc.kill('SIGTERM');
-      reject(new Error(`HeadyConductor execution timeout after ${timeoutMs}ms`));
-    }, timeoutMs);
-
-    proc.stdout.on("data", (data) => {
-      stdout += data.toString();
-    });
-
-    proc.stderr.on("data", (data) => {
-      stderr += data.toString();
-    });
-
-    proc.on("close", (code) => {
-      clearTimeout(timeout);
-
-      if (code !== 0) {
-        reject(new Error(`HeadyConductor exited with code ${code}: ${stderr}`));
-      } else {
-        try {
-          // Extract JSON from output (last JSON object)
-          const jsonMatch = stdout.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            resolve(JSON.parse(jsonMatch[0]));
-          } else {
-            resolve({ output: stdout, stderr });
-          }
-        } catch (e) {
-          resolve({ output: stdout, stderr, parseError: e.message });
-        }
-      }
-    });
-
-    proc.on('error', (error) => {
-      clearTimeout(timeout);
-      reject(new Error(`Failed to start HeadyConductor: ${error.message}`));
-    });
-  });
+  return conductorPool.execute(args, timeoutMs);
 }
 
 // Error handling middleware
@@ -398,25 +342,26 @@ app.use((error, req, res, next) => {
 const LAYERS_CONFIG_PATH = path.join(__dirname, "scripts", "heady-layers.json");
 const LAYER_STATE_PATH = path.join(__dirname, "scripts", ".heady-active-layer");
 
-function getActiveLayer() {
+async function getActiveLayer() {
   try {
     if (fs.existsSync(LAYER_STATE_PATH)) {
-      return fs.readFileSync(LAYER_STATE_PATH, "utf8").trim();
+      const content = await fsp.readFile(LAYER_STATE_PATH, "utf8");
+      return content.trim();
     }
-    const config = readJsonFileSafe(LAYERS_CONFIG_PATH);
+    const config = await readJsonFileAsync(LAYERS_CONFIG_PATH);
     return config ? config.default_layer : "local";
   } catch {
     return "local";
   }
 }
 
-function getLayerConfig() {
-  return readJsonFileSafe(LAYERS_CONFIG_PATH);
+async function getLayerConfig() {
+  return readJsonFileAsync(LAYERS_CONFIG_PATH);
 }
 
-app.get("/api/layer", (req, res) => {
-  const activeId = getActiveLayer();
-  const config = getLayerConfig();
+app.get("/api/layer", async (req, res) => {
+  const activeId = await getActiveLayer();
+  const config = await getLayerConfig();
   const layer = config && config.layers ? config.layers[activeId] : null;
 
   res.json({
@@ -432,9 +377,9 @@ app.get("/api/layer", (req, res) => {
   });
 });
 
-app.post("/api/layer/switch", (req, res) => {
+app.post("/api/layer/switch", async (req, res) => {
   const { layer } = req.body;
-  const config = getLayerConfig();
+  const config = await getLayerConfig();
 
   if (!config || !config.layers || !config.layers[layer]) {
     return res.status(400).json({
@@ -444,7 +389,7 @@ app.post("/api/layer/switch", (req, res) => {
   }
 
   try {
-    fs.writeFileSync(LAYER_STATE_PATH, layer, "utf8");
+    await fsp.writeFile(LAYER_STATE_PATH, layer, "utf8");
     const layerInfo = config.layers[layer];
     res.json({
       success: true,
@@ -459,9 +404,9 @@ app.post("/api/layer/switch", (req, res) => {
 });
 
 // System pulse endpoint
-app.get("/api/pulse", (req, res) => {
-  const activeLayer = getActiveLayer();
-  const config = getLayerConfig();
+app.get("/api/pulse", async (req, res) => {
+  const activeLayer = await getActiveLayer();
+  const config = await getLayerConfig();
   const layer = config && config.layers ? config.layers[activeLayer] : null;
 
   res.json({
@@ -483,12 +428,12 @@ app.get("/api/pulse", (req, res) => {
 
 const REGISTRY_PATH = path.join(__dirname, ".heady", "registry.json");
 
-function loadRegistry() {
-  return readJsonFileSafe(REGISTRY_PATH) || { nodes: {}, tools: {}, workflows: {}, services: {}, skills: {} };
+async function loadRegistry() {
+  return (await readJsonFileAsync(REGISTRY_PATH)) || { nodes: {}, tools: {}, workflows: {}, services: {}, skills: {} };
 }
 
-function saveRegistry(data) {
-  fs.writeFileSync(REGISTRY_PATH, JSON.stringify(data, null, 2), "utf8");
+async function saveRegistry(data) {
+  await fsp.writeFile(REGISTRY_PATH, JSON.stringify(data, null, 2), "utf8");
 }
 
 // ─── Monte Carlo Global: Bind + Auto-Run ─────────────────────────────
@@ -504,8 +449,8 @@ mcGlobal.bind({
 mcGlobal.startAutoRun();
 
 // Get all nodes and their status
-app.get("/api/nodes", (req, res) => {
-  const reg = loadRegistry();
+app.get("/api/nodes", async (req, res) => {
+  const reg = await loadRegistry();
   const nodes = Object.entries(reg.nodes || {}).map(([key, node]) => ({
     id: key,
     ...node
@@ -519,29 +464,29 @@ app.get("/api/nodes", (req, res) => {
 });
 
 // Get single node status
-app.get("/api/nodes/:nodeId", (req, res) => {
-  const reg = loadRegistry();
+app.get("/api/nodes/:nodeId", async (req, res) => {
+  const reg = await loadRegistry();
   const node = reg.nodes[req.params.nodeId.toUpperCase()];
   if (!node) return res.status(404).json({ error: `Node '${req.params.nodeId}' not found` });
   res.json({ id: req.params.nodeId.toUpperCase(), ...node });
 });
 
 // Activate a single node
-app.post("/api/nodes/:nodeId/activate", (req, res) => {
-  const reg = loadRegistry();
+app.post("/api/nodes/:nodeId/activate", async (req, res) => {
+  const reg = await loadRegistry();
   const nodeId = req.params.nodeId.toUpperCase();
   if (!reg.nodes[nodeId]) return res.status(404).json({ error: `Node '${nodeId}' not found` });
 
   reg.nodes[nodeId].status = "active";
   reg.nodes[nodeId].last_invoked = new Date().toISOString();
-  saveRegistry(reg);
+  await saveRegistry(reg);
 
   res.json({ success: true, node: nodeId, status: "active", activated_at: reg.nodes[nodeId].last_invoked });
 });
 
 // Activate ALL nodes (production mode)
-app.post("/api/nodes/activate-all", (req, res) => {
-  const reg = loadRegistry();
+app.post("/api/nodes/activate-all", async (req, res) => {
+  const reg = await loadRegistry();
   const ts = new Date().toISOString();
   const activated = [];
 
@@ -556,7 +501,7 @@ app.post("/api/nodes/activate-all", (req, res) => {
   reg.metadata.environment = "production";
   reg.metadata.all_nodes_active = true;
 
-  saveRegistry(reg);
+  await saveRegistry(reg);
 
   res.json({
     success: true,
@@ -568,22 +513,22 @@ app.post("/api/nodes/activate-all", (req, res) => {
 });
 
 // Deactivate a single node
-app.post("/api/nodes/:nodeId/deactivate", (req, res) => {
-  const reg = loadRegistry();
+app.post("/api/nodes/:nodeId/deactivate", async (req, res) => {
+  const reg = await loadRegistry();
   const nodeId = req.params.nodeId.toUpperCase();
   if (!reg.nodes[nodeId]) return res.status(404).json({ error: `Node '${nodeId}' not found` });
 
   reg.nodes[nodeId].status = "available";
-  saveRegistry(reg);
+  await saveRegistry(reg);
 
   res.json({ success: true, node: nodeId, status: "available" });
 });
 
 // Full system status (production dashboard)
-app.get("/api/system/status", (req, res) => {
-  const reg = loadRegistry();
-  const activeLayer = getActiveLayer();
-  const config = getLayerConfig();
+app.get("/api/system/status", async (req, res) => {
+  const reg = await loadRegistry();
+  const activeLayer = await getActiveLayer();
+  const config = await getLayerConfig();
   const layer = config && config.layers ? config.layers[activeLayer] : null;
 
   const nodeList = Object.entries(reg.nodes || {});
@@ -627,8 +572,8 @@ app.get("/api/system/status", (req, res) => {
 });
 
 // Production activation endpoint - activates EVERYTHING
-app.post("/api/system/production", (req, res) => {
-  const reg = loadRegistry();
+app.post("/api/system/production", async (req, res) => {
+  const reg = await loadRegistry();
   const ts = new Date().toISOString();
   const report = { nodes: [], tools: [], workflows: [], services: [] };
 
@@ -673,11 +618,11 @@ app.post("/api/system/production", (req, res) => {
     production_activated_at: ts
   };
 
-  saveRegistry(reg);
+  await saveRegistry(reg);
 
   // Switch layer state to production
   try {
-    fs.writeFileSync(LAYER_STATE_PATH, "cloud-sys", "utf8");
+    await fsp.writeFile(LAYER_STATE_PATH, "cloud-sys", "utf8");
   } catch (e) {
     console.error("Could not set production layer:", e.message);
   }
@@ -1057,12 +1002,12 @@ app.post("/api/monte-carlo/readiness", async (req, res) => {
 });
 
 // Node performance prediction
-app.post("/api/monte-carlo/nodes", (req, res) => {
+app.post("/api/monte-carlo/nodes", async (req, res) => {
   try {
     const { profiles, load, iterations } = req.body;
     if (!profiles || !load) {
       // Build defaults from registry
-      const reg = loadRegistry();
+      const reg = await loadRegistry();
       const defaultProfiles = Object.entries(reg.nodes || {}).map(([id, n]) => ({
         id,
         capacity: 10,
@@ -1218,18 +1163,18 @@ app.post("/api/config/env", (req, res) => {
   res.json({ success: true, config: cloudEnvConfig, timestamp: new Date().toISOString() });
 });
 
-app.get("/api/config/services", (req, res) => {
+app.get("/api/config/services", async (req, res) => {
   try {
-    const services = JSON.parse(fs.readFileSync(CLOUD_CONFIG_PATH, "utf8"));
-    res.json(services);
+    const raw = await fsp.readFile(CLOUD_CONFIG_PATH, "utf8");
+    res.json(JSON.parse(raw));
   } catch (err) {
     res.status(500).json({ error: "Services config not found", message: err.message });
   }
 });
 
-app.post("/api/config/services", (req, res) => {
+app.post("/api/config/services", async (req, res) => {
   try {
-    fs.writeFileSync(CLOUD_CONFIG_PATH, JSON.stringify(req.body, null, 2), "utf8");
+    await fsp.writeFile(CLOUD_CONFIG_PATH, JSON.stringify(req.body, null, 2), "utf8");
     res.json({ success: true, timestamp: new Date().toISOString() });
   } catch (err) {
     res.status(500).json({ error: "Failed to write services config", message: err.message });
@@ -1803,6 +1748,43 @@ app.use((req, res, next) => {
   next();
 });
 
+// ═══════════════════════════════════════════════════════════════════════
+// SCALING & READINESS
+// ═══════════════════════════════════════════════════════════════════════
+
+app.get("/api/scaling/readiness", (req, res) => {
+  const mem = process.memoryUsage();
+  const heapUsedPct = (mem.heapUsed / mem.heapTotal) * 100;
+  const rssBytes = mem.rss;
+  const uptimeSec = process.uptime();
+  const healthy = heapUsedPct < 90 && rssBytes < 1.5e9;
+
+  res.status(healthy ? 200 : 503).json({
+    ready: healthy,
+    pid: process.pid,
+    uptime: uptimeSec,
+    memory: {
+      heapUsedMB: Math.round(mem.heapUsed / 1e6),
+      heapTotalMB: Math.round(mem.heapTotal / 1e6),
+      rssMB: Math.round(rssBytes / 1e6),
+      heapUsedPct: heapUsedPct.toFixed(1) + "%",
+    },
+    cache: cache.getStats(),
+    conductorPool: conductorPool.getStats(),
+    scaling: {
+      clusterEnabled: process.env.HEADY_CLUSTER !== "false",
+      redisConnected: cache.redis !== null,
+      workerPid: process.pid,
+    },
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Liveness probe (lightweight, no deps)
+app.get("/api/scaling/liveness", (req, res) => {
+  res.status(200).json({ alive: true, pid: process.pid });
+});
+
 // 404 handler
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -1854,29 +1836,23 @@ const server = app.listen(PORT, () => {
   });
 });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
+// Graceful shutdown — shared cleanup
+async function gracefulShutdown(signal) {
+  console.log(`${signal} received, shutting down gracefully`);
   mcGlobal.stopAutoRun();
   soulOrchestrator.stop();
   computeCluster.stopHealthChecks();
   driftEngine.stopPeriodicScan?.();
   connectorRegistry.stopHealthChecks?.();
   if (intelligenceEngine) intelligenceEngine.stop();
+  await cache.shutdown();
   server.close(() => {
     console.log('Process terminated');
+    process.exit(0);
   });
-});
+  // Force exit after 10s if connections don't close
+  setTimeout(() => process.exit(1), 10000).unref();
+}
 
-process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
-  mcGlobal.stopAutoRun();
-  soulOrchestrator.stop();
-  computeCluster.stopHealthChecks();
-  driftEngine.stopPeriodicScan?.();
-  connectorRegistry.stopHealthChecks?.();
-  if (intelligenceEngine) intelligenceEngine.stop();
-  server.close(() => {
-    console.log('Process terminated');
-  });
-});
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));

@@ -1,10 +1,11 @@
 {
   "name": "heady-unified-system",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Heady Unified System - Sacred Geometry :: Organic Systems :: Breathing Interfaces",
   "main": "heady-manager.js",
   "scripts": {
     "start": "node heady-manager.js",
+    "start:cluster": "node cluster.js",
     "dev": "nodemon heady-manager.js",
     "backend": "npm start --prefix backend",
     "frontend": "npm start --prefix frontend",
@@ -41,6 +42,7 @@
     "express": "^4.18.2",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
+    "redis": "^4.7.0",
     "js-yaml": "^4.1.1",
     "node-cron": "^3.0.2"
   }
