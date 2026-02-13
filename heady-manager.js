@@ -59,6 +59,8 @@ const { IntentResolver, ConfirmationPolicy } = require(path.join(__dirname, "src
 const { ConnectorRegistry } = require(path.join(__dirname, "src", "mcp", "connector-registry"));
 const { SoulOrchestrator } = require(path.join(__dirname, "src", "soul", "soul-orchestrator"));
 const { HeadyModelProvider, ArenaMergeEngine } = require(path.join(__dirname, "src", "heady-ide"));
+const { HeadyServiceManifest } = require(path.join(__dirname, "src", "service-manifest"));
+const { DeterministicConfig } = require(path.join(__dirname, "src", "deterministic-config"));
 
 // ─── Boot HCFullPipeline with all subsystems ─────────────────────────────
 // 1. Load pipeline configs (YAML → circuit breakers, stage DAG)
@@ -909,18 +911,105 @@ app.get("/api/agents/claude-code/status", (req, res) => {
   res.json(agent.getStatus());
 });
 
-// Combined subsystem overview
+// ═══════════════════════════════════════════════════════════════════════
+// SERVICE MANIFEST — ALL SERVICES REGISTERED
+// ═══════════════════════════════════════════════════════════════════════
+
+const serviceManifest = new HeadyServiceManifest({
+  configPath: path.join(__dirname, "..", "config", "services.json"),
+});
+
+const deterministicConfig = new DeterministicConfig({
+  ai: {
+    temperature: parseFloat(process.env.HEADY_TEMPERATURE || "0"),
+    seed: parseInt(process.env.HEADY_SEED || "42"),
+  },
+  monteCarlo: {
+    defaultIterations: parseInt(process.env.HEADY_MONTE_CARLO_ITERATIONS || "10000"),
+  },
+});
+app.locals.deterministicConfig = deterministicConfig;
+
+// Register every live runtime module so /api/subsystems reports ALL of them
+serviceManifest.registerModule("hcPipeline", hcPipeline, { type: "pipeline", group: "execution", description: "HCFullPipeline — 9-stage deterministic build/deploy" });
+serviceManifest.registerModule("hcSupervisor", hcSupervisor, { type: "supervisor", group: "execution", description: "Agent supervisor — routes tasks to registered agents" });
+serviceManifest.registerModule("hcBrain", hcBrain, { type: "controller", group: "execution", description: "HCBrain meta-controller — readiness scoring, auto-tune" });
+serviceManifest.registerModule("hcCheckpoint", hcCheckpoint, { type: "analyzer", group: "execution", description: "Checkpoint analyzer — stage-gate validation" });
+serviceManifest.registerModule("hcReadiness", hcReadiness, { type: "evaluator", group: "execution", description: "Readiness evaluator — deploy-readiness scoring" });
+serviceManifest.registerModule("hcHealth", hcHealth, { type: "health", group: "observability", description: "Health check runner — cron-based service probes" });
+serviceManifest.registerModule("mcGlobal", mcGlobal, { type: "simulation", group: "validation", description: "Monte Carlo — always-on probabilistic scoring" });
+serviceManifest.registerModule("soulOrchestrator", soulOrchestrator, { type: "orchestrator", group: "governance", description: "SoulOrchestrator v2.0 — goal decomposition + value-driven execution" });
+serviceManifest.registerModule("driftEngine", driftEngine, { type: "detector", group: "observability", description: "Drift detection — 6-signal config/dependency/soul drift" });
+serviceManifest.registerModule("intentResolver", intentResolver, { type: "resolver", group: "companion", description: "Intent resolver — 3-stage keyword/fuzzy/LLM matching" });
+serviceManifest.registerModule("confirmationPolicy", confirmationPolicy, { type: "policy", group: "governance", description: "Confirmation policy — risk-gated action approval" });
+serviceManifest.registerModule("connectorRegistry", connectorRegistry, { type: "registry", group: "extensibility", description: "MCP connector registry — tool registration + invocation" });
+serviceManifest.registerModule("sessionManager", sessionManager, { type: "manager", group: "companion", description: "Session manager — T1/T2/T3 tiered conversation state" });
+serviceManifest.registerModule("computeCluster", computeCluster, { type: "cluster", group: "infrastructure", description: "Compute cluster — physical node routing + heartbeat" });
+serviceManifest.registerModule("colabManager", colabManager, { type: "cluster", group: "gpu", description: "Colab GPU cluster — A100/V100/T4 task routing" });
+serviceManifest.registerModule("headyModelProvider", headyModelProvider, { type: "provider", group: "ide", description: "Model provider — 7 Heady service models + external LLMs" });
+serviceManifest.registerModule("arenaMergeEngine", arenaMergeEngine, { type: "engine", group: "ide", description: "Arena merge — branch/worktree parallel evaluation" });
+serviceManifest.registerModule("cache", cache, { type: "cache", group: "infrastructure", description: "Scalable cache — Redis-backed or in-memory, 10K entries" });
+serviceManifest.registerModule("conductorPool", conductorPool, { type: "pool", group: "infrastructure", description: "Python worker pool — persistent queued HeadyConductor" });
+if (typeof intelligenceEngine !== "undefined" && intelligenceEngine) {
+  serviceManifest.registerModule("intelligenceEngine", intelligenceEngine, { type: "engine", group: "execution", description: "Intelligence Engine v1.3 — DAG scheduler, parallel allocator, speed controller" });
+}
+if (typeof siteGenerator !== "undefined" && siteGenerator) {
+  serviceManifest.registerModule("siteGenerator", siteGenerator, { type: "generator", group: "content", description: "Site generator — 9 branded domain static sites" });
+}
+
+// Expose manifest on app.locals for domain routers
+app.locals.serviceManifest = serviceManifest;
+
+// Combined subsystem overview — NOW reports ALL services
 app.get("/api/subsystems", (req, res) => {
   const readinessLast = hcReadiness.getLastEvaluation();
   const checkpointLast = hcCheckpoint.getLastRecord();
+  const manifestSummary = serviceManifest.getHCAutoFlowSummary();
+  const moduleProbes = serviceManifest.probeAllModules();
+
   res.json(mcGlobal.enrich({
     supervisor: { agentCount: hcSupervisor.agents.size, agents: Array.from(hcSupervisor.agents.keys()) },
     brain: { readinessScore: hcBrain.computeReadinessScore(), mode: hcBrain.determineMode(hcBrain.computeReadinessScore()) },
     readiness: readinessLast ? { score: readinessLast.score, mode: readinessLast.mode, timestamp: readinessLast.timestamp } : { score: null, mode: "unknown" },
     health: hcHealth.getSnapshot(),
     checkpoint: checkpointLast ? { id: checkpointLast.id, decision: checkpointLast.decision, stage: checkpointLast.stage } : null,
+    services: manifestSummary,
+    moduleHealth: moduleProbes,
     timestamp: new Date().toISOString(),
   }));
+});
+
+// Full service manifest — every single service, node, engine, domain
+app.get("/api/services/full", (req, res) => {
+  res.json(serviceManifest.getFullManifest());
+});
+
+// Full scan — probe all modules + return complete state
+app.post("/api/services/scan", (req, res) => {
+  const scan = serviceManifest.fullScan();
+  res.json(scan);
+});
+
+// HCAutoFlow summary — grouped counts for pipeline verification
+app.get("/api/services/summary", (req, res) => {
+  res.json(serviceManifest.getHCAutoFlowSummary());
+});
+
+// Deterministic execution config
+app.get("/api/config/deterministic", (req, res) => {
+  res.json(deterministicConfig.getAll());
+});
+
+app.get("/api/config/ai-params", (req, res) => {
+  res.json(deterministicConfig.getAIParams());
+});
+
+app.get("/api/config/edge", (req, res) => {
+  res.json(deterministicConfig.getEdgeConfig());
+});
+
+app.get("/api/config/gpu", (req, res) => {
+  res.json(deterministicConfig.getGPUConfig());
 });
 
 // ═══════════════════════════════════════════════════════════════════════

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HeadyOS — AI-Powered Browser</title>
-  <meta name="description" content="Browse the web with HeadyBuddy at your side. Summarize pages, research topics, generate code, and manage tasks — all from one AI-native browser shell.">
+  <title>HeadyAI-IDE — Your IDE, Your Models, Your Merge</title>
+  <meta name="description" content="Choose Heady as your AI model. Run multiple services in parallel on branches and worktrees, then arena-merge the best results — intelligently squash-merged by SoulOrchestrator.">
   <meta name="theme-color" content="#7c3aed">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
   <style>
@@ -893,7 +893,7 @@ footer a:hover { color: var(--accent); }
     <div class="wrap">
       <strong style="color:var(--accent)">Part of the Heady Ecosystem</strong>
       <span class="context-sep">/</span>
-      HeadyOS is the AI browser shell for the <a href="https://headysystems.com">Heady Systems platform</a>. <a href="https://headybuddy.org">HeadyBuddy</a> lives in the sidebar, powered by the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.
+      HeadyAI-IDE is the development surface for the <a href="https://headysystems.com">Heady Systems platform</a>. Select Heady services as AI models, powered by <a href="https://headybuddy.org">HeadyBuddy</a> and the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.
     </div>
   </div>
 
@@ -920,23 +920,23 @@ footer a:hover { color: var(--accent); }
 <text x="24" y="28" text-anchor="middle" fill="url(#lg)" font-size="16" font-weight="700" font-family="serif">&#x221e;</text>
 </svg>
         <div>
-          <div class="logo-text">HeadyOS</div>
-          <div class="logo-sub">AI Browser</div>
+          <div class="logo-text">HeadyAI-IDE</div>
+          <div class="logo-sub">AI IDE</div>
         </div>
       </a>
-      <div class="nav-links"><a href="#features">Features</a><a href="#launch">Try It</a><a href="https://headybuddy.org">Buddy</a><a href="https://headysystems.com">Platform</a><a href="https://headyio.com">Docs</a></div>
+      <div class="nav-links"><a href="#models">Models</a><a href="#arena">Arena Merge</a><a href="#architecture">Architecture</a><a href="https://headysystems.com">Platform</a><a href="https://headyio.com">Docs</a></div>
     </nav>
   </div>
 
   <div class="hero">
     <div class="wrap">
-      <div class="hero-badge"><span class="pulse-dot"></span>Browser Active</div>
-      <h1>AI-Powered Browser</h1>
-      <p class="hero-desc">Browse the web with HeadyBuddy at your side. Summarize pages, research topics, generate code, and manage tasks — all from one AI-native browser shell.</p>
-      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: browser</span> <span class="vtag">layer: user-facing</span> <span class="vtag">audience: everyone</span></div>
+      <div class="hero-badge"><span class="pulse-dot"></span>IDE Active</div>
+      <h1>Your IDE, Your Models, Your Merge</h1>
+      <p class="hero-desc">Choose Heady as your AI model. Run multiple services in parallel on branches and worktrees, then arena-merge the best results — intelligently squash-merged by SoulOrchestrator.</p>
+      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: ide</span> <span class="vtag">layer: user-facing</span> <span class="vtag">audience: developers</span></div>
       <div class="hero-btns">
-        <a href="#launch" class="btn btn-primary">Launch HeadyOS</a>
-        <a href="https://headybuddy.org" class="btn btn-ghost">Meet Buddy</a>
+        <a href="#models" class="btn btn-primary">Explore Models</a>
+        <a href="#arena" class="btn btn-ghost">See Arena Merge</a>
       </div>
     </div>
   </div>
@@ -952,48 +952,80 @@ footer a:hover { color: var(--accent); }
             <div class="system-context-vertical">Browser Vertical</div>
           </div>
         </div>
-        <div class="system-context-desc">HeadyOS is the AI browser shell for the <a href="https://headysystems.com">Heady Systems platform</a>. <a href="https://headybuddy.org">HeadyBuddy</a> lives in the sidebar, powered by the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.</div>
+        <div class="system-context-desc">HeadyAI-IDE is the development surface for the <a href="https://headysystems.com">Heady Systems platform</a>. Select Heady services as AI models, powered by <a href="https://headybuddy.org">HeadyBuddy</a> and the full intelligence stack. A program of <a href="https://headyconnection.org">HeadyConnection</a>.</div>
         
       </div>
     </div>
 
 
     
-    <section id="features">
+    <section id="models">
       <div class="wrap">
-        <h2 class="section-title">Browser Meets AI Companion</h2>
-        <p class="section-sub">Four modes, one sidebar, every page</p>
+        <h2 class="section-title">Heady as Your AI Model</h2>
+        <p class="section-sub">Select from 7 specialized Heady service models</p>
         <div class="grid g2c">
-<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4ac;</div><h3>Chat Mode</h3><p>Ask Buddy anything while browsing. Get instant answers, summaries, and explanations without leaving the page.</p></div>
-<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x2699;&#xfe0f;</div><h3>Tasks Mode</h3><p>Run deployments, trigger pipelines, manage MCP connectors, and orchestrate workflows — all from the sidebar.</p></div>
-<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4bb;</div><h3>Code Mode</h3><p>Generate, explain, and refactor code. Buddy sees the page context and can help you work with any codebase.</p></div>
-<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50d;</div><h3>Research Mode</h3><p>Summarize the current page, compare multiple sources, maintain research sessions across tabs.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x2734;&#xfe0f;</div><h3>Heady (Full Stack)</h3><p>The complete intelligence stack — SoulOrchestrator + Intelligence Engine + HeadyBuddy working together. The recommended default.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f9e0;</div><h3>HeadySoul</h3><p>Value-driven decision engine. Evaluates tasks against mission, ethics, and fairness before execution.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x26a1;</div><h3>Intelligence Engine</h3><p>DAG scheduler with critical-path optimization, parallel allocation, and zero-idle backfill.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x2728;</div><h3>HeadyBuddy</h3><p>Conversational AI companion — chat, code generation, research sessions, and summarization.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f3af;</div><h3>HeadyConductor</h3><p>Python-based orchestration for data processing, ML inference, and batch operations.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f680;</div><h3>HCFullPipeline</h3><p>9-stage build/deploy/verify pipeline with Monte Carlo confidence scoring.</p></div>
 </div>
-<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">HeadyOS merges browser and AI companion into one experience. <a href="https://headybuddy.org" style="color:var(--accent)">HeadyBuddy</a> is always aware of your current page and context.</p>
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">Each model routes through the <a href="https://headysystems.com" style="color:var(--accent)">Heady Systems</a> API. Choose one or combine them in Arena Merge mode.</p>
       </div>
     </section>
 
     <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
-    <section id="launch">
+    <section id="arena">
       <div class="wrap">
-        <h2 class="section-title">Architecture</h2>
-        <p class="section-sub">How HeadyOS connects everything</p>
+        <h2 class="section-title">Arena Merge</h2>
+        <p class="section-sub">Intelligent squash merging of parallel branches</p>
         <div class="eco-block">
-  <div class="eco-label">HeadyOS Stack</div>
-  <div class="code-block" style="font-size:12px">HeadyOS (browser shell UI)
-  ├── Viewport — multi-tab page rendering
-  ├── Tab Manager — create, switch, close tabs
-  ├── HeadyBuddy Sidebar — Chat / Tasks / Code / Research
-  ├── Context Engine — page URL, selection, clipboard awareness
-  └── HeadySystems API — intent resolution, health, orchestration
-       ├── 3-stage intent matching (keyword, fuzzy, LLM)
-       ├── MCP tool invocation
-       └── HeadySoul governance (value-weighted decisions)</div>
+  <div class="eco-label">Arena Merge Flow</div>
+  <div class="code-block" style="font-size:12px">1. Submit Task → "Refactor auth module"
+2. Arena creates branch + worktree per model
+   ├── arena/session-abc/heady-full     (worktree A)
+   ├── arena/session-abc/heady-soul     (worktree B)
+   └── arena/session-abc/heady-buddy    (worktree C)
+3. Each model works independently on its branch
+4. SoulOrchestrator evaluates each branch’s output
+   ├── Completeness (25pts) — did it address all files?
+   ├── Minimality (25pts) — fewest unnecessary changes
+   ├── Correctness (25pts) — tests pass, no errors
+   └── Consistency (25pts) — matches task expectations
+5. Winner squash-merged into target branch
+6. Losing branches archived for learning</div>
 </div>
 <div class="grid g3c" style="margin-top:var(--sp-md)">
-<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f310;</div><h3>Desktop App</h3><p>Tauri v2 shell with system WebView. Tray icon, global hotkey, always-on-top overlay.</p></div>
-<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50c;</div><h3>Browser Extension</h3><p>Manifest V3 sidepanel for Chrome, Edge, Brave, Firefox. Same Buddy, existing browser.</p></div>
-<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x2601;&#xfe0f;</div><h3>Cloudflare Worker</h3><p>Edge-deployed web app. Zero-latency static hosting with API proxy to HeadySystems.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f3c6;</div><h3>Squash Winner</h3><p>Clear winner by 15+ points? All their commits become one clean squash merge on your target branch.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f352;</div><h3>Cherry-Pick Best</h3><p>Close scores? Cherry-pick the best commits from multiple branches into one composite result.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f9e9;</div><h3>Composite Merge</h3><p>Near-tie? Select individual files from different models’ branches for the optimal combination.</p></div>
+</div>
+      </div>
+    </section>
+
+    <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
+    <section id="architecture">
+      <div class="wrap">
+        <h2 class="section-title">Architecture</h2>
+        <p class="section-sub">How HeadyAI-IDE connects the stack</p>
+        <div class="eco-block">
+  <div class="eco-label">HeadyAI-IDE Stack</div>
+  <div class="code-block" style="font-size:12px">HeadyAI-IDE (Windsurf-next base)
+  ├── Model Provider — 7 Heady service models + external LLMs
+  ├── Arena Merge Engine — branch/worktree orchestration
+  ├── HeadyBuddy Sidebar — Chat / Tasks / Code / Research
+  ├── Context Engine — workspace, file, selection awareness
+  └── HeadySystems API
+       ├── SoulOrchestrator (evaluation + governance)
+       ├── Intelligence Engine (DAG scheduling)
+       ├── MCP tool invocation
+       └── Monte Carlo confidence scoring</div>
+</div>
+<div class="grid g3c" style="margin-top:var(--sp-md)">
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4bb;</div><h3>IDE Surface</h3><p>Built on Windsurf-next. Full editor, terminal, file explorer with Heady model integration.</p></div>
+<div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50c;</div><h3>MCP Protocol</h3><p>Extend any model with <a href="https://headymcp.com">HeadyMCP</a> connectors — databases, APIs, tools, services.</p></div>
+<div class="card"><div class="card-icon" style="background:#7c3aed20">&#x2601;&#xfe0f;</div><h3>Cloud Deploy</h3><p>Arena results deploy through <a href="https://headycloud.com">HeadyCloud</a> with full pipeline verification.</p></div>
 </div>
       </div>
     </section>
@@ -1002,11 +1034,11 @@ footer a:hover { color: var(--accent); }
     <div class="wrap">
       <div class="eco-block">
         <div class="eco-label">Related in the Heady Ecosystem</div>
-        <div class="eco-text">AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.</div>
+        <div class="eco-text">HeadyAI-IDE — choose Heady as your AI model, arena-merge branches intelligently, and build with the full Heady intelligence stack.</div>
         <div class="eco-links">
-          <a href="https://headybuddy.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>About HeadyBuddy</strong><br><small style="color:var(--text3)">The AI companion powering the sidebar</small></span></a>
-          <a href="https://headysystems.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Platform</strong><br><small style="color:var(--text3)">The intelligence engine behind HeadyOS</small></span></a>
-          <a href="https://headybot.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Chat directly</strong><br><small style="color:var(--text3)">Talk to Buddy without a browser shell</small></span></a>
+          <a href="https://headybuddy.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>About HeadyBuddy</strong><br><small style="color:var(--text3)">The AI companion available as a model</small></span></a>
+          <a href="https://headysystems.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Platform</strong><br><small style="color:var(--text3)">The intelligence engine powering all models</small></span></a>
+          <a href="https://headymcp.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>MCP Connectors</strong><br><small style="color:var(--text3)">Extend models with any tool or service</small></span></a>
           <a href="https://headyconnection.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Our mission</strong><br><small style="color:var(--text3)">The nonprofit governing everything</small></span></a>
         </div>
       </div>
@@ -1105,7 +1137,7 @@ footer a:hover { color: var(--accent); }
       </div>
       <div class="footer-eco-item" style="background:var(--surface2);border-radius:8px">
         <a href="https://headyos.com">🌐 HeadyOS (you are here)</a>
-        <small>AI-powered browser shell with HeadyBuddy sidebar — browse, research, code, and chat in one place.</small>
+        <small>HeadyAI-IDE — choose Heady as your AI model, arena-merge branches intelligently, and build with the full Heady intelligence stack.</small>
       </div>
       </div>
       <div class="footer-bottom">
