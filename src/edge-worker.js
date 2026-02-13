@@ -16,29 +16,39 @@
  * Deploy: wrangler deploy src/edge-worker.js --name heady-edge
  */
 
-const ORIGIN_MAP = {
-  "headysystems.com":   "https://heady-manager-headysystems.onrender.com",
-  "headycloud.com":     "https://heady-manager-headyme.onrender.com",
-  "headyconnection.com":"https://heady-manager-headyconnection.onrender.com",
-  "headybot.com":       "https://heady-manager-headysystems.onrender.com",
-  "headymcp.com":       "https://heady-manager-headysystems.onrender.com",
-  "headycheck.com":     "https://heady-manager-headysystems.onrender.com",
-  "headyio.com":        "https://heady-manager-headysystems.onrender.com",
-  "headybuddy.org":     "https://heady-manager-headysystems.onrender.com",
-  "headyos.com":        "https://heady-manager-headysystems.onrender.com",
-};
+// Origin resolution: Worker fetches from the branded domain itself.
+// Cloudflare DNS (set to DNS-only / gray-cloud for the origin CNAME)
+// resolves to the actual compute backend. NO infrastructure URLs here.
+// Override per-domain via wrangler.toml [vars] ORIGIN_HEADYSYSTEMS etc.
+function resolveOrigin(hostname, env) {
+  const envKey = `ORIGIN_${hostname.replace(/[.\-]/g, "_").toUpperCase()}`;
+  if (env && env[envKey]) return env[envKey];
+  // Default: route through headysystems.com as primary API gateway
+  const GATEWAY = {
+    "headysystems.com": "https://headysystems.com",
+    "headycloud.com": "https://headycloud.com",
+    "headyconnection.com": "https://headyconnection.com",
+    "headybot.com": "https://headysystems.com",
+    "headymcp.com": "https://headysystems.com",
+    "headycheck.com": "https://headysystems.com",
+    "headyio.com": "https://headysystems.com",
+    "headybuddy.org": "https://headysystems.com",
+    "headyos.com": "https://headysystems.com",
+  };
+  return GATEWAY[hostname] || "https://headysystems.com";
+}
 
 const CACHE_RULES = [
-  { pattern: /^\/(index\.html)?$/,           ttl: 86400, swr: 3600,  type: "static"  },
-  { pattern: /^\/(sites|_shared)\//,         ttl: 86400, swr: 3600,  type: "static"  },
-  { pattern: /^\/api\/health$/,              ttl: 10,    swr: 5,     type: "health"  },
-  { pattern: /^\/api\/scaling\/liveness$/,   ttl: 5,     swr: 2,     type: "health"  },
-  { pattern: /^\/api\/system\/status$/,      ttl: 15,    swr: 5,     type: "status"  },
-  { pattern: /^\/api\/subsystems$/,          ttl: 30,    swr: 10,    type: "api"     },
-  { pattern: /^\/api\/services\//,           ttl: 30,    swr: 10,    type: "api"     },
-  { pattern: /^\/api\/monte-carlo\/status$/, ttl: 30,    swr: 10,    type: "api"     },
-  { pattern: /^\/system-registry\.json$/,    ttl: 300,   swr: 60,    type: "static"  },
-  { pattern: /^\/api\//,                     ttl: 0,     swr: 0,     type: "dynamic" },
+  { pattern: /^\/(index\.html)?$/, ttl: 86400, swr: 3600, type: "static" },
+  { pattern: /^\/(sites|_shared)\//, ttl: 86400, swr: 3600, type: "static" },
+  { pattern: /^\/api\/health$/, ttl: 10, swr: 5, type: "health" },
+  { pattern: /^\/api\/scaling\/liveness$/, ttl: 5, swr: 2, type: "health" },
+  { pattern: /^\/api\/system\/status$/, ttl: 15, swr: 5, type: "status" },
+  { pattern: /^\/api\/subsystems$/, ttl: 30, swr: 10, type: "api" },
+  { pattern: /^\/api\/services\//, ttl: 30, swr: 10, type: "api" },
+  { pattern: /^\/api\/monte-carlo\/status$/, ttl: 30, swr: 10, type: "api" },
+  { pattern: /^\/system-registry\.json$/, ttl: 300, swr: 60, type: "static" },
+  { pattern: /^\/api\//, ttl: 0, swr: 0, type: "dynamic" },
 ];
 
 const SECURITY_HEADERS = {
@@ -84,8 +94,8 @@ async function handleRequest(request, env, ctx) {
     return new Response(null, { status: 204, headers: CORS_HEADERS });
   }
 
-  // Resolve origin
-  const origin = ORIGIN_MAP[hostname];
+  // Resolve origin via branded domains (NO infrastructure URLs)
+  const origin = resolveOrigin(hostname, env);
   if (!origin) {
     return new Response(JSON.stringify({ error: "Unknown domain", domain: hostname }), {
       status: 404,
