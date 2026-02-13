@@ -15,6 +15,7 @@ from fastapi import FastAPI
 from pyngrok import ngrok
 import uvicorn
 import aiohttp
+import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 from fastapi.middleware.cors import CORSMiddleware
 
