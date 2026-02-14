@@ -951,6 +951,20 @@ app.get("/api/agents/claude-code/status", (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════
+// HEADY AI-IDE — MODEL PROVIDER & ARENA MERGE ENGINE (must be before manifest registration)
+// ═══════════════════════════════════════════════════════════════════════
+
+const headyModelProvider = new HeadyModelProvider({
+  baseUrl: "https://headysystems.com",
+  defaultModel: "heady-full",
+});
+
+const arenaMergeEngine = new ArenaMergeEngine({
+  repoRoot: path.join(__dirname),
+  baseBranch: "main",
+});
+
+// ═══════════════════════════════════════════════════════════════════════
 // SERVICE MANIFEST — ALL SERVICES REGISTERED
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -1847,20 +1861,6 @@ app.use((req, res, next) => {
     return mcpRouter(req, res, next);
   }
   next();
-});
-
-// ═══════════════════════════════════════════════════════════════════════
-// HEADY AI-IDE — MODEL PROVIDER & ARENA MERGE ENGINE
-// ═══════════════════════════════════════════════════════════════════════
-
-const headyModelProvider = new HeadyModelProvider({
-  baseUrl: "https://headysystems.com",
-  defaultModel: "heady-full",
-});
-
-const arenaMergeEngine = new ArenaMergeEngine({
-  repoRoot: path.join(__dirname),
-  baseBranch: "main",
 });
 
 // ─── Model Provider Endpoints ────────────────────────────────────────
