@@ -1075,8 +1075,10 @@ const SITES = {
       { l: 'MCP', h: 'https://headymcp.com' },
       { l: 'Buddy', h: 'https://headybuddy.org' }
     ],
-    primaryCta: { l: 'View Architecture', h: '#arch' },
-    secondaryCta: { l: 'API Reference', h: 'https://headyio.com' },
+    primaryCta: { l: 'Sign In', h: 'https://headysystems.com/dashboard' },
+    secondaryCta: { l: 'View Pricing', h: '#pricing' },
+    tertiaryCta: { l: 'View Architecture', h: '#arch' },
+    quaternaryCta: { l: 'API Reference', h: 'https://headyio.com' },
     relatedLinks: [
       { label: 'Read the API docs', url: 'https://headyio.com', desc: 'Full endpoint reference' },
       { label: 'Talk to Buddy', url: 'https://headybot.com', desc: 'Ask anything about the platform' },
@@ -1126,10 +1128,126 @@ HeadyBuddy (user-facing companion on all devices)</div>
         id: 'why', title: 'Why Sacred Geometry?', sub: 'Organic systems that breathe, heal, and self-correct',
         unique: true,
         body: `<div class="grid g2c">
-<div class="card"><h3>Organic, Not Mechanical</h3><p>Our systems follow natural patterns \u2014 Fibonacci spacing, golden ratio rhythms, fractal self-similarity. The same values govern code, services, and the organization itself.</p></div>
+<div class="card"><h3>Organic, Not Mechanical</h3><p>Our systems follow natural patterns — Fibonacci spacing, golden ratio rhythms, fractal self-similarity. The same values govern code, services, and the organization itself.</p></div>
 <div class="card"><h3>Self-Correcting</h3><p>6-signal drift detection, Monte Carlo validation on every deploy, and HeadySoul governance ensure the system heals itself before problems reach users.</p></div>
 </div>
-<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">Revenue from Heady Systems products directly funds <a href="https://headyconnection.org" style="color:var(--accent)">HeadyConnection's nonprofit programs</a> \u2014 expanding access to underserved communities worldwide.</p>`
+<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">Revenue from Heady Systems products directly funds <a href="https://headyconnection.org" style="color:var(--accent)">HeadyConnection's nonprofit programs</a> — expanding access to underserved communities worldwide.</p>`
+      },
+      {
+        id: 'pricing', title: 'Choose Your Plan', sub: 'Start free, upgrade as you grow. All plans include core HeadyBuddy features.',
+        unique: true,
+        body: `<div class="grid g3c" style="margin-top:var(--sp-lg)">
+<div class="card pricing-card">
+  <div class="pricing-header">
+    <h3>Free</h3>
+    <div class="price">$0<span>/month</span></div>
+  </div>
+  <ul class="pricing-features">
+    <li> Basic HeadyBuddy chat</li>
+    <li> 100 API calls/month</li>
+    <li> 100MB storage</li>
+    <li> Community support</li>
+    <li class="disabled"> Advanced models</li>
+    <li class="disabled"> Arena Merge</li>
+  </ul>
+  <div class="pricing-action">
+    <a href="https://headysystems.com/dashboard" class="btn btn-secondary">Get Started</a>
+  </div>
+</div>
+
+<div class="card pricing-card featured">
+  <div class="pricing-badge">Most Popular</div>
+  <div class="pricing-header">
+    <h3>Pro</h3>
+    <div class="price">$29<span>/month</span></div>
+    <div class="price-note">or $290/year (save 2 months)</div>
+  </div>
+  <ul class="pricing-features">
+    <li> Unlimited HeadyBuddy</li>
+    <li> 10,000 API calls/month</li>
+    <li> 10GB storage</li>
+    <li> All Heady models</li>
+    <li> Arena Merge parallel dev</li>
+    <li> Priority support</li>
+  </ul>
+  <div class="pricing-action">
+    <button onclick="subscribe('pro', 'monthly')" class="btn btn-primary">Start Pro Trial</button>
+  </div>
+</div>
+
+<div class="card pricing-card">
+  <div class="pricing-header">
+    <h3>Enterprise</h3>
+    <div class="price">$99<span>/month</span></div>
+    <div class="price-note">or $990/year (save 2 months)</div>
+  </div>
+  <ul class="pricing-features">
+    <li> Everything in Pro</li>
+    <li> Unlimited API calls</li>
+    <li> 100GB storage</li>
+    <li> Custom model training</li>
+    <li> Dedicated support</li>
+    <li> White-label options</li>
+    <li> SLA guarantee</li>
+  </ul>
+  <div class="pricing-action">
+    <button onclick="subscribe('enterprise', 'monthly')" class="btn btn-secondary">Contact Sales</button>
+  </div>
+</div>
+</div>
+
+<div style="text-align:center;margin-top:var(--sp-lg);color:var(--text2)">
+  <p>All plans include: <strong>Secure authentication</strong> • <strong>Usage analytics</strong> • <strong>API access</strong></p>
+  <p style="margin-top:var(--sp-sm)"><a href="#faq">Have questions?</a> • <a href="https://headyio.com">Read our docs</a></p>
+</div>
+
+<style>
+.pricing-card { position: relative; text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
+.pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px var(--glow); }
+.pricing-card.featured { border: 2px solid var(--accent); box-shadow: 0 8px 32px var(--glow); }
+.pricing-badge { position: absolute; top: -12px; right: 20px; background: var(--accent); color: var(--bg); padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.pricing-header { padding: var(--sp-lg) var(--sp-md) var(--sp-md); }
+.pricing-header h3 { font-size: 24px; font-weight: 700; margin-bottom: var(--sp-xs); }
+.price { font-size: 48px; font-weight: 800; color: var(--accent); line-height: 1; }
+.price span { font-size: 18px; font-weight: 400; color: var(--text2); }
+.price-note { margin-top: var(--sp-xs); color: var(--text2); font-size: 14px; }
+.pricing-features { list-style: none; padding: 0 var(--sp-md); margin: 0; }
+.pricing-features li { padding: var(--sp-sm) 0; border-bottom: 1px solid var(--border); text-align: left; color: var(--text); }
+.pricing-features li:last-child { border-bottom: none; }
+.pricing-features li.disabled { color: var(--text3); text-decoration: line-through; }
+.pricing-action { padding: var(--sp-md); }
+</style>
+
+<script>
+async function subscribe(plan, interval) {
+  const token = localStorage.getItem('accessToken');
+  if (!token) {
+    window.location.href = 'https://headysystems.com/dashboard?redirect=pricing&plan=' + plan + '&interval=' + interval;
+    return;
+  }
+  
+  try {
+    const res = await fetch('/api/payments/subscribe', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({ plan, interval })
+    });
+    
+    if (res.ok) {
+      const { checkoutUrl } = await res.json();
+      window.location.href = checkoutUrl;
+    } else {
+      const error = await res.json();
+      alert(error.error || 'Failed to create subscription');
+    }
+  } catch (error) {
+    alert('Error: ' + error.message);
+  }
+}
+</script>`
       }
     ]
   },
@@ -1801,6 +1919,8 @@ ${contextBarHtml}
       <div class="hero-btns">
         <a href="${site.primaryCta.h}" class="btn btn-primary">${site.primaryCta.l}</a>
         <a href="${site.secondaryCta.h}" class="btn btn-ghost">${site.secondaryCta.l}</a>
+        ${site.tertiaryCta ? `<a href="${site.tertiaryCta.h}" class="btn btn-ghost">${site.tertiaryCta.l}</a>` : ''}
+        ${site.quaternaryCta ? `<a href="${site.quaternaryCta.h}" class="btn btn-ghost">${site.quaternaryCta.l}</a>` : ''}
       </div>
     </div>
   </div>
