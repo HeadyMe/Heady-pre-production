@@ -7,11 +7,11 @@
     "build": "electron-builder"
   },
   "dependencies": {
-    "electron": "^28.0.0",
+    "electron": "^35.7.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "electron-builder": "^24.0.0"
+    "electron-builder": "^26.7.0"
   }
 }
