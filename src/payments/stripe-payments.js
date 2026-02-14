@@ -226,7 +226,7 @@ class HeadyPayments {
   // Handle successful payment
   async handlePaymentSucceeded(invoice) {
     const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
-    const user = Array.from(this.auth.users.values()).find(u => 
+    const user = Array.from(this.auth.users.values()).find(u =>
       u.metadata.stripeCustomerId === subscription.customer
     );
 
@@ -248,7 +248,7 @@ class HeadyPayments {
   // Handle failed payment
   async handlePaymentFailed(invoice) {
     const subscription = await stripe.subscriptions.retrieve(invoice.subscription);
-    const user = Array.from(this.auth.users.values()).find(u => 
+    const user = Array.from(this.auth.users.values()).find(u =>
       u.metadata.stripeCustomerId === subscription.customer
     );
 
@@ -260,7 +260,7 @@ class HeadyPayments {
 
   // Handle subscription update
   async handleSubscriptionUpdated(subscription) {
-    const user = Array.from(this.auth.users.values()).find(u => 
+    const user = Array.from(this.auth.users.values()).find(u =>
       u.metadata.stripeCustomerId === subscription.customer
     );
 
@@ -273,7 +273,7 @@ class HeadyPayments {
 
   // Handle subscription cancellation
   async handleSubscriptionDeleted(subscription) {
-    const user = Array.from(this.auth.users.values()).find(u => 
+    const user = Array.from(this.auth.users.values()).find(u =>
       u.metadata.stripeCustomerId === subscription.customer
     );
 
@@ -342,13 +342,13 @@ class HeadyPayments {
     }
 
     const tier = this.auth.getSubscriptionInfo(user);
-    
+
     return {
-      current: user.usage,
+      current: user.usage || { apiCalls: 0, storage: 0 },
       limits: tier.limits,
       percentages: {
-        apiCalls: (user.usage.apiCalls / tier.limits.apiCalls * 100).toFixed(1),
-        storage: (user.usage.storage / tier.limits.storage * 100).toFixed(1)
+        apiCalls: ((user.usage?.apiCalls || 0) / tier.limits.apiCalls * 100).toFixed(1),
+        storage: ((user.usage?.storage || 0) / tier.limits.storage * 100).toFixed(1)
       }
     };
   }
