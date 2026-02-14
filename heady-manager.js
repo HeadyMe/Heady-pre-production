@@ -988,7 +988,7 @@ app.locals.deterministicConfig = deterministicConfig;
 
 // ─── User Authentication & Payment Systems ─────────────────────────────
 const userAuth = new HeadyUserAuth();
-const payments = new HeadyPayments();
+const payments = new HeadyPayments(userAuth);
 const userDashboard = new HeadyUserDashboard();
 
 // Expose for middleware and routes

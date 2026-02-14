@@ -61,8 +61,8 @@ const SUBSCRIPTION_PLANS = {
 };
 
 class HeadyPayments {
-  constructor() {
-    this.auth = new HeadyUserAuth();
+  constructor(authInstance) {
+    this.auth = authInstance;
     this.webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   }
 
