@@ -983,34 +983,7 @@ const deterministicConfig = new DeterministicConfig({
 });
 app.locals.deterministicConfig = deterministicConfig;
 
-// Register every live runtime module so /api/subsystems reports ALL of them
-serviceManifest.registerModule("hcPipeline", hcPipeline, { type: "pipeline", group: "execution", description: "HCFullPipeline — 9-stage deterministic build/deploy" });
-serviceManifest.registerModule("hcSupervisor", hcSupervisor, { type: "supervisor", group: "execution", description: "Agent supervisor — routes tasks to registered agents" });
-serviceManifest.registerModule("hcBrain", hcBrain, { type: "controller", group: "execution", description: "HCBrain meta-controller — readiness scoring, auto-tune" });
-serviceManifest.registerModule("hcCheckpoint", hcCheckpoint, { type: "analyzer", group: "execution", description: "Checkpoint analyzer — stage-gate validation" });
-serviceManifest.registerModule("hcReadiness", hcReadiness, { type: "evaluator", group: "execution", description: "Readiness evaluator — deploy-readiness scoring" });
-serviceManifest.registerModule("hcHealth", hcHealth, { type: "health", group: "observability", description: "Health check runner — cron-based service probes" });
-serviceManifest.registerModule("mcGlobal", mcGlobal, { type: "simulation", group: "validation", description: "Monte Carlo — always-on probabilistic scoring" });
-serviceManifest.registerModule("soulOrchestrator", soulOrchestrator, { type: "orchestrator", group: "governance", description: "SoulOrchestrator v2.0 — goal decomposition + value-driven execution" });
-serviceManifest.registerModule("driftEngine", driftEngine, { type: "detector", group: "observability", description: "Drift detection — 6-signal config/dependency/soul drift" });
-serviceManifest.registerModule("intentResolver", intentResolver, { type: "resolver", group: "companion", description: "Intent resolver — 3-stage keyword/fuzzy/LLM matching" });
-serviceManifest.registerModule("confirmationPolicy", confirmationPolicy, { type: "policy", group: "governance", description: "Confirmation policy — risk-gated action approval" });
-serviceManifest.registerModule("connectorRegistry", connectorRegistry, { type: "registry", group: "extensibility", description: "MCP connector registry — tool registration + invocation" });
-serviceManifest.registerModule("sessionManager", sessionManager, { type: "manager", group: "companion", description: "Session manager — T1/T2/T3 tiered conversation state" });
-serviceManifest.registerModule("computeCluster", computeCluster, { type: "cluster", group: "infrastructure", description: "Compute cluster — physical node routing + heartbeat" });
-serviceManifest.registerModule("colabManager", colabManager, { type: "cluster", group: "gpu", description: "Colab GPU cluster — A100/V100/T4 task routing" });
-serviceManifest.registerModule("headyModelProvider", headyModelProvider, { type: "provider", group: "ide", description: "Model provider — 7 Heady service models + external LLMs" });
-serviceManifest.registerModule("arenaMergeEngine", arenaMergeEngine, { type: "engine", group: "ide", description: "Arena merge — branch/worktree parallel evaluation" });
-serviceManifest.registerModule("cache", cache, { type: "cache", group: "infrastructure", description: "Scalable cache — Redis-backed or in-memory, 10K entries" });
-serviceManifest.registerModule("conductorPool", conductorPool, { type: "pool", group: "infrastructure", description: "Python worker pool — persistent queued HeadyConductor" });
-if (typeof intelligenceEngine !== "undefined" && intelligenceEngine) {
-  serviceManifest.registerModule("intelligenceEngine", intelligenceEngine, { type: "engine", group: "execution", description: "Intelligence Engine v1.3 — DAG scheduler, parallel allocator, speed controller" });
-}
-if (typeof siteGenerator !== "undefined" && siteGenerator) {
-  serviceManifest.registerModule("siteGenerator", siteGenerator, { type: "generator", group: "content", description: "Site generator — 9 branded domain static sites" });
-}
-
-// Expose manifest on app.locals for domain routers
+// Registration is deferred — called after ALL modules are instantiated (see registerAllServiceModules below)
 app.locals.serviceManifest = serviceManifest;
 
 // Combined subsystem overview — NOW reports ALL services
@@ -2025,6 +1998,29 @@ app.get("/api/scaling/readiness", (req, res) => {
 app.get("/api/scaling/liveness", (req, res) => {
   res.status(200).json({ alive: true, pid: process.pid });
 });
+
+// ─── Deferred service manifest registration (all modules now instantiated) ───
+serviceManifest.registerModule("hcPipeline", hcPipeline, { type: "pipeline", group: "execution", description: "HCFullPipeline — 9-stage deterministic build/deploy" });
+serviceManifest.registerModule("hcSupervisor", hcSupervisor, { type: "supervisor", group: "execution", description: "Agent supervisor — routes tasks to registered agents" });
+serviceManifest.registerModule("hcBrain", hcBrain, { type: "controller", group: "execution", description: "HCBrain meta-controller — readiness scoring, auto-tune" });
+serviceManifest.registerModule("hcCheckpoint", hcCheckpoint, { type: "analyzer", group: "execution", description: "Checkpoint analyzer — stage-gate validation" });
+serviceManifest.registerModule("hcReadiness", hcReadiness, { type: "evaluator", group: "execution", description: "Readiness evaluator — deploy-readiness scoring" });
+serviceManifest.registerModule("hcHealth", hcHealth, { type: "health", group: "observability", description: "Health check runner — cron-based service probes" });
+serviceManifest.registerModule("mcGlobal", mcGlobal, { type: "simulation", group: "validation", description: "Monte Carlo — always-on probabilistic scoring" });
+serviceManifest.registerModule("soulOrchestrator", soulOrchestrator, { type: "orchestrator", group: "governance", description: "SoulOrchestrator v2.0 — goal decomposition + value-driven execution" });
+serviceManifest.registerModule("driftEngine", driftEngine, { type: "detector", group: "observability", description: "Drift detection — 6-signal config/dependency/soul drift" });
+serviceManifest.registerModule("intentResolver", intentResolver, { type: "resolver", group: "companion", description: "Intent resolver — 3-stage keyword/fuzzy/LLM matching" });
+serviceManifest.registerModule("confirmationPolicy", confirmationPolicy, { type: "policy", group: "governance", description: "Confirmation policy — risk-gated action approval" });
+serviceManifest.registerModule("connectorRegistry", connectorRegistry, { type: "registry", group: "extensibility", description: "MCP connector registry — tool registration + invocation" });
+serviceManifest.registerModule("sessionManager", sessionManager, { type: "manager", group: "companion", description: "Session manager — T1/T2/T3 tiered conversation state" });
+serviceManifest.registerModule("computeCluster", computeCluster, { type: "cluster", group: "infrastructure", description: "Compute cluster — physical node routing + heartbeat" });
+serviceManifest.registerModule("colabManager", colabManager, { type: "cluster", group: "gpu", description: "Colab GPU cluster — A100/V100/T4 task routing" });
+serviceManifest.registerModule("headyModelProvider", headyModelProvider, { type: "provider", group: "ide", description: "Model provider — 7 Heady service models + external LLMs" });
+serviceManifest.registerModule("arenaMergeEngine", arenaMergeEngine, { type: "engine", group: "ide", description: "Arena merge — branch/worktree parallel evaluation" });
+serviceManifest.registerModule("cache", cache, { type: "cache", group: "infrastructure", description: "Scalable cache — Redis-backed or in-memory, 10K entries" });
+serviceManifest.registerModule("conductorPool", conductorPool, { type: "pool", group: "infrastructure", description: "Python worker pool — persistent queued HeadyConductor" });
+serviceManifest.registerModule("siteGenerator", siteGenerator, { type: "generator", group: "content", description: "Site generator — 9 branded domain static sites" });
+console.log(`[ServiceManifest] ${serviceManifest.runtimeModules.size} runtime modules registered`);
 
 // 404 handler
 app.use('*', (req, res) => {
