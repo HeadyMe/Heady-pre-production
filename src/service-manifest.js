@@ -19,20 +19,20 @@ const path = require("path");
  */
 
 const BRANDED_DOMAINS = [
-  { key: "headysystems",   domain: "headysystems.com",   role: "Primary API & Platform" },
-  { key: "headycloud",     domain: "headycloud.com",     role: "Cloud Orchestration" },
-  { key: "headyconnection",domain: "headyconnection.com",role: "Nonprofit Mission" },
-  { key: "headybot",       domain: "headybot.com",       role: "HeadyBuddy Chat" },
-  { key: "headymcp",       domain: "headymcp.com",       role: "MCP Marketplace" },
-  { key: "headycheck",     domain: "headycheck.com",     role: "Health Dashboard" },
-  { key: "headyio",        domain: "headyio.com",        role: "Developer Docs" },
-  { key: "headybuddy",     domain: "headybuddy.org",     role: "HeadyBuddy Portal" },
-  { key: "headyos",        domain: "headyos.com",        role: "HeadyAI-IDE" },
+  { key: "headysystems", domain: "headysystems.com", role: "Primary API & Platform" },
+  { key: "headycloud", domain: "headycloud.com", role: "Cloud Orchestration" },
+  { key: "headyconnection", domain: "headyconnection.com", role: "Nonprofit Mission" },
+  { key: "headybot", domain: "headybot.com", role: "HeadyBuddy Chat" },
+  { key: "headymcp", domain: "headymcp.com", role: "MCP Marketplace" },
+  { key: "headycheck", domain: "headycheck.com", role: "Health Dashboard" },
+  { key: "headyio", domain: "headyio.com", role: "Developer Docs" },
+  { key: "headybuddy", domain: "headybuddy.org", role: "HeadyBuddy Portal" },
+  { key: "headyos", domain: "headyos.com", role: "HeadyAI-IDE" },
 ];
 
 class HeadyServiceManifest {
   constructor(opts = {}) {
-    this.configPath = opts.configPath || path.join(__dirname, "..", "..", "config", "services.json");
+    this.configPath = opts.configPath || path.join(__dirname, "..", "configs", "services.json");
     this.config = null;
     this.runtimeModules = new Map();
     this.domainHealth = new Map();

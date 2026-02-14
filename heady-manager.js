@@ -61,6 +61,9 @@ const { SoulOrchestrator } = require(path.join(__dirname, "src", "soul", "soul-o
 const { HeadyModelProvider, ArenaMergeEngine } = require(path.join(__dirname, "src", "heady-ide"));
 const { HeadyServiceManifest } = require(path.join(__dirname, "src", "service-manifest"));
 const { DeterministicConfig } = require(path.join(__dirname, "src", "deterministic-config"));
+const { HeadyUserAuth } = require(path.join(__dirname, "src", "auth", "user-auth"));
+const { HeadyPayments } = require(path.join(__dirname, "src", "payments", "stripe-payments"));
+const { HeadyUserDashboard } = require(path.join(__dirname, "src", "web", "user-dashboard"));
 
 // ─── Boot HCFullPipeline with all subsystems ─────────────────────────────
 // 1. Load pipeline configs (YAML → circuit breakers, stage DAG)
@@ -969,7 +972,7 @@ const arenaMergeEngine = new ArenaMergeEngine({
 // ═══════════════════════════════════════════════════════════════════════
 
 const serviceManifest = new HeadyServiceManifest({
-  configPath: path.join(__dirname, "..", "config", "services.json"),
+  configPath: path.join(__dirname, "configs", "services.json"),
 });
 
 const deterministicConfig = new DeterministicConfig({
@@ -982,6 +985,16 @@ const deterministicConfig = new DeterministicConfig({
   },
 });
 app.locals.deterministicConfig = deterministicConfig;
+
+// ─── User Authentication & Payment Systems ─────────────────────────────
+const userAuth = new HeadyUserAuth();
+const payments = new HeadyPayments();
+const userDashboard = new HeadyUserDashboard();
+
+// Expose for middleware and routes
+app.locals.auth = userAuth;
+app.locals.payments = payments;
+app.locals.dashboard = userDashboard;
 
 // Registration is deferred — called after ALL modules are instantiated (see registerAllServiceModules below)
 app.locals.serviceManifest = serviceManifest;
@@ -2021,6 +2034,139 @@ serviceManifest.registerModule("cache", cache, { type: "cache", group: "infrastr
 serviceManifest.registerModule("conductorPool", conductorPool, { type: "pool", group: "infrastructure", description: "Python worker pool — persistent queued HeadyConductor" });
 serviceManifest.registerModule("siteGenerator", siteGenerator, { type: "generator", group: "content", description: "Site generator — 9 branded domain static sites" });
 console.log(`[ServiceManifest] ${serviceManifest.runtimeModules.size} runtime modules registered`);
+
+// ─── User Authentication API Routes ─────────────────────────────────────
+app.post("/api/auth/register", async (req, res) => {
+  try {
+    const { email, password, name } = req.body;
+    const user = await userAuth.register(email, password, { name });
+    const { tokens } = await userAuth.login(email, password);
+    res.json({ user: { id: user.id, email, name: user.metadata.name, subscriptionTier: user.subscriptionTier }, tokens });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.post("/api/auth/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const { user, tokens } = await userAuth.login(email, password);
+    res.json({ user: { id: user.id, email, name: user.metadata.name, subscriptionTier: user.subscriptionTier }, tokens });
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+});
+
+app.post("/api/auth/refresh", async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    const tokens = await userAuth.refreshTokens(refreshToken);
+    res.json({ tokens });
+  } catch (error) {
+    res.status(401).json({ error: error.message });
+  }
+});
+
+app.post("/api/auth/logout", (req, res) => {
+  const { refreshToken } = req.body;
+  userAuth.logout(refreshToken);
+  res.json({ success: true });
+});
+
+app.get("/api/auth/me", userAuth.requireAuth(), (req, res) => {
+  const user = req.user;
+  res.json({
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.metadata.name,
+      subscriptionTier: user.subscriptionTier,
+      roles: user.roles
+    }
+  });
+});
+
+// ─── Payment API Routes ─────────────────────────────────────────────────
+app.post("/api/payments/subscribe", userAuth.requireAuth(), userAuth.requireTier('pro'), async (req, res) => {
+  try {
+    const { plan, interval } = req.body;
+    const session = await payments.createSubscriptionCheckout(req.user.id, plan, interval);
+    res.json({ checkoutUrl: session.url });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.post("/api/payments/purchase", userAuth.requireAuth(), async (req, res) => {
+  try {
+    const { itemType, quantity } = req.body;
+    const session = await payments.createOneTimeCheckout(req.user.id, itemType, quantity);
+    res.json({ checkoutUrl: session.url });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/api/payments/portal", userAuth.requireAuth(), async (req, res) => {
+  try {
+    const session = await payments.createCustomerPortalSession(req.user.id);
+    res.json({ portalUrl: session.url });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/api/payments/billing", userAuth.requireAuth(), async (req, res) => {
+  try {
+    const billing = await payments.getBillingInfo(req.user.id);
+    res.json(billing);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.post("/api/payments/cancel", userAuth.requireAuth(), async (req, res) => {
+  try {
+    const { immediate } = req.body;
+    await payments.cancelSubscription(req.user.id, immediate);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+app.get("/api/payments/usage", userAuth.requireAuth(), (req, res) => {
+  try {
+    const metrics = payments.getUsageMetrics(req.user.id);
+    res.json(metrics);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Stripe webhook
+app.post("/api/payments/webhook", express.raw({ type: 'application/json' }), async (req, res) => {
+  try {
+    const result = await payments.handleWebhook(req.body, req.headers['stripe-signature']);
+    res.json(result);
+  } catch (error) {
+    console.error('Webhook error:', error);
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// ─── User Dashboard Routes ───────────────────────────────────────────────
+app.get("/dashboard", userAuth.requireAuth(), (req, res) => {
+  userDashboard.renderDashboard(req, res);
+});
+
+app.get("/dashboard/billing", userAuth.requireAuth(), (req, res) => {
+  userDashboard.renderBilling(req, res);
+});
+
+app.get("/dashboard/usage", userAuth.requireAuth(), (req, res) => {
+  userDashboard.renderUsage(req, res);
+});
 
 // 404 handler
 app.use('*', (req, res) => {
