@@ -974,17 +974,119 @@ footer a:hover { color: var(--accent); }
         <div class="chat-box" style="height:600px"><div class="chat-msgs" id="bot-msgs">
 <div class="chat-msg bot"><div class="avatar">&#x1f916;</div><div class="chat-text">Welcome to HeadyBot! I'm connected to the full Heady intelligence platform. Ask me about system health, run drift scans, manage connectors, or just chat. What can I do for you?</div></div>
 </div><div class="chat-input"><input type="text" id="bot-in" placeholder="Type your message..." onkeydown="if(event.key==='Enter')botSend()"><button onclick="botSend()">Send</button></div></div>
-<script>const H={base:location.origin,async get(p){try{const r=await fetch(this.base+p);return r.ok?await r.json():null}catch(e){return null}},async post(p,d){try{const r=await fetch(this.base+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});return r.ok?await r.json():null}catch(e){return null}}};
-async function botSend(){const inp=document.getElementById('bot-in');const msg=inp.value.trim();if(!msg)return;inp.value='';
-const msgs=document.getElementById('bot-msgs');
-msgs.innerHTML+=`<div class="chat-msg user"><div class="avatar">&#x1f464;</div><div class="chat-text">${msg}</div></div>`;
-msgs.scrollTop=msgs.scrollHeight;
-const r=await H.post('/api/v1/chat/resolve',{message:msg,userId:'headybot-web'});
-let reply;
-if(r?.data?.topMatch){const m=r.data.topMatch;reply='<strong>'+m.skill+'</strong>: '+m.description+'<br><small style="color:var(--text3)">Confidence: '+(m.confidence*100).toFixed(0)+'%'+(r.data.requiresConfirmation?' | Requires confirmation':'')+'</small>'}
-else{reply="I'm processing your request through the intent resolver. Try asking about: system status, health checks, drift detection, deployments, or MCP connectors."}
-msgs.innerHTML+=`<div class="chat-msg bot"><div class="avatar">&#x1f916;</div><div class="chat-text">${reply}</div></div>`;
-msgs.scrollTop=msgs.scrollHeight;}
+<script>
+const H = {
+  base: location.origin,
+  async get(p) {
+    try {
+      const r = await fetch(this.base + p);
+      return r.ok ? await r.json() : null;
+    } catch (e) {
+      return null;
+    }
+  },
+  async post(p, d) {
+    try {
+      const r = await fetch(this.base + p, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(d)
+      });
+      return r.ok ? await r.json() : null;
+    } catch (e) {
+      return null;
+    }
+  }
+};
+
+async function botSend() {
+  const inp = document.getElementById('bot-in');
+  const msg = inp.value.trim();
+  if (!msg) return;
+  inp.value = '';
+  
+  const msgs = document.getElementById('bot-msgs');
+  msgs.innerHTML += `<div class="chat-msg user"><div class="avatar">&#x1f464;</div><div class="chat-text">${msg}</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  // Show typing indicator
+  msgs.innerHTML += `<div class="chat-msg bot" id="typing"><div class="avatar">&#x1f916;</div><div class="chat-text">🤔 Thinking...</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+  
+  try {
+    const r = await H.post('/api/v1/chat/resolve', { message: msg, userId: 'headybot-web' });
+    
+    // Remove typing indicator
+    const typing = document.getElementById('typing');
+    if (typing) typing.remove();
+    
+    let reply;
+    if (r?.success && r?.data) {
+      const result = r.data;
+      
+      if (result.skill && result.confidence > 0.4) {
+        // High confidence match - execute the skill
+        reply = `<strong>${result.skill}</strong>: ${getSkillDescription(result.skill)}<br><small style="color:var(--text3)">Confidence: ${(result.confidence * 100).toFixed(0)}%</small>`;
+        
+        // Execute the skill if it's a simple one
+        if (result.confidence > 0.8) {
+          await executeSkill(result.skill, result.params);
+        }
+      } else if (result.suggestions && result.suggestions.length > 0) {
+        // Low confidence - show suggestions
+        reply = `I'm not sure what you mean by "${msg}". Did you mean:<br><br>`;
+        result.suggestions.slice(0, 5).forEach(s => {
+          reply += `• <strong>${s.command}</strong> → ${s.skill}<br>`;
+        });
+      } else {
+        reply = "I'm processing your request through the intent resolver. Try asking about: system status, health checks, drift detection, deployments, or MCP connectors.";
+      }
+    } else {
+      reply = "I'm having trouble connecting to the intent resolver. Please try again or check if the backend service is running.";
+    }
+    
+    msgs.innerHTML += `<div class="chat-msg bot"><div class="avatar">&#x1f916;</div><div class="chat-text">${reply}</div></div>`;
+  } catch (error) {
+    // Remove typing indicator
+    const typing = document.getElementById('typing');
+    if (typing) typing.remove();
+    
+    msgs.innerHTML += `<div class="chat-msg bot"><div class="avatar">&#x1f916;</div><div class="chat-text">Sorry, I encountered an error. Please try again.</div></div>`;
+  }
+  
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function getSkillDescription(skill) {
+  const descriptions = {
+    'hcfp-clean-build': 'Clean and rebuild the entire project from scratch',
+    'cross-platform-deploy': 'Deploy the application across multiple platforms',
+    'system-health-check': 'Run comprehensive system health diagnostics',
+    'run-tests': 'Execute the test suite and report results',
+    'code-lint': 'Run code quality and style checks',
+    'cloud-sync': 'Synchronize local changes with the cloud',
+    'checkpoint-create': 'Create a system checkpoint/backup',
+    'rollback': 'Rollback to a previous stable state',
+    'gap-scanner': 'Scan for gaps in coverage or configuration',
+    'security-audit': 'Run security vulnerability scans',
+    'auto-doc': 'Generate automatic documentation',
+    'optimization-engine': 'Run performance optimization analysis',
+    'drift-detection': 'Check for configuration drift',
+    'workspace-clean': 'Clean up workspace and temporary files',
+    'imagination-engine': 'Brainstorm and explore ideas',
+    'mcp-connect': 'Manage MCP connectors and integrations'
+  };
+  return descriptions[skill] || 'Execute skill operation';
+}
+
+async function executeSkill(skill, params = {}) {
+  // This would execute the actual skill
+  console.log('Executing skill:', skill, params);
+  // For now, just show a message
+  const msgs = document.getElementById('bot-msgs');
+  msgs.innerHTML += `<div class="chat-msg bot"><div class="avatar">&#x1f916;</div><div class="chat-text">🚀 Executing ${skill}... (skill execution would happen here)</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+}
 </script>
 <p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">This is the web chat surface for <a href="https://headybuddy.org" style="color:var(--accent)">HeadyBuddy</a>. Buddy also lives on <a href="https://headybuddy.org#surfaces" style="color:var(--accent)">desktop, mobile, browser widget, and IDE</a>.</p>
       </div>

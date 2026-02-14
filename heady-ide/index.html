@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeadyAI-IDE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <h1>🧠 HeadyAI-IDE</h1>
+            </div>
+            <div class="model-selector">
+                <select id="modelSelect">
+                    <option value="">Select Model...</option>
+                </select>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="sidebar">
+                <div class="section">
+                    <h3>🤖 Model Provider</h3>
+                    <div id="modelInfo" class="info-panel">
+                        <p>No model selected</p>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h3>⚔️ Arena Mode</h3>
+                    <button id="createArenaBtn">Create Arena Session</button>
+                    <div id="arenaSessions" class="session-list"></div>
+                </div>
+            </div>
+
+            <div class="workspace">
+                <div class="editor-area">
+                    <div class="tabs">
+                        <div class="tab active">Workspace</div>
+                        <div class="tab">Arena Results</div>
+                    </div>
+                    <div class="editor-content">
+                        <textarea id="taskInput" placeholder="Enter your task or code here..."></textarea>
+                        <div class="actions">
+                            <button id="executeBtn">Execute</button>
+                            <button id="arenaEvaluateBtn">Arena Evaluate</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="output-panel">
+                    <h3>Output</h3>
+                    <div id="output" class="output-content"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>

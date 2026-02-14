@@ -176,6 +176,19 @@ class GoalDecomposer {
         { id: 'promote', type: 'deployment', description: 'Promote to production', dependencies: ['deploy-canary'], priority: 'P0', estimated_duration_ms: 30000, metadata: { env: 'production', user_facing: true } }
       ]
     });
+
+    // Public Domain Deep Scan template
+    this.templates.set('public_domain_deep_scan', {
+      name: 'public-domain-scan',
+      tasks: [
+        { id: 'scan-patterns', type: 'scan', description: 'Scan public domain pattern registry', dependencies: [], priority: 'P0', estimated_duration_ms: 8000, metadata: { source: 'public-domain-patterns.md' } },
+        { id: 'analyze-implementations', type: 'analysis', description: 'Analyze current Heady implementations', dependencies: [], priority: 'P0', estimated_duration_ms: 12000, metadata: {} },
+        { id: 'compare-performance', type: 'comparison', description: 'Compare performance metrics', dependencies: ['scan-patterns', 'analyze-implementations'], priority: 'P0', estimated_duration_ms: 10000, metadata: {} },
+        { id: 'evaluate-complexity', type: 'evaluation', description: 'Evaluate implementation complexity', dependencies: ['scan-patterns', 'analyze-implementations'], priority: 'P1', estimated_duration_ms: 6000, metadata: {} },
+        { id: 'generate-report', type: 'report', description: 'Generate comparison report', dependencies: ['compare-performance', 'evaluate-complexity'], priority: 'P0', estimated_duration_ms: 5000, metadata: { user_facing: true } },
+        { id: 'store-results', type: 'storage', description: 'Store results for future reference', dependencies: ['generate-report'], priority: 'P1', estimated_duration_ms: 3000, metadata: {} }
+      ]
+    });
   }
 
   registerTemplate(key, template) {

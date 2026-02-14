@@ -1,887 +1,1197 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Heady Systems — The Sacred Geometry AI Platform</title>
-  <meta name="description" content="Self-aware, self-correcting intelligence infrastructure. 20 AI nodes, 9-stage pipeline, Monte Carlo validation — powering every Heady product.">
+  <meta name="description"
+    content="Self-aware, self-correcting intelligence infrastructure. 20 AI nodes, 9-stage pipeline, Monte Carlo validation — powering every Heady product.">
   <meta name="theme-color" content="#00e5cc">
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x221e;</text></svg>">
   <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-:root {
-  --bg: #060610;
-  --surface: #0c0c1a;
-  --surface2: #141428;
-  --border: #1e1e3a;
-  --border-glow: #00e5cc30;
-  --accent: #00e5cc;
-  --accent2: #0099ff;
-  --glow: #00e5cc20;
-  --text: #e4e4f0;
-  --text2: #9494b0;
-  --text3: #5a5a78;
-  --ok: #00d4aa;
-  --warn: #f59e0b;
-  --err: #ef4444;
-  --radius: 16px;
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono: 'JetBrains Mono', 'Fira Code', monospace;
-  /* Golden ratio spacing */
-  --phi: 1.618;
-  --sp-xs: 8px;
-  --sp-sm: 13px;
-  --sp-md: 21px;
-  --sp-lg: 34px;
-  --sp-xl: 55px;
-  --sp-2xl: 89px;
-}
+    :root {
+      --bg: #060610;
+      --surface: #0c0c1a;
+      --surface2: #141428;
+      --border: #1e1e3a;
+      --border-glow: #00e5cc30;
+      --accent: #00e5cc;
+      --accent2: #0099ff;
+      --glow: #00e5cc20;
+      --text: #e4e4f0;
+      --text2: #9494b0;
+      --text3: #5a5a78;
+      --ok: #00d4aa;
+      --warn: #f59e0b;
+      --err: #ef4444;
+      --radius: 16px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      /* Golden ratio spacing */
+      --phi: 1.618;
+      --sp-xs: 8px;
+      --sp-sm: 13px;
+      --sp-md: 21px;
+      --sp-lg: 34px;
+      --sp-xl: 55px;
+      --sp-2xl: 89px;
+    }
 
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.618; /* golden ratio */
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.618;
+      /* golden ratio */
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-/* ── Sacred Geometry Background ── */
-.sg-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.sg-pattern {
-  position: absolute;
-  color: var(--accent);
-}
-.sg-flower {
-  width: 800px;
-  height: 800px;
-  top: -200px;
-  right: -200px;
-  animation: sg-rotate 120s linear infinite;
-}
-.sg-metatron {
-  width: 600px;
-  height: 600px;
-  bottom: -150px;
-  left: -150px;
-  animation: sg-rotate 90s linear infinite reverse;
-}
-@keyframes sg-rotate { to { transform: rotate(360deg); } }
+    /* ── Sacred Geometry Background ── */
+    .sg-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
 
-/* Ambient glow orbs */
-.orb {
-  position: fixed;
-  border-radius: 50%;
-  filter: blur(120px);
-  pointer-events: none;
-  z-index: 0;
-}
-.orb-1 {
-  width: 500px; height: 500px;
-  top: -150px; left: -100px;
-  background: var(--accent);
-  opacity: 0.06;
-  animation: orb-breathe 8s ease-in-out infinite;
-}
-.orb-2 {
-  width: 400px; height: 400px;
-  bottom: -100px; right: -80px;
-  background: var(--accent2);
-  opacity: 0.05;
-  animation: orb-breathe 10s ease-in-out infinite 2s;
-}
-.orb-3 {
-  width: 300px; height: 300px;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: var(--accent);
-  opacity: 0.03;
-  animation: orb-breathe 12s ease-in-out infinite 4s;
-}
-@keyframes orb-breathe {
-  0%, 100% { opacity: 0.04; transform: scale(1); }
-  50% { opacity: 0.08; transform: scale(1.15); }
-}
+    .sg-pattern {
+      position: absolute;
+      color: var(--accent);
+    }
 
-/* Grid overlay — subtle sacred grid lines */
-.sg-grid {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image:
-    linear-gradient(var(--accent) 1px, transparent 1px),
-    linear-gradient(90deg, var(--accent) 1px, transparent 1px);
-  background-size: 89px 89px; /* fibonacci number */
-  opacity: 0.015;
-}
+    .sg-flower {
+      width: 800px;
+      height: 800px;
+      top: -200px;
+      right: -200px;
+      animation: sg-rotate 120s linear infinite;
+    }
 
-/* ── Layout ── */
-.wrap {
-  max-width: 1140px;
-  margin: 0 auto;
-  padding: 0 var(--sp-lg);
-  position: relative;
-  z-index: 1;
-}
+    .sg-metatron {
+      width: 600px;
+      height: 600px;
+      bottom: -150px;
+      left: -150px;
+      animation: sg-rotate 90s linear infinite reverse;
+    }
 
-/* ── Navigation ── */
-nav {
-  padding: var(--sp-md) 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(20px);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--bg)cc; /* semi-transparent */
-}
-.logo {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  text-decoration: none;
-  color: var(--text);
-}
-.logo .sg-logo { width: 40px; height: 40px; }
-.logo-text {
-  font-size: 18px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-.logo-sub {
-  font-size: 11px;
-  color: var(--text3);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-weight: 500;
-}
-.nav-links {
-  display: flex;
-  gap: 4px;
-}
-.nav-links a {
-  color: var(--text2);
-  text-decoration: none;
-  padding: var(--sp-xs) var(--sp-sm);
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-.nav-links a:hover {
-  color: var(--accent);
-  background: var(--glow);
-}
+    @keyframes sg-rotate {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-/* ── Hero ── */
-.hero {
-  padding: var(--sp-2xl) 0 var(--sp-xl);
-  text-align: center;
-  position: relative;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-xs);
-  padding: 6px 18px;
-  background: var(--glow);
-  border: 1px solid var(--accent)40;
-  border-radius: 100px;
-  font-size: 13px;
-  color: var(--accent);
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  margin-bottom: var(--sp-lg);
-  backdrop-filter: blur(10px);
-}
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  position: relative;
-}
-.pulse-dot::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 1.5px solid var(--accent);
-  animation: pulse-ring 2s ease-out infinite;
-}
-@keyframes pulse-ring {
-  0% { transform: scale(1); opacity: 0.6; }
-  100% { transform: scale(2); opacity: 0; }
-}
-h1 {
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-  margin-bottom: var(--sp-md);
-  background: linear-gradient(135deg, var(--text) 0%, var(--accent) 50%, var(--accent2) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero-desc {
-  font-size: 18px;
-  color: var(--text2);
-  max-width: 560px;
-  margin: 0 auto var(--sp-lg);
-  line-height: 1.7;
-}
-.hero-btns {
-  display: flex;
-  gap: var(--sp-sm);
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.btn {
-  padding: 14px 32px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.25s;
-  cursor: pointer;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-xs);
-  font-family: var(--font);
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  color: #fff;
-  box-shadow: 0 4px 20px var(--glow);
-}
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 40px var(--accent)40;
-}
-.btn-ghost {
-  background: var(--surface2);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  box-shadow: 0 0 20px var(--glow);
-}
+    /* Ambient glow orbs */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
 
-/* ── Divider with sacred geometry ── */
-.sg-divider {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-md);
-  padding: var(--sp-lg) 0;
-  color: var(--text3);
-}
-.sg-divider::before, .sg-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-.sg-divider span { font-size: 20px; opacity: 0.4; }
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      top: -150px;
+      left: -100px;
+      background: var(--accent);
+      opacity: 0.06;
+      animation: orb-breathe 8s ease-in-out infinite;
+    }
 
-/* ── Cards ── */
-.grid { display: grid; gap: var(--sp-md); padding: var(--sp-lg) 0; }
-.g2c { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
-.g3c { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-.g4c { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      bottom: -100px;
+      right: -80px;
+      background: var(--accent2);
+      opacity: 0.05;
+      animation: orb-breathe 10s ease-in-out infinite 2s;
+    }
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-lg);
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.card:hover {
-  border-color: var(--accent)50;
-  transform: translateY(-4px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.3), 0 0 30px var(--glow);
-}
-.card:hover::before { opacity: 1; }
-.card h3 {
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 6px;
-  letter-spacing: -0.01em;
-}
-.card p {
-  color: var(--text2);
-  font-size: 14px;
-  line-height: 1.6;
-}
-.card-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  margin-bottom: var(--sp-sm);
-  background: var(--glow);
-  border: 1px solid var(--accent)20;
-}
+    .orb-3 {
+      width: 300px;
+      height: 300px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--accent);
+      opacity: 0.03;
+      animation: orb-breathe 12s ease-in-out infinite 4s;
+    }
 
-/* ── Sections ── */
-section {
-  padding: var(--sp-xl) 0;
-  position: relative;
-}
-section + section {
-  border-top: 1px solid var(--border);
-}
-.section-title {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  margin-bottom: var(--sp-xs);
-}
-.section-sub {
-  color: var(--text2);
-  margin-bottom: var(--sp-lg);
-  font-size: 15px;
-}
+    @keyframes orb-breathe {
 
-/* ── Live Panels ── */
-.live-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-lg);
-  margin: var(--sp-md) 0;
-  position: relative;
-  overflow: hidden;
-}
-.live-panel::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent)60, transparent);
-}
-.status-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--sp-sm) 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-}
-.status-row:last-child { border: none; }
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: var(--sp-xs);
-}
-.status-dot.up { background: var(--ok); box-shadow: 0 0 8px var(--ok)60; }
-.status-dot.dn { background: var(--err); box-shadow: 0 0 8px var(--err)60; }
-.status-dot.wn { background: var(--warn); box-shadow: 0 0 8px var(--warn)60; }
+      0%,
+      100% {
+        opacity: 0.04;
+        transform: scale(1);
+      }
 
-.tag {
-  display: inline-block;
-  padding: 3px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-}
-.tg { background: #00d4aa18; color: var(--ok); }
-.tp { background: var(--glow); color: var(--accent); }
-.tw { background: #f59e0b18; color: var(--warn); }
-.tr { background: #ef444418; color: var(--err); }
+      50% {
+        opacity: 0.08;
+        transform: scale(1.15);
+      }
+    }
 
-/* ── Code Blocks ── */
-.code-block {
-  background: #08080f;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: var(--sp-md);
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--accent);
-  overflow-x: auto;
-  white-space: pre;
-  line-height: 1.7;
-}
+    /* Grid overlay — subtle sacred grid lines */
+    .sg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--accent) 1px, transparent 1px),
+        linear-gradient(90deg, var(--accent) 1px, transparent 1px);
+      background-size: 89px 89px;
+      /* fibonacci number */
+      opacity: 0.015;
+    }
 
-/* ── Chat Interface ── */
-.chat-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.chat-msgs {
-  flex: 1;
-  overflow-y: auto;
-  padding: var(--sp-md);
-}
-.chat-msg {
-  margin-bottom: var(--sp-sm);
-  display: flex;
-  gap: var(--sp-sm);
-}
-.chat-msg.bot .avatar { background: var(--glow); color: var(--accent); border: 1px solid var(--accent)30; }
-.chat-msg.user .avatar { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
-.avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 15px;
-  flex-shrink: 0;
-}
-.chat-text {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: var(--sp-sm) var(--sp-md);
-  font-size: 14px;
-  max-width: 75%;
-  line-height: 1.6;
-}
-.chat-input {
-  display: flex;
-  gap: var(--sp-xs);
-  padding: var(--sp-sm);
-  border-top: 1px solid var(--border);
-  background: var(--surface2);
-}
-.chat-input input {
-  flex: 1;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: var(--sp-sm) var(--sp-md);
-  color: var(--text);
-  font-size: 14px;
-  font-family: var(--font);
-  outline: none;
-  transition: border-color 0.2s;
-}
-.chat-input input:focus { border-color: var(--accent); box-shadow: 0 0 12px var(--glow); }
-.chat-input button {
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  border: none;
-  color: #fff;
-  padding: var(--sp-sm) var(--sp-md);
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-family: var(--font);
-  transition: all 0.2s;
-}
-.chat-input button:hover { box-shadow: 0 4px 16px var(--glow); }
+    /* ── Layout ── */
+    .wrap {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 var(--sp-lg);
+      position: relative;
+      z-index: 1;
+    }
 
-/* ── Footer ── */
-footer {
-  padding: var(--sp-xl) 0 var(--sp-lg);
-  text-align: center;
-  color: var(--text3);
-  font-size: 13px;
-  border-top: 1px solid var(--border);
-  position: relative;
-  z-index: 1;
-}
-footer .sg-divider { padding: 0 0 var(--sp-md) 0; }
-footer a {
-  color: var(--text3);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-footer a:hover { color: var(--accent); }
-.footer-links {
-  display: flex;
-  gap: var(--sp-md);
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: var(--sp-sm);
-}
+    /* ── Navigation ── */
+    nav {
+      padding: var(--sp-md) 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg)cc;
+      /* semi-transparent */
+    }
 
-/* ── Ecosystem Block ── */
-.eco-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-lg);
-  margin: var(--sp-lg) 0;
-  position: relative;
-}
-.eco-block::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-}
-.eco-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  font-weight: 600;
-  margin-bottom: var(--sp-sm);
-}
-.eco-text {
-  color: var(--text2);
-  font-size: 14px;
-  line-height: 1.7;
-  margin-bottom: var(--sp-md);
-}
-.eco-links {
-  display: flex;
-  gap: var(--sp-sm);
-  flex-wrap: wrap;
-}
-.eco-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text2);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-.eco-link:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--glow);
-}
-.eco-link .eco-icon { font-size: 14px; }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      text-decoration: none;
+      color: var(--text);
+    }
 
-/* ── Tags ── */
-.vtag {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  color: var(--text3);
-  margin-right: 4px;
-}
+    .logo .sg-logo {
+      width: 40px;
+      height: 40px;
+    }
 
-/* ── Where This Fits ── */
-.context-bar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: var(--sp-sm) 0;
-  font-size: 13px;
-  color: var(--text3);
-  position: relative;
-  z-index: 1;
-}
-.context-bar a {
-  color: var(--accent);
-  text-decoration: none;
-}
-.context-bar a:hover { text-decoration: underline; }
-.context-sep { margin: 0 8px; opacity: 0.4; }
+    .logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
 
-/* ── Footer Ecosystem Grid ── */
-.footer-eco {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: var(--sp-sm);
-  margin-bottom: var(--sp-lg);
-  text-align: left;
-}
-.footer-eco-item {
-  padding: var(--sp-sm);
-  border-radius: 8px;
-  transition: background 0.2s;
-}
-.footer-eco-item:hover { background: var(--surface2); }
-.footer-eco-item a {
-  color: var(--text2);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 500;
-  display: block;
-}
-.footer-eco-item a:hover { color: var(--accent); }
-.footer-eco-item small {
-  display: block;
-  color: var(--text3);
-  font-size: 11px;
-  margin-top: 2px;
-}
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--sp-sm);
-  padding-top: var(--sp-md);
-  border-top: 1px solid var(--border);
-}
-.footer-bottom a {
-  color: var(--text3);
-  text-decoration: none;
-  font-size: 12px;
-}
-.footer-bottom a:hover { color: var(--accent); }
+    .logo-sub {
+      font-size: 11px;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 500;
+    }
 
-/* ── System Context Block ("Where This Fits") ── */
-.system-context {
-  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-lg);
-  margin: var(--sp-lg) 0;
-  position: relative;
-  overflow: hidden;
-}
-.system-context::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
-}
-.system-context-header {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  margin-bottom: var(--sp-md);
-}
-.system-context-icon {
-  width: 40px; height: 40px;
-  border-radius: 12px;
-  background: var(--glow);
-  border: 1px solid var(--accent)30;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-}
-.system-context-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  font-weight: 700;
-}
-.system-context-vertical {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-}
-.system-context-desc {
-  color: var(--text2);
-  font-size: 14px;
-  line-height: 1.7;
-  margin-bottom: var(--sp-md);
-}
-.system-context-desc a { color: var(--accent); text-decoration: none; }
-.system-context-desc a:hover { text-decoration: underline; }
+    .nav-links {
+      display: flex;
+      gap: 4px;
+    }
 
-/* ── Cross-Domain Connections ── */
-.cross-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: var(--sp-sm);
-  margin-top: var(--sp-md);
-}
-.cross-link-card {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-sm);
-  padding: var(--sp-sm) var(--sp-md);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  text-decoration: none;
-  color: var(--text2);
-  transition: all 0.25s;
-  font-size: 13px;
-}
-.cross-link-card:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--glow);
-  transform: translateX(4px);
-}
-.cross-link-icon {
-  width: 32px; height: 32px;
-  border-radius: 8px;
-  background: var(--glow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-.cross-link-text strong {
-  display: block;
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 600;
-}
-.cross-link-text small {
-  color: var(--text3);
-  font-size: 11px;
-}
+    .nav-links a {
+      color: var(--text2);
+      text-decoration: none;
+      padding: var(--sp-xs) var(--sp-sm);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
 
-/* ── System Map ── */
-.system-map {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: var(--sp-lg);
-  margin: var(--sp-lg) 0;
-}
-.system-map-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  font-weight: 700;
-  margin-bottom: var(--sp-md);
-  text-align: center;
-}
-.system-map-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--sp-sm);
-}
-.system-map-node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: var(--sp-sm);
-  border-radius: 10px;
-  text-decoration: none;
-  color: var(--text2);
-  transition: all 0.25s;
-  text-align: center;
-  border: 1px solid transparent;
-}
-.system-map-node:hover {
-  background: var(--glow);
-  border-color: var(--accent)40;
-  color: var(--accent);
-  transform: translateY(-2px);
-}
-.system-map-node.current {
-  background: var(--glow);
-  border-color: var(--accent);
-  color: var(--accent);
-}
-.system-map-node .node-icon { font-size: 24px; }
-.system-map-node .node-name { font-size: 13px; font-weight: 600; }
-.system-map-node .node-role { font-size: 11px; color: var(--text3); }
+    .nav-links a:hover {
+      color: var(--accent);
+      background: var(--glow);
+    }
 
-/* ── Global Vertical Nav Strip ── */
-.vertical-nav {
-  display: flex;
-  gap: 2px;
-  padding: 6px 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.vertical-nav a {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text3);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: all 0.2s;
-}
-.vertical-nav a:hover { color: var(--accent); background: var(--glow); }
-.vertical-nav a.active { color: var(--accent); background: var(--glow); font-weight: 600; }
+    /* ── Hero ── */
+    .hero {
+      padding: var(--sp-2xl) 0 var(--sp-xl);
+      text-align: center;
+      position: relative;
+    }
 
-/* ── Responsive ── */
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .hero { padding: var(--sp-xl) 0 var(--sp-lg); }
-  h1 { font-size: 32px; }
-  .g2c, .g3c { grid-template-columns: 1fr; }
-  .sg-flower { width: 400px; height: 400px; }
-  .sg-metatron { width: 300px; height: 300px; }
-  .footer-eco { grid-template-columns: repeat(2, 1fr); }
-  .context-bar { display: none; }
-  .cross-links { grid-template-columns: 1fr; }
-  .system-map-grid { grid-template-columns: repeat(2, 1fr); }
-  .system-context { margin: var(--sp-md) 0; }
-}
-</style>
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      padding: 6px 18px;
+      background: var(--glow);
+      border: 1px solid var(--accent)40;
+      border-radius: 100px;
+      font-size: 13px;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--sp-lg);
+      backdrop-filter: blur(10px);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .pulse-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1.5px solid var(--accent);
+      animation: pulse-ring 2s ease-out infinite;
+    }
+
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+
+    h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: var(--sp-md);
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: var(--text2);
+      max-width: 560px;
+      margin: 0 auto var(--sp-lg);
+      line-height: 1.7;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: var(--sp-sm);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-xs);
+      font-family: var(--font);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 4px 20px var(--glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--accent)40;
+    }
+
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 20px var(--glow);
+    }
+
+    /* ── Divider with sacred geometry ── */
+    .sg-divider {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-lg) 0;
+      color: var(--text3);
+    }
+
+    .sg-divider::before,
+    .sg-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .sg-divider span {
+      font-size: 20px;
+      opacity: 0.4;
+    }
+
+    /* ── Cards ── */
+    .grid {
+      display: grid;
+      gap: var(--sp-md);
+      padding: var(--sp-lg) 0;
+    }
+
+    .g2c {
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+
+    .g3c {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .g4c {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--sp-lg);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      border-color: var(--accent)50;
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3), 0 0 30px var(--glow);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card h3 {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .card p {
+      color: var(--text2);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: var(--sp-sm);
+      background: var(--glow);
+      border: 1px solid var(--accent)20;
+    }
+
+    /* ── Sections ── */
+    section {
+      padding: var(--sp-xl) 0;
+      position: relative;
+    }
+
+    section+section {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--sp-xs);
+    }
+
+    .section-sub {
+      color: var(--text2);
+      margin-bottom: var(--sp-lg);
+      font-size: 15px;
+    }
+
+    /* ── Live Panels ── */
+    .live-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--sp-lg);
+      margin: var(--sp-md) 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .live-panel::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent)60, transparent);
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--sp-sm) 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    .status-row:last-child {
+      border: none;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: var(--sp-xs);
+    }
+
+    .status-dot.up {
+      background: var(--ok);
+      box-shadow: 0 0 8px var(--ok)60;
+    }
+
+    .status-dot.dn {
+      background: var(--err);
+      box-shadow: 0 0 8px var(--err)60;
+    }
+
+    .status-dot.wn {
+      background: var(--warn);
+      box-shadow: 0 0 8px var(--warn)60;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .tg {
+      background: #00d4aa18;
+      color: var(--ok);
+    }
+
+    .tp {
+      background: var(--glow);
+      color: var(--accent);
+    }
+
+    .tw {
+      background: #f59e0b18;
+      color: var(--warn);
+    }
+
+    .tr {
+      background: #ef444418;
+      color: var(--err);
+    }
+
+    /* ── Code Blocks ── */
+    .code-block {
+      background: #08080f;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: var(--sp-md);
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--accent);
+      overflow-x: auto;
+      white-space: pre;
+      line-height: 1.7;
+    }
+
+    /* ── Chat Interface ── */
+    .chat-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-msgs {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--sp-md);
+    }
+
+    .chat-msg {
+      margin-bottom: var(--sp-sm);
+      display: flex;
+      gap: var(--sp-sm);
+    }
+
+    .chat-msg.bot .avatar {
+      background: var(--glow);
+      color: var(--accent);
+      border: 1px solid var(--accent)30;
+    }
+
+    .chat-msg.user .avatar {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+
+    .avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .chat-text {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: var(--sp-sm) var(--sp-md);
+      font-size: 14px;
+      max-width: 75%;
+      line-height: 1.6;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: var(--sp-xs);
+      padding: var(--sp-sm);
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .chat-input input {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: var(--sp-sm) var(--sp-md);
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px var(--glow);
+    }
+
+    .chat-input button {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      padding: var(--sp-sm) var(--sp-md);
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: var(--font);
+      transition: all 0.2s;
+    }
+
+    .chat-input button:hover {
+      box-shadow: 0 4px 16px var(--glow);
+    }
+
+    /* ── Footer ── */
+    footer {
+      padding: var(--sp-xl) 0 var(--sp-lg);
+      text-align: center;
+      color: var(--text3);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    footer .sg-divider {
+      padding: 0 0 var(--sp-md) 0;
+    }
+
+    footer a {
+      color: var(--text3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: var(--accent);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: var(--sp-md);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: var(--sp-sm);
+    }
+
+    /* ── Ecosystem Block ── */
+    .eco-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--sp-lg);
+      margin: var(--sp-lg) 0;
+      position: relative;
+    }
+
+    .eco-block::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+    }
+
+    .eco-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: var(--sp-sm);
+    }
+
+    .eco-text {
+      color: var(--text2);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: var(--sp-md);
+    }
+
+    .eco-links {
+      display: flex;
+      gap: var(--sp-sm);
+      flex-wrap: wrap;
+    }
+
+    .eco-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .eco-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--glow);
+    }
+
+    .eco-link .eco-icon {
+      font-size: 14px;
+    }
+
+    /* ── Tags ── */
+    .vtag {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text3);
+      margin-right: 4px;
+    }
+
+    /* ── Where This Fits ── */
+    .context-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: var(--sp-sm) 0;
+      font-size: 13px;
+      color: var(--text3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .context-bar a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .context-bar a:hover {
+      text-decoration: underline;
+    }
+
+    .context-sep {
+      margin: 0 8px;
+      opacity: 0.4;
+    }
+
+    /* ── Footer Ecosystem Grid ── */
+    .footer-eco {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-lg);
+      text-align: left;
+    }
+
+    .footer-eco-item {
+      padding: var(--sp-sm);
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .footer-eco-item:hover {
+      background: var(--surface2);
+    }
+
+    .footer-eco-item a {
+      color: var(--text2);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      display: block;
+    }
+
+    .footer-eco-item a:hover {
+      color: var(--accent);
+    }
+
+    .footer-eco-item small {
+      display: block;
+      color: var(--text3);
+      font-size: 11px;
+      margin-top: 2px;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--sp-sm);
+      padding-top: var(--sp-md);
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-bottom a {
+      color: var(--text3);
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .footer-bottom a:hover {
+      color: var(--accent);
+    }
+
+    /* ── System Context Block ("Where This Fits") ── */
+    .system-context {
+      background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--sp-lg);
+      margin: var(--sp-lg) 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .system-context::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent));
+    }
+
+    .system-context-header {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      margin-bottom: var(--sp-md);
+    }
+
+    .system-context-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--glow);
+      border: 1px solid var(--accent)30;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .system-context-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .system-context-vertical {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .system-context-desc {
+      color: var(--text2);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: var(--sp-md);
+    }
+
+    .system-context-desc a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .system-context-desc a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Cross-Domain Connections ── */
+    .cross-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--sp-sm);
+      margin-top: var(--sp-md);
+    }
+
+    .cross-link-card {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-sm);
+      padding: var(--sp-sm) var(--sp-md);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text2);
+      transition: all 0.25s;
+      font-size: 13px;
+    }
+
+    .cross-link-card:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--glow);
+      transform: translateX(4px);
+    }
+
+    .cross-link-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .cross-link-text strong {
+      display: block;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .cross-link-text small {
+      color: var(--text3);
+      font-size: 11px;
+    }
+
+    /* ── System Map ── */
+    .system-map {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--sp-lg);
+      margin: var(--sp-lg) 0;
+    }
+
+    .system-map-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: var(--sp-md);
+      text-align: center;
+    }
+
+    .system-map-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--sp-sm);
+    }
+
+    .system-map-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      padding: var(--sp-sm);
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text2);
+      transition: all 0.25s;
+      text-align: center;
+      border: 1px solid transparent;
+    }
+
+    .system-map-node:hover {
+      background: var(--glow);
+      border-color: var(--accent)40;
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .system-map-node.current {
+      background: var(--glow);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .system-map-node .node-icon {
+      font-size: 24px;
+    }
+
+    .system-map-node .node-name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .system-map-node .node-role {
+      font-size: 11px;
+      color: var(--text3);
+    }
+
+    /* ── Global Vertical Nav Strip ── */
+    .vertical-nav {
+      display: flex;
+      gap: 2px;
+      padding: 6px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .vertical-nav a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text3);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .vertical-nav a:hover {
+      color: var(--accent);
+      background: var(--glow);
+    }
+
+    .vertical-nav a.active {
+      color: var(--accent);
+      background: var(--glow);
+      font-weight: 600;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .hero {
+        padding: var(--sp-xl) 0 var(--sp-lg);
+      }
+
+      h1 {
+        font-size: 32px;
+      }
+
+      .g2c,
+      .g3c {
+        grid-template-columns: 1fr;
+      }
+
+      .sg-flower {
+        width: 400px;
+        height: 400px;
+      }
+
+      .sg-metatron {
+        width: 300px;
+        height: 300px;
+      }
+
+      .footer-eco {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .context-bar {
+        display: none;
+      }
+
+      .cross-links {
+        grid-template-columns: 1fr;
+      }
+
+      .system-map-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .system-context {
+        margin: var(--sp-md) 0;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <!-- Sacred Geometry Background Layer -->
   <div class="sg-bg">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="sg-pattern sg-flower">
-<defs><circle id="c" r="30" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.15"/></defs>
-<use href="#c" x="100" y="100"/><use href="#c" x="130" y="100"/><use href="#c" x="70" y="100"/>
-<use href="#c" x="115" y="74"/><use href="#c" x="85" y="74"/><use href="#c" x="115" y="126"/><use href="#c" x="85" y="126"/>
-<use href="#c" x="100" y="48"/><use href="#c" x="100" y="152"/><use href="#c" x="145" y="74"/><use href="#c" x="55" y="74"/>
-<use href="#c" x="145" y="126"/><use href="#c" x="55" y="126"/><use href="#c" x="160" y="100"/><use href="#c" x="40" y="100"/>
-<use href="#c" x="130" y="48"/><use href="#c" x="70" y="48"/><use href="#c" x="130" y="152"/><use href="#c" x="70" y="152"/>
-</svg>
+      <defs>
+        <circle id="c" r="30" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.15" />
+      </defs>
+      <use href="#c" x="100" y="100" />
+      <use href="#c" x="130" y="100" />
+      <use href="#c" x="70" y="100" />
+      <use href="#c" x="115" y="74" />
+      <use href="#c" x="85" y="74" />
+      <use href="#c" x="115" y="126" />
+      <use href="#c" x="85" y="126" />
+      <use href="#c" x="100" y="48" />
+      <use href="#c" x="100" y="152" />
+      <use href="#c" x="145" y="74" />
+      <use href="#c" x="55" y="74" />
+      <use href="#c" x="145" y="126" />
+      <use href="#c" x="55" y="126" />
+      <use href="#c" x="160" y="100" />
+      <use href="#c" x="40" y="100" />
+      <use href="#c" x="130" y="48" />
+      <use href="#c" x="70" y="48" />
+      <use href="#c" x="130" y="152" />
+      <use href="#c" x="70" y="152" />
+    </svg>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="sg-pattern sg-metatron">
-<g fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.12">
-<circle cx="100" cy="100" r="50"/><circle cx="100" cy="50" r="50"/><circle cx="100" cy="150" r="50"/>
-<circle cx="143" cy="75" r="50"/><circle cx="57" cy="75" r="50"/><circle cx="143" cy="125" r="50"/><circle cx="57" cy="125" r="50"/>
-<line x1="100" y1="50" x2="143" y2="75"/><line x1="143" y1="75" x2="143" y2="125"/><line x1="143" y1="125" x2="100" y2="150"/>
-<line x1="100" y1="150" x2="57" y2="125"/><line x1="57" y1="125" x2="57" y2="75"/><line x1="57" y1="75" x2="100" y2="50"/>
-<line x1="100" y1="50" x2="143" y2="125"/><line x1="143" y1="75" x2="57" y2="125"/><line x1="143" y1="125" x2="57" y2="75"/>
-<line x1="100" y1="150" x2="57" y2="75"/><line x1="57" y1="125" x2="143" y2="75"/><line x1="100" y1="50" x2="57" y2="125"/>
-</g></svg>
+      <g fill="none" stroke="currentColor" stroke-width="0.4" opacity="0.12">
+        <circle cx="100" cy="100" r="50" />
+        <circle cx="100" cy="50" r="50" />
+        <circle cx="100" cy="150" r="50" />
+        <circle cx="143" cy="75" r="50" />
+        <circle cx="57" cy="75" r="50" />
+        <circle cx="143" cy="125" r="50" />
+        <circle cx="57" cy="125" r="50" />
+        <line x1="100" y1="50" x2="143" y2="75" />
+        <line x1="143" y1="75" x2="143" y2="125" />
+        <line x1="143" y1="125" x2="100" y2="150" />
+        <line x1="100" y1="150" x2="57" y2="125" />
+        <line x1="57" y1="125" x2="57" y2="75" />
+        <line x1="57" y1="75" x2="100" y2="50" />
+        <line x1="100" y1="50" x2="143" y2="125" />
+        <line x1="143" y1="75" x2="57" y2="125" />
+        <line x1="143" y1="125" x2="57" y2="75" />
+        <line x1="100" y1="150" x2="57" y2="75" />
+        <line x1="57" y1="125" x2="143" y2="75" />
+        <line x1="100" y1="50" x2="57" y2="125" />
+      </g>
+    </svg>
   </div>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
@@ -893,38 +1203,48 @@ footer a:hover { color: var(--accent); }
     <div class="wrap">
       <strong style="color:var(--accent)">Part of the Heady Ecosystem</strong>
       <span class="context-sep">/</span>
-      This is the core platform that powers everything in the Heady universe. Revenue from Heady Systems products helps fund <a href="https://headyconnection.org">HeadyConnection's</a> nonprofit programs. Talk to <a href="https://headybuddy.org">HeadyBuddy</a> to interact with this platform from any device.
+      This is the core platform that powers everything in the Heady universe. Revenue from Heady Systems products helps
+      fund <a href="https://headyconnection.org">HeadyConnection's</a> nonprofit programs. Talk to <a
+        href="https://headybuddy.org">HeadyBuddy</a> to interact with this platform from any device.
     </div>
   </div>
 
   <div class="wrap">
     <!-- Global Vertical Navigation — same order on every domain -->
-    <div class="vertical-nav"><a href="https://headysystems.com" class="active">✴️ Platform</a><a href="https://headybuddy.org">✨ Companion</a><a href="https://headyconnection.org">🌍 Nonprofit</a><a href="https://headycheck.com">💚 Operations</a><a href="https://headycloud.com">☁️ Cloud</a><a href="https://headyio.com">📚 Documentation</a><a href="https://headymcp.com">🔌 Extensibility</a><a href="https://headyos.com">🌐 Browser</a></div>
+    <div class="vertical-nav"><a href="https://headysystems.com" class="active">✴️ Platform</a><a
+        href="https://headybuddy.org">✨ Companion</a><a href="https://headyconnection.org">🌍 Nonprofit</a><a
+        href="https://headycheck.com">💚 Operations</a><a href="https://headycloud.com">☁️ Cloud</a><a
+        href="https://headyio.com">📚 Documentation</a><a href="https://headymcp.com">🔌 Extensibility</a><a
+        href="https://headyos.com">🌐 Browser</a></div>
 
     <nav>
       <a href="/" class="logo">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="sg-logo">
-<defs>
-<linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:var(--accent)"/><stop offset="100%" style="stop-color:var(--accent2)"/>
-</linearGradient>
-</defs>
-<circle cx="24" cy="24" r="23" fill="none" stroke="url(#lg)" stroke-width="1.5"/>
-<circle cx="24" cy="24" r="10" fill="none" stroke="url(#lg)" stroke-width="0.8" opacity="0.6"/>
-<circle cx="24" cy="14" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
-<circle cx="24" cy="34" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
-<circle cx="32.7" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
-<circle cx="15.3" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
-<circle cx="32.7" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
-<circle cx="15.3" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3"/>
-<text x="24" y="28" text-anchor="middle" fill="url(#lg)" font-size="16" font-weight="700" font-family="serif">&#x221e;</text>
-</svg>
+          <defs>
+            <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:var(--accent)" />
+              <stop offset="100%" style="stop-color:var(--accent2)" />
+            </linearGradient>
+          </defs>
+          <circle cx="24" cy="24" r="23" fill="none" stroke="url(#lg)" stroke-width="1.5" />
+          <circle cx="24" cy="24" r="10" fill="none" stroke="url(#lg)" stroke-width="0.8" opacity="0.6" />
+          <circle cx="24" cy="14" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3" />
+          <circle cx="24" cy="34" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3" />
+          <circle cx="32.7" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3" />
+          <circle cx="15.3" cy="19" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3" />
+          <circle cx="32.7" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3" />
+          <circle cx="15.3" cy="29" r="10" fill="none" stroke="url(#lg)" stroke-width="0.5" opacity="0.3" />
+          <text x="24" y="28" text-anchor="middle" fill="url(#lg)" font-size="16" font-weight="700"
+            font-family="serif">&#x221e;</text>
+        </svg>
         <div>
           <div class="logo-text">Heady Systems</div>
           <div class="logo-sub">Platform</div>
         </div>
       </a>
-      <div class="nav-links"><a href="#arch">Architecture</a><a href="#status">Status</a><a href="https://headyio.com">Docs</a><a href="https://headymcp.com">MCP</a><a href="https://headybuddy.org">Buddy</a></div>
+      <div class="nav-links"><a href="#arch">Architecture</a><a href="#status">Status</a><a
+          href="https://headyio.com">Docs</a><a href="https://headymcp.com">MCP</a><a
+          href="https://headybuddy.org">Buddy</a></div>
     </nav>
   </div>
 
@@ -932,8 +1252,10 @@ footer a:hover { color: var(--accent); }
     <div class="wrap">
       <div class="hero-badge"><span class="pulse-dot"></span>System Online</div>
       <h1>The Sacred Geometry AI Platform</h1>
-      <p class="hero-desc">Self-aware, self-correcting intelligence infrastructure. 20 AI nodes, 9-stage pipeline, Monte Carlo validation — powering every Heady product.</p>
-      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: platform</span> <span class="vtag">layer: infrastructure</span> <span class="vtag">audience: dev</span></div>
+      <p class="hero-desc">Self-aware, self-correcting intelligence infrastructure. 20 AI nodes, 9-stage pipeline, Monte
+        Carlo validation — powering every Heady product.</p>
+      <div style="margin:var(--sp-sm) 0"><span class="vtag">vertical: platform</span> <span class="vtag">layer:
+          infrastructure</span> <span class="vtag">audience: dev</span></div>
       <div class="hero-btns">
         <a href="https://headysystems.com/dashboard" class="btn btn-primary">Sign In</a>
         <a href="#pricing" class="btn btn-ghost">View Pricing</a>
@@ -945,269 +1267,391 @@ footer a:hover { color: var(--accent); }
 
   <!-- WHERE THIS FITS — system context + cross-domain connections -->
 
+  <div class="wrap">
+    <div class="system-context">
+      <div class="system-context-header">
+        <div class="system-context-icon">✴️</div>
+        <div>
+          <div class="system-context-title">Where This Fits</div>
+          <div class="system-context-vertical">Platform Vertical &middot; Public Brand Site</div>
+        </div>
+      </div>
+      <div class="system-context-desc">This is the core platform that powers everything in the Heady universe. Revenue
+        from Heady Systems products helps fund <a href="https://headyconnection.org">HeadyConnection's</a> nonprofit
+        programs. Talk to <a href="https://headybuddy.org">HeadyBuddy</a> to interact with this platform from any
+        device.</div>
+      <div class="cross-links"><a href="https://headyconnection.org" class="cross-link-card">
+          <div class="cross-link-icon">🌐</div>
+          <div class="cross-link-text">
+            <strong>See our impact</strong>
+            <small>Funds the mission</small>
+          </div>
+        </a>
+        <a href="https://headybuddy.org" class="cross-link-card">
+          <div class="cross-link-icon">✨</div>
+          <div class="cross-link-text">
+            <strong>Meet Buddy</strong>
+            <small>Powers Buddy</small>
+          </div>
+        </a>
+        <a href="https://headyio.com" class="cross-link-card">
+          <div class="cross-link-icon">📚</div>
+          <div class="cross-link-text">
+            <strong>Read the docs</strong>
+            <small>Documented here</small>
+          </div>
+        </a>
+        <a href="https://headycheck.com" class="cross-link-card">
+          <div class="cross-link-icon">💚</div>
+          <div class="cross-link-text">
+            <strong>View health</strong>
+            <small>Monitored by HeadyCheck</small>
+          </div>
+        </a>
+        <a href="https://headymcp.com" class="cross-link-card">
+          <div class="cross-link-icon">🔌</div>
+          <div class="cross-link-text">
+            <strong>Browse connectors</strong>
+            <small>Extended via MCP</small>
+          </div>
+        </a>
+        <a href="https://headycloud.com" class="cross-link-card">
+          <div class="cross-link-icon">☁️</div>
+          <div class="cross-link-text">
+            <strong>View layers</strong>
+            <small>Deployed via HeadyCloud</small>
+          </div>
+        </a>
+        <a href="https://headyos.com" class="cross-link-card">
+          <div class="cross-link-icon">🌐</div>
+          <div class="cross-link-text">
+            <strong>Open IDE</strong>
+            <small>Accessible via HeadyOS</small>
+          </div>
+        </a>
+        <a href="https://headyconnection.org" class="cross-link-card">
+          <div class="cross-link-icon">🌐</div>
+          <div class="cross-link-text">
+            <strong>See the impact</strong>
+            <small>Revenue funds the mission</small>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+
+  <section id="status">
     <div class="wrap">
-      <div class="system-context">
-        <div class="system-context-header">
-          <div class="system-context-icon">✴️</div>
-          <div>
-            <div class="system-context-title">Where This Fits</div>
-            <div class="system-context-vertical">Platform Vertical &middot; Public Brand Site</div>
+      <h2 class="section-title">Live System Status</h2>
+      <p class="section-sub">Real-time health across all services</p>
+      <div class="live-panel" id="sys-status">
+        <div style="color:var(--text2)">Connecting to Heady Systems...</div>
+      </div>
+      <script>const H = { base: location.origin, async get(p) { try { const r = await fetch(this.base + p); return r.ok ? await r.json() : null } catch (e) { return null } }, async post(p, d) { try { const r = await fetch(this.base + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) }); return r.ok ? await r.json() : null } catch (e) { return null } } };
+        (async () => {
+          const d = await H.get('/api/system/status'); const el = document.getElementById('sys-status'); if (!d) { el.innerHTML = '<div style="color:var(--err)">API unreachable — services may be deploying</div>'; return }
+          el.innerHTML = `<div class="status-row"><span>Environment</span><span class="tag tg">${d.environment || 'production'}</span></div>
+<div class="status-row"><span>Active Nodes</span><span>${d.capabilities?.nodes?.active || 0}/${d.capabilities?.nodes?.total || 0}</span></div>
+<div class="status-row"><span>Services</span><span>${d.capabilities?.services?.healthy || 0}/${d.capabilities?.services?.total || 0} healthy</span></div>
+<div class="status-row"><span>Tools</span><span>${d.capabilities?.tools?.active || 0} active</span></div>
+<div class="status-row"><span>Uptime</span><span>${Math.floor((d.uptime || 0) / 3600)}h ${Math.floor(((d.uptime || 0) % 3600) / 60)}m</span></div>
+<div class="status-row"><span>Sacred Geometry</span><span class="tag tp">Active</span></div>`})();</script>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sg-divider"><span>&#x221e;</span></div>
+  </div>
+  <section id="arch">
+    <div class="wrap">
+      <h2 class="section-title">Architecture</h2>
+      <p class="section-sub">Fractal intelligence at every layer — same values at every scale</p>
+      <div class="grid g3c">
+        <div class="card">
+          <div class="card-icon" style="background:#7c6aef20">&#x1f9e0;</div>
+          <h3>BRAIN</h3>
+          <p>Central meta-controller — pre-response processing, context gathering, concept identification across all
+            layers</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#4ecdc420">&#x1f50d;</div>
+          <h3>LENS</h3>
+          <p>Real-time observability — performance-indexed data structures, comprehensive system health tracking</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#ff6b9d20">&#x1f4be;</div>
+          <h3>MEMORY</h3>
+          <p>Persistent indexed storage — session memory, external sources, user preferences with GDPR compliance</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#ffd93d20">&#x1f3bc;</div>
+          <h3>CONDUCTOR</h3>
+          <p>Orchestration engine — routes requests, manages agent lifecycles, optimizes resource allocation</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#4ecdc420">&#x2728;</div>
+          <h3>SOUL</h3>
+          <p>Value governance — mission alignment scoring, ethical guardrails, drift detection, hard veto authority</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:#7c6aef20">&#x1f916;</div>
+          <h3>INTELLIGENCE</h3>
+          <p>DAG scheduler — parallel allocation, critical path monitoring, zero-idle backfill, anti-stagnation</p>
+        </div>
+      </div>
+      <div class="eco-block" style="margin-top:var(--sp-lg)">
+        <div class="eco-label">Architecture Diagram</div>
+        <div class="code-block" style="font-size:12px">HeadySoul (mission, values, ethics) ← ULTIMATE GOVERNOR
+          ↓
+          Intelligence Engine v1.3 (DAG scheduler, priority queue)
+          ↓
+          HCFullPipeline (9-stage execution)
+          ↓
+          HCBrain (meta-controller)
+          ↓
+          Agents (execute with HeadySoul constraints)
+          ↓
+          HeadyBuddy (user-facing companion on all devices)</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sg-divider"><span>&#x221e;</span></div>
+  </div>
+  <section id="why">
+    <div class="wrap">
+      <h2 class="section-title">Why Sacred Geometry?</h2>
+      <p class="section-sub">Organic systems that breathe, heal, and self-correct</p>
+      <div class="grid g2c">
+        <div class="card">
+          <h3>Organic, Not Mechanical</h3>
+          <p>Our systems follow natural patterns — Fibonacci spacing, golden ratio rhythms, fractal self-similarity. The
+            same values govern code, services, and the organization itself.</p>
+        </div>
+        <div class="card">
+          <h3>Self-Correcting</h3>
+          <p>6-signal drift detection, Monte Carlo validation on every deploy, and HeadySoul governance ensure the
+            system heals itself before problems reach users.</p>
+        </div>
+      </div>
+      <p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">Revenue from Heady Systems products directly
+        funds <a href="https://headyconnection.org" style="color:var(--accent)">HeadyConnection's nonprofit programs</a>
+        — expanding access to underserved communities worldwide.</p>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sg-divider"><span>&#x221e;</span></div>
+  </div>
+  <section id="pricing">
+    <div class="wrap">
+      <h2 class="section-title">Choose Your Plan</h2>
+      <p class="section-sub">Start free, upgrade as you grow. All plans include core HeadyBuddy features.</p>
+      <div class="grid g3c" style="margin-top:var(--sp-lg)">
+        <div class="card pricing-card">
+          <div class="pricing-header">
+            <h3>Free</h3>
+            <div class="price">$0<span>/month</span></div>
+          </div>
+          <ul class="pricing-features">
+            <li> Basic HeadyBuddy chat</li>
+            <li> 100 API calls/month</li>
+            <li> 100MB storage</li>
+            <li> Community support</li>
+            <li class="disabled"> Advanced models</li>
+            <li class="disabled"> Arena Merge</li>
+          </ul>
+          <div class="pricing-action">
+            <a href="https://headysystems.com/dashboard" class="btn btn-secondary">Get Started</a>
           </div>
         </div>
-        <div class="system-context-desc">This is the core platform that powers everything in the Heady universe. Revenue from Heady Systems products helps fund <a href="https://headyconnection.org">HeadyConnection's</a> nonprofit programs. Talk to <a href="https://headybuddy.org">HeadyBuddy</a> to interact with this platform from any device.</div>
-        <div class="cross-links"><a href="https://headyconnection.org" class="cross-link-card">
-        <div class="cross-link-icon">🌐</div>
-        <div class="cross-link-text">
-          <strong>See our impact</strong>
-          <small>Funds the mission</small>
+
+        <div class="card pricing-card featured">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-header">
+            <h3>Pro</h3>
+            <div class="price">$29<span>/month</span></div>
+            <div class="price-note">or $290/year (save 2 months)</div>
+          </div>
+          <ul class="pricing-features">
+            <li> Unlimited HeadyBuddy</li>
+            <li> 10,000 API calls/month</li>
+            <li> 10GB storage</li>
+            <li> All Heady models</li>
+            <li> Arena Merge parallel dev</li>
+            <li> Priority support</li>
+          </ul>
+          <div class="pricing-action">
+            <button onclick="subscribe('pro', 'monthly')" class="btn btn-primary">Start Pro Trial</button>
+          </div>
         </div>
-      </a>
-      <a href="https://headybuddy.org" class="cross-link-card">
-        <div class="cross-link-icon">✨</div>
-        <div class="cross-link-text">
-          <strong>Meet Buddy</strong>
-          <small>Powers Buddy</small>
+
+        <div class="card pricing-card">
+          <div class="pricing-header">
+            <h3>Enterprise</h3>
+            <div class="price">$99<span>/month</span></div>
+            <div class="price-note">or $990/year (save 2 months)</div>
+          </div>
+          <ul class="pricing-features">
+            <li> Everything in Pro</li>
+            <li> Unlimited API calls</li>
+            <li> 100GB storage</li>
+            <li> Custom model training</li>
+            <li> Dedicated support</li>
+            <li> White-label options</li>
+            <li> SLA guarantee</li>
+          </ul>
+          <div class="pricing-action">
+            <button onclick="subscribe('enterprise', 'monthly')" class="btn btn-secondary">Contact Sales</button>
+          </div>
         </div>
-      </a>
-      <a href="https://headyio.com" class="cross-link-card">
-        <div class="cross-link-icon">📚</div>
-        <div class="cross-link-text">
-          <strong>Read the docs</strong>
-          <small>Documented here</small>
-        </div>
-      </a>
-      <a href="https://headycheck.com" class="cross-link-card">
-        <div class="cross-link-icon">💚</div>
-        <div class="cross-link-text">
-          <strong>View health</strong>
-          <small>Monitored by HeadyCheck</small>
-        </div>
-      </a>
-      <a href="https://headymcp.com" class="cross-link-card">
-        <div class="cross-link-icon">🔌</div>
-        <div class="cross-link-text">
-          <strong>Browse connectors</strong>
-          <small>Extended via MCP</small>
-        </div>
-      </a>
-      <a href="https://headycloud.com" class="cross-link-card">
-        <div class="cross-link-icon">☁️</div>
-        <div class="cross-link-text">
-          <strong>View layers</strong>
-          <small>Deployed via HeadyCloud</small>
-        </div>
-      </a>
-      <a href="https://headyos.com" class="cross-link-card">
-        <div class="cross-link-icon">🌐</div>
-        <div class="cross-link-text">
-          <strong>Open IDE</strong>
-          <small>Accessible via HeadyOS</small>
-        </div>
-      </a>
-      <a href="https://headyconnection.org" class="cross-link-card">
-        <div class="cross-link-icon">🌐</div>
-        <div class="cross-link-text">
-          <strong>See the impact</strong>
-          <small>Revenue funds the mission</small>
-        </div>
-      </a></div>
+      </div>
+
+      <div style="text-align:center;margin-top:var(--sp-lg);color:var(--text2)">
+        <p>All plans include: <strong>Secure authentication</strong> • <strong>Usage analytics</strong> • <strong>API
+            access</strong></p>
+        <p style="margin-top:var(--sp-sm)"><a href="#faq">Have questions?</a> • <a href="https://headyio.com">Read our
+            docs</a></p>
+      </div>
+
+      <style>
+        .pricing-card {
+          position: relative;
+          text-align: center;
+          transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .pricing-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 40px var(--glow);
+        }
+
+        .pricing-card.featured {
+          border: 2px solid var(--accent);
+          box-shadow: 0 8px 32px var(--glow);
+        }
+
+        .pricing-badge {
+          position: absolute;
+          top: -12px;
+          right: 20px;
+          background: var(--accent);
+          color: var(--bg);
+          padding: 4px 16px;
+          border-radius: 20px;
+          font-size: 12px;
+          font-weight: 600;
+        }
+
+        .pricing-header {
+          padding: var(--sp-lg) var(--sp-md) var(--sp-md);
+        }
+
+        .pricing-header h3 {
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: var(--sp-xs);
+        }
+
+        .price {
+          font-size: 48px;
+          font-weight: 800;
+          color: var(--accent);
+          line-height: 1;
+        }
+
+        .price span {
+          font-size: 18px;
+          font-weight: 400;
+          color: var(--text2);
+        }
+
+        .price-note {
+          margin-top: var(--sp-xs);
+          color: var(--text2);
+          font-size: 14px;
+        }
+
+        .pricing-features {
+          list-style: none;
+          padding: 0 var(--sp-md);
+          margin: 0;
+        }
+
+        .pricing-features li {
+          padding: var(--sp-sm) 0;
+          border-bottom: 1px solid var(--border);
+          text-align: left;
+          color: var(--text);
+        }
+
+        .pricing-features li:last-child {
+          border-bottom: none;
+        }
+
+        .pricing-features li.disabled {
+          color: var(--text3);
+          text-decoration: line-through;
+        }
+
+        .pricing-action {
+          padding: var(--sp-md);
+        }
+      </style>
+
+      <script>
+        async function subscribe(plan, interval) {
+          const token = localStorage.getItem('accessToken');
+          if (!token) {
+            window.location.href = 'https://headysystems.com/dashboard?redirect=pricing&plan=' + plan + '&interval=' + interval;
+            return;
+          }
+
+          try {
+            const res = await fetch('/api/payments/subscribe', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+              },
+              body: JSON.stringify({ plan, interval })
+            });
+
+            if (res.ok) {
+              const { checkoutUrl } = await res.json();
+              window.location.href = checkoutUrl;
+            } else {
+              const error = await res.json();
+              alert(error.error || 'Failed to create subscription');
+            }
+          } catch (error) {
+            alert('Error: ' + error.message);
+          }
+        }
+      </script>
+    </div>
+  </section>
+
+
+  <div class="wrap">
+    <div class="eco-block">
+      <div class="eco-label">Related in the Heady Ecosystem</div>
+      <div class="eco-text">The Sacred Geometry AI platform powering every Heady product and service.</div>
+      <div class="eco-links">
+        <a href="https://headyio.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Read the API
+              docs</strong><br><small style="color:var(--text3)">Full endpoint reference</small></span></a>
+        <a href="https://headybot.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Talk to
+              Buddy</strong><br><small style="color:var(--text3)">Ask anything about the platform</small></span></a>
+        <a href="https://headycheck.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>System
+              health</strong><br><small style="color:var(--text3)">Live uptime and drift scores</small></span></a>
+        <a href="https://headyconnection.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Our
+              mission</strong><br><small style="color:var(--text3)">The nonprofit behind it all</small></span></a>
       </div>
     </div>
-
-
-    
-    <section id="status">
-      <div class="wrap">
-        <h2 class="section-title">Live System Status</h2>
-        <p class="section-sub">Real-time health across all services</p>
-        <div class="live-panel" id="sys-status"><div style="color:var(--text2)">Connecting to Heady Systems...</div></div>
-<script>const H={base:location.origin,async get(p){try{const r=await fetch(this.base+p);return r.ok?await r.json():null}catch(e){return null}},async post(p,d){try{const r=await fetch(this.base+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});return r.ok?await r.json():null}catch(e){return null}}};
-(async()=>{const d=await H.get('/api/system/status');const el=document.getElementById('sys-status');if(!d){el.innerHTML='<div style="color:var(--err)">API unreachable — services may be deploying</div>';return}
-el.innerHTML=`<div class="status-row"><span>Environment</span><span class="tag tg">${d.environment||'production'}</span></div>
-<div class="status-row"><span>Active Nodes</span><span>${d.capabilities?.nodes?.active||0}/${d.capabilities?.nodes?.total||0}</span></div>
-<div class="status-row"><span>Services</span><span>${d.capabilities?.services?.healthy||0}/${d.capabilities?.services?.total||0} healthy</span></div>
-<div class="status-row"><span>Tools</span><span>${d.capabilities?.tools?.active||0} active</span></div>
-<div class="status-row"><span>Uptime</span><span>${Math.floor((d.uptime||0)/3600)}h ${Math.floor(((d.uptime||0)%3600)/60)}m</span></div>
-<div class="status-row"><span>Sacred Geometry</span><span class="tag tp">Active</span></div>`})();</script>
-      </div>
-    </section>
-
-    <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
-    <section id="arch">
-      <div class="wrap">
-        <h2 class="section-title">Architecture</h2>
-        <p class="section-sub">Fractal intelligence at every layer — same values at every scale</p>
-        <div class="grid g3c">
-<div class="card"><div class="card-icon" style="background:#7c6aef20">&#x1f9e0;</div><h3>BRAIN</h3><p>Central meta-controller — pre-response processing, context gathering, concept identification across all layers</p></div>
-<div class="card"><div class="card-icon" style="background:#4ecdc420">&#x1f50d;</div><h3>LENS</h3><p>Real-time observability — performance-indexed data structures, comprehensive system health tracking</p></div>
-<div class="card"><div class="card-icon" style="background:#ff6b9d20">&#x1f4be;</div><h3>MEMORY</h3><p>Persistent indexed storage — session memory, external sources, user preferences with GDPR compliance</p></div>
-<div class="card"><div class="card-icon" style="background:#ffd93d20">&#x1f3bc;</div><h3>CONDUCTOR</h3><p>Orchestration engine — routes requests, manages agent lifecycles, optimizes resource allocation</p></div>
-<div class="card"><div class="card-icon" style="background:#4ecdc420">&#x2728;</div><h3>SOUL</h3><p>Value governance — mission alignment scoring, ethical guardrails, drift detection, hard veto authority</p></div>
-<div class="card"><div class="card-icon" style="background:#7c6aef20">&#x1f916;</div><h3>INTELLIGENCE</h3><p>DAG scheduler — parallel allocation, critical path monitoring, zero-idle backfill, anti-stagnation</p></div>
-</div>
-<div class="eco-block" style="margin-top:var(--sp-lg)">
-  <div class="eco-label">Architecture Diagram</div>
-  <div class="code-block" style="font-size:12px">HeadySoul (mission, values, ethics) ← ULTIMATE GOVERNOR
-  ↓
-Intelligence Engine v1.3 (DAG scheduler, priority queue)
-  ↓
-HCFullPipeline (9-stage execution)
-  ↓
-HCBrain (meta-controller)
-  ↓
-Agents (execute with HeadySoul constraints)
-  ↓
-HeadyBuddy (user-facing companion on all devices)</div>
-</div>
-      </div>
-    </section>
-
-    <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
-    <section id="why">
-      <div class="wrap">
-        <h2 class="section-title">Why Sacred Geometry?</h2>
-        <p class="section-sub">Organic systems that breathe, heal, and self-correct</p>
-        <div class="grid g2c">
-<div class="card"><h3>Organic, Not Mechanical</h3><p>Our systems follow natural patterns — Fibonacci spacing, golden ratio rhythms, fractal self-similarity. The same values govern code, services, and the organization itself.</p></div>
-<div class="card"><h3>Self-Correcting</h3><p>6-signal drift detection, Monte Carlo validation on every deploy, and HeadySoul governance ensure the system heals itself before problems reach users.</p></div>
-</div>
-<p style="color:var(--text2);margin-top:var(--sp-md);font-size:14px">Revenue from Heady Systems products directly funds <a href="https://headyconnection.org" style="color:var(--accent)">HeadyConnection's nonprofit programs</a> — expanding access to underserved communities worldwide.</p>
-      </div>
-    </section>
-
-    <div class="wrap"><div class="sg-divider"><span>&#x221e;</span></div></div>
-    <section id="pricing">
-      <div class="wrap">
-        <h2 class="section-title">Choose Your Plan</h2>
-        <p class="section-sub">Start free, upgrade as you grow. All plans include core HeadyBuddy features.</p>
-        <div class="grid g3c" style="margin-top:var(--sp-lg)">
-<div class="card pricing-card">
-  <div class="pricing-header">
-    <h3>Free</h3>
-    <div class="price">$0<span>/month</span></div>
   </div>
-  <ul class="pricing-features">
-    <li> Basic HeadyBuddy chat</li>
-    <li> 100 API calls/month</li>
-    <li> 100MB storage</li>
-    <li> Community support</li>
-    <li class="disabled"> Advanced models</li>
-    <li class="disabled"> Arena Merge</li>
-  </ul>
-  <div class="pricing-action">
-    <a href="https://headysystems.com/dashboard" class="btn btn-secondary">Get Started</a>
-  </div>
-</div>
-
-<div class="card pricing-card featured">
-  <div class="pricing-badge">Most Popular</div>
-  <div class="pricing-header">
-    <h3>Pro</h3>
-    <div class="price">$29<span>/month</span></div>
-    <div class="price-note">or $290/year (save 2 months)</div>
-  </div>
-  <ul class="pricing-features">
-    <li> Unlimited HeadyBuddy</li>
-    <li> 10,000 API calls/month</li>
-    <li> 10GB storage</li>
-    <li> All Heady models</li>
-    <li> Arena Merge parallel dev</li>
-    <li> Priority support</li>
-  </ul>
-  <div class="pricing-action">
-    <button onclick="subscribe('pro', 'monthly')" class="btn btn-primary">Start Pro Trial</button>
-  </div>
-</div>
-
-<div class="card pricing-card">
-  <div class="pricing-header">
-    <h3>Enterprise</h3>
-    <div class="price">$99<span>/month</span></div>
-    <div class="price-note">or $990/year (save 2 months)</div>
-  </div>
-  <ul class="pricing-features">
-    <li> Everything in Pro</li>
-    <li> Unlimited API calls</li>
-    <li> 100GB storage</li>
-    <li> Custom model training</li>
-    <li> Dedicated support</li>
-    <li> White-label options</li>
-    <li> SLA guarantee</li>
-  </ul>
-  <div class="pricing-action">
-    <button onclick="subscribe('enterprise', 'monthly')" class="btn btn-secondary">Contact Sales</button>
-  </div>
-</div>
-</div>
-
-<div style="text-align:center;margin-top:var(--sp-lg);color:var(--text2)">
-  <p>All plans include: <strong>Secure authentication</strong> • <strong>Usage analytics</strong> • <strong>API access</strong></p>
-  <p style="margin-top:var(--sp-sm)"><a href="#faq">Have questions?</a> • <a href="https://headyio.com">Read our docs</a></p>
-</div>
-
-<style>
-.pricing-card { position: relative; text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
-.pricing-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px var(--glow); }
-.pricing-card.featured { border: 2px solid var(--accent); box-shadow: 0 8px 32px var(--glow); }
-.pricing-badge { position: absolute; top: -12px; right: 20px; background: var(--accent); color: var(--bg); padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-.pricing-header { padding: var(--sp-lg) var(--sp-md) var(--sp-md); }
-.pricing-header h3 { font-size: 24px; font-weight: 700; margin-bottom: var(--sp-xs); }
-.price { font-size: 48px; font-weight: 800; color: var(--accent); line-height: 1; }
-.price span { font-size: 18px; font-weight: 400; color: var(--text2); }
-.price-note { margin-top: var(--sp-xs); color: var(--text2); font-size: 14px; }
-.pricing-features { list-style: none; padding: 0 var(--sp-md); margin: 0; }
-.pricing-features li { padding: var(--sp-sm) 0; border-bottom: 1px solid var(--border); text-align: left; color: var(--text); }
-.pricing-features li:last-child { border-bottom: none; }
-.pricing-features li.disabled { color: var(--text3); text-decoration: line-through; }
-.pricing-action { padding: var(--sp-md); }
-</style>
-
-<script>
-async function subscribe(plan, interval) {
-  const token = localStorage.getItem('accessToken');
-  if (!token) {
-    window.location.href = 'https://headysystems.com/dashboard?redirect=pricing&plan=' + plan + '&interval=' + interval;
-    return;
-  }
-  
-  try {
-    const res = await fetch('/api/payments/subscribe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      },
-      body: JSON.stringify({ plan, interval })
-    });
-    
-    if (res.ok) {
-      const { checkoutUrl } = await res.json();
-      window.location.href = checkoutUrl;
-    } else {
-      const error = await res.json();
-      alert(error.error || 'Failed to create subscription');
-    }
-  } catch (error) {
-    alert('Error: ' + error.message);
-  }
-}
-</script>
-      </div>
-    </section>
-
-
-    <div class="wrap">
-      <div class="eco-block">
-        <div class="eco-label">Related in the Heady Ecosystem</div>
-        <div class="eco-text">The Sacred Geometry AI platform powering every Heady product and service.</div>
-        <div class="eco-links">
-          <a href="https://headyio.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Read the API docs</strong><br><small style="color:var(--text3)">Full endpoint reference</small></span></a>
-          <a href="https://headybot.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Talk to Buddy</strong><br><small style="color:var(--text3)">Ask anything about the platform</small></span></a>
-          <a href="https://headycheck.com" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>System health</strong><br><small style="color:var(--text3)">Live uptime and drift scores</small></span></a>
-          <a href="https://headyconnection.org" class="eco-link"><span class="eco-icon">&#x2192;</span> <span><strong>Our mission</strong><br><small style="color:var(--text3)">The nonprofit behind it all</small></span></a>
-        </div>
-      </div>
-    </div>
 
   <!-- SYSTEM MAP — visual graph of the full ecosystem -->
   <div class="wrap">
@@ -1268,45 +1712,47 @@ async function subscribe(plan, interval) {
       <div class="sg-divider"><span>&#x221e;</span></div>
       <h3 style="color:var(--text);font-size:16px;margin-bottom:var(--sp-md);text-align:center">The Heady Ecosystem</h3>
       <div class="footer-eco">
-      <div class="footer-eco-item" style="background:var(--surface2);border-radius:8px">
-        <a href="https://headysystems.com">✴️ Heady Systems (you are here)</a>
-        <small>The Sacred Geometry AI platform powering every Heady product and service.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headyconnection.org">🌐 HeadyConnection</a>
-        <small>The nonprofit mission behind Heady — impact, governance, and community programs.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headybuddy.org">✨ HeadyBuddy</a>
-        <small>Your cross-device AI companion — chat, tasks, code, research — everywhere you are.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headybot.com">🤖 HeadyBot</a>
-        <small>Direct line to HeadyBuddy AI — full-featured conversational interface.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headycloud.com">☁️ HeadyCloud</a>
-        <small>Cloud orchestration, deployment layers, and infrastructure management.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headymcp.com">🔌 HeadyMCP</a>
-        <small>Model Context Protocol connectors — extend Heady with any tool or service.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headyio.com">📚 Heady Docs</a>
-        <small>API reference, architecture guides, and integration documentation.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headycheck.com">💚 HeadyCheck</a>
-        <small>Real-time health and observability across the entire Heady ecosystem.</small>
-      </div>
-      <div class="footer-eco-item">
-        <a href="https://headyos.com">🌐 HeadyOS</a>
-        <small>HeadyAI-IDE — choose Heady as your AI model, arena-merge branches intelligently, and build with the full Heady intelligence stack.</small>
-      </div>
+        <div class="footer-eco-item" style="background:var(--surface2);border-radius:8px">
+          <a href="https://headysystems.com">✴️ Heady Systems (you are here)</a>
+          <small>The Sacred Geometry AI platform powering every Heady product and service.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headyconnection.org">🌐 HeadyConnection</a>
+          <small>The nonprofit mission behind Heady — impact, governance, and community programs.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headybuddy.org">✨ HeadyBuddy</a>
+          <small>Your cross-device AI companion — chat, tasks, code, research — everywhere you are.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headybot.com">🤖 HeadyBot</a>
+          <small>Direct line to HeadyBuddy AI — full-featured conversational interface.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headycloud.com">☁️ HeadyCloud</a>
+          <small>Cloud orchestration, deployment layers, and infrastructure management.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headymcp.com">🔌 HeadyMCP</a>
+          <small>Model Context Protocol connectors — extend Heady with any tool or service.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headyio.com">📚 Heady Docs</a>
+          <small>API reference, architecture guides, and integration documentation.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headycheck.com">💚 HeadyCheck</a>
+          <small>Real-time health and observability across the entire Heady ecosystem.</small>
+        </div>
+        <div class="footer-eco-item">
+          <a href="https://headyos.com">🌐 HeadyOS</a>
+          <small>HeadyAI-IDE — choose Heady as your AI model, arena-merge branches intelligently, and build with the
+            full Heady intelligence stack.</small>
+        </div>
       </div>
       <div class="footer-bottom">
-        <span style="color:var(--text3);font-size:12px">&copy; 2026 Heady Systems &mdash; Sacred Geometry Architecture</span>
+        <span style="color:var(--text3);font-size:12px">&copy; 2026 Heady Systems &mdash; Sacred Geometry
+          Architecture</span>
         <span>
           <a href="https://headyconnection.org">Nonprofit</a>
           <span style="margin:0 8px;color:var(--text3)">&middot;</span>
@@ -1319,5 +1765,21 @@ async function subscribe(plan, interval) {
       </div>
     </div>
   </footer>
+
+  <!-- HeadyBuddy Chat Widget -->
+  <script src="../_shared/heady-buddy-widget.js"></script>
+  <script>
+    // Auto-initialize HeadyBuddy widget with platform-specific config
+    document.addEventListener('DOMContentLoaded', () => {
+      new HeadyBuddyWidget({
+        position: 'bottom-right',
+        autoOpen: false,
+        showBranding: true,
+        siteContext: 'headysystems.com',
+        apiEndpoint: 'https://headybot.com' // Point to the chat backend
+      });
+    });
+  </script>
 </body>
+
 </html>
