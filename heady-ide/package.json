@@ -9,6 +9,7 @@
     "dev": "electron . --dev",
     "build": "electron-builder",
     "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
     "build:all": "electron-builder --win --linux --mac"
   },
   "dependencies": {

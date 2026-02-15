@@ -1,0 +1,97 @@
+admin_ui:
+  version: 1.x
+  css:
+    theme:
+      css/admin-ui.css: {}
+      css/animations.css: {}
+      css/themes.css: {}
+      css/components.css: {}
+  js:
+    js/admin-ui.js: {}
+    js/dashboard.js: {}
+    js/service-manager.js: {}
+    js/customization.js: {}
+    js/security.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/drupalSettings
+    - core/jquery.once
+
+charts:
+  version: 1.x
+  css:
+    theme:
+      css/charts.css: {}
+  js:
+    js/charts.js: {}
+    js/performance-chart.js: {}
+  dependencies:
+    - heady_admin/admin_ui
+
+service_manager:
+  version: 1.x
+  css:
+    theme:
+      css/service-manager.css: {}
+  js:
+    js/service-manager.js: {}
+    js/service-actions.js: {}
+  dependencies:
+    - heady_admin/admin_ui
+
+domain_manager:
+  version: 1.x
+  css:
+    theme:
+      css/domain-manager.css: {}
+  js:
+    js/domain-manager.js: {}
+    js/dns-editor.js: {}
+  dependencies:
+    - heady_admin/admin_ui
+
+customization:
+  version: 1.x
+  css:
+    theme:
+      css/customization.css: {}
+  js:
+    js/customization.js: {}
+    js/theme-editor.js: {}
+    js/color-picker.js: {}
+  dependencies:
+    - heady_admin/admin_ui
+
+security:
+  version: 1.x
+  css:
+    theme:
+      css/security.css: {}
+  js:
+    js/security.js: {}
+    js/threat-monitor.js: {}
+  dependencies:
+    - heady_admin/admin_ui
+
+service_config:
+  version: 1.x
+  css:
+    theme:
+      css/service-config.css: {}
+  js:
+    js/service-config.js: {}
+    js/config-validator.js: {}
+  dependencies:
+    - heady_admin/admin_ui
+
+color_picker:
+  version: 1.x
+  css:
+    theme:
+      css/color-picker.css: {}
+  js:
+    js/color-picker.js: {}
+    js/color-wheel.js: {}
+  dependencies:
+    - heady_admin/admin_ui

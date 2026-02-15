@@ -1,0 +1,24 @@
+administer heady services:
+  title: 'Administer Heady services'
+  description: 'Access and configure all Heady services and systems.'
+  restrict access: true
+
+access heady dashboard:
+  title: 'Access Heady dashboard'
+  description: 'View the Heady admin dashboard and system status.'
+
+manage heady services:
+  title: 'Manage Heady services'
+  description: 'Start, stop, restart, and configure Heady services.'
+
+manage heady domains:
+  title: 'Manage Heady domains'
+  description: 'Configure DNS, SSL, and domain settings for Heady services.'
+
+customize heady ui:
+  title: 'Customize Heady UI'
+  description: 'Modify themes, colors, layouts, and visual settings.'
+
+access heady security:
+  title: 'Access Heady security center'
+  description: 'View security logs, audit trails, and security configurations.'

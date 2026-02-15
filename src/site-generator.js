@@ -126,6 +126,13 @@ const DOMAIN_THEMES = {
     audience: 'Developers, creators, teams',
     org: 'Heady Systems'
   },
+  headyme: {
+    accent: '#ef4444', accent2: '#f97316', glow: '#ef444420',
+    label: 'Admin Center',
+    role: 'Heady Admin Control Center — comprehensive management interface for all Heady services with rich visual customization.',
+    audience: 'Administrators, operators, developers',
+    org: 'Heady Systems'
+  },
 };
 
 // Ecosystem registry — used for cross-links, footers, and system map
@@ -139,6 +146,7 @@ const ECOSYSTEM = [
   { key: 'headyio', domain: 'headyio.com', name: 'Heady Docs', short: 'Docs', icon: '📚' },
   { key: 'headycheck', domain: 'headycheck.com', name: 'HeadyCheck', short: 'Health', icon: '💚' },
   { key: 'headyos', domain: 'headyos.com', name: 'HeadyOS', short: 'Browser', icon: '🌐' },
+  { key: 'headyme', domain: 'headyme.com', name: 'HeadyMe', short: 'Admin', icon: '⚙️' },
 ];
 
 // System Verticals — canonical taxonomy used across all domains
@@ -151,6 +159,7 @@ const SYSTEM_VERTICALS = {
   documentation: { label: 'Documentation', icon: '📚', primary: 'headyio', desc: 'API reference, architecture guides, integration docs' },
   extensibility: { label: 'Extensibility', icon: '🔌', primary: 'headymcp', desc: 'MCP connectors — extend Heady with any tool or service' },
   browser: { label: 'Browser', icon: '🌐', primary: 'headyos', desc: 'AI-powered browser shell with Buddy sidebar' },
+  admin: { label: 'Admin', icon: '⚙️', primary: 'headyme', desc: 'Comprehensive admin interface with rich visual customization' },
 };
 
 // Cross-domain relationships — bidirectional links with context
@@ -164,6 +173,7 @@ const CROSS_DOMAIN_MAP = {
     headymcp: { outLabel: 'Extended via MCP', inLabel: 'Extends this platform', outVerb: 'Browse connectors', inVerb: 'See the platform' },
     headycloud: { outLabel: 'Deployed via HeadyCloud', inLabel: 'Deploys this platform', outVerb: 'View layers', inVerb: 'See what\'s deployed' },
     headyos: { outLabel: 'Accessible via HeadyOS', inLabel: 'Powered by this platform', outVerb: 'Open IDE', inVerb: 'See the engine' },
+    headyme: { outLabel: 'Managed here', inLabel: 'Manages this platform', outVerb: 'Admin Console', inVerb: 'See the platform' },
   },
   headyconnection: {
     headybuddy: { outLabel: 'Created Buddy', inLabel: 'A program of the nonprofit', outVerb: 'Meet our companion', inVerb: 'Learn the philosophy' },
@@ -179,7 +189,7 @@ const CROSS_DOMAIN_MAP = {
 const WEBSITE_CLASSES = {
   brand_public: {
     label: 'Public Brand Site',
-    members: ['headysystems', 'headyconnection', 'headybuddy', 'headyos'],
+    members: ['headysystems', 'headyconnection', 'headybuddy', 'headyos', 'headyme'],
     pattern: 'Differentiated look/voice, shared ecosystem section, cross-links explaining relationships'
   },
   product_surface: {
@@ -1735,6 +1745,189 @@ el.innerHTML=\`<div class="status-row"><span>HeadySystems</span><span class="tag
 <div class="card"><div class="card-icon" style="background:#7c3aed20">&#x1f4bb;</div><h3>IDE Surface</h3><p>Built on Windsurf-next. Full editor, terminal, file explorer with Heady model integration.</p></div>
 <div class="card"><div class="card-icon" style="background:#a78bfa20">&#x1f50c;</div><h3>MCP Protocol</h3><p>Extend any model with <a href="https://headymcp.com">HeadyMCP</a> connectors — databases, APIs, tools, services.</p></div>
 <div class="card"><div class="card-icon" style="background:#7c3aed20">&#x2601;&#xfe0f;</div><h3>Cloud Deploy</h3><p>Arena results deploy through <a href="https://headycloud.com">HeadyCloud</a> with full pipeline verification.</p></div>
+</div>`
+      }
+    ]
+  },
+
+  headyme: {
+    title: 'HeadyMe Admin Center',
+    domain: 'headyme.com',
+    tagline: 'Intelligence Management Reimagined',
+    desc: 'Comprehensive admin interface for Heady services with rich visual customization, real-time monitoring, and full service configuration capabilities.',
+    badge: 'Admin Console',
+    vertical: 'admin',
+    tags: ['vertical: admin', 'layer: management', 'audience: administrators'],
+    ecosystemContext: 'HeadyMe is the admin console for the entire <a href="https://headysystems.com">Heady Systems platform</a>. Manage all services, monitor health, and customize the interface. Built by <a href="https://headyconnection.org">HeadyConnection</a> for operators.',
+    nav: [
+      { l: 'Dashboard', h: '#dashboard' },
+      { l: 'Services', h: '#services' },
+      { l: 'Domains', h: '#domains' },
+      { l: 'Customize', h: '#customize' },
+      { l: 'Security', h: '#security' }
+    ],
+    primaryCta: { l: 'Admin Dashboard', h: '#dashboard' },
+    secondaryCta: { l: 'Service Management', h: '#services' },
+    relatedLinks: [
+      { label: 'Platform Status', url: 'https://headysystems.com', desc: 'System health and monitoring' },
+      { label: 'Cloud Services', url: 'https://headycloud.com', desc: 'Cloud orchestration and deployment' },
+      { label: 'Health Monitor', url: 'https://headycheck.com', desc: 'Real-time system health' },
+      { label: 'Our Mission', url: 'https://headyconnection.org', desc: 'The nonprofit behind Heady' }
+    ],
+    sections: [
+      {
+        id: 'dashboard', title: 'Admin Dashboard', sub: 'Real-time system monitoring and control',
+        unique: true,
+        body: `<div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f4ca;</div><h3>System Health</h3><p>Real-time monitoring of all 76+ services with Monte Carlo confidence scoring and predictive analytics.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x26a1;</div><h3>Performance Metrics</h3><p>Response times, throughput, uptime, and resource utilization across all Heady domains.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f9e0;</div><h3>Service Management</h3><p>Start, stop, restart, and configure any Heady service with real-time status updates.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x1f680;</div><h3>Monte Carlo Analysis</h3><p>Probabilistic intelligence with 10,000 simulation iterations and confidence intervals.</p></div>
+</div>
+<div class="eco-block" style="margin-top:var(--sp-lg)">
+  <div class="eco-label">Live System Status</div>
+  <div class="grid g3c" style="margin-top:var(--sp-md)">
+    <div class="metric-card">
+      <div class="metric-value">88.5</div>
+      <div class="metric-label">Monte Carlo Score</div>
+      <div class="metric-grade">EXCELLENT</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">76/76</div>
+      <div class="metric-label">Services Active</div>
+      <div class="metric-grade">100%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">99.9%</div>
+      <div class="metric-label">Uptime</div>
+      <div class="metric-grade">HEALTHY</div>
+    </div>
+  </div>
+</div>`
+      },
+      {
+        id: 'services', title: 'Service Configuration', sub: 'Full control over all Heady services',
+        unique: true,
+        body: `<div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f9e0;</div><h3>AI Nodes (20)</h3><p>BRIDGE, BRAIN, CONDUCTOR, SOPHIA, and more — each with individual configuration and health monitoring.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x2699;&#xfe0f;</div><h3>Intelligence Engines (6)</h3><p>Sacred Geometry, Monte Carlo, Story Driver, Code Map, Pipeline Engine, Layer Manager.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x26a1;</div><h3>Core Services (7)</h3><p>HeadyBuddy, MCP Protocol, Health Monitor, Connection Layer, Cloud Layer, System Core.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x1f30f;</div><h3>External Services (14)</h3><p>Claude, Perplexity, Render, Cloudflare, GitHub, PostgreSQL, 1Password, Colab Pro+.</p></div>
+</div>
+<div class="eco-block" style="margin-top:var(--sp-lg)">
+  <div class="eco-label">Service Configuration Options</div>
+  <div class="code-block" style="font-size:12px">Basic Settings
+├── Enable/Disable Service
+├── Debug Mode & Log Level
+├── Performance Mode
+└── Cache Configuration
+
+Connection Limits
+├── Max Connections
+├── Timeout Settings
+├── Retry Attempts
+└── Rate Limiting
+
+Security Settings
+├── Authentication Required
+├── Allowed IP Addresses
+├── SSL/TLS Requirements
+└── Request Validation</div>
+</div>`
+      },
+      {
+        id: 'domains', title: 'Domain Management', sub: 'Monitor and configure all Heady domains',
+        unique: true,
+        body: `<div class="grid g3c">
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f310;</div><h3>headysystems.com</h3><p>Primary API platform — system status, stories, pipeline management.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x2601;&#xfe0f;</div><h3>headycloud.com</h3><p>Cloud orchestration, deployment layers, and infrastructure management.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f30d;</div><h3>headyconnection.com</h3><p>Nonprofit governance, mission programs, and community impact.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x1f517;</div><h3>headymcp.com</h3><p>MCP Protocol marketplace — connectors and extensions.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f916;</div><h3>headybot.com</h3><p>Direct HeadyBuddy chat interface with full features.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x2728;</div><h3>headybuddy.org</h3><p>HeadyBuddy companion portal and documentation.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f527;</div><h3>headycheck.com</h3><p>Health dashboard, monitoring, and system observability.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x1f4da;</div><h3>headyio.com</h3><p>Developer documentation, API reference, and integration guides.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f7a0;</div><h3>headyos.com</h3><p>AI-powered browser shell with HeadyBuddy integration.</p></div>
+</div>
+<div class="eco-block" style="margin-top:var(--sp-lg)">
+  <div class="eco-label">Domain Health Monitoring</div>
+  <div class="grid g2c" style="margin-top:var(--sp-md)">
+    <div class="metric-card">
+      <div class="metric-value">9/9</div>
+      <div class="metric-label">Domains Healthy</div>
+      <div class="metric-grade">100%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">142ms</div>
+      <div class="metric-label">Avg Response Time</div>
+      <div class="metric-grade">OPTIMAL</div>
+    </div>
+  </div>
+</div>`
+      },
+      {
+        id: 'customize', title: 'Customization Studio', sub: 'Rich visual customization and theming',
+        unique: true,
+        body: `<div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1faa8;</div><h3>Theme Editor</h3><p>5 built-in themes: Cosmic, Ocean, Sunset, Aurora, Matrix. Full color customization with live preview.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x1f3a8;</div><h3>Layout Options</h3><p>Grid, Masonry, Circular, Hexagonal, Tree, Radial layouts with responsive design.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x2728;</div><h3>Visual Effects</h3><p>Animated watermarks, floating particles, flowing waves, glassmorphism UI with smooth transitions.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x2699;&#xfe0f;</div><h3>Animation Controls</h3><p>Adjust animation speeds, watermark intensity, particle density, and wave patterns.</p></div>
+</div>
+<div class="eco-block" style="margin-top:var(--sp-lg)">
+  <div class="eco-label">Theme Presets</div>
+  <div class="grid g5c" style="margin-top:var(--sp-md)">
+    <div class="theme-preview" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+      <div class="theme-name">Cosmic</div>
+    </div>
+    <div class="theme-preview" style="background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%)">
+      <div class="theme-name">Ocean</div>
+    </div>
+    <div class="theme-preview" style="background:linear-gradient(135deg, #f97316 0%, #dc2626 100%)">
+      <div class="theme-name">Sunset</div>
+    </div>
+    <div class="theme-preview" style="background:linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #06b6d4 100%)">
+      <div class="theme-name">Aurora</div>
+    </div>
+    <div class="theme-preview" style="background:linear-gradient(135deg, #00ff41 0%, #008f11 100%)">
+      <div class="theme-name">Matrix</div>
+    </div>
+  </div>
+</div>`
+      },
+      {
+        id: 'security', title: 'Security Center', sub: 'Comprehensive security monitoring and control',
+        unique: true,
+        body: `<div class="grid g2c">
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f510;</div><h3>Security Logs</h3><p>Comprehensive audit trail with 15,420+ events, threat detection, and incident response.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x1f6e1;</div><h3>Threat Intelligence</h3><p>Real-time threat monitoring with 127 blocked IPs, 89 malicious requests detected.</p></div>
+<div class="card"><div class="card-icon" style="background:#ef444420">&#x1f512;</div><h3>Access Control</h3><p>Role-based permissions with 5 access levels and comprehensive audit logging.</p></div>
+<div class="card"><div class="card-icon" style="background:#f9731620">&#x1f3e1;</div><h3>SSL Management</h3><p>Automated certificate monitoring with 9 valid certificates and expiration tracking.</p></div>
+</div>
+<div class="eco-block" style="margin-top:var(--sp-lg)">
+  <div class="eco-label">Security Metrics</div>
+  <div class="grid g4c" style="margin-top:var(--sp-md)">
+    <div class="metric-card">
+      <div class="metric-value">LOW</div>
+      <div class="metric-label">Threat Level</div>
+      <div class="metric-grade">SECURE</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">127</div>
+      <div class="metric-label">Blocked IPs</div>
+      <div class="metric-grade">ACTIVE</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">3</div>
+      <div class="metric-label">Failed Logins</div>
+      <div class="metric-grade">MONITORED</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value">100%</div>
+      <div class="metric-label">SSL Valid</div>
+      <div class="metric-grade">HEALTHY</div>
+    </div>
+  </div>
 </div>`
       }
     ]

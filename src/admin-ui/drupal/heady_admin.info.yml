@@ -1,0 +1,17 @@
+name: 'Heady Admin Control Center'
+type: module
+description: 'Comprehensive admin interface for Heady services with rich visual customization and full service configuration capabilities.'
+package: 'Heady'
+core_version_requirement: ^11
+dependencies:
+  - drupal:system
+  - drupal:user
+  - drupal:node
+  - drupal:field
+  - drupal:views
+  - drupal:block
+  - drupal:menu_ui
+configure: heady_admin.settings
+version: '1.0.0'
+project: 'heady_admin'
+datestamp: 1739531200

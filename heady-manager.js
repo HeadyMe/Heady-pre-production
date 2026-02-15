@@ -194,6 +194,7 @@ const BRANDED_DOMAIN_MAP = {
   'headycloud.com': 'headycloud',
   'headyconnection.com': 'headyconnection',
   'headyos.com': 'headyos',
+  'headyme.com': 'headyme',
 };
 
 function resolveHost(req) {

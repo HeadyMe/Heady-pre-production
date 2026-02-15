@@ -1,0 +1,315 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the Heady Admin dashboard.
+ *
+ * Available variables:
+ * - services: Array of service data.
+ * - domains: Array of domain data.
+ * - themes: Array of theme presets.
+ */
+#}
+
+<div class="background-container">
+  <div class="watermark-layer">
+    <div class="watermark" style="top: 5%; left: 10%; opacity: 0.03;">HEADY</div>
+    <div class="watermark" style="top: 15%; right: 15%; opacity: 0.02;">INTELLIGENCE</div>
+    <div class="watermark" style="bottom: 20%; left: 8%; opacity: 0.04;">SYSTEMS</div>
+    <div class="watermark" style="bottom: 10%; right: 10%; opacity: 0.03;">CLOUD</div>
+    <div class="watermark" style="top: 40%; left: 50%; opacity: 0.02;">CONNECTION</div>
+    <div class="watermark" style="top: 60%; right: 25%; opacity: 0.03;">BUDDY</div>
+    <div class="watermark" style="bottom: 30%; left: 35%; opacity: 0.02;">MCP</div>
+    <div class="watermark" style="top: 25%; left: 70%; opacity: 0.04;">SOUL</div>
+  </div>
+  <div class="gradient-bg"></div>
+  <div class="floating-particles"></div>
+  <div class="wave-animation"></div>
+</div>
+
+<div class="admin-container">
+  <!-- Header -->
+  <header class="admin-header">
+    <div class="heady-region-header">
+      <div class="logo-section">
+        <div class="logo-container">
+          <img src="/modules/custom/heady_admin/assets/logos/heady-logo-primary.svg" alt="Heady" class="logo">
+          <div class="logo-glow"></div>
+        </div>
+        <div class="brand-text">
+          <h1 class="brand-name">Heady Admin</h1>
+          <p class="brand-tagline">Intelligence Control Center</p>
+        </div>
+      </div>
+      
+      <nav class="header-nav">
+        <a href="/admin/heady" class="nav-item active">
+          <i class="fas fa-tachometer-alt"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="/admin/heady/services" class="nav-item">
+          <i class="fas fa-network-wired"></i>
+          <span>Services</span>
+        </a>
+        <a href="/admin/heady/domains" class="nav-item">
+          <i class="fas fa-globe"></i>
+          <span>Domains</span>
+        </a>
+        <a href="/admin/heady/customization" class="nav-item">
+          <i class="fas fa-palette"></i>
+          <span>Customize</span>
+        </a>
+        <a href="/admin/heady/security" class="nav-item">
+          <i class="fas fa-shield-alt"></i>
+          <span>Security</span>
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="theme-selector">
+          <button class="theme-btn" data-theme="cosmic" title="Cosmic Theme">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="theme-btn" data-theme="ocean" title="Ocean Theme">
+            <i class="fas fa-water"></i>
+          </button>
+          <button class="theme-btn" data-theme="sunset" title="Sunset Theme">
+            <i class="fas fa-sun"></i>
+          </button>
+          <button class="theme-btn" data-theme="aurora" title="Aurora Theme">
+            <i class="fas fa-star"></i>
+          </button>
+        </div>
+        <div class="user-profile">
+          <img src="/modules/custom/heady_admin/assets/icons/heady-icon-code.svg" alt="Admin" class="avatar">
+          <span class="user-name">{{ current_user.name }}</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="heady-region-content">
+      <!-- Dashboard Header -->
+      <div class="section-header">
+        <h2 class="section-title">
+          <i class="fas fa-tachometer-alt"></i>
+          System Dashboard
+        </h2>
+        <div class="section-actions">
+          <button class="btn btn-primary" onclick="refreshDashboard()">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+          <button class="btn btn-secondary" onclick="exportReport()">
+            <i class="fas fa-download"></i> Export Report
+          </button>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <!-- System Health Card -->
+        <div class="metric-card health-card">
+          <div class="card-header">
+            <h3>System Health</h3>
+            <div class="health-indicator excellent"></div>
+          </div>
+          <div class="card-content">
+            <div class="health-score">
+              <div class="score-circle">
+                <svg viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="#00ff88" stroke-width="8" 
+                          stroke-dasharray="283" stroke-dashoffset="28" stroke-linecap="round"
+                          class="progress-ring"/>
+                </svg>
+                <div class="score-text">90%</div>
+              </div>
+            </div>
+            <div class="health-metrics">
+              <div class="metric">
+                <span class="label">Services</span>
+                <span class="value">76/76 Active</span>
+              </div>
+              <div class="metric">
+                <span class="label">Domains</span>
+                <span class="value">9/9 Healthy</span>
+              </div>
+              <div class="metric">
+                <span class="label">Monte Carlo</span>
+                <span class="value">88.5 EXCELLENT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Services Card -->
+        <div class="metric-card services-card">
+          <div class="card-header">
+            <h3>Active Services</h3>
+            <i class="fas fa-server"></i>
+          </div>
+          <div class="card-content">
+            <div class="service-count">
+              <span class="count">76</span>
+              <span class="label">Total Services</span>
+            </div>
+            <div class="service-breakdown">
+              {% for category, data in services %}
+                <div class="service-type">
+                  <span class="type-name">{{ category|title }}</span>
+                  <span class="type-count">{{ data|length }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="metric-card performance-card">
+          <div class="card-header">
+            <h3>Performance</h3>
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="card-content">
+            <div class="performance-chart">
+              <canvas id="performanceChart" width="200" height="100"></canvas>
+            </div>
+            <div class="performance-stats">
+              <div class="stat">
+                <span class="label">Response Time</span>
+                <span class="value">142ms</span>
+              </div>
+              <div class="stat">
+                <span class="label">Throughput</span>
+                <span class="value">1.2K/s</span>
+              </div>
+              <div class="stat">
+                <span class="label">Uptime</span>
+                <span class="value">99.9%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="metric-card activity-card">
+          <div class="card-header">
+            <h3>Recent Activity</h3>
+            <i class="fas fa-history"></i>
+          </div>
+          <div class="card-content">
+            <div class="activity-feed" id="activityFeed">
+              <div class="activity-item">
+                <div class="activity-icon success">
+                  <i class="fas fa-check"></i>
+                </div>
+                <div class="activity-details">
+                  <span class="activity-title">Pipeline Completed</span>
+                  <span class="activity-time">2 minutes ago</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon info">
+                  <i class="fas fa-sync"></i>
+                </div>
+                <div class="activity-details">
+                  <span class="activity-title">Service Sync</span>
+                  <span class="activity-time">15 minutes ago</span>
+                </div>
+              </div>
+              <div class="activity-item">
+                <div class="activity-icon warning">
+                  <i class="fas fa-exclamation"></i>
+                </div>
+                <div class="activity-details">
+                  <span class="activity-title">DNS Update</span>
+                  <span class="activity-time">1 hour ago</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monte Carlo Score -->
+        <div class="metric-card monte-carlo-card">
+          <div class="card-header">
+            <h3>Monte Carlo Analysis</h3>
+            <i class="fas fa-dice"></i>
+          </div>
+          <div class="card-content">
+            <div class="mc-score-display">
+              <div class="mc-score">88.5</div>
+              <div class="mc-grade">EXCELLENT</div>
+            </div>
+            <div class="mc-breakdown">
+              <div class="mc-metric">
+                <span class="label">Reliability</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 92%"></div>
+                </div>
+                <span class="value">92%</span>
+              </div>
+              <div class="mc-metric">
+                <span class="label">Performance</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 87%"></div>
+                </div>
+                <span class="value">87%</span>
+              </div>
+              <div class="mc-metric">
+                <span class="label">Security</span>
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width: 95%"></div>
+                </div>
+                <span class="value">95%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Domain Status -->
+        <div class="metric-card domains-card">
+          <div class="card-header">
+            <h3>Domain Status</h3>
+            <i class="fas fa-globe"></i>
+          </div>
+          <div class="card-content">
+            <div class="domain-grid">
+              {% for domain, data in domains.active %}
+                <div class="domain-item healthy">
+                  <div class="domain-name">{{ domain }}</div>
+                  <div class="domain-status">
+                    <div class="status-indicator active"></div>
+                    <span class="response-time">{{ data.response_time }}ms</span>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Floating Action Button -->
+<div class="fab-container">
+  <button class="fab main-fab" onclick="toggleFabMenu()">
+    <i class="fas fa-plus"></i>
+  </button>
+  <div class="fab-menu">
+    <button class="fab-item" onclick="openCustomization()" title="Customize">
+      <i class="fas fa-palette"></i>
+    </button>
+    <button class="fab-item" onclick="exportConfig()" title="Export Config">
+      <i class="fas fa-download"></i>
+    </button>
+    <button class="fab-item" onclick="toggleFullscreen()" title="Fullscreen">
+      <i class="fas fa-expand"></i>
+    </button>
+    <button class="fab-item" onclick="openSettings()" title="Settings">
+      <i class="fas fa-cog"></i>
+    </button>
+  </div>
+</div>

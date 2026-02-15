@@ -1,0 +1,79 @@
+heady_admin.dashboard:
+  path: '/admin/heady'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyAdminController::dashboard'
+    _title: 'Heady Admin Control Center'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.services:
+  path: '/admin/heady/services'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyAdminController::services'
+    _title: 'Service Management'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.domains:
+  path: '/admin/heady/domains'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyAdminController::domains'
+    _title: 'Domain Management'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.customization:
+  path: '/admin/heady/customization'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyAdminController::customization'
+    _title: 'Customization Studio'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.security:
+  path: '/admin/heady/security'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyAdminController::security'
+    _title: 'Security Center'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.service_config:
+  path: '/admin/heady/service/{service_id}/config'
+  defaults:
+    _form: '\Drupal\heady_admin\Form\ServiceConfigForm'
+    _title: 'Service Configuration'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.api_status:
+  path: '/admin/heady/api/status'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyApiController::status'
+  _format: 'json'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.api_services:
+  path: '/admin/heady/api/services'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyApiController::services'
+    _format: 'json'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.api_service_action:
+  path: '/admin/heady/api/service/{service_id}/{action}'
+  defaults:
+    _controller: '\Drupal\heady_admin\Controller\HeadyApiController::serviceAction'
+    _format: 'json'
+  requirements:
+    _permission: 'administer heady services'
+
+heady_admin.settings:
+  path: '/admin/config/heady'
+  defaults:
+    _form: '\Drupal\heady_admin\Form\HeadySettingsForm'
+    _title: 'Heady Admin Settings'
+  requirements:
+    _permission: 'administer heady services'
