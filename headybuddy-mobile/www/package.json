@@ -29,6 +29,7 @@
     },
     "files": [
       "main.js",
+      "automation-engine.js",
       "renderer.js",
       "index.html",
       "styles.css",

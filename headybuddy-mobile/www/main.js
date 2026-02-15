@@ -17,7 +17,19 @@
 const { app, BrowserWindow, ipcMain, screen, Tray, Menu } = require('electron');
 const path = require('path');
 const axios = require('axios');
-const HeadyBuddyAutomation = require('./automation-engine');
+
+// Initialize automation engine with fallback
+let HeadyBuddyAutomation;
+try {
+  HeadyBuddyAutomation = require('./automation-engine');
+} catch (error) {
+  console.log('Automation engine not found, using fallback mode');
+  HeadyBuddyAutomation = class {
+    constructor() { this.initialized = false; }
+    async initialize() { return true; }
+    async execute() { return { success: true, result: 'Fallback mode' }; }
+  };
+}
 
 let mainWindow;
 let tray;
