@@ -17,8 +17,8 @@
     "ws": "^8.14.0"
   },
   "devDependencies": {
-    "electron": "^28.0.0",
-    "electron-builder": "^24.9.0"
+    "electron": "^35.7.5",
+    "electron-builder": "^26.7.0"
   },
   "build": {
     "appId": "com.heady.ide",
